@@ -1,0 +1,1 @@
+This is will be a frontend part of the pets project
