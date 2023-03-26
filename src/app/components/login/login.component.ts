@@ -16,7 +16,12 @@ export class LoginComponent {
     private toastr: ToastrService,
     private service: AuthService,
     private router: Router
-  ) {}
+  ) {
+    // localStorage.clear();
+    if (this.service.IsLoggedIn()) {
+      this.router.navigate(['']);
+    }
+  }
 
   response: any;
   error: any;
@@ -33,6 +38,8 @@ export class LoginComponent {
 
           console.log(this.response.token); //token
           console.log(this.response.user.email); //email
+          this.router.navigate(['']);
+          localStorage.setItem('id_token', this.response.token);
         },
         (err: HttpErrorResponse) => {
           this.toastr.error('You entered wrong credentials', 'Error');
