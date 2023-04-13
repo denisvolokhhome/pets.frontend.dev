@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-top-menu',
@@ -9,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class TopMenuComponent {
   constructor(private service: AuthService) {}
 
-  get userLoggedIn() {
-    return this.service.IsLoggedIn();
+  get userLoggedIn(): Boolean {
+    return true;
   }
 }
