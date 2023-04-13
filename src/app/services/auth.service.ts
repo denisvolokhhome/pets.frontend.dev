@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   constructor(private http: HttpClient) {}
-  apiurl = 'http://127.0.0.1:8000/api'; //<todo> make dinamic from env</todo>
-
+  apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
+  response: any;
   // GetAllUsers(){
   //   return this.http.get(this.apiurl);
   // }
@@ -24,14 +26,21 @@ export class AuthService {
     return this.http.post(this.apiurl + '/login', input);
   }
 
-  IsLoggedIn() {
-    return this.http.get(this.apiurl + '/validateToken');
+  IsLoggedIn(): Observable<boolean> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<boolean>(this.apiurl + '/validatetoken', {
+      headers: header,
+    });
   }
 
   LogoutUser() {
-    return this.http.get(this.apiurl + '/logout');
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post(this.apiurl + '/logout', { headers: header });
   }
-  // UpdateUser(id:any, input:any){
-  //   return this.http.post(this.apiurl+'/user/update/'+id, input);
-  // }
 }

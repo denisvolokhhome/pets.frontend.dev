@@ -17,9 +17,13 @@ export class RegisterComponent {
     private router: Router
   ) {
     //if logged in navigate to home
-    if (this.service.IsLoggedIn()) {
-      this.router.navigate(['']);
-    }
+
+    this.service.IsLoggedIn().subscribe((res) => {
+      if (res) {
+        console.log('user logged in, redirecting to home...');
+        this.router.navigate(['']);
+      }
+    });
   }
   // TODO: Make better password validation and confirm email validation
   registerForm = this.builder.group({

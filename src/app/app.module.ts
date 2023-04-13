@@ -12,9 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthService } from 'src/app/services/auth.service';
 import { LogoutComponent } from './components/logout/logout.component';
-// import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,14 +33,7 @@ import { LogoutComponent } from './components/logout/logout.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
   ],
-  providers: [
-    AuthService,
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthInterceptor,
-    //   multi: true,
-    // },
-  ],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

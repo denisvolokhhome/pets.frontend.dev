@@ -6,9 +6,10 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +29,14 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.service.IsLoggedIn()) {
-      return true;
-    } else {
-      this.router.navigate(['login']);
-      return false;
-    }
+    return this.service.IsLoggedIn().pipe(
+      map((res) => {
+        if (!res) {
+          this.router.navigate(['login']);
+          return false;
+        }
+        return true;
+      })
+    );
   }
 }

@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { first, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,7 @@ export class LoginComponent {
     private toastr: ToastrService,
     private service: AuthService,
     private router: Router
-  ) {
-    // localStorage.clear();
-    if (this.service.IsLoggedIn()) {
-      this.router.navigate(['']);
-    }
-  }
+  ) {}
 
   response: any;
   error: any;
@@ -29,6 +25,24 @@ export class LoginComponent {
     email: this.builder.control('', Validators.required),
     password: this.builder.control('', Validators.required),
   });
+
+  ngOnInit() {
+    this.service.IsLoggedIn().subscribe(
+      (response) => {
+        if (response === true) {
+          // User is authenticated
+          console.log('User is authenticated');
+          this.router.navigate(['']);
+        } else {
+          // User is not authenticated
+          console.log('User is not authenticated');
+        }
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
 
   proceedLogin() {
     if (this.loginForm.valid) {
