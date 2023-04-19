@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private isLoggedInSubject = new Subject<boolean>();
+  private loginStatus = new Subject<boolean>();
+
   constructor(private http: HttpClient) {}
   apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
   response: any;
@@ -31,9 +34,11 @@ export class AuthService {
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.get<boolean>(this.apiurl + '/validatetoken', {
-      headers: header,
-    });
+    return this.http
+      .get<boolean>(this.apiurl + '/validatetoken', {
+        headers: header,
+      })
+      .pipe(tap((isLoggedIn) => this.isLoggedInSubject.next(isLoggedIn)));
   }
 
   LogoutUser() {
@@ -43,4 +48,8 @@ export class AuthService {
     );
     return this.http.post(this.apiurl + '/logout', { headers: header });
   }
+
+  // public get isLoggedIn$(): Observable<boolean> {
+  //   return this.isLoggedInSubject.asObservable();
+  // }
 }

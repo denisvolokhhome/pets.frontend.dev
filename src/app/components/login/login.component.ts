@@ -4,7 +4,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { first, take } from 'rxjs';
 
 @Component({
   selector: 'app-login',

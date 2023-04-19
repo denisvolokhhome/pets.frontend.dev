@@ -1,17 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { map, switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.css'],
 })
-export class TopMenuComponent {
+export class TopMenuComponent implements OnInit {
   constructor(private service: AuthService) {}
 
-  get userLoggedIn(): Boolean {
-    return true;
+  ngOnInit(): void {}
+
+  get checkToken() {
+    if (localStorage.getItem('id_token')) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
+  ngOnDestroy() {}
 }
