@@ -13,6 +13,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutComponent } from './components/logout/logout.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { LogoutComponent } from './components/logout/logout.component';
     RegisterComponent,
     UserComponent,
     LogoutComponent,
+    DashboardComponent,
+    LeftMenuComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,9 @@
 <app-top-menu></app-top-menu>
 <div class="wrapper">
+  <app-left-menu
+    *ngIf="
+      !(this.route == '/login' || this.route == '/register' || this.route == '')
+    "
+  ></app-left-menu>
   <router-outlet></router-outlet>
 </div>

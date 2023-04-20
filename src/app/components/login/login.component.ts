@@ -31,7 +31,7 @@ export class LoginComponent {
         if (response === true) {
           // User is authenticated
           console.log('User is authenticated');
-          this.router.navigate(['']);
+          this.router.navigate(['dashboard']);
         } else {
           // User is not authenticated
           console.log('User is not authenticated');
@@ -51,7 +51,7 @@ export class LoginComponent {
 
           console.log(this.response.token); //token
           console.log(this.response.user.email); //email
-          this.router.navigate(['']);
+          this.router.navigate(['dashboard']);
           localStorage.setItem('id_token', this.response.token);
         },
         (err: HttpErrorResponse) => {
