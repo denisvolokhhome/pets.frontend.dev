@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -8,18 +8,10 @@ import { Observable, Subject } from 'rxjs';
 })
 export class AuthService {
   private isLoggedInSubject = new Subject<boolean>();
-  private loginStatus = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
   apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
   response: any;
-  // GetAllUsers(){
-  //   return this.http.get(this.apiurl);
-  // }
-
-  // GetUserById(id:any){
-  //   return this.http.get(this.apiurl+'/'+id);
-  // }
 
   RegisterUser(input: any) {
     return this.http.post(this.apiurl + '/register', input);
@@ -48,8 +40,4 @@ export class AuthService {
     );
     return this.http.post(this.apiurl + '/logout', { headers: header });
   }
-
-  // public get isLoggedIn$(): Observable<boolean> {
-  //   return this.isLoggedInSubject.asObservable();
-  // }
 }

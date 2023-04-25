@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -7,9 +9,19 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./top-menu.component.css'],
 })
 export class TopMenuComponent implements OnInit {
-  constructor(private service: AuthService) {}
+  location: any;
+  route: any;
+  constructor(
+    private service: AuthService,
+    private router: Router,
+    private loc: Location
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.router.events.subscribe((res) => {
+      this.route = this.loc.path();
+    });
+  }
 
   get checkToken() {
     if (localStorage.getItem('id_token')) {

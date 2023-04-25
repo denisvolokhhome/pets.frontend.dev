@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
+import { PetsComponent } from './components/pets/pets.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { LeftMenuComponent } from './components/left-menu/left-menu.component';
     LogoutComponent,
     DashboardComponent,
     LeftMenuComponent,
+    PetsComponent,
   ],
   imports: [
     BrowserModule,

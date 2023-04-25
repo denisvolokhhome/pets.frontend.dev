@@ -7,6 +7,7 @@ import { UserComponent } from './components/user/user.component';
 import { AuthGuard } from './guard/auth.guard';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { PetsComponent } from './components/pets/pets.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,6 +20,12 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'pets', component: PetsComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
