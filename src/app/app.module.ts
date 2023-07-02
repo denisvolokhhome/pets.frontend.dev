@@ -16,6 +16,7 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { PetsComponent } from './components/pets/pets.component';
+import { PetCardComponent } from './components/pet-card/pet-card.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { PetsComponent } from './components/pets/pets.component';
     DashboardComponent,
     LeftMenuComponent,
     PetsComponent,
+    PetCardComponent,
   ],
   imports: [
     BrowserModule,

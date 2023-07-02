@@ -53,6 +53,7 @@ export class LoginComponent {
           console.log(this.response.user.email); //email
           this.router.navigate(['dashboard']);
           localStorage.setItem('id_token', this.response.token);
+          localStorage.setItem('id', this.response.token);
         },
         (err: HttpErrorResponse) => {
           this.toastr.error('You entered wrong credentials', 'Error');

@@ -1,1 +1,6 @@
-<p>pets works!</p>
+<div *ngIf="DataService.pets">
+  <app-pet-card
+    *ngFor="let pet of pets; let i = index"
+    [pet]="pet"
+  ></app-pet-card>
+</div>
