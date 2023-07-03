@@ -4,3 +4,7 @@
     [pet]="pet"
   ></app-pet-card>
 </div>
+
+<div *ngIf="!DataService.pets">
+ <h1>Please add a pet</h1>
+</div>
