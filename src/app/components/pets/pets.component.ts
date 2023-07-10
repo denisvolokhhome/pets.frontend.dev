@@ -16,8 +16,11 @@ export class PetsComponent implements OnInit {
   pets: IPet [] = [];
 
   ngOnInit(): void {
+
     this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
       this.pets = pets;
+      console.log(pets);
+
     });
   }
 

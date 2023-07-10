@@ -10,5 +10,4 @@ import { IPet } from 'src/app/models/pet';
 export class PetCardComponent {
   @Input() pet: IPet;
 
-  details = false;
 }

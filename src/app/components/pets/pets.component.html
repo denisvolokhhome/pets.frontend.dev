@@ -1,10 +1,13 @@
-<div *ngIf="DataService.pets">
-  <app-pet-card
-    *ngFor="let pet of pets; let i = index"
-    [pet]="pet"
-  ></app-pet-card>
-</div>
+<div class="grid grid-cols-3 gap-4">
+  <div *ngIf="DataService.pets">
+    <app-pet-card
+      *ngFor="let pet of pets; let i = index"
+      [pet]="pet"
+    ></app-pet-card>
+  </div>
 
-<div *ngIf="!DataService.pets">
- <h1>Please add a pet</h1>
+
 </div>
+<div *ngIf="!DataService.pets">
+  <h1>Please add a pet</h1>
+  </div>

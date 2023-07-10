@@ -1,12 +1,10 @@
 export interface IPet {
-  id?: number;
-  name: string;
-  breed: string;
-  date_of_birth: string;
+  pet_id?: number;
+  pet_name: string;
+  breed_name: string;
+  pet_dob: string;
   gender: string;
   weight: string;
-  location: string;
-  description: string;
-
-
+  location_name: string;
+  pet_desc: string;
 }
