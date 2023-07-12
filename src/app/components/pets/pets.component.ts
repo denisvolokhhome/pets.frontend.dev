@@ -14,6 +14,7 @@ export class PetsComponent implements OnInit {
   ){}
 
   pets: IPet [] = [];
+  view: string = 'cards';
 
   ngOnInit(): void {
 
@@ -22,6 +23,11 @@ export class PetsComponent implements OnInit {
       console.log(pets);
 
     });
+  }
+
+  changeLayout(emittedName: string) {
+    this.view = emittedName;
+    console.log('Layout change clicked.');
   }
 
 }

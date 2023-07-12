@@ -1,5 +1,8 @@
-<div class="grid grid-cols-3 gap-4">
-  <div *ngIf="DataService.pets">
+
+<app-sub-menu (buttonClicked)='changeLayout($event)'></app-sub-menu>
+<div class="comp-wrapper px-5 py-7">
+<div *ngIf="view == 'cards'">
+  <div *ngIf="DataService.pets" class="grid grid-cols-3 gap-4">
     <app-pet-card
       *ngFor="let pet of pets; let i = index"
       [pet]="pet"
@@ -7,7 +10,24 @@
   </div>
 
 
-</div>
-<div *ngIf="!DataService.pets">
-  <h1>Please add a pet</h1>
+  <div *ngIf="!DataService.pets">
+    <h1>Please add a pet</h1>
   </div>
+
+</div>
+<div *ngIf="view == 'table'">
+  <h2>this is table view</h2>
+  <div *ngIf="DataService.pets" class="grid grid-cols-3 gap-4">
+    <app-pet-grid
+      *ngFor="let pet of pets; let i = index"
+      [pet]="pet"
+    ></app-pet-grid>
+  </div>
+
+
+  <div *ngIf="!DataService.pets">
+    <h1>Please add a pet</h1>
+  </div>
+
+</div>
+</div>

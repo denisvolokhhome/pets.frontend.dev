@@ -17,6 +17,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LeftMenuComponent } from './components/left-menu/left-menu.component';
 import { PetsComponent } from './components/pets/pets.component';
 import { PetCardComponent } from './components/pet-card/pet-card.component';
+import { SubMenuComponent } from './components/sub-menu/sub-menu.component';
+import { PetGridComponent } from './components/pet-grid/pet-grid.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { PetCardComponent } from './components/pet-card/pet-card.component';
     LeftMenuComponent,
     PetsComponent,
     PetCardComponent,
+    SubMenuComponent,
+    PetGridComponent,
   ],
   imports: [
     BrowserModule,
