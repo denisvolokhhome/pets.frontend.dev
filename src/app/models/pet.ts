@@ -7,4 +7,5 @@ export interface IPet {
   weight: string;
   location_name: string;
   pet_desc: string;
+
 }
