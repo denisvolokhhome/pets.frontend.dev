@@ -1,11 +1,11 @@
 <app-top-menu></app-top-menu>
-<div class="wrapper flex-row flex min-h-full">
+<div class="main-wrapper d-flex flex-row h-100">
   <app-left-menu
     *ngIf="
       !(this.route == '/login' || this.route == '/register' || this.route == '')
     "
   ></app-left-menu>
-  <div class="wrapper w-full">
+  <div class="content-wrapper w-100 me-3 mt-3">
     <router-outlet ></router-outlet>
-</div>
+  </div>
 </div>

@@ -1,5 +1,5 @@
 
-<app-sub-menu (buttonClicked)='changeLayout($event)'></app-sub-menu>
+<app-sub-menu (buttonClicked)='changeLayout($event)' class="w-100"></app-sub-menu>
 <div class="comp-wrapper px-5 py-7">
 <div *ngIf="view == 'cards'">
   <div *ngIf="DataService.pets" class="grid grid-cols-3 gap-4">

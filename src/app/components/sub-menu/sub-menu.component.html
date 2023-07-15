@@ -1,31 +1,29 @@
-<div class="flex flex-row bg-slate-200 w-full h-15 py-3 justify-between px-3">
-<ul class="sub-menu sub-menu-layout flex flex-row">
-  <li class="">
+<nav class="navbar navbar-expand-lg sub-menu w-100">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" >
+      <div class="navbar-nav d-flex flex-row justify-content-between w-100" >
+        <div><button
+          class="fab-button"
+          (click)="changeLayout('table')"
+        >
+        <i class="bi bi-table"></i>
+        </button>
+        <button
+        class="fab-button ms-3"
+        (click)="changeLayout('cards')"
+      >
+      <i class="bi bi-postcard-heart"></i>
+      </button>
+    </div>
+<div>
     <button
-    class="border py-2 px-4 rounded bg-yellow-400"
-    (click)="changeLayout('table')"
-  >
-    table view
-  </button>
-  </li>
-  <li class="ml-2">
-    <button
-    class="border py-2 px-4 rounded bg-yellow-400"
-    (click)="changeLayout('cards')"
-  >
-    cards view
-  </button>
-  </li>
-</ul>
-<ul class="sub-menu sub-menu-edit flex flex-row">
-  <li class="ml-2">
-    <button
-    class="border py-2 px-4 rounded bg-green-600"
+    class="fab-button fab-success"
 
   >
-    Add
+  <i class="bi bi-plus-circle"></i>
   </button>
-  </li>
-
-</ul>
 </div>
+      </div>
+    </div>
+  </div>
+</nav>
