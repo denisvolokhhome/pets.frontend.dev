@@ -20,7 +20,7 @@ import { PetCardComponent } from './components/pet-card/pet-card.component';
 import { SubMenuComponent } from './components/sub-menu/sub-menu.component';
 import { PetGridComponent } from './components/pet-grid/pet-grid.component';
 import {MatButtonModule} from '@angular/material/button';
-import { PetModalComponent } from './components/pet-modal/pet-modal.component';
+import { PetAddComponent } from './components/pet-add/pet-add.component';
 
 
 
@@ -40,7 +40,7 @@ import { PetModalComponent } from './components/pet-modal/pet-modal.component';
     PetCardComponent,
     SubMenuComponent,
     PetGridComponent,
-    PetModalComponent,
+    PetAddComponent,
   ],
   imports: [
     BrowserModule,
