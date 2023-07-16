@@ -1,1 +1,87 @@
-<p>pet-add works!</p>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="modal-body container-fluid">
+    <div class="row">
+      <div class="col-lg-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Enter your pet name here</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Name"
+            formControlName="pet_name"
+            appFocus
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6">
+        <mat-form-field class="w-100">
+          <mat-select required>
+            <mat-option>-- None --</mat-option>
+            <mat-option value="option">Option1</mat-option>
+            <mat-option value="option">Option2</mat-option>
+          </mat-select>
+          <mat-label><mat-icon>pets</mat-icon> Choose breed</mat-label>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+<!-- <form [formGroup]="form" (ngSubmit)="submit()">
+  <input
+    type="text"
+    class="border rounded w-full py-2 px-4 mb-4"
+    placeholder="Enter your pet name"
+    formControlName="pet_name"
+    appFocus
+  />
+  <p
+    class="text-red-600 font-medium mb-2"
+    *ngIf="title.errors?.minlength && title.touched"
+  >
+    Please fill title field width min length. Now {{ title.value.length }}
+  </p>
+
+  <input
+    type="email"
+    class="border rounded w-full py-2 px-4 mb-4"
+    placeholder="email"
+    formControlName="email"
+  />
+  <p
+    class="text-red-600 font-medium mb-2"
+    *ngIf="email.errors?.email && email.touched"
+  >
+    Please enter correct email
+  </p>
+
+  <textarea
+    class="border rounded w-full py-2 px-4 mb-4"
+    name=""
+    id=""
+    cols="30"
+    rows="10"
+    placeholder="enter some text"
+    formControlName="desc"
+  ></textarea>
+
+  <p
+    class="text-red-600 font-medium mb-2"
+    *ngIf="desc.errors?.minlength && desc.touched"
+  >
+    Please enter more text here -at least 10. You have: {{ desc.value.length }}
+  </p>
+  <p
+    class="text-red-600 font-medium mb-2"
+    *ngIf="desc.errors?.maxlength && desc.touched"
+  >
+    You've entered too many symbols: {{ desc.value.length }}
+  </p>
+
+  <button type="submit" class="py-2 px-4 bg-blue-400 text-white">Create</button>
+</form> -->

@@ -103,3 +103,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .card {
   border: none;
 }
+.modal-backdrop{
+  z-index: 500;
+}
+.modal{
+  z-index: 501;
+}

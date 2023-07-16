@@ -1,48 +1,57 @@
-
-<app-sub-menu (buttonClicked)='changeLayout($event)' class="w-100"></app-sub-menu>
+<app-sub-menu
+  (buttonClicked)="changeLayout($event)"
+  class="w-100"
+></app-sub-menu>
 <div class="container mt-3">
-<div *ngIf="view == 'cards'">
-  <div *ngIf="DataService.pets" class="row">
-    <div app-pet-card class="col-lg-4"
-      *ngFor="let pet of pets; let i = index"
-      [pet]="pet"
-    ></div>
+  <div *ngIf="view == 'cards'">
+    <div *ngIf="DataService.pets" class="row">
+      <div
+        app-pet-card
+        class="col-lg-4"
+        *ngFor="let pet of pets; let i = index"
+        [pet]="pet"
+      ></div>
+    </div>
+
+    <div *ngIf="!DataService.pets">
+      <h1>Please add a pet</h1>
+    </div>
   </div>
+  <div *ngIf="view == 'table'">
+    <table *ngIf="DataService.pets" class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Breed</th>
+          <th scope="col">Description</th>
+          <th scope="col">Date of Birth</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Weight</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-slate-800">
+        <tr
+          app-pet-grid
+          *ngFor="let pet of pets; let i = index"
+          [pet]="pet"
+        ></tr>
+      </tbody>
+    </table>
 
-
-  <div *ngIf="!DataService.pets">
-    <h1>Please add a pet</h1>
+    <div *ngIf="!DataService.pets">
+      <h1>Please add a pet</h1>
+    </div>
   </div>
-
 </div>
-<div *ngIf="view == 'table'">
-  <table *ngIf="DataService.pets" class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Breed</th>
-        <th scope="col">Description</th>
-        <th scope="col">Date of Birth</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Weight</th>
 
-      </tr>
-    </thead>
-    <tbody class="bg-white dark:bg-slate-800">
-
-
-    <tr app-pet-grid
-      *ngFor="let pet of pets; let i = index"
-      [pet]="pet"
-    ></tr>
-  </tbody>
-  </table>
-
-
-
-  <div *ngIf="!DataService.pets">
-    <h1>Please add a pet</h1>
-  </div>
-
-</div>
+<div
+  app-modal
+  title="Add a pet"
+  class="modal fade"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  id="mainModal"
+>
+  <app-pet-add></app-pet-add>
 </div>

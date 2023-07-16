@@ -19,4 +19,17 @@ export class DataService {
     );
   }
 
+  createPet(pet: any): Observable<IPet[]> {
+    return this.http.post<IPet[]>(this.apiurl + '/pets', pet).
+    pipe(
+      tap((pets) => (this.pets = pets))
+    );
+  }
+
+  // create(product: IProduct): Observable<IProduct> {
+  //   return this.http
+  //     .post<IProduct>('https://fakestoreapi.com/products', product)
+  //     .pipe(tap((prod) => this.products.push(prod)));
+  // }
+
 }

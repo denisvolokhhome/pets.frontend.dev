@@ -21,7 +21,13 @@ import { SubMenuComponent } from './components/sub-menu/sub-menu.component';
 import { PetGridComponent } from './components/pet-grid/pet-grid.component';
 import {MatButtonModule} from '@angular/material/button';
 import { PetAddComponent } from './components/pet-add/pet-add.component';
-
+import { ModalComponent } from './components/modal/modal.component';
+import {FloatLabelType, MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 
@@ -41,6 +47,7 @@ import { PetAddComponent } from './components/pet-add/pet-add.component';
     SubMenuComponent,
     PetGridComponent,
     PetAddComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +58,12 @@ import { PetAddComponent } from './components/pet-add/pet-add.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     MatButtonModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
 
   ],
   providers: [],
