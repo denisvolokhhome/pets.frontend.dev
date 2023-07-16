@@ -1,13 +1,17 @@
 
 
-<!-- <h3>{{ pet.pet_name }}</h3> -->
-<div class="max-w-sm rounded overflow-hidden shadow-lg col-span-2">
-  <div class="px-6 py-4">
-    <div class="font-bold text-xl">Name: {{pet.pet_name}}</div>
-    <div class="font-bold text-md mb-2">{{pet.breed_name}}</div>
-    <p class="text-gray-700 text-base">
-      {{pet.pet_desc}}
-    </p>
+
+  <div class="card shadow-sm" >
+    <img *ngIf="pet.image" [src]="apiurl + pet.image" class="card-img-top" alt="...">
+    <div *ngIf="!pet.image"  class="card-img-top no-image">
+      <i class="bi bi-card-image"></i>
+    </div>
+
+    <div class="card-body">
+      <h4 class="card-title">Name: {{pet.pet_name}}</h4>
+      <h5 class="breed">{{pet.breed_name}}</h5>
+      <p class="card-text">{{pet.pet_desc}}</p>
+      <a href="#" class="btn btn-primary">More</a>
+    </div>
   </div>
 
-</div>

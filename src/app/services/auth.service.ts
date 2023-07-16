@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,7 @@ export class AuthService {
   private isLoggedInSubject = new Subject<boolean>();
 
   constructor(private http: HttpClient) {}
-  apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
+  apiurl= environment.API_URL;
   response: any;
 
   RegisterUser(input: any) {
