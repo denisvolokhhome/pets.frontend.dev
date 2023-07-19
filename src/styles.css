@@ -10,6 +10,15 @@
   --accent-color-1: #651fff;
   --accent-color-2: #4caf50;
 }
+
+.mat-mdc-radio-button.mat-accent{
+  --mdc-radio-selected-pressed-icon-color:var(--accent-color-1)!important;
+  --mat-mdc-radio-checked-ripple-color:var(--accent-color-1)!important;
+  --mdc-radio-selected-pressed-icon-color:var(--accent-color-1)!important;
+  --mdc-radio-selected-icon-color:var(--accent-color-1)!important;
+  --mdc-radio-selected-hover-icon-color:var(--accent-color-1)!important;
+  --mdc-radio-selected-focus-icon-color:var(--accent-color-1)!important;
+}
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
@@ -108,4 +117,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .modal{
   z-index: 501;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: unset;
 }
