@@ -17,8 +17,9 @@
         <mat-form-field class="w-100">
           <mat-select required [formControl]="breed_name">
             <mat-option>-- None --</mat-option>
-            <mat-option value="English Pointer">English Pointer</mat-option>
-            <mat-option value="option2">Option2</mat-option>
+            <mat-option *ngFor="let breed of breeds" [value]="breed.name">{{
+              breed.name
+            }}</mat-option>
           </mat-select>
           <mat-label><mat-icon>pets</mat-icon> Choose breed</mat-label>
         </mat-form-field>
@@ -63,10 +64,13 @@
       </div>
       <div class="col-lg-6">
         <mat-form-field class="w-100">
-          <mat-select required formControlName="breed_name">
+          <mat-select required [formControl]="location_name">
             <mat-option>-- None --</mat-option>
-            <mat-option value="option">Main</mat-option>
-            <mat-option value="option">Location 2</mat-option>
+            <mat-option
+              *ngFor="let location of locations"
+              [value]="location.name"
+              >{{ location.name }}</mat-option
+            >
           </mat-select>
           <mat-label
             ><mat-icon>location_on</mat-icon> Choose location</mat-label

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalService } from './../../services/modal.service';
 import { DataService } from './../../services/data.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IBreed } from 'src/app/models/breed';
+import { ILocation } from 'src/app/models/location';
 declare var window: any;
 
 
@@ -14,6 +16,8 @@ declare var window: any;
 export class PetAddComponent implements OnInit{
 
   formModal: any;
+  breeds: IBreed[];
+  locations: ILocation[];
 
   constructor(private DataService: DataService, private ModalService: ModalService )
   {}
@@ -22,6 +26,14 @@ export class PetAddComponent implements OnInit{
     this.formModal = new window.bootstrap.Modal(
       document.getElementById('mainModal')
     );
+
+  this.DataService.getBreeds().subscribe(breeds => {
+    this.breeds = breeds;
+  })
+
+  this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
+    this.locations = locations;
+  })
   }
 
 
@@ -62,7 +74,7 @@ export class PetAddComponent implements OnInit{
     return this.form.controls.pet_desc as FormControl;
   }
   get pet_dob() {
-    return this.form.controls.pet_name as FormControl;
+    return this.form.controls.pet_dob as FormControl;
   }
   get gender() {
     return this.form.controls.gender as FormControl;
@@ -83,7 +95,7 @@ export class PetAddComponent implements OnInit{
       date_of_birth: this.form.value.pet_dob as string,
       gender: this.form.value.gender as string,
       weight: this.form.value.weight as string,
-      location_name: this.form.value.weight,
+      location_name: this.form.value.location_name,
       image: 'https://i.pravatar.cc',
       is_puppy: 0,
       has_microchip: 0,
