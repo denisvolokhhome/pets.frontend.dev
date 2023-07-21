@@ -12,5 +12,5 @@ export class PetCardComponent {
   @Input() pet: IPet;
 
   apiurl = environment.API_URL;
-
+  apihost = environment.API_HOST;
 }

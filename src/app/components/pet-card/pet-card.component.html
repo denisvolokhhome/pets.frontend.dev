@@ -1,17 +1,18 @@
-
-
-
-  <div class="card shadow-sm" >
-    <img *ngIf="pet.image" [src]="apiurl + pet.image" class="card-img-top" alt="...">
-    <div *ngIf="!pet.image"  class="card-img-top no-image">
-      <i class="bi bi-card-image"></i>
-    </div>
-
-    <div class="card-body">
-      <h4 class="card-title">Name: {{pet.pet_name}}</h4>
-      <h5 class="breed">{{pet.breed_name}}</h5>
-      <p class="card-text">{{pet.pet_desc}}</p>
-      <a href="#" class="btn btn-primary">More</a>
-    </div>
+<div class="card shadow-sm">
+  <img
+    *ngIf="pet.image_path"
+    [src]="apiurl + '/' + pet.image_path"
+    class="card-img-top"
+    alt="..."
+  />
+  <div *ngIf="!pet.image_path" class="card-img-top no-image">
+    <i class="bi bi-card-image"></i>
   </div>
 
+  <div class="card-body">
+    <h4 class="card-title">Name: {{ pet.pet_name }}</h4>
+    <h5 class="breed">{{ pet.breed_name }}</h5>
+    <p class="card-text">{{ pet.pet_desc }}</p>
+    <a href="#" class="btn btn-primary">More</a>
+  </div>
+</div>
