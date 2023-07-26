@@ -9,4 +9,11 @@ export interface IPet {
   pet_desc: string;
   image_path: string;
   image_name: string;
+  is_puppy: number;
+  has_microchip: number;
+  has_vaccination: number;
+  has_healthcertificate: number;
+  has_dewormed: number;
+  has_birthcertificate: number;
+  id: any;
 }

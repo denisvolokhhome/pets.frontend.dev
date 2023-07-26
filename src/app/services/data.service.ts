@@ -17,6 +17,7 @@ export class DataService {
   breeds: IBreed[] = [];
   locations: ILocation[] = [];
 
+
   getPetsByBreeder(id: any): Observable<IPet[]> {
     return this.http.get<IPet[]>(this.apiurl + '/pets/breeder/' + id).
     pipe(
@@ -24,11 +25,11 @@ export class DataService {
     );
   }
 
-  createPet(pet: any): Observable<IPet[]> {
-    return this.http.post<IPet[]>(this.apiurl + '/pets', pet).
-    pipe(
-      tap((pets) => (this.pets = pets))
-    );
+
+  createPet(pet: any): Observable<IPet> {
+    return this.http
+      .post<IPet>(this.apiurl + '/pets', pet)
+      .pipe(tap((pet) => this.pets.push(pet)));
   }
 
   getBreeds(): Observable<IBreed[]> {
