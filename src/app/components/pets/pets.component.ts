@@ -24,7 +24,6 @@ export class PetsComponent implements OnInit {
     this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
       this.pets = pets;
       // console.log(pets);
-
     });
   }
 

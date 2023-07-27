@@ -21,15 +21,20 @@ export class DataService {
   getPetsByBreeder(id: any): Observable<IPet[]> {
     return this.http.get<IPet[]>(this.apiurl + '/pets/breeder/' + id).
     pipe(
-      tap((pets) => (this.pets = pets))
+      tap(pets => this.pets = pets)
     );
   }
 
 
-  createPet(pet: any): Observable<IPet> {
+  createPet(pet: IPet): Observable<IPet> {
     return this.http
       .post<IPet>(this.apiurl + '/pets', pet)
-      .pipe(tap((pet) => this.pets.push(pet)));
+      .pipe(tap(pet => {
+        console.log(this.pets);
+        this.pets.push(pet)
+      }
+
+        ));
   }
 
   getBreeds(): Observable<IBreed[]> {

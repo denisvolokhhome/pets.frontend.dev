@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalService } from './../../services/modal.service';
 import { DataService } from './../../services/data.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
 declare var window: any;
@@ -19,6 +19,8 @@ export class PetAddComponent implements OnInit{
   breeds: IBreed[];
   locations: ILocation[];
 
+  @ViewChild('addPet') public addPetForm:NgForm;
+
   constructor(private DataService: DataService, private ModalService: ModalService )
   {}
 
@@ -26,6 +28,7 @@ export class PetAddComponent implements OnInit{
     this.formModal = new window.bootstrap.Modal(
       document.getElementById('mainModal')
     );
+
 
   this.DataService.getBreeds().subscribe(breeds => {
     this.breeds = breeds;
@@ -38,7 +41,7 @@ export class PetAddComponent implements OnInit{
 
 
   form = new FormGroup({
-    pet_name: new FormControl<string>('', [
+    name: new FormControl<string>('', [
       Validators.required
     ]),
     breed_name: new FormControl<string>('', [
@@ -62,8 +65,8 @@ export class PetAddComponent implements OnInit{
     ])
   });
 
-  get pet_name() {
-    return this.form.controls.pet_name as FormControl;
+  get name() {
+    return this.form.controls.name as FormControl;
   }
 
   get breed_name() {
@@ -87,16 +90,15 @@ export class PetAddComponent implements OnInit{
   }
 
   submit() {
-    console.log('Adding: ' + this.form.value.pet_name);
+    console.log('Adding: ' + this.form.value.name);
     this.DataService.createPet({
-      name: this.form.value.pet_name as string,
+      name: this.form.value.name as string,
       breed_name: this.form.value.breed_name as string,
       description: this.form.value.pet_desc as string,
-      date_of_birth: this.form.value.pet_dob as string,
+      pet_dob: this.form.value.pet_dob as string,
       gender: this.form.value.gender as string,
       weight: this.form.value.weight as string,
-      location_name: this.form.value.location_name,
-      image: 'https://i.pravatar.cc',
+      location_name: this.form.value.location_name as string,
       is_puppy: 0,
       has_microchip: 0,
       has_vaccination: 1,
@@ -105,6 +107,10 @@ export class PetAddComponent implements OnInit{
       has_birthcertificate: 1,
       id: localStorage.getItem('id')
     }).subscribe(() => {
+      this.addPetForm.form.reset();
+      Object.keys(this.addPetForm.form.controls).forEach(key =>{
+        this.addPetForm.form.controls[key].setErrors(null)
+      });
       this.formModal.hide();
     });
   }
