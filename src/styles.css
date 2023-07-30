@@ -121,3 +121,53 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mdc-text-field--filled:not(.mdc-text-field--disabled){
   background-color: unset;
 }
+
+
+.image-upload {
+  opacity: 0.0;
+
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+
+  /* IE 5-7 */
+  filter: alpha(opacity=0);
+
+  /* Netscape or and older firefox browsers */
+  -moz-opacity: 0.0;
+
+  /* older Safari browsers */
+  -khtml-opacity: 0.0;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height:100%;
+}
+.image-upload-container {
+  width: 100%;
+  height: 100%;
+  background: cadetblue;
+  position: relative;
+  overflow: hidden;
+}
+.image-upload-container .image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: .3s;
+  opacity: 0;
+  z-index: 1002;
+  cursor: pointer;
+  background-color: black;
+}
+.image-upload-container .image-overlay:hover {
+  opacity: .5;
+}
+.image-preview .image-upload-container {
+  z-index: 1001;
+}
