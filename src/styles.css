@@ -149,9 +149,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .image-upload-container {
   width: 100%;
   height: 100%;
-  background: cadetblue;
   position: relative;
   overflow: hidden;
+  border-radius: 5px;
 }
 .image-upload-container .image-overlay {
   position: absolute;
@@ -170,4 +170,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .image-preview .image-upload-container {
   z-index: 1001;
+}
+.image-upload-container .image-overlay input {
+  cursor: pointer;
+}
+.image-preview {
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f6f6f6;
+  border-radius: 5px;
+}
+
+.image-preview.with-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.image-preview.with-placeholder i{
+  font-size: 80px;
+}
+.image-preview.with-placeholder label{
+  font-size: 30px;
+}
+
+.image-preview.without-placeholder{
+
 }

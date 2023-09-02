@@ -7,6 +7,7 @@ export interface IPet {
   weight: string;
   location_name: string;
   description: string;
+  image?: File;
   image_path?: string;
   image_name?: string;
   is_puppy: number;

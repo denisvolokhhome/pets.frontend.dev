@@ -1,12 +1,31 @@
-<form #addPet="ngForm" [formGroup]="form" (ngSubmit)="submit()">
+<form
+  #addPet="ngForm"
+  enctype="multipart/form-data"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
   <div class="modal-body container-fluid">
     <div class="row mb-6">
       <div class="col-lg-6">
+        <!-- <span *ngIf="selectImage">{{ image_path }}</span> -->
         <div class="image-upload-container">
-          <div class="image-preview"></div>
-          <div class="image-overlay">
-            <input type="file" class="image-upload" />
+          <div
+            class="image-preview h-100"
+            [ngClass]="image ? 'without-placeholder' : 'with-placeholder'"
+            [style.background-image]="'url(' + image_path + ')'"
+          >
+            <i *ngIf="!image_path" class="bi bi-cloud-upload"></i>
+            <label *ngIf="!image_path">Upload image</label>
           </div>
+          <div class="image-overlay" (click)="selectImage.click()"></div>
+          <input
+            type="file"
+            id="image"
+            class="image-upload form-control"
+            (change)="readURL($event)"
+            formControlName="image"
+            #selectImage
+          />
         </div>
       </div>
       <div class="col-lg-6">

@@ -4,6 +4,8 @@ import { DataService } from './../../services/data.service';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
+import { Event } from '@angular/router';
+import { SafeUrl, DomSanitizer  } from '@angular/platform-browser';
 declare var window: any;
 
 
@@ -19,15 +21,35 @@ export class PetAddComponent implements OnInit{
   breeds: IBreed[];
   locations: ILocation[];
 
+  image_path: any ;
+
+
   @ViewChild('addPet') public addPetForm:NgForm;
 
-  constructor(private DataService: DataService, private ModalService: ModalService )
+  constructor(private DataService: DataService, private ModalService: ModalService, private sanitizer: DomSanitizer )
   {}
 
+  readURL(event: any): void {
+    this.image_path = window.URL.createObjectURL(event.target.files[0]);
+
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+
+      this.form.patchValue({
+        imageSource: file
+      });
+
+      console.log('file set');
+      console.log(file);
+    }
+
+  }
+
   ngOnInit(): void {
-    this.formModal = new window.bootstrap.Modal(
-      document.getElementById('mainModal')
-    );
+  this.formModal = new window.bootstrap.Modal(
+    document.getElementById('mainModal')
+  );
 
 
   this.DataService.getBreeds().subscribe(breeds => {
@@ -62,7 +84,9 @@ export class PetAddComponent implements OnInit{
     ]),
     location_name: new FormControl('', [
       Validators.required
-    ])
+    ]),
+    image: new FormControl(''),
+    imageSource: new FormControl('')
   });
 
   get name() {
@@ -88,10 +112,13 @@ export class PetAddComponent implements OnInit{
   get location_name() {
     return this.form.controls.location_name as FormControl;
   }
+  get image() {
+    return this.form.controls.image as FormControl;
+  }
 
   submit() {
-    console.log('Adding: ' + this.form.value.name);
-    this.DataService.createPet({
+
+     this.DataService.createPet({
       name: this.form.value.name as string,
       breed_name: this.form.value.breed_name as string,
       description: this.form.value.pet_desc as string,
@@ -99,6 +126,7 @@ export class PetAddComponent implements OnInit{
       gender: this.form.value.gender as string,
       weight: this.form.value.weight as string,
       location_name: this.form.value.location_name as string,
+      image: this.form.get('imageSource')?.value as any ,
       is_puppy: 0,
       has_microchip: 0,
       has_vaccination: 1,
@@ -106,13 +134,13 @@ export class PetAddComponent implements OnInit{
       has_dewormed: 1,
       has_birthcertificate: 1,
       id: localStorage.getItem('id')
-    }).subscribe(() => {
-      this.addPetForm.form.reset();
-      Object.keys(this.addPetForm.form.controls).forEach(key =>{
-        this.addPetForm.form.controls[key].setErrors(null)
-      });
-      this.formModal.hide();
-    });
+     }).subscribe(() => {
+       this.addPetForm.form.reset();
+       Object.keys(this.addPetForm.form.controls).forEach(key =>{
+         this.addPetForm.form.controls[key].setErrors(null)
+       });
+       this.formModal.hide();
+     });
   }
 
 }

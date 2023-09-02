@@ -10,7 +10,7 @@ import { ILocation } from '../models/location';
 })
 
 export class DataService {
-  constructor(private http: HttpClient) {}
+  constructor(public http: HttpClient) {}
   apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
   response: any;
   pets: IPet[] = [];
@@ -27,14 +27,30 @@ export class DataService {
 
 
   createPet(pet: IPet): Observable<IPet> {
-    return this.http
-      .post<IPet>(this.apiurl + '/pets', pet)
-      .pipe(tap(pet => {
-        console.log(this.pets);
-        this.pets.push(pet)
-      }
 
-        ));
+    let formData = new FormData();
+    formData.append("name", pet.name as string);
+    formData.append("breed_name", pet.breed_name as string);
+    formData.append("description", pet.description as string);
+    formData.append("pet_dob", pet.pet_dob as string);
+    formData.append("gender", pet.gender as string);
+    formData.append("weight", pet.weight as string);
+    formData.append("location_name", pet.location_name as string);
+    formData.append("image", pet.image as any);
+    formData.append("is_puppy", pet.is_puppy as any);
+    formData.append("has_microchip", pet.has_microchip as any);
+    formData.append("has_vaccination", pet.has_vaccination as any);
+    formData.append("has_healthcertificate", pet.has_healthcertificate as any);
+    formData.append("has_dewormed", pet.has_dewormed as any);
+    formData.append("has_birthcertificate", pet.has_birthcertificate as any);
+    formData.append("id", pet.id as any);
+
+    return this.http
+      .post<IPet>(this.apiurl + '/pets', formData)
+      .pipe(tap(pet => {
+        this.pets.push(pet)
+        }
+      ));
   }
 
   getBreeds(): Observable<IBreed[]> {
