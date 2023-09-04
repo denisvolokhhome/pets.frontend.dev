@@ -3,6 +3,7 @@ export interface IPet {
   name: string;
   breed_name: string;
   pet_dob: string;
+  date_of_birth?: string;
   gender: string;
   weight: string;
   location_name: string;

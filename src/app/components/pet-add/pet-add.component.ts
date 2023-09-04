@@ -4,8 +4,8 @@ import { DataService } from './../../services/data.service';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
-import { Event } from '@angular/router';
-import { SafeUrl, DomSanitizer  } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
+import { DomSanitizer  } from '@angular/platform-browser';
 declare var window: any;
 
 
@@ -20,14 +20,16 @@ export class PetAddComponent implements OnInit{
   formModal: any;
   breeds: IBreed[];
   locations: ILocation[];
-
+  maxDate: Date;
   image_path: any ;
 
 
   @ViewChild('addPet') public addPetForm:NgForm;
 
   constructor(private DataService: DataService, private ModalService: ModalService, private sanitizer: DomSanitizer )
-  {}
+  {
+    this.maxDate = new Date();
+  }
 
   readURL(event: any): void {
     this.image_path = window.URL.createObjectURL(event.target.files[0]);
@@ -73,6 +75,7 @@ export class PetAddComponent implements OnInit{
       Validators.minLength(0),
       Validators.maxLength(200),
     ]),
+    // TODO add date validation - date less or equel then today
     pet_dob: new FormControl('', [
       Validators.required
     ]),
@@ -118,11 +121,14 @@ export class PetAddComponent implements OnInit{
 
   submit() {
 
+    const dateSendingToServer = new DatePipe('en-US').transform(this.form.value.pet_dob, 'yyyy/MM/dd')
+    console.log(dateSendingToServer);
+
      this.DataService.createPet({
       name: this.form.value.name as string,
       breed_name: this.form.value.breed_name as string,
       description: this.form.value.pet_desc as string,
-      pet_dob: this.form.value.pet_dob as string,
+      pet_dob: dateSendingToServer as string,
       gender: this.form.value.gender as string,
       weight: this.form.value.weight as string,
       location_name: this.form.value.location_name as string,

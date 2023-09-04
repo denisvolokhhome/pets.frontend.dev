@@ -32,7 +32,7 @@ export class DataService {
     formData.append("name", pet.name as string);
     formData.append("breed_name", pet.breed_name as string);
     formData.append("description", pet.description as string);
-    formData.append("pet_dob", pet.pet_dob as string);
+    formData.append("date_of_birth", pet.pet_dob as string);
     formData.append("gender", pet.gender as string);
     formData.append("weight", pet.weight as string);
     formData.append("location_name", pet.location_name as string);
