@@ -1,17 +1,35 @@
 <div class="card shadow-sm">
-  <img
+  <div
     *ngIf="pet.image_path"
-    [src]="apiurl + '/' + pet.image_path"
     class="card-img-top"
-    alt="..."
-  />
+    [style.background-image]="'url(' + apiurl + '/' + pet.image_path + ')'"
+  >
+    <!-- <img [src]="apiurl + '/' + pet.image_path" class="card-img-top" alt="..." /> -->
+  </div>
   <div *ngIf="!pet.image_path" class="card-img-top no-image">
     <i class="bi bi-card-image"></i>
   </div>
 
-  <div class="card-body">
-    <h4 class="card-title">Name: {{ pet.name }}</h4>
-    <h5 class="breed">{{ pet.breed_name }}</h5>
+  <div class="card-body position-relative">
+    <div
+      class="pet-gender position-absolute shadow d-flex justify-content-center align-items-center"
+    >
+      <i
+        class="bi fs-3 fw-bold"
+        [ngClass]="
+          pet.gender == 'm'
+            ? 'bi-gender-male text-color-blue-400'
+            : 'bi-gender-female text-color-pink-400'
+        "
+      ></i>
+    </div>
+    <div
+      class="pet-name position-absolute d-flex justify-content-center align-items-center shadow"
+    >
+      <h4 class="card-title fs-4 text-capitalize">{{ pet.name }}</h4>
+    </div>
+    <h5 class="mt-2 breed">{{ pet.breed_name }}</h5>
+    <time datetime="">{{ pet.date_of_birth }}</time>
     <p class="card-text">{{ pet.description }}</p>
     <a href="#" class="btn btn-primary">More</a>
   </div>

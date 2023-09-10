@@ -89,7 +89,12 @@ export class PetAddComponent implements OnInit{
       Validators.required
     ]),
     image: new FormControl(''),
-    imageSource: new FormControl('')
+    imageSource: new FormControl(''),
+    has_vaccination: new FormControl(''),
+    has_microchip: new FormControl(''),
+    has_healthcertificate: new FormControl(''),
+    has_dewormed: new FormControl(''),
+    has_birthcertificate: new FormControl('')
   });
 
   get name() {
@@ -122,7 +127,6 @@ export class PetAddComponent implements OnInit{
   submit() {
 
     const dateSendingToServer = new DatePipe('en-US').transform(this.form.value.pet_dob, 'yyyy/MM/dd')
-    console.log(dateSendingToServer);
 
      this.DataService.createPet({
       name: this.form.value.name as string,
@@ -134,14 +138,15 @@ export class PetAddComponent implements OnInit{
       location_name: this.form.value.location_name as string,
       image: this.form.get('imageSource')?.value as any ,
       is_puppy: 0,
-      has_microchip: 0,
-      has_vaccination: 1,
-      has_healthcertificate: 1,
-      has_dewormed: 1,
-      has_birthcertificate: 1,
+      has_microchip: this.form.value.has_microchip ? 1 : 0 as number,
+      has_vaccination:  this.form.value.has_vaccination ? 1 : 0 as number,
+      has_healthcertificate: this.form.value.has_healthcertificate ? 1 : 0 as number,
+      has_dewormed: this.form.value.has_dewormed ? 1 : 0 as number,
+      has_birthcertificate: this.form.value.has_birthcertificate ? 1 : 0 as number,
       id: localStorage.getItem('id')
      }).subscribe(() => {
        this.addPetForm.form.reset();
+       this.image_path = '';
        Object.keys(this.addPetForm.form.controls).forEach(key =>{
          this.addPetForm.form.controls[key].setErrors(null)
        });

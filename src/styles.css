@@ -9,6 +9,8 @@
   --second-color: #F5F5F5;
   --accent-color-1: #651fff;
   --accent-color-2: #4caf50;
+  --male-color-1: #3d8bfd;
+  --female-color-1: #de5c9d;
 }
 
 .mat-mdc-radio-button.mat-accent{
@@ -101,7 +103,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --bs-btn-disabled-border-color: var(--first-color);
 }
 .card-img-top.no-image {
-  height: 140px;
+  height: 10rem;
   background-color: #d5d5d5;
   display: flex;
   align-items: center;
@@ -109,8 +111,30 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 85px;
   color: white;
 }
+.card-img-top {
+  width: 100%;
+  height: 10rem;
+  max-height: 10rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
 .card {
   border: none;
+}
+.card-body .pet-gender {
+  height: 3rem;
+  width: 3rem;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  top: -35px;
+  right: 10px;
+}
+.text-color-blue-400 {
+  color: var(--male-color-1);
+}
+.text-color-pink-400 {
+  color: var(--female-color-1);
 }
 .modal-backdrop{
   z-index: 500;
@@ -145,6 +169,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   right: 0;
   width: 100%;
   height:100%;
+}
+.pet-name * {
+  margin: 0!important;
+}
+.pet-name {
+  top: -35px;
+  left: 10px;
+  height: 3rem;
+  background-color: #f5f5f5;
+  padding: 0 1.5rem;
+  border-radius: 25px;
+}
+.bi.fw-bold:before{
+  font-weight: 700!important;
 }
 .image-upload-container {
   width: 100%;
@@ -197,6 +235,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 30px;
 }
 
-.image-preview.without-placeholder{
 
-}
