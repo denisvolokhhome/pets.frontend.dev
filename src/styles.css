@@ -236,7 +236,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .image-preview.with-placeholder label{
   font-size: 30px;
 }
-
+.page-search .form-control {
+  border-radius: 25px;
+}
 .card{
   z-index: 1;
  }
@@ -253,7 +255,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 2;
   opacity: 1;
   right: 0;
-  top: -10px
+  top: -10px;
 }
 .card .actions > div {
   border-radius: 50%;
