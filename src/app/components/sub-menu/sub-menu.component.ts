@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalService } from 'src/app/services/modal.service';
-declare var window: any;
+
 @Component({
   selector: 'app-sub-menu',
   templateUrl: './sub-menu.component.html',
@@ -15,12 +15,12 @@ export class SubMenuComponent implements OnInit {
   ) {}
 
   inputView: string = 'cards';
+  term: string = '';
 
+  @Output() searchingPet = new EventEmitter();
   @Output() buttonClicked = new EventEmitter();
+
   formModal: any;
-
-
-
 
   ngOnInit() {
 
@@ -32,6 +32,14 @@ export class SubMenuComponent implements OnInit {
     this.inputView = layout;
     this.buttonClicked.emit(this.inputView);
     console.log(this.inputView);
+  }
+
+
+  searchPets(searchText: any): void{
+    this.term = searchText.target.value;
+    this.searchingPet.emit(this.term);
+    console.log(this.term);
+
   }
 
   openModal(){

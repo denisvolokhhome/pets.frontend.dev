@@ -30,6 +30,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { SearchPetsPipe } from './pipes/search-pets.pipe';
 
 
 
@@ -51,6 +52,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     PetGridComponent,
     PetAddComponent,
     ModalComponent,
+    SearchPetsPipe,
   ],
   imports: [
     BrowserModule,

@@ -18,6 +18,7 @@ export class PetsComponent implements OnInit {
   pets: IPet [] = [];
   view: string = 'cards';
   title: string = 'Pets';
+  term: string = '';
 
   ngOnInit(): void {
 
@@ -32,6 +33,10 @@ export class PetsComponent implements OnInit {
     console.log('Layout change clicked.');
   }
 
+  searchPets(emittedSearch: string){
+    this.term = emittedSearch;
+    console.log('searching... ' + emittedSearch);
 
+  }
 
 }
