@@ -9,6 +9,7 @@ declare var window: any;
 })
 export class ModalComponent implements OnInit {
   @Input() title: string;
+  @Input() modalSize: string;
   formModal: any;
 
   constructor(public ModalService: ModalService) {}

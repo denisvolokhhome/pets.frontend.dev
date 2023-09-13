@@ -46,14 +46,29 @@
   </div>
 </div>
 
+<!-- TODO: Make single modal for different actions -->
 <div
   app-modal
   title="Add a pet"
+  modalSize="large"
   class="modal fade"
   tabindex="-1"
-  aria-labelledby="exampleModalLabel"
+  aria-labelledby="PetAddModal"
   aria-hidden="true"
   id="mainModal"
 >
   <app-pet-add></app-pet-add>
+</div>
+
+<div
+  app-modal
+  title="Delete a pet"
+  modalSize="small"
+  class="modal fade"
+  tabindex="-1"
+  aria-labelledby="PetDeleteModal"
+  aria-hidden="true"
+  id="deletePetModal"
+>
+  <app-pet-delete></app-pet-delete>
 </div>

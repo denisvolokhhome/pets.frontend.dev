@@ -31,6 +31,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { SearchPetsPipe } from './pipes/search-pets.pipe';
+import { PetDeleteComponent } from './components/pet-delete/pet-delete.component';
 
 
 
@@ -53,6 +54,7 @@ import { SearchPetsPipe } from './pipes/search-pets.pipe';
     PetAddComponent,
     ModalComponent,
     SearchPetsPipe,
+    PetDeleteComponent,
   ],
   imports: [
     BrowserModule,

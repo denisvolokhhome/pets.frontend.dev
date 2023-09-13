@@ -1,23 +1,27 @@
 <div class="card shadow-sm position-relative">
   <div class="actions position-absolute">
-    <div class="edit shadow d-flex justify-content-center align-items-center">
+    <button
+      class="edit shadow d-flex justify-content-center align-items-center"
+    >
       <i class="bi bi-pencil fs-5"></i>
-    </div>
+    </button>
 
-    <div
+    <button
       class="use-for-litter shadow d-flex justify-content-center align-items-center"
-    ></div>
-    <div class="delete shadow d-flex justify-content-center align-items-center">
+    ></button>
+    <button
+      class="delete shadow d-flex justify-content-center align-items-center"
+      data-bs-toggle="modal"
+      data-bs-target="#deletePetModal"
+    >
       <i class="bi bi-trash3 fs-5"></i>
-    </div>
+    </button>
   </div>
   <div
     *ngIf="pet.image_path"
     class="card-img-top"
     [style.background-image]="'url(' + apiurl + '/' + pet.image_path + ')'"
-  >
-    <!-- <img [src]="apiurl + '/' + pet.image_path" class="card-img-top" alt="..." /> -->
-  </div>
+  ></div>
   <div *ngIf="!pet.image_path" class="card-img-top no-image">
     <i class="bi bi-card-image"></i>
   </div>
