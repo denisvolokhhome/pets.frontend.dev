@@ -36,7 +36,7 @@ export class PetsComponent implements OnInit {
   searchPets(emittedSearch: string){
     this.term = emittedSearch;
     console.log('searching... ' + emittedSearch);
-
   }
+
 
 }

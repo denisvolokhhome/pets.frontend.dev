@@ -147,6 +147,7 @@ export class PetAddComponent implements OnInit{
      }).subscribe(() => {
        this.addPetForm.form.reset();
        this.image_path = '';
+
        Object.keys(this.addPetForm.form.controls).forEach(key =>{
          this.addPetForm.form.controls[key].setErrors(null)
        });

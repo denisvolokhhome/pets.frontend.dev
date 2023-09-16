@@ -10,7 +10,7 @@
       <div
         app-pet-card
         class="col-xxl-3 col-lg-4 mt-3"
-        *ngFor="let pet of pets | searchPets : term; let i = index"
+        *ngFor="let pet of DataService.pets | searchPets : term; let i = index"
         [pet]="pet"
       ></div>
     </div>
@@ -34,7 +34,10 @@
       <tbody class="bg-white dark:bg-slate-800">
         <tr
           app-pet-grid
-          *ngFor="let pet of pets; let i = index"
+          *ngFor="
+            let pet of DataService.pets | searchPets : term;
+            let i = index
+          "
           [pet]="pet"
         ></tr>
       </tbody>
@@ -59,7 +62,6 @@
 >
   <app-pet-add></app-pet-add>
 </div>
-
 <div
   app-modal
   title="Delete a pet"

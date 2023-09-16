@@ -8,9 +8,18 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class PetDeleteComponent {
 
+pet_id: string = '';
+
   form = new FormGroup({
     petId: new FormControl<string>('')
   });
+
+
+
+  deletePet(emittedPetId: string){
+    this.pet_id = emittedPetId;
+    console.log('deleting pet id... ' + emittedPetId);
+  }
 
 
   submit() {}

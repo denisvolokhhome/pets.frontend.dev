@@ -49,6 +49,7 @@ export class DataService {
       .post<IPet>(this.apiurl + '/pets', formData)
       .pipe(tap(pet => {
         this.pets.push(pet)
+        this.pets = [...this.pets]
         }
       ));
   }
