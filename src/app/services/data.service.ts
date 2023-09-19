@@ -54,6 +54,10 @@ export class DataService {
       ));
   }
 
+  deletePet(pet_id: string){
+    return this.http.post(this.apiurl + '/pets/delete', pet_id)
+  }
+
   getBreeds(): Observable<IBreed[]> {
     return this.http.get<IBreed[]>(this.apiurl + '/breeds').
     pipe(
@@ -67,11 +71,5 @@ export class DataService {
       tap((locations) => (this.locations = locations))
     );
   }
-
-  // create(product: IProduct): Observable<IProduct> {
-  //   return this.http
-  //     .post<IProduct>('https://fakestoreapi.com/products', product)
-  //     .pipe(tap((prod) => this.products.push(prod)));
-  // }
 
 }

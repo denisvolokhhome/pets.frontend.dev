@@ -50,7 +50,7 @@ export class PetAddComponent implements OnInit{
 
   ngOnInit(): void {
   this.formModal = new window.bootstrap.Modal(
-    document.getElementById('mainModal')
+    document.getElementById('addPetModal')
   );
 
 

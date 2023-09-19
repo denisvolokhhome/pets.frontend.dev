@@ -10,14 +10,18 @@ import { environment } from 'src/environments/environment';
 })
 export class PetCardComponent {
   @Input() pet: IPet;
-  @Output() PetId = new EventEmitter();
 
   apiurl = environment.API_URL;
   apihost = environment.API_HOST;
 
 
   deletePet(pet_id: any): void{
-    this.PetId.emit(pet_id);
-    console.log('pet id to delete: '+pet_id);
+
+    var deletePetModal = (<HTMLInputElement>document.getElementById('deletePetModal'));
+    let modalTitle = deletePetModal?.querySelector('.modal-body h2');
+    let modalBodyInput = <HTMLInputElement>deletePetModal?.querySelector('.modal-body input.pet_id');
+    modalTitle!.textContent = 'Are you sure you want to delete this pet?';
+    modalBodyInput.value = pet_id;
+
   }
 }
