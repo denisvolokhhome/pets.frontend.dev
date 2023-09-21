@@ -19,6 +19,7 @@ export class PetsComponent implements OnInit {
   view: string = 'cards';
   title: string = 'Pets';
   term: string = '';
+  petId: string = '';
 
   ngOnInit(): void {
 
@@ -38,5 +39,9 @@ export class PetsComponent implements OnInit {
     console.log('searching... ' + emittedSearch);
   }
 
+  deletePet(emittedPetId: any){
+    this.petId = emittedPetId;
+    console.log('deleting pet id: ' + emittedPetId);
+  }
 
 }

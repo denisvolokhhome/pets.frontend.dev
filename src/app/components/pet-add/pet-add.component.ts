@@ -37,13 +37,10 @@ export class PetAddComponent implements OnInit{
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
 
-
       this.form.patchValue({
         imageSource: file
       });
 
-      console.log('file set');
-      console.log(file);
     }
 
   }

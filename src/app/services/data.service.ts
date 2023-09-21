@@ -54,8 +54,11 @@ export class DataService {
       ));
   }
 
-  deletePet(pet_id: string){
+  deletePet(pet_id: any){
+    console.log(pet_id);
     return this.http.post(this.apiurl + '/pets/delete', pet_id)
+
+
   }
 
   getBreeds(): Observable<IBreed[]> {

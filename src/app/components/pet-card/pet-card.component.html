@@ -14,7 +14,7 @@
       data-bs-toggle="modal"
       data-bs-target="#deletePetModal"
       [attr.data-bs-pet_id]="pet.pet_id"
-      (click)="deletePet(pet.pet_id)"
+      (click)="deletePet($event)"
     >
       <i class="bi bi-trash3 fs-5"></i>
     </button>
