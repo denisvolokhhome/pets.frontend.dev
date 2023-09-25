@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -16,8 +16,9 @@ export class PetDeleteComponent implements OnInit{
     public modalService: ModalService
   ){}
 
-pet_id: string = '';
+@Input() pet_id: string = '';
 formModal: any;
+
 
 ngOnInit(): void {
   this.formModal = new window.bootstrap.Modal(
@@ -31,7 +32,7 @@ ngOnInit(): void {
 
 
   submit() {
-    console.log(this.form.value.petId);
+    console.log(this.pet_id);
 
     this.dataService.deletePet(this.form.value.petId as string).subscribe(()=> {
       this.formModal.hide();

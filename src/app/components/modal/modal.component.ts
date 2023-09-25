@@ -10,6 +10,8 @@ declare var window: any;
 export class ModalComponent implements OnInit {
   @Input() title: string;
   @Input() modalSize: string;
+  @Input() pet_id:string;
+
   formModal: any;
 
   constructor(public ModalService: ModalService) {}
