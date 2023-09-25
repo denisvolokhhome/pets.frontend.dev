@@ -2,6 +2,10 @@
   <div class="actions position-absolute">
     <button
       class="edit shadow d-flex justify-content-center align-items-center"
+      data-bs-toggle="modal"
+      data-bs-target="#editPetModal"
+      [attr.data-bs-pet_id]="pet.pet_id"
+      (click)="editPet($event)"
     >
       <i class="bi bi-pencil fs-5"></i>
     </button>

@@ -44,4 +44,9 @@ export class PetsComponent implements OnInit {
     console.log('deleting pet id: ' + emittedPetId);
   }
 
+  editPet(emittedPetId: any){
+    this.petId = emittedPetId;
+    console.log('editing pet id: ' + emittedPetId);
+  }
+
 }

@@ -10,6 +10,7 @@
       <div
         app-pet-card
         (deletingPet)="deletePet($event)"
+        (editingPet)="editPet($event)"
         class="col-xxl-3 col-lg-4 mt-3"
         *ngFor="let pet of DataService.pets | searchPets : term; let i = index"
         [pet]="pet"
@@ -74,4 +75,16 @@
   id="deletePetModal"
 >
   <app-pet-delete [pet_id]="petId"></app-pet-delete>
+</div>
+<div
+  app-modal
+  title="Edit"
+  modalSize="large"
+  class="modal fade"
+  tabindex="-1"
+  aria-labelledby="PetEditModal"
+  aria-hidden="true"
+  id="editPetModal"
+>
+  <app-pet-edit [pet_id]="petId"></app-pet-edit>
 </div>

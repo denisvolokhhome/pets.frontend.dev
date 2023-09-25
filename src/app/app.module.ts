@@ -32,6 +32,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { SearchPetsPipe } from './pipes/search-pets.pipe';
 import { PetDeleteComponent } from './components/pet-delete/pet-delete.component';
+import { PetEditComponent } from './components/pet-edit/pet-edit.component';
 
 
 
@@ -55,6 +56,7 @@ import { PetDeleteComponent } from './components/pet-delete/pet-delete.component
     ModalComponent,
     SearchPetsPipe,
     PetDeleteComponent,
+    PetEditComponent,
   ],
   imports: [
     BrowserModule,
