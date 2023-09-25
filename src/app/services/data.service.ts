@@ -16,6 +16,7 @@ export class DataService {
   pets: IPet[] = [];
   breeds: IBreed[] = [];
   locations: ILocation[] = [];
+  index: number = -1;
 
 
   getPetsByBreeder(id: any): Observable<IPet[]> {
@@ -55,8 +56,17 @@ export class DataService {
   }
 
   deletePet(pet_id: any){
-    console.log(pet_id);
-    return this.http.post(this.apiurl + '/pets/delete', pet_id)
+    let formData = new FormData();
+    formData.append("id", pet_id as string);
+    this.index =  this.pets.findIndex(x => x.pet_id === pet_id);
+    return this.http.post(this.apiurl + '/pets/delete', formData)
+    .pipe(tap(pet => {
+      if (this.index !== -1) {
+          this.pets.splice(this.index, 1);
+      }
+      this.pets = [...this.pets]
+      }
+    ));
 
 
   }

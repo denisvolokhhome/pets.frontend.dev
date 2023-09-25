@@ -34,7 +34,7 @@ ngOnInit(): void {
   submit() {
     console.log(this.pet_id);
 
-    this.dataService.deletePet(this.form.value.petId as string).subscribe(()=> {
+    this.dataService.deletePet(this.pet_id as string).subscribe(()=> {
       this.formModal.hide();
     })
   }
