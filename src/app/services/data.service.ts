@@ -1,9 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPet } from '../models/pet';
 import { Observable, delay, retry, tap } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,8 @@ import { ILocation } from '../models/location';
 
 export class DataService {
   constructor(public http: HttpClient) {}
-  apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
+  // apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
+  apiurl= environment.API_URL;
   response: any;
   pets: IPet[] = [];
   breeds: IBreed[] = [];
@@ -26,6 +28,13 @@ export class DataService {
     );
   }
 
+  getPet(id: any): Observable<IPet[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<IPet[]>(this.apiurl + '/pets/' + id, {headers: header})
+  }
 
   createPet(pet: IPet): Observable<IPet> {
 

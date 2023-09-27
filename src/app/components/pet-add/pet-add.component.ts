@@ -26,7 +26,7 @@ export class PetAddComponent implements OnInit{
 
   @ViewChild('addPet') public addPetForm:NgForm;
 
-  constructor(private DataService: DataService, private ModalService: ModalService, private sanitizer: DomSanitizer )
+  constructor(private DataService: DataService )
   {
     this.maxDate = new Date();
   }

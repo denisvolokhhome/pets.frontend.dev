@@ -1,1 +1,178 @@
-<p>pet-edit works!</p>
+<form
+  #addPet="ngForm"
+  enctype="multipart/form-data"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <div class="modal-body container-fluid">
+    <div class="row mb-6">
+      <div class="col-lg-6">
+        <!-- <span *ngIf="selectImage">{{ image_path }}</span> -->
+        <div class="image-upload-container">
+          <div
+            class="image-preview h-100"
+            [ngClass]="image_path ? 'without-placeholder' : 'with-placeholder'"
+            [style.background-image]="'url(' + image_path + ')'"
+          >
+            <i *ngIf="!image_path" class="bi bi-cloud-upload"></i>
+            <label *ngIf="!image_path">Upload image</label>
+          </div>
+          <div class="image-overlay" (click)="selectImage.click()"></div>
+          <input
+            type="file"
+            id="image"
+            class="image-upload form-control"
+            (change)="readURL($event)"
+            formControlName="image"
+            #selectImage
+          />
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+              <h1 *ngIf="pet">{{ pet.name }}</h1>
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Enter your pet name here</mat-label>
+                <input
+                  matInput
+                  [attr.value]="pet ? pet.name : ''"
+                  type="text"
+                  placeholder="Name"
+                  formControlName="name"
+                  appFocus
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-lg-12">
+              <mat-form-field class="w-100">
+                <mat-select required [formControl]="breed_name">
+                  <mat-option>-- None --</mat-option>
+                  <mat-option
+                    *ngFor="let breed of breeds"
+                    [value]="breed.name"
+                    >{{ breed.name }}</mat-option
+                  >
+                </mat-select>
+                <mat-label><mat-icon>pets</mat-icon> Choose breed</mat-label>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-12">
+              <mat-form-field class="w-100">
+                <mat-label>Date of birth</mat-label>
+                <input
+                  formControlName="pet_dob"
+                  matInput
+                  [max]="maxDate"
+                  [matDatepicker]="picker"
+                />
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-12 mt-4">
+              <mat-radio-group
+                formControlName="gender"
+                class="w-100 h-75 d-flex justify-content-around align-items-center"
+                aria-label="Gender"
+              >
+                <mat-radio-button value="m">Male</mat-radio-button>
+                <mat-radio-button value="f">Femail</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4"></div>
+    <div class="row mb-4">
+      <div class="col-lg-6">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Weight</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Weight"
+            formControlName="weight"
+            appFocus
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-lg-6">
+        <mat-form-field class="w-100">
+          <mat-select required [formControl]="location_name">
+            <mat-option>-- None --</mat-option>
+            <mat-option
+              *ngFor="let location of locations"
+              [value]="location.name"
+              >{{ location.name }}</mat-option
+            >
+          </mat-select>
+          <mat-label
+            ><mat-icon>location_on</mat-icon> Choose location</mat-label
+          >
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-12">
+        <mat-form-field class="w-100">
+          <mat-label>Pet description</mat-label>
+          <textarea
+            matInput
+            placeholder="Pet description"
+            formControlName="pet_desc"
+          >
+          </textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-3 col-xxl-3">
+        <p>
+          <mat-checkbox formControlName="has_vaccination"
+            >Vaccinated</mat-checkbox
+          >
+        </p>
+      </div>
+      <div class="col-lg-3 col-xxl-3">
+        <p>
+          <mat-checkbox formControlName="has_birthcertificate"
+            >Has Birth Certificate</mat-checkbox
+          >
+        </p>
+      </div>
+      <div class="col-lg-3 col-xxl-3">
+        <p>
+          <mat-checkbox formControlName="has_healthcertificate"
+            >Has Health Certificate</mat-checkbox
+          >
+        </p>
+      </div>
+      <div class="col-lg-3 col-xxl-3">
+        <p>
+          <mat-checkbox formControlName="has_dewormed">Dewormed</mat-checkbox>
+        </p>
+      </div>
+      <div class="col-lg-3 col-xxl-3">
+        <p>
+          <mat-checkbox formControlName="has_birthcertificate"
+            >Has birth certificate?</mat-checkbox
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>

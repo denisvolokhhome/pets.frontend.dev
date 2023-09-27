@@ -16,6 +16,7 @@ export class PetsComponent implements OnInit {
   ){}
 
   pets: IPet [] = [];
+  pet: IPet;
   view: string = 'cards';
   title: string = 'Pets';
   term: string = '';
@@ -25,7 +26,6 @@ export class PetsComponent implements OnInit {
 
     this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
       this.pets = pets;
-      // console.log(pets);
     });
   }
 
@@ -44,9 +44,8 @@ export class PetsComponent implements OnInit {
     console.log('deleting pet id: ' + emittedPetId);
   }
 
-  editPet(emittedPetId: any){
-    this.petId = emittedPetId;
-    console.log('editing pet id: ' + emittedPetId);
+  editPet(emittedPet: any){
+    this.pet = emittedPet;
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPet } from 'src/app/models/pet';
+import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 
 
@@ -9,6 +10,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./pet-card.component.css']
 })
 export class PetCardComponent {
+
+  constructor(private dataService: DataService){}
+
   @Input() pet: IPet;
   @Output() deletingPet = new EventEmitter();
   @Output() editingPet = new EventEmitter();
@@ -23,6 +27,9 @@ export class PetCardComponent {
   }
 
   editPet(pet_id: any): void{
-    this.editingPet.emit(this.pet.pet_id);
+    // this.dataService.getPet(this.pet.pet_id).subscribe(
+
+    // )
+    this.editingPet.emit(this.pet);
   }
 }
