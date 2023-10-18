@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPet } from 'src/app/models/pet';
-import { SharedService } from 'src/app/services/shared.service';
+import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 
 
@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class PetCardComponent {
 
-  constructor(private sharedService: SharedService){}
+  constructor(private dataService: DataService){}
 
   @Input() pet: IPet;
   @Output() deletingPet = new EventEmitter();
@@ -26,9 +26,10 @@ export class PetCardComponent {
     this.deletingPet.emit(this.pet.pet_id);
   }
 
-  editPet(pet_id: any){
-    this.editingPet.emit(this.pet);
-    this.sharedService.sendClickEvent();
-  }
+  editPet(pet_id: any): void{
+    // this.dataService.getPet(this.pet.pet_id).subscribe(
 
+    // )
+    this.editingPet.emit(this.pet);
+  }
 }

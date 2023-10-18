@@ -4,8 +4,6 @@ import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
 import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
-import { SharedService } from 'src/app/services/shared.service';
-import { Subscription } from 'rxjs';
 declare var window: any;
 
 @Component({
@@ -14,13 +12,9 @@ declare var window: any;
   styleUrls: ['./pet-edit.component.css']
 })
 export class PetEditComponent implements OnInit{
-  clickEventsubscription:Subscription;
 
-  constructor(private dataService: DataService, private sharedService: SharedService){
+  constructor(private DataService: DataService,){
     this.maxDate = new Date();
-    this.clickEventsubscription=this.sharedService.getClickEvent().subscribe(()=>{
-      console.log('clicked on edit for ' + this.pet.pet_id);
-    })
   }
 
   @Input() pet: IPet
@@ -31,8 +25,6 @@ export class PetEditComponent implements OnInit{
   maxDate: Date;
   formModal: any;
   image_path: any ;
-
-
 
   readURL(event: any): void {
     this.image_path = window.URL.createObjectURL(event.target.files[0]);
@@ -49,27 +41,20 @@ export class PetEditComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
-
       this.formModal = new window.bootstrap.Modal(
         document.getElementById('editPetModal')
       );
 
 
-      this.dataService.getBreeds().subscribe(breeds => {
+      this.DataService.getBreeds().subscribe(breeds => {
         this.breeds = breeds;
       })
 
-      this.dataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
+      this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
         this.locations = locations;
       })
 
-      // // <TODO> Need to set form input values
-      // if(this.pet){
-      //   this.dataService.getPet(this.pet.pet_id)?.subscribe((res) => {
-      //     this.form.controls.name.setValue('test2');
-      //   })
-      // }
+      // <TODO> Need to set form input values
 
     }
 
