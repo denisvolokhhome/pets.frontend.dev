@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+
 })
 export class LoginComponent {
   constructor(
@@ -20,10 +21,14 @@ export class LoginComponent {
 
   response: any;
   error: any;
+
   loginForm = this.builder.group({
-    email: this.builder.control('', Validators.required),
+    email: this.builder.control('', [Validators.required, Validators.email]),
     password: this.builder.control('', Validators.required),
   });
+
+
+  emailFormControl = new FormControl('', [Validators.required, Validators.email])
 
   ngOnInit() {
     this.service.IsLoggedIn().subscribe(
@@ -43,6 +48,7 @@ export class LoginComponent {
     );
   }
 
+
   proceedLogin() {
     if (this.loginForm.valid) {
       this.service.LoginUser(this.loginForm.value).subscribe(
@@ -59,6 +65,8 @@ export class LoginComponent {
           this.toastr.error('You entered wrong credentials', 'Error');
         }
       );
+    }else{
+      this.toastr.error('Please fill the form correctly', 'Error');
     }
   }
 }

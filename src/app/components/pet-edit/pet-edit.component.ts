@@ -58,6 +58,13 @@ export class PetEditComponent implements OnInit{
 
     }
 
+    modalClose(){
+      console.log('clicked');
+      this.formModal.reset
+      this.formModal.hide();
+    }
+
+
 
     form = new FormGroup({
       name: new FormControl<string>('', [

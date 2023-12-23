@@ -30,6 +30,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatCardModule} from '@angular/material/card';
 import { SearchPetsPipe } from './pipes/search-pets.pipe';
 import { PetDeleteComponent } from './components/pet-delete/pet-delete.component';
 import { PetEditComponent } from './components/pet-edit/pet-edit.component';
@@ -74,7 +75,8 @@ import { PetEditComponent } from './components/pet-edit/pet-edit.component';
     MatSelectModule,
     MatIconModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatCardModule,
 
   ],
   providers: [],
