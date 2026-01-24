@@ -32,8 +32,8 @@ export class LoginComponent {
 
   ngOnInit() {
     this.service.IsLoggedIn().subscribe(
-      (response) => {
-        if (response === true) {
+      (user) => {
+        if (user && user.id) {
           // User is authenticated
           console.log('User is authenticated');
           this.router.navigate(['dashboard']);
@@ -43,7 +43,7 @@ export class LoginComponent {
         }
       },
       (error: any) => {
-        console.error(error);
+        console.error('Not authenticated:', error);
       }
     );
   }
@@ -52,20 +52,35 @@ export class LoginComponent {
   proceedLogin() {
     if (this.loginForm.valid) {
       this.service.LoginUser(this.loginForm.value).subscribe(
-        (res) => {
+        (res: any) => {
           this.response = res;
 
-          console.log(this.response.token); //token
-          console.log(this.response.user.email); //email
-          this.router.navigate(['dashboard']);
-          localStorage.setItem('id_token', this.response.token);
-          localStorage.setItem('id', this.response.user.id);
+          // FastAPI returns access_token, not token
+          if (this.response.access_token) {
+            localStorage.setItem('id_token', this.response.access_token);
+            
+            // Fetch user info after successful login
+            this.service.IsLoggedIn().subscribe(
+              (userResponse: any) => {
+                if (userResponse && userResponse.id) {
+                  localStorage.setItem('id', userResponse.id);
+                  this.toastr.success('Login successful', 'Success');
+                  this.router.navigate(['dashboard']);
+                }
+              },
+              (err: HttpErrorResponse) => {
+                console.error('Error fetching user info:', err);
+                this.toastr.error('Error fetching user information', 'Error');
+              }
+            );
+          }
         },
         (err: HttpErrorResponse) => {
+          console.error('Login error:', err);
           this.toastr.error('You entered wrong credentials', 'Error');
         }
       );
-    }else{
+    } else {
       this.toastr.error('Please fill the form correctly', 'Error');
     }
   }
