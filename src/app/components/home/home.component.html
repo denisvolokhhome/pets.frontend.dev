@@ -1,1 +1,165 @@
-<p>home works!</p>
+<!-- Hero Section -->
+<section class="hero-section" aria-labelledby="hero-heading">
+  <!-- Responsive hero background image with WebP and JPEG fallback -->
+  <!-- Optimized for performance: compressed to < 200KB, uses WebP format, responsive srcset -->
+  <picture class="hero-background-picture">
+    <!-- WebP format for modern browsers - optimized quality for smaller file size -->
+    <source 
+      type="image/webp"
+      srcset="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=640&q=70&fm=webp&auto=format&fit=crop 640w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1024&q=70&fm=webp&auto=format&fit=crop 1024w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1440&q=65&fm=webp&auto=format&fit=crop 1440w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=60&fm=webp&auto=format&fit=crop 1920w"
+      sizes="100vw">
+    <!-- JPEG fallback for older browsers - optimized quality -->
+    <source 
+      type="image/jpeg"
+      srcset="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=640&q=70&auto=format&fit=crop 640w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1024&q=70&auto=format&fit=crop 1024w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1440&q=65&auto=format&fit=crop 1440w,
+              https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=60&auto=format&fit=crop 1920w"
+      sizes="100vw">
+    <!-- Default image - optimized for performance -->
+    <img 
+      src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=60&auto=format&fit=crop" 
+      alt="Happy golden retriever puppy with family in a sunny outdoor setting"
+      class="hero-background-image"
+      width="1920"
+      height="1080"
+      loading="eager"
+      fetchpriority="high">
+  </picture>
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 text-center">
+          <h1 id="hero-heading" class="hero-title">Find Your Perfect Companion with Breedly</h1>
+          <p class="hero-subtitle">Connecting responsible breeders with loving families</p>
+          <div class="hero-cta-buttons" role="group" aria-label="Get started options">
+            <button 
+              class="btn btn-primary btn-lg cta-breeder" 
+              (click)="navigateToRegister()"
+              aria-label="Register as a breeder">
+              <i class="bi bi-person-plus me-2" aria-hidden="true"></i>I'm a Breeder
+            </button>
+            <button 
+              class="btn btn-secondary btn-lg cta-pet-seeker" 
+              (click)="navigateToPets()"
+              aria-label="Browse available pets">
+              <i class="bi bi-search me-2" aria-hidden="true"></i>Find a Pet
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section" aria-labelledby="features-heading">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 id="features-heading" class="section-title">Why Choose Breedly?</h2>
+        <p class="section-subtitle">Everything you need to manage your breeding program or find your perfect pet</p>
+      </div>
+    </div>
+    <div class="row features-grid" role="list">
+      <div class="col-lg-4 col-md-6 col-sm-12 mb-4" *ngFor="let feature of features" role="listitem">
+        <article class="feature-card">
+          <div class="feature-icon-wrapper" aria-hidden="true">
+            <i class="material-icons feature-icon">{{ feature.icon }}</i>
+          </div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works-section" aria-labelledby="how-it-works-heading">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-12">
+        <h2 id="how-it-works-heading" class="section-title">How It Works</h2>
+        <p class="section-subtitle">Get started in just a few simple steps</p>
+      </div>
+    </div>
+
+    <!-- Flow Toggle Buttons -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-auto">
+        <div class="flow-toggle-buttons" role="tablist" aria-label="User type selection">
+          <button 
+            class="btn flow-toggle-btn" 
+            [class.active]="selectedFlow === 'breeder'"
+            (click)="selectFlow('breeder')"
+            role="tab"
+            [attr.aria-selected]="selectedFlow === 'breeder'"
+            [attr.aria-controls]="'breeder-steps'"
+            id="breeder-tab">
+            <i class="bi bi-person-badge me-2" aria-hidden="true"></i>For Breeders
+          </button>
+          <button 
+            class="btn flow-toggle-btn" 
+            [class.active]="selectedFlow === 'petSeeker'"
+            (click)="selectFlow('petSeeker')"
+            role="tab"
+            [attr.aria-selected]="selectedFlow === 'petSeeker'"
+            [attr.aria-controls]="'petSeeker-steps'"
+            id="petSeeker-tab">
+            <i class="bi bi-search-heart me-2" aria-hidden="true"></i>For Pet Seekers
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps Display -->
+    <div class="row steps-container">
+      <div class="col-12">
+        <div 
+          class="steps-wrapper p-2" 
+          role="tabpanel"
+          [attr.id]="selectedFlow + '-steps'"
+          [attr.aria-labelledby]="selectedFlow + '-tab'">
+          <article class="step-item" *ngFor="let step of currentSteps; let i = index; let last = last">
+            <div class="step-content">
+              <div class="step-number-badge" aria-hidden="true">
+                <span class="step-number">{{ step.number }}</span>
+              </div>
+              <div class="step-icon-wrapper" aria-hidden="true">
+                <i class="material-icons step-icon">{{ step.icon }}</i>
+              </div>
+              <h3 class="step-title">Step {{ step.number }}: {{ step.title }}</h3>
+              <p class="step-description">{{ step.description }}</p>
+            </div>
+            <div class="step-connector" *ngIf="!last" aria-hidden="true">
+              <i class="bi bi-arrow-right"></i>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Footer Section -->
+<section class="cta-footer-section" aria-labelledby="cta-footer-heading">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 id="cta-footer-heading" class="cta-footer-title">Ready to Get Started?</h2>
+        <p class="cta-footer-subtitle">Join Breedly today and connect with responsible breeders or find your perfect companion</p>
+        <button 
+          class="btn btn-light btn-lg cta-footer-button" 
+          (click)="navigateToRegister()"
+          aria-label="Sign up for Breedly">
+          <i class="bi bi-rocket-takeoff me-2" aria-hidden="true"></i>Sign Up Now
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

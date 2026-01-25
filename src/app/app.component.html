@@ -1,11 +1,12 @@
+<a href="#main-content" class="skip-to-main">Skip to main content</a>
 <app-top-menu></app-top-menu>
-<div class="main-wrapper d-flex flex-row h-100">
+<main id="main-content" class="main-wrapper d-flex flex-row h-100">
   <app-left-menu
     *ngIf="
       !(this.route == '/login' || this.route == '/register' || this.route == '')
     "
   ></app-left-menu>
-  <div class="content-wrapper w-100 me-3 mt-3">
-    <router-outlet ></router-outlet>
+  <div class="content-wrapper w-100 mx-3 mt-3">
+    <router-outlet></router-outlet>
   </div>
-</div>
+</main>
