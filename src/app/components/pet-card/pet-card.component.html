@@ -52,6 +52,13 @@
     </div>
     <h5 class="mt-2 breed">{{ pet.breed_name }}</h5>
     <time datetime="">{{ pet.date_of_birth }}</time>
+    
+    <!-- Location Info -->
+    <div class="location-info" *ngIf="pet.location_name">
+      <i class="bi bi-geo-alt-fill"></i>
+      <span>{{ pet.location_name }}</span>
+    </div>
+    
     <p class="card-text">{{ pet.description }}</p>
     
     <!-- Health Records -->

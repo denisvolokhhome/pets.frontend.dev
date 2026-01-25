@@ -1,3 +1,8 @@
+export interface IPetBasicInfo {
+  id: string;
+  name: string;
+}
+
 export interface ILocation {
   id?: number;
   user_id?: string;
@@ -11,4 +16,5 @@ export interface ILocation {
   country: string;
   zipcode: string;
   location_type: string;
+  pets?: IPetBasicInfo[];
 }

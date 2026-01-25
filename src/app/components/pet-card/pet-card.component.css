@@ -186,6 +186,37 @@ time {
   margin-bottom: 0.75rem;
 }
 
+/* Location Info */
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.08), rgba(255, 107, 107, 0.04));
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.location-info:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.12), rgba(255, 107, 107, 0.06));
+  border-color: rgba(255, 107, 107, 0.3);
+  transform: translateY(-1px);
+}
+
+.location-info i {
+  font-size: 0.9375rem;
+  color: var(--primary-color);
+}
+
+.location-info span {
+  line-height: 1.4;
+}
+
 /* Description */
 .card-text {
   font-size: 0.875rem;

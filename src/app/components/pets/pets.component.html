@@ -4,51 +4,199 @@
   class="w-100"
 ></app-sub-menu>
 
-<div class="container mt-3">
-  <div *ngIf="view == 'cards'">
-    <div *ngIf="DataService.pets" class="row">
-      <div
-        app-pet-card
-        (deletingPet)="deletePet($event)"
-        (editingPet)="editPet($event)"
-        class="col-xxl-3 col-lg-4 mt-3"
-        *ngFor="let pet of DataService.pets | searchPets : term; let i = index"
-        [pet]="pet"
-      ></div>
+<div class="pets-layout">
+  <!-- Filters Sidebar -->
+  <aside class="filters-sidebar">
+    <div class="filters-header">
+      <h3 class="filters-title">
+        <i class="bi bi-funnel-fill"></i>
+        Filters
+      </h3>
+      <button 
+        *ngIf="hasActiveFilters()" 
+        class="btn-clear-filters"
+        (click)="clearFilters()"
+        title="Clear all filters">
+        <i class="bi bi-x-circle-fill"></i>
+      </button>
     </div>
 
-    <div *ngIf="!DataService.pets">
-      <h1>Please add a pet</h1>
-    </div>
-  </div>
-  <div *ngIf="view == 'table'">
-    <table *ngIf="DataService.pets" class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Breed</th>
-          <th scope="col">Description</th>
-          <th scope="col">Date of Birth</th>
-          <th scope="col">Gender</th>
-          <th scope="col">Weight</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white dark:bg-slate-800">
-        <tr
-          app-pet-grid
-          *ngFor="
-            let pet of DataService.pets | searchPets : term;
-            let i = index
-          "
-          [pet]="pet"
-        ></tr>
-      </tbody>
-    </table>
+    <div class="filters-content">
+      <!-- Location Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="bi bi-geo-alt-fill"></i>
+          Location
+        </label>
+        <select 
+          class="filter-select"
+          [(ngModel)]="selectedLocation"
+          (change)="onLocationFilterChange(selectedLocation)">
+          <option value="">All</option>
+          <option *ngFor="let location of locations" [value]="location.name">
+            {{ location.name }}
+          </option>
+        </select>
+      </div>
 
-    <div *ngIf="!DataService.pets">
-      <h1>Please add a pet</h1>
+      <!-- Gender Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="bi bi-gender-ambiguous"></i>
+          Gender
+        </label>
+        <div class="gender-buttons">
+          <button 
+            class="gender-btn"
+            [class.active]="selectedGender === 'm'"
+            (click)="onGenderFilterChange(selectedGender === 'm' ? '' : 'm')">
+            <i class="bi bi-gender-male"></i>
+            Male
+          </button>
+          <button 
+            class="gender-btn"
+            [class.active]="selectedGender === 'f'"
+            (click)="onGenderFilterChange(selectedGender === 'f' ? '' : 'f')">
+            <i class="bi bi-gender-female"></i>
+            Female
+          </button>
+        </div>
+      </div>
+
+      <!-- Health Records Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="bi bi-heart-pulse-fill"></i>
+          Health Records
+        </label>
+        <div class="health-checkboxes">
+          <label class="health-checkbox" for="filter-vaccination">
+            <input 
+              type="checkbox"
+              id="filter-vaccination"
+              [(ngModel)]="selectedHealthFilters.vaccination"
+              (ngModelChange)="applyFilters()">
+            <span class="checkbox-label">
+              <i class="bi bi-shield-fill-check"></i>
+              Vaccination
+            </span>
+          </label>
+          <label class="health-checkbox" for="filter-microchip">
+            <input 
+              type="checkbox"
+              id="filter-microchip"
+              [(ngModel)]="selectedHealthFilters.microchip"
+              (ngModelChange)="applyFilters()">
+            <span class="checkbox-label">
+              <i class="bi bi-cpu"></i>
+              Microchip
+            </span>
+          </label>
+          <label class="health-checkbox" for="filter-healthcertificate">
+            <input 
+              type="checkbox"
+              id="filter-healthcertificate"
+              [(ngModel)]="selectedHealthFilters.healthcertificate"
+              (ngModelChange)="applyFilters()">
+            <span class="checkbox-label">
+              <i class="bi bi-file-medical"></i>
+              Health Cert
+            </span>
+          </label>
+          <label class="health-checkbox" for="filter-dewormed">
+            <input 
+              type="checkbox"
+              id="filter-dewormed"
+              [(ngModel)]="selectedHealthFilters.dewormed"
+              (ngModelChange)="applyFilters()">
+            <span class="checkbox-label">
+              <i class="bi bi-capsule"></i>
+              Dewormed
+            </span>
+          </label>
+          <label class="health-checkbox" for="filter-birthcertificate">
+            <input 
+              type="checkbox"
+              id="filter-birthcertificate"
+              [(ngModel)]="selectedHealthFilters.birthcertificate"
+              (ngModelChange)="applyFilters()">
+            <span class="checkbox-label">
+              <i class="bi bi-file-earmark-text"></i>
+              Birth Cert
+            </span>
+          </label>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <!-- Results Count -->
+    <div class="results-count" *ngIf="filteredPets">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>{{ filteredPets.length }} of {{ pets.length }}</span>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="pets-content">
+    <div class="container-fluid">
+      <div *ngIf="view == 'cards'">
+        <div *ngIf="filteredPets && filteredPets.length > 0" class="row">
+          <div
+            app-pet-card
+            (deletingPet)="deletePet($event)"
+            (editingPet)="editPet($event)"
+            class="col-xxl-4 col-lg-6 mt-3"
+            *ngFor="let pet of filteredPets | searchPets : term; let i = index"
+            [pet]="pet"
+          ></div>
+        </div>
+
+        <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
+          <i class="bi bi-search"></i>
+          <h3>No pets found</h3>
+          <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+      <div *ngIf="view == 'table'">
+        <table *ngIf="filteredPets && filteredPets.length > 0" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Breed</th>
+              <th scope="col">Description</th>
+              <th scope="col">Date of Birth</th>
+              <th scope="col">Gender</th>
+              <th scope="col">Weight</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-slate-800">
+            <tr
+              app-pet-grid
+              *ngFor="
+                let pet of filteredPets | searchPets : term;
+                let i = index
+              "
+              [pet]="pet"
+            ></tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
+          <i class="bi bi-search"></i>
+          <h3>No pets found</h3>
+          <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+            Clear Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
 
 <!-- TODO: Make single modal for different actions -->

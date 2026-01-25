@@ -153,6 +153,7 @@ export class BreedingLocationsComponent implements OnInit {
   cancelDelete(): void {
     this.locationToDelete = null;
     this.deleteErrorPets = [];
+    this.saveError = null;
     this.showDeleteConfirm = false;
   }
 
@@ -180,10 +181,14 @@ export class BreedingLocationsComponent implements OnInit {
         console.error('Error status:', error.status);
         console.error('Error.error:', error.error);
         console.error('Error.error.detail:', error.error?.detail);
+        console.error('Error.error.error_code:', error.error?.error_code);
         
         this.isLoading = false;
         
-        if (error.status === 409) {
+        // Check for 409 conflict - either by status code or error_code field
+        const is409Error = error.status === 409 || error.error?.error_code === 'HTTP_409';
+        
+        if (is409Error) {
           // Handle the enhanced error response with pet names
           const errorDetail = error.error?.detail;
           
@@ -205,27 +210,25 @@ export class BreedingLocationsComponent implements OnInit {
               console.log('this.saveError:', this.saveError);
               console.log('this.showDeleteConfirm:', this.showDeleteConfirm);
               
-              this.toastr.error(
-                `Cannot delete location. ${errorDetail.pet_count} pet(s) are using this location: ${errorDetail.pet_names.join(', ')}`,
-                'Cannot Delete',
-                { timeOut: 8000 }
-              );
+              // Don't show toast - the error alert with pet list is enough
               // Keep modal open - don't change showDeleteConfirm or locationToDelete
               return;
             }
           }
           
-          // Fallback
+          // Fallback for 409 without pet names
           this.saveError = 'Cannot delete location with associated pets';
           this.toastr.error(this.saveError, 'Error');
-        } else {
-          const errorMessage = error.error?.detail?.message || error.error?.detail || 'Failed to delete location';
-          this.saveError = errorMessage;
-          this.toastr.error(errorMessage, 'Error');
-          this.showDeleteConfirm = false;
-          this.locationToDelete = null;
-          this.deleteErrorPets = [];
+          return;
         }
+        
+        // Handle other errors
+        const errorMessage = error.error?.detail?.message || error.error?.detail || 'Failed to delete location';
+        this.saveError = errorMessage;
+        this.toastr.error(errorMessage, 'Error');
+        this.showDeleteConfirm = false;
+        this.locationToDelete = null;
+        this.deleteErrorPets = [];
       }
     });
   }

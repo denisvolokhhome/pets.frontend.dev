@@ -240,7 +240,7 @@ export class DataService {
       } else if (error.status === 404) {
         errorMessage = 'Resource not found.';
       } else if (error.status === 409) {
-        errorMessage = error.error?.detail || 'Conflict occurred.';
+        errorMessage = error.error?.detail?.message || error.error?.detail || 'Conflict occurred.';
       } else if (error.status === 413) {
         errorMessage = 'File size too large.';
       } else if (error.status === 422) {
@@ -252,7 +252,12 @@ export class DataService {
       }
     }
     
-    return throwError(() => new Error(errorMessage));
+    // Return the original HttpErrorResponse with the message attached
+    // This preserves all the error data including status, headers, etc.
+    return throwError(() => ({
+      ...error,
+      message: errorMessage
+    }));
   }
 
 }

@@ -14,20 +14,9 @@
     Location saved successfully!
   </div>
 
-  <!-- Error Message -->
+  <!-- Error Message (only for non-409 errors) -->
   <div class="alert alert-error" *ngIf="saveError && deleteErrorPets.length === 0">
     {{ saveError }}
-  </div>
-  
-  <!-- Error Message with Pet List -->
-  <div class="alert alert-error" *ngIf="saveError && deleteErrorPets.length > 0">
-    <div>
-      <strong>{{ saveError }}</strong>
-      <p class="pets-list-header">Pets using this location:</p>
-      <ul class="pets-list-inline">
-        <li *ngFor="let petName of deleteErrorPets">{{ petName }}</li>
-      </ul>
-    </div>
   </div>
 
   <!-- Loading Indicator -->
@@ -44,6 +33,19 @@
         <p *ngIf="location.address2">{{ location.address2 }}</p>
         <p>{{ location.city }}, {{ location.state }} {{ location.zipcode }}</p>
         <p>{{ location.country }}</p>
+        
+        <!-- Pet Names Section -->
+        <div class="pets-section" *ngIf="location.pets && location.pets.length > 0">
+          <div class="pets-label">
+            <i class="bi bi-heart-fill"></i>
+            Pets at this location:
+          </div>
+          <div class="pets-tags">
+            <span class="pet-tag" *ngFor="let pet of location.pets">
+              {{ pet.name }}
+            </span>
+          </div>
+        </div>
       </div>
       <div class="location-actions">
         <button class="btn btn-secondary" (click)="editLocation(location)">
