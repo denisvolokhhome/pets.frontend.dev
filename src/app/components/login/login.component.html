@@ -1,49 +1,52 @@
-<mat-card class="login-card">
-  <form class="" [formGroup]="loginForm" (ngSubmit)="proceedLogin()">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Login</mat-card-title>
-      <mat-card-subtitle
-        >Please enter your username and password</mat-card-subtitle
-      >
-    </mat-card-header>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <i class="material-icons">pets</i>
+      </div>
+      <h1 class="auth-title">Welcome Back to Breedly</h1>
+      <p class="auth-subtitle">Sign in to manage your breeding program</p>
+    </div>
 
-    <mat-card-content>
-      <mat-form-field class="example-full-width">
-        <mat-label>Email</mat-label>
+    <form [formGroup]="loginForm" (ngSubmit)="proceedLogin()" class="auth-form">
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
         <input
           type="email"
-          matInput
+          id="email"
+          class="form-control"
           formControlName="email"
-          placeholder="Ex. pat@example.com"
+          placeholder="your.email@example.com"
+          aria-label="Email address"
+          [class.is-invalid]="emailFormControl.hasError('email') && !emailFormControl.hasError('required')"
         />
-        <mat-error
-          *ngIf="
-            emailFormControl.hasError('email') &&
-            !emailFormControl.hasError('required')
-          "
-          >Please enter a valid email address</mat-error
-        >
-      </mat-form-field>
-      <mat-form-field class="example-full-width">
-        <mat-label>Password</mat-label>
+        <div class="invalid-feedback" *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          Please enter a valid email address
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
         <input
-          matInput
-          name="password"
           type="password"
+          id="password"
+          class="form-control"
           formControlName="password"
-          placeholder="******************"
+          placeholder="Enter your password"
+          aria-label="Password"
         />
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-fab extended color="primary" type="submit">Sign in</button>
-      <a
-        class="text-purple-500 hover:text-purple-900 transition-all px-3 focus:shadow-outline focus:outline-none my-4"
-        routerLink="/register"
-      >
-        Back to Sign Up
-      </a>
-    </mat-card-actions>
-  </form>
-</mat-card>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100 auth-submit-btn">
+        <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Sign In
+      </button>
+
+      <div class="auth-footer">
+        <p class="auth-footer-text">
+          Don't have an account? 
+          <a routerLink="/register" class="auth-link">Create one now</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

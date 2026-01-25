@@ -3,174 +3,217 @@
   enctype="multipart/form-data"
   [formGroup]="form"
   (ngSubmit)="submit()"
+  class="modern-pet-form"
 >
-  <div class="modal-body container-fluid">
-    <div class="row mb-6">
-      <div class="col-lg-6">
-        <!-- <span *ngIf="selectImage">{{ image_path }}</span> -->
-        <div class="image-upload-container">
-          <div
-            class="image-preview h-100"
-            [ngClass]="image_path ? 'without-placeholder' : 'with-placeholder'"
-            [style.background-image]="'url(' + image_path + ')'"
-          >
-            <i *ngIf="!image_path" class="bi bi-cloud-upload"></i>
-            <label *ngIf="!image_path">Upload image</label>
+  <div class="modal-body">
+    <div class="pet-form-header">
+      <div class="pet-form-icon">
+        <i class="material-icons">pets</i>
+      </div>
+      <h2 class="pet-form-title">Add a New Pet</h2>
+      <p class="pet-form-subtitle">Fill in the details about your pet</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Image Upload Section -->
+      <div class="col-lg-5">
+        <div class="form-section">
+          <label class="section-label">
+            <i class="bi bi-image me-2"></i>Pet Photo
+          </label>
+          <div class="image-upload-modern">
+            <div
+              class="image-preview-modern"
+              [class.has-image]="image_path"
+              [style.background-image]="image_path ? 'url(' + image_path + ')' : 'none'"
+            >
+              <div class="upload-placeholder" *ngIf="!image_path">
+                <i class="bi bi-cloud-upload"></i>
+                <span class="upload-text">Click to upload</span>
+                <span class="upload-hint">JPG, PNG up to 5MB</span>
+              </div>
+              <div class="image-overlay-modern" (click)="selectImage.click()">
+                <i class="bi bi-camera"></i>
+                <span>{{ image_path ? 'Change' : 'Upload' }}</span>
+              </div>
+            </div>
+            <input
+              type="file"
+              id="image"
+              class="d-none"
+              (change)="readURL($event)"
+              formControlName="image"
+              #selectImage
+              accept="image/*"
+            />
           </div>
-          <div class="image-overlay" (click)="selectImage.click()"></div>
-          <input
-            type="file"
-            id="image"
-            class="image-upload form-control"
-            (change)="readURL($event)"
-            formControlName="image"
-            #selectImage
-          />
         </div>
       </div>
-      <div class="col-lg-6">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-12">
-              <mat-form-field appearance="fill" class="w-100">
-                <mat-label>Enter your pet name here</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  placeholder="Name"
-                  formControlName="name"
-                  appFocus
-                />
-              </mat-form-field>
+
+      <!-- Pet Details Section -->
+      <div class="col-lg-7">
+        <div class="form-section">
+          <label class="section-label">
+            <i class="bi bi-info-circle me-2"></i>Basic Information
+          </label>
+          
+          <div class="form-group-modern">
+            <label for="petName" class="form-label-modern">Pet Name *</label>
+            <input
+              type="text"
+              id="petName"
+              class="form-control-modern"
+              placeholder="Enter your pet's name"
+              formControlName="name"
+              appFocus
+            />
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-modern">
+                <label for="breed" class="form-label-modern">Breed *</label>
+                <select
+                  id="breed"
+                  class="form-control-modern form-select-modern"
+                  [formControl]="breed_name"
+                >
+                  <option value="">Select a breed</option>
+                  <option *ngFor="let breed of breeds" [value]="breed.name">
+                    {{ breed.name }}
+                  </option>
+                </select>
+              </div>
             </div>
-            <div class="col-lg-12">
-              <mat-form-field class="w-100">
-                <mat-select required [formControl]="breed_name">
-                  <mat-option value="">-- Select a breed --</mat-option>
-                  <mat-option
-                    *ngFor="let breed of breeds"
-                    [value]="breed.name"
-                    >{{ breed.name }}</mat-option
-                  >
-                </mat-select>
-                <mat-label><mat-icon>pets</mat-icon> Choose breed</mat-label>
-              </mat-form-field>
-            </div>
-            <div class="col-lg-12">
-              <mat-form-field class="w-100">
-                <mat-label>Date of birth</mat-label>
+
+            <div class="col-md-6">
+              <div class="form-group-modern">
+                <label for="dob" class="form-label-modern">Date of Birth *</label>
                 <input
+                  type="date"
+                  id="dob"
+                  class="form-control-modern"
                   formControlName="pet_dob"
-                  matInput
-                  [max]="maxDate"
-                  [matDatepicker]="picker"
+                  [max]="maxDate | date:'yyyy-MM-dd'"
                 />
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </mat-form-field>
+              </div>
             </div>
-            <div class="col-lg-12 mt-4">
-              <mat-radio-group
-                formControlName="gender"
-                class="w-100 h-75 d-flex justify-content-around align-items-center"
-                aria-label="Gender"
-              >
-                <mat-radio-button value="m">Male</mat-radio-button>
-                <mat-radio-button value="f">Femail</mat-radio-button>
-              </mat-radio-group>
+          </div>
+
+          <div class="form-group-modern">
+            <label class="form-label-modern">Gender *</label>
+            <div class="gender-selector">
+              <label class="gender-option" [class.selected]="gender.value === 'm'">
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  value="m"
+                  class="d-none"
+                />
+                <i class="bi bi-gender-male"></i>
+                <span>Male</span>
+              </label>
+              <label class="gender-option" [class.selected]="gender.value === 'f'">
+                <input
+                  type="radio"
+                  formControlName="gender"
+                  value="f"
+                  class="d-none"
+                />
+                <i class="bi bi-gender-female"></i>
+                <span>Female</span>
+              </label>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row mb-4"></div>
-    <div class="row mb-4">
+    <!-- Additional Details -->
+    <div class="row g-4 mt-2">
       <div class="col-lg-6">
-        <mat-form-field appearance="fill" class="w-100">
-          <mat-label>Weight</mat-label>
+        <div class="form-group-modern">
+          <label for="weight" class="form-label-modern">Weight (kg) *</label>
           <input
-            matInput
             type="text"
-            placeholder="Weight"
+            id="weight"
+            class="form-control-modern"
+            placeholder="e.g., 25.5"
             formControlName="weight"
-            appFocus
           />
-        </mat-form-field>
+        </div>
       </div>
+
       <div class="col-lg-6">
-        <mat-form-field class="w-100">
-          <mat-select required [formControl]="location_name">
-            <mat-option value="">-- Select a location --</mat-option>
-            <mat-option
-              *ngFor="let location of locations"
-              [value]="location.name"
-              >{{ location.name }}</mat-option
-            >
-          </mat-select>
-          <mat-label
-            ><mat-icon>location_on</mat-icon> Choose location</mat-label
+        <div class="form-group-modern">
+          <label for="location" class="form-label-modern">Location *</label>
+          <select
+            id="location"
+            class="form-control-modern form-select-modern"
+            [formControl]="location_name"
           >
-        </mat-form-field>
+            <option value="">Select a location</option>
+            <option *ngFor="let location of locations" [value]="location.name">
+              {{ location.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
-    <div class="row mb-4">
-      <div class="col-lg-12">
-        <mat-form-field class="w-100">
-          <mat-label>Pet description</mat-label>
+
+    <div class="row g-4 mt-2">
+      <div class="col-12">
+        <div class="form-group-modern">
+          <label for="description" class="form-label-modern">Description</label>
           <textarea
-            matInput
-            placeholder="Pet description"
+            id="description"
+            class="form-control-modern"
+            rows="3"
+            placeholder="Tell us about your pet's personality, habits, or any special notes..."
             formControlName="pet_desc"
-          >
-          </textarea>
-        </mat-form-field>
+            maxlength="200"
+          ></textarea>
+          <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
+        </div>
       </div>
     </div>
-    <div class="row mb-4">
-      <div class="col-lg-3 col-xxl-3">
-        <p>
-          <mat-checkbox formControlName="has_vaccination"
-            >Vaccinated</mat-checkbox
-          >
-        </p>
-      </div>
-      <div class="col-lg-3 col-xxl-3">
-        <p>
-          <mat-checkbox formControlName="has_birthcertificate"
-            >Has Birth Certificate</mat-checkbox
-          >
-        </p>
-      </div>
-      <div class="col-lg-3 col-xxl-3">
-        <p>
-          <mat-checkbox formControlName="has_healthcertificate"
-            >Has Health Certificate</mat-checkbox
-          >
-        </p>
-      </div>
-      <div class="col-lg-3 col-xxl-3">
-        <p>
-          <mat-checkbox formControlName="has_dewormed">Dewormed</mat-checkbox>
-        </p>
-      </div>
-      <div class="col-lg-3 col-xxl-3">
-        <p>
-          <mat-checkbox formControlName="has_birthcertificate"
-            >Has birth certificate?</mat-checkbox
-          >
-        </p>
+
+    <!-- Health Records -->
+    <div class="form-section mt-4">
+      <label class="section-label">
+        <i class="bi bi-heart-pulse me-2"></i>Health Records
+      </label>
+      <div class="health-checkboxes">
+        <label class="checkbox-modern">
+          <input type="checkbox" formControlName="has_vaccination" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Vaccinated</span>
+        </label>
+        <label class="checkbox-modern">
+          <input type="checkbox" formControlName="has_birthcertificate" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Birth Certificate</span>
+        </label>
+        <label class="checkbox-modern">
+          <input type="checkbox" formControlName="has_healthcertificate" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Health Certificate</span>
+        </label>
+        <label class="checkbox-modern">
+          <input type="checkbox" formControlName="has_dewormed" />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-label">Dewormed</span>
+        </label>
       </div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-      Cancel
+
+  <div class="modal-footer-modern">
+    <button type="button" class="btn btn-secondary-modern" data-bs-dismiss="modal">
+      <i class="bi bi-x-lg me-2"></i>Cancel
     </button>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary-modern" [disabled]="!form.valid">
+      <i class="bi bi-check-lg me-2"></i>Save Pet
+    </button>
   </div>
 </form>

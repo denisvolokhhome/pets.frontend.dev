@@ -1,83 +1,94 @@
-<mat-card class="signup-card">
-  <form class="" [formGroup]="registerForm" (ngSubmit)="proceedRegistration()">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>Create an account</mat-card-title>
-      <mat-card-subtitle>Please fill the form below</mat-card-subtitle>
-    </mat-card-header>
+<div class="auth-container">
+  <div class="auth-card auth-card-wide">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <i class="material-icons">pets</i>
+      </div>
+      <h1 class="auth-title">Join Breedly Today</h1>
+      <p class="auth-subtitle">Create your account to start managing your breeding program</p>
+    </div>
 
-    <mat-card-content>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-            <mat-form-field class="w-100">
-              <mat-label>First Name</mat-label>
-              <input
-                type="text"
-                matInput
-                formControlName="firstName"
-                placeholder="Enter your first name"
-              />
-            </mat-form-field>
-          </div>
-          <div class="col-lg-6">
-            <mat-form-field class="w-100">
-              <mat-label>Last Name</mat-label>
-              <input
-                type="text"
-                matInput
-                formControlName="LastName"
-                placeholder="Enter your last name"
-              />
-            </mat-form-field>
+    <form [formGroup]="registerForm" (ngSubmit)="proceedRegistration()" class="auth-form">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              class="form-control"
+              formControlName="firstName"
+              placeholder="Enter your first name"
+              aria-label="First name"
+            />
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <mat-form-field class="w-100">
-              <mat-label>Email</mat-label>
-              <input
-                type="email"
-                matInput
-                formControlName="email"
-                placeholder="Ex. email@example.com"
-              />
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6">
-            <mat-form-field class="w-100">
-              <mat-label>Password</mat-label>
-              <input
-                matInput
-                id="password"
-                name="password"
-                type="password"
-                formControlName="password"
-                placeholder="******************"
-              />
-            </mat-form-field>
-          </div>
-          <div class="col-lg-6">
-            <mat-form-field class="w-100">
-              <mat-label>Password confirmaion</mat-label>
-              <input
-                matInput
-                id="password_confirmation"
-                name="password_confirmation"
-                type="password"
-                formControlName="password_confirmation"
-                placeholder="******************"
-              />
-            </mat-form-field>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              class="form-control"
+              formControlName="LastName"
+              placeholder="Enter your last name"
+              aria-label="Last name"
+            />
           </div>
         </div>
       </div>
-    </mat-card-content>
-    <mat-card-actions class="flex-column">
-      <button mat-fab extended color="primary" type="submit">Sign up</button>
-      <a class="my-4" routerLink="/login"> Back to login </a>
-    </mat-card-actions>
-  </form>
-</mat-card>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="your.email@example.com"
+          aria-label="Email address"
+        />
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Create a strong password"
+              aria-label="Password"
+            />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="password_confirmation" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              id="password_confirmation"
+              class="form-control"
+              formControlName="password_confirmation"
+              placeholder="Re-enter your password"
+              aria-label="Confirm password"
+            />
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg w-100 auth-submit-btn">
+        <i class="bi bi-person-plus me-2" aria-hidden="true"></i>Create Account
+      </button>
+
+      <div class="auth-footer">
+        <p class="auth-footer-text">
+          Already have an account? 
+          <a routerLink="/login" class="auth-link">Sign in here</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
