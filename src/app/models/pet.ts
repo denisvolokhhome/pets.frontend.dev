@@ -1,6 +1,7 @@
 export interface IPet {
   pet_id?: string;
   name: string;
+  breed_id?: number;
   breed_name: string;
   pet_dob: string;
   date_of_birth?: string;

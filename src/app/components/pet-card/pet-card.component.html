@@ -26,7 +26,7 @@
   <div
     *ngIf="pet.image_path"
     class="card-img-top"
-    [style.background-image]="'url(' + apiurl + '/' + pet.image_path + ')'"
+    [style.background-image]="'url(' + getImageUrl(pet.image_path) + ')'"
   ></div>
   <div *ngIf="!pet.image_path" class="card-img-top no-image">
     <i class="bi bi-card-image"></i>
@@ -53,6 +53,31 @@
     <h5 class="mt-2 breed">{{ pet.breed_name }}</h5>
     <time datetime="">{{ pet.date_of_birth }}</time>
     <p class="card-text">{{ pet.description }}</p>
+    
+    <!-- Health Records -->
+    <div class="health-records">
+      <div class="health-icon" *ngIf="pet.has_vaccination" title="Vaccinated">
+        <i class="bi bi-shield-fill-check"></i>
+        <span>Vacc</span>
+      </div>
+      <div class="health-icon" *ngIf="pet.has_microchip" title="Microchipped">
+        <i class="bi bi-cpu"></i>
+        <span>Chip</span>
+      </div>
+      <div class="health-icon" *ngIf="pet.has_healthcertificate" title="Health Certificate">
+        <i class="bi bi-file-medical"></i>
+        <span>Health</span>
+      </div>
+      <div class="health-icon" *ngIf="pet.has_dewormed" title="Dewormed">
+        <i class="bi bi-capsule"></i>
+        <span>Deworm</span>
+      </div>
+      <div class="health-icon" *ngIf="pet.has_birthcertificate" title="Birth Certificate">
+        <i class="bi bi-file-earmark-text"></i>
+        <span>Birth</span>
+      </div>
+    </div>
+    
     <a href="#" class="btn btn-primary">More</a>
   </div>
 </div>

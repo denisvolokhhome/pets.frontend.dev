@@ -1,0 +1,612 @@
+/* Modern Pet Form Styling */
+.modern-pet-form {
+  font-family: var(--font-secondary);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 200px);
+}
+
+.modern-pet-form .modal-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
+  padding: 1.5rem;
+}
+
+/* Form Header */
+.pet-form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #F3F4F6;
+}
+
+.pet-form-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.pet-form-icon i {
+  font-size: 32px;
+  color: white;
+}
+
+.pet-form-title {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.pet-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Section Labels */
+.form-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-label i {
+  color: var(--primary-color);
+}
+
+/* Modern Image Upload */
+.image-upload-modern {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+}
+
+.image-preview-modern {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border: 3px dashed #D1D5DB;
+  border-radius: var(--border-radius);
+  background-color: #F9FAFB;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.image-preview-modern:hover {
+  border-color: var(--primary-color);
+  background-color: #FEF2F2;
+}
+
+.image-preview-modern.has-image {
+  border-style: solid;
+  border-color: var(--primary-color);
+}
+
+/* Existing image with tint overlay */
+.image-preview-modern.has-existing-image {
+  border-style: solid;
+  border-color: #9CA3AF;
+  position: relative;
+}
+
+.image-preview-modern.has-existing-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(1px);
+  z-index: 1;
+}
+
+.image-preview-modern.has-existing-image:hover::before {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.image-preview-modern.has-existing-image .upload-placeholder,
+.image-preview-modern.has-existing-image .image-overlay-modern {
+  z-index: 2;
+  position: relative;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.upload-placeholder i {
+  font-size: 48px;
+  color: var(--primary-color);
+  opacity: 0.6;
+}
+
+.upload-text {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--dark-color);
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.image-overlay-modern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: var(--transition);
+  cursor: pointer;
+  color: white;
+}
+
+.image-preview-modern.has-image:hover .image-overlay-modern {
+  opacity: 1;
+}
+
+.image-overlay-modern i {
+  font-size: 32px;
+}
+
+.image-overlay-modern span {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Modern Form Controls */
+.form-group-modern {
+  margin-bottom: 1.25rem;
+}
+
+.form-label-modern {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control-modern {
+  font-family: var(--font-secondary);
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #E5E7EB;
+  border-radius: calc(var(--border-radius) * 0.75);
+  font-size: 0.9375rem;
+  transition: var(--transition);
+  background-color: #F9FAFB;
+}
+
+.form-control-modern:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.form-control-modern::placeholder {
+  color: #9CA3AF;
+}
+
+.form-select-modern {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
+textarea.form-control-modern {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Gender Selector */
+.gender-selector {
+  display: flex;
+  gap: 1rem;
+}
+
+.gender-option {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px solid #E5E7EB;
+  border-radius: calc(var(--border-radius) * 0.75);
+  background-color: #F9FAFB;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.gender-option:hover {
+  border-color: var(--primary-color);
+  background-color: #FEF2F2;
+}
+
+.gender-option.selected {
+  border-color: var(--primary-color);
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.gender-option i {
+  font-size: 28px;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.gender-option.selected i {
+  color: var(--primary-color);
+}
+
+.gender-option span {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--dark-color);
+}
+
+/* Health Checkboxes */
+.health-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.checkbox-modern {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid #E5E7EB;
+  border-radius: calc(var(--border-radius) * 0.75);
+  background-color: #F9FAFB;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.checkbox-modern:hover {
+  border-color: var(--primary-color);
+  background-color: #FEF2F2;
+}
+
+.checkbox-modern input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #D1D5DB;
+  border-radius: 4px;
+  background-color: white;
+  transition: var(--transition);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.checkbox-modern input[type="checkbox"]:checked ~ .checkbox-custom {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.checkbox-modern input[type="checkbox"]:checked ~ .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label {
+  font-family: var(--font-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dark-color);
+}
+
+/* Modal Footer */
+.modal-footer-modern {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 2px solid #F3F4F6;
+  background-color: #F9FAFB;
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.btn-secondary-modern,
+.btn-primary-modern {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: calc(var(--border-radius) * 0.75);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary-modern {
+  background-color: #E5E7EB;
+  color: var(--dark-color);
+}
+
+.btn-secondary-modern:hover {
+  background-color: #D1D5DB;
+}
+
+.btn-primary-modern {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary-modern:hover:not(:disabled) {
+  background-color: #FF5252;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+}
+
+.btn-primary-modern:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .image-upload-modern {
+    min-height: 240px;
+  }
+
+  .image-preview-modern {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 576px) {
+  .pet-form-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .pet-form-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .pet-form-icon i {
+    font-size: 28px;
+  }
+
+  .pet-form-title {
+    font-size: 1.25rem;
+  }
+
+  .gender-selector {
+    flex-direction: column;
+  }
+
+  .health-checkboxes {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer-modern {
+    flex-direction: column;
+  }
+
+  .btn-secondary-modern,
+  .btn-primary-modern {
+    width: 100%;
+  }
+}
+
+/* Autocomplete Styles */
+.autocomplete-wrapper {
+  position: relative;
+}
+
+.autocomplete-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid var(--primary-color);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: -1px;
+}
+
+.autocomplete-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9375rem;
+  color: var(--dark-color);
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.autocomplete-item:hover {
+  background: linear-gradient(90deg, rgba(255, 107, 107, 0.08) 0%, rgba(78, 205, 196, 0.08) 100%);
+  color: var(--primary-color);
+  padding-left: 1.25rem;
+}
+
+.autocomplete-item.no-results {
+  color: var(--text-secondary);
+  cursor: default;
+  text-align: center;
+  font-style: italic;
+}
+
+.autocomplete-item.no-results:hover {
+  background: transparent;
+  padding-left: 1rem;
+}
+
+/* Adjust input when dropdown is open */
+.autocomplete-wrapper input:focus {
+  border-radius: 8px 8px 0 0;
+}
+
+/* Custom scrollbar for dropdown */
+.autocomplete-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 0 0 8px 0;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #ff5252;
+}
+
+/* Read-only Fields */
+.read-only-field {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #F3F4F6;
+  border: 2px solid #E5E7EB;
+  border-radius: calc(var(--border-radius) * 0.75);
+  font-size: 0.9375rem;
+  color: var(--dark-color);
+  font-family: var(--font-secondary);
+}
+
+.read-only-field i {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.read-only-field span {
+  font-weight: 500;
+}
+
+/* Gender Display (Read-only) */
+.gender-display {
+  display: flex;
+  gap: 1rem;
+}
+
+.gender-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #F3F4F6;
+  border: 2px solid #E5E7EB;
+  border-radius: calc(var(--border-radius) * 0.75);
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.gender-badge.male {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #2563eb;
+}
+
+.gender-badge.female {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(219, 39, 119, 0.05));
+  border-color: rgba(236, 72, 153, 0.3);
+  color: #db2777;
+}
+
+.gender-badge i {
+  font-size: 1.25rem;
+}
+

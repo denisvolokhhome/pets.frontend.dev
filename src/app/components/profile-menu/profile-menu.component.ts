@@ -1,7 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 import { IUser } from '../../models/user';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile-menu',
@@ -11,9 +13,11 @@ import { IUser } from '../../models/user';
 export class ProfileMenuComponent implements OnInit {
   isOpen = false;
   user: IUser | null = null;
+  apihost = environment.API_HOST;
 
   constructor(
     private authService: AuthService,
+    private dataService: DataService,
     private router: Router
   ) {}
 
@@ -22,8 +26,8 @@ export class ProfileMenuComponent implements OnInit {
   }
 
   loadUserProfile(): void {
-    // Load user profile from auth service
-    this.authService.IsLoggedIn().subscribe({
+    // Load user profile from data service to get profile image
+    this.dataService.getCurrentUserProfile().subscribe({
       next: (user) => {
         this.user = user;
       },
@@ -31,6 +35,23 @@ export class ProfileMenuComponent implements OnInit {
         console.error('Failed to load user profile', err);
       }
     });
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    
+    // Remove 'app/' prefix if present (backend returns 'app/filename.png')
+    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
+    
+    // Use /storage endpoint instead of /api
+    return `${this.apihost}/storage/${cleanPath}`;
+  }
+
+  getProfileImageStyle(): string | null {
+    if (this.user?.profile_image_path) {
+      return `url(${this.getImageUrl(this.user.profile_image_path)})`;
+    }
+    return null;
   }
 
   toggleMenu(): void {

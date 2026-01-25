@@ -21,9 +21,19 @@ export class PetCardComponent {
   apiurl = environment.API_URL;
   apihost = environment.API_HOST;
 
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    
+    // Remove 'app/' prefix if present (backend returns 'app/filename.png')
+    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
+    
+    // Use /storage endpoint instead of /api
+    return `${this.apihost}/storage/${cleanPath}`;
+  }
+
 
   deletePet(pet_id: any): void{
-    this.deletingPet.emit(this.pet.pet_id);
+    this.deletingPet.emit(this.pet.id);
   }
 
   editPet(pet_id: any): void{

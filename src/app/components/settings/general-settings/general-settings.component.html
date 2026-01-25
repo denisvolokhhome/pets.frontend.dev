@@ -29,9 +29,11 @@
       
       <div class="image-upload-section">
         <div class="image-preview-wrapper">
-          <div *ngIf="imagePreview" class="image-preview has-image">
-            <img [src]="imagePreview" alt="Profile preview" />
-          </div>
+          <div 
+            *ngIf="imagePreview" 
+            class="image-preview has-image"
+            [style.background-image]="'url(' + imagePreview + ')'"
+          ></div>
           <div *ngIf="!imagePreview" class="image-preview no-image">
             <i class="bi bi-image"></i>
             <span>No image</span>

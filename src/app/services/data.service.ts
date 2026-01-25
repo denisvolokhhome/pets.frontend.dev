@@ -78,20 +78,60 @@ export class DataService {
       );
   }
 
-  deletePet(pet_id: any){
-    let formData = new FormData();
-    formData.append("id", pet_id as string);
-    this.index =  this.pets.findIndex(x => x.pet_id === pet_id);
-    return this.http.post(this.apiurl + '/pets/delete', formData)
-    .pipe(tap(pet => {
-      if (this.index !== -1) {
-          this.pets.splice(this.index, 1);
-      }
-      this.pets = [...this.pets]
-      }
-    ));
+  updatePet(petId: string, petData: any): Observable<IPet> {
+    let header = new HttpHeaders()
+      .set('Authorization', 'Bearer ' + localStorage.getItem('id_token'))
+      .set('Content-Type', 'application/json');
 
+    return this.http
+      .put<IPet>(this.apiurl + '/pets/' + petId, petData, { headers: header })
+      .pipe(
+        tap(updatedPet => {
+          // Update the pet in the local array
+          const index = this.pets.findIndex(p => p.id === petId);
+          if (index !== -1) {
+            this.pets[index] = updatedPet;
+            this.pets = [...this.pets];
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
 
+  uploadPetImage(petId: string, imageFile: File): Observable<IPet> {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    return this.http
+      .post<IPet>(this.apiurl + '/pets/' + petId + '/image', formData, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deletePet(pet_id: any): Observable<any> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    this.index = this.pets.findIndex(x => x.pet_id === pet_id || x.id === pet_id);
+    
+    return this.http.delete(this.apiurl + '/pets/' + pet_id, { headers: header })
+      .pipe(
+        tap(() => {
+          if (this.index !== -1) {
+            this.pets.splice(this.index, 1);
+          }
+          this.pets = [...this.pets]
+        }),
+        catchError(this.handleError)
+      );
   }
 
   getBreeds(): Observable<IBreed[]> {

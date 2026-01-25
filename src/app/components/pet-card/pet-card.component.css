@@ -256,3 +256,42 @@ time {
 .bi.fw-bold:before {
   font-weight: 700 !important;
 }
+
+/* Health Records */
+.health-records {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.health-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(78, 205, 196, 0.05));
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0d9488;
+  transition: all 0.2s ease;
+}
+
+.health-icon:hover {
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(78, 205, 196, 0.08));
+  border-color: rgba(78, 205, 196, 0.5);
+  transform: translateY(-1px);
+}
+
+.health-icon i {
+  font-size: 0.9rem;
+}
+
+.health-icon span {
+  line-height: 1;
+}

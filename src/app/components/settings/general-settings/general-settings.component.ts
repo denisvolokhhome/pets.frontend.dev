@@ -4,6 +4,7 @@ import { DataService } from '../../../services/data.service';
 import { AuthService } from '../../../services/auth.service';
 import { IUser } from '../../../models/user';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-general-settings',
@@ -20,6 +21,7 @@ export class GeneralSettingsComponent implements OnInit {
   saveSuccess: boolean = false;
   saveError: string | null = null;
   currentUser: IUser | null = null;
+  apihost = environment.API_HOST;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +39,16 @@ export class GeneralSettingsComponent implements OnInit {
     this.loadProfile();
   }
 
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    
+    // Remove 'app/' prefix if present (backend returns 'app/filename.png')
+    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
+    
+    // Use /storage endpoint instead of /api
+    return `${this.apihost}/storage/${cleanPath}`;
+  }
+
   loadProfile(): void {
     this.isLoading = true;
     this.dataService.getCurrentUserProfile().subscribe({
@@ -48,7 +60,7 @@ export class GeneralSettingsComponent implements OnInit {
         });
         this.tags = user.search_tags || [];
         if (user.profile_image_path) {
-          this.imagePreview = user.profile_image_path;
+          this.imagePreview = this.getImageUrl(user.profile_image_path);
         }
         this.isLoading = false;
       },
@@ -113,7 +125,7 @@ export class GeneralSettingsComponent implements OnInit {
     this.isLoading = true;
     this.dataService.uploadProfileImage(this.selectedFile).subscribe({
       next: (response) => {
-        this.imagePreview = response.profile_image_path;
+        this.imagePreview = this.getImageUrl(response.profile_image_path);
         this.selectedFile = null;
         this.isLoading = false;
         this.toastr.success('Profile image uploaded successfully', 'Success');

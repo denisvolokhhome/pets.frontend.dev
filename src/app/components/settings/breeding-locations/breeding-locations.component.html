@@ -15,8 +15,19 @@
   </div>
 
   <!-- Error Message -->
-  <div class="alert alert-error" *ngIf="saveError">
+  <div class="alert alert-error" *ngIf="saveError && deleteErrorPets.length === 0">
     {{ saveError }}
+  </div>
+  
+  <!-- Error Message with Pet List -->
+  <div class="alert alert-error" *ngIf="saveError && deleteErrorPets.length > 0">
+    <div>
+      <strong>{{ saveError }}</strong>
+      <p class="pets-list-header">Pets using this location:</p>
+      <ul class="pets-list-inline">
+        <li *ngFor="let petName of deleteErrorPets">{{ petName }}</li>
+      </ul>
+    </div>
   </div>
 
   <!-- Loading Indicator -->
@@ -159,15 +170,38 @@
   <!-- Delete Confirmation Modal -->
   <div class="modal-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <h3>Confirm Delete</h3>
-      <p>Are you sure you want to delete "{{ locationToDelete?.name }}"?</p>
-      <p class="warning">This action cannot be undone.</p>
+      <h3>{{ deleteErrorPets.length > 0 ? 'Cannot Delete Location' : 'Confirm Delete' }}</h3>
+      
+      <div *ngIf="deleteErrorPets.length === 0">
+        <p>Are you sure you want to delete "{{ locationToDelete?.name }}"?</p>
+        <p class="warning">This action cannot be undone.</p>
+      </div>
+      
+      <div *ngIf="deleteErrorPets.length > 0" class="error-content">
+        <div class="alert alert-error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          {{ saveError }}
+        </div>
+        <p class="pets-list-header">The following pets are using this location:</p>
+        <ul class="pets-list">
+          <li *ngFor="let petName of deleteErrorPets">
+            <i class="bi bi-dot"></i>
+            {{ petName }}
+          </li>
+        </ul>
+        <p class="help-text">Please reassign these pets to a different location before deleting this one.</p>
+      </div>
+      
       <div class="modal-actions">
-        <button class="btn btn-danger" (click)="deleteLocation()" [disabled]="isLoading">
+        <button 
+          *ngIf="deleteErrorPets.length === 0"
+          class="btn btn-danger" 
+          (click)="deleteLocation()" 
+          [disabled]="isLoading">
           {{ isLoading ? 'Deleting...' : 'Delete' }}
         </button>
         <button class="btn btn-secondary" (click)="cancelDelete()" [disabled]="isLoading">
-          Cancel
+          {{ deleteErrorPets.length > 0 ? 'Close' : 'Cancel' }}
         </button>
       </div>
     </div>

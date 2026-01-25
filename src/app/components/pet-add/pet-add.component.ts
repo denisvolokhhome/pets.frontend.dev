@@ -149,10 +149,9 @@ export class PetAddComponent implements OnInit{
   }
 
   submit() {
-
     const dateSendingToServer = new DatePipe('en-US').transform(this.form.value.pet_dob, 'yyyy-MM-dd')
 
-     this.DataService.createPet({
+    this.DataService.createPet({
       name: this.form.value.name as string,
       breed_name: this.form.value.breed_name as string,
       description: this.form.value.pet_desc as string,
@@ -160,7 +159,6 @@ export class PetAddComponent implements OnInit{
       gender: this.form.value.gender as string,
       weight: this.form.value.weight as string,
       location_name: this.form.value.location_name as string,
-      image: this.form.get('imageSource')?.value as any ,
       is_puppy: 0,
       has_microchip: this.form.value.has_microchip ? 1 : 0 as number,
       has_vaccination:  this.form.value.has_vaccination ? 1 : 0 as number,
@@ -168,15 +166,40 @@ export class PetAddComponent implements OnInit{
       has_dewormed: this.form.value.has_dewormed ? 1 : 0 as number,
       has_birthcertificate: this.form.value.has_birthcertificate ? 1 : 0 as number,
       id: localStorage.getItem('id')
-     }).subscribe(() => {
-       this.addPetForm.form.reset();
-       this.image_path = '';
+    }).subscribe({
+      next: (createdPet) => {
+        // If there's an image to upload, upload it separately
+        const imageFile = this.form.get('imageSource')?.value as any;
+        if (imageFile && imageFile instanceof File) {
+          this.DataService.uploadPetImage(createdPet.id, imageFile as File).subscribe({
+            next: () => {
+              this.resetForm();
+            },
+            error: (error) => {
+              console.error('Error uploading image:', error);
+              alert('Pet created but image upload failed. You can add the image later by editing the pet.');
+              this.resetForm();
+            }
+          });
+        } else {
+          this.resetForm();
+        }
+      },
+      error: (error) => {
+        console.error('Error creating pet:', error);
+        alert('Failed to create pet. Please try again.');
+      }
+    });
+  }
 
-       Object.keys(this.addPetForm.form.controls).forEach(key =>{
-         this.addPetForm.form.controls[key].setErrors(null)
-       });
-       this.formModal.hide();
-     });
+  resetForm() {
+    this.addPetForm.form.reset();
+    this.image_path = '';
+    Object.keys(this.addPetForm.form.controls).forEach(key => {
+      this.addPetForm.form.controls[key].setErrors(null)
+    });
+    this.formModal.hide();
+    window.location.reload();
   }
 
 }
