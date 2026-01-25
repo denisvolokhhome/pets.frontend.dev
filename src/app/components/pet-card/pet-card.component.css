@@ -1,57 +1,258 @@
-.card{
+.card {
   z-index: 1;
- }
-.card .actions {
-  opacity: 0;
-  transition: .3s;
-  right: -30px;
-  top: -10px;
-  display: inline-flex;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
 
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Action Buttons Container */
+.card .actions {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover .actions {
-  z-index: 2;
   opacity: 1;
-  right: 0;
-  top: -10px;
-}
-.card .actions > button {
-  border-radius: 50%;
-  margin: .2rem;
-  cursor: pointer;
-  height: 2rem;
-  width: 2rem;
-  background-color: #f6f6f6;
-  transition: .3s;
-  border: 1px solid #3d3d3d;
-}
-.card .actions > button.use-for-litter:hover{
-  background-color: var(--success-color-1 );
-}
-.card .actions > button.edit:hover{
-  background-color: var(--edit-color-1 );
-}
-.card .actions > button.delete:hover{
-  background-color: var(--delete-color-1 );
-}
-.card .actions > button.use-for-litter {
-  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg height='21px' width='21px' version='1.1' id='_x32_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23000000;%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st0' d='M439.464,51.073c-6.026-13.266-13.941-25.629-24.903-35.19c-10.87-9.57-25.367-15.967-41.621-15.882 c-8.295-0.008-16.126,1.739-23.054,4.751c-12.177,5.3-21.367,14.101-28.414,23.535c-10.548,14.212-16.793,30.254-20.759,42.912 c-1.055,3.409-1.933,6.548-2.667,9.375h-29.055h-25.984h-29.063c-2.127-8.312-5.612-19.578-11.063-31.308 c-5.291-11.232-12.354-22.954-22.658-32.532c-5.148-4.768-11.164-8.978-18.11-11.983c-6.929-3.012-14.768-4.76-23.055-4.751 c-16.16-0.085-30.615,6.135-41.519,15.544C81.093,29.739,71.313,49.95,64.908,70.853c-6.321,20.987-9.013,42.945-9.03,61.696 c0,28.591,0,140.346,0,181.932c0.008,15.916,2.482,35.696,8.616,56.894c9.215,31.713,26.785,66.751,57.671,94.21 c30.81,27.494,75.021,46.515,133.831,46.414c39.215,0.016,71.933-8.312,98.523-22.144c39.966-20.742,65.544-53.434,80.802-86.068 c15.3-32.768,20.759-65.485,20.801-89.307c0-41.586,0-153.341,0-181.932C456.046,108.355,451.397,77.688,439.464,51.073z M424.933,314.481c0.008,12.666-2.068,29.924-7.384,48.202c-7.966,27.493-23.106,57.148-48.414,79.569 c-25.375,22.397-60.844,38.456-113.139,38.557c-34.86-0.016-62.236-7.274-84.135-18.625c-32.768-17.029-53.789-43.67-66.945-71.636 c-8.506-18.059-13.468-36.625-15.907-52.675c12.565,0,34.473,0,64.574,0c49.443,0,82.405-47.586,82.405-86.042 c0-29.578,0-106.228,0-140.076h7.021h25.984h54.869l2.109-13.097c0.025-0.414,3.392-19.536,11.797-37.012 c4.144-8.735,9.528-16.92,15.469-22.27c2.979-2.7,6.033-4.725,9.198-6.076c3.198-1.35,6.523-2.102,10.506-2.11 c8.439,0.084,14.734,2.768,21.173,8.245c9.553,8.118,17.908,23.586,23.114,41.198c5.308,17.518,7.73,36.928,7.706,51.915 C424.933,161.14,424.933,272.895,424.933,314.481z'/%3E%3Cpath class='st0' d='M253.397,350.86c-22.963,0-41.579,13.975-41.579,31.19c0,17.224,18.616,31.19,41.579,31.19 c22.97,0,41.586-13.966,41.586-31.19C294.984,364.835,276.368,350.86,253.397,350.86z'/%3E%3Ccircle class='st0' cx='333.971' cy='249.502' r='25.992'/%3E%3Cpath class='st0' d='M372.08,71.039c-17.316,0-20.793,36.388-20.793,36.388h38.126C389.413,107.426,389.396,71.039,372.08,71.039z' /%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
+  transform: translateX(0);
 }
 
-.pet-name * {
-  margin: 0!important;
+/* Action Buttons */
+.card .actions > button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
 }
+
+.card .actions > button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card .actions > button:active {
+  transform: scale(0.95);
+}
+
+/* Edit Button */
+.card .actions > button.edit {
+  background: linear-gradient(135deg, #FFE66D 0%, #FFDB4D 100%);
+  color: #2C3E50;
+}
+
+.card .actions > button.edit:hover {
+  background: linear-gradient(135deg, #FFDB4D 0%, #FFD033 100%);
+}
+
+/* Use for Litter Button */
+.card .actions > button.use-for-litter {
+  background: linear-gradient(135deg, #95E1D3 0%, #7FD4C4 100%);
+  position: relative;
+}
+
+.card .actions > button.use-for-litter::before {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg height='21px' width='21px' version='1.1' id='_x32_' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 512 512' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%232C3E50;%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st0' d='M439.464,51.073c-6.026-13.266-13.941-25.629-24.903-35.19c-10.87-9.57-25.367-15.967-41.621-15.882 c-8.295-0.008-16.126,1.739-23.054,4.751c-12.177,5.3-21.367,14.101-28.414,23.535c-10.548,14.212-16.793,30.254-20.759,42.912 c-1.055,3.409-1.933,6.548-2.667,9.375h-29.055h-25.984h-29.063c-2.127-8.312-5.612-19.578-11.063-31.308 c-5.291-11.232-12.354-22.954-22.658-32.532c-5.148-4.768-11.164-8.978-18.11-11.983c-6.929-3.012-14.768-4.76-23.055-4.751 c-16.16-0.085-30.615,6.135-41.519,15.544C81.093,29.739,71.313,49.95,64.908,70.853c-6.321,20.987-9.013,42.945-9.03,61.696 c0,28.591,0,140.346,0,181.932c0.008,15.916,2.482,35.696,8.616,56.894c9.215,31.713,26.785,66.751,57.671,94.21 c30.81,27.494,75.021,46.515,133.831,46.414c39.215,0.016,71.933-8.312,98.523-22.144c39.966-20.742,65.544-53.434,80.802-86.068 c15.3-32.768,20.759-65.485,20.801-89.307c0-41.586,0-153.341,0-181.932C456.046,108.355,451.397,77.688,439.464,51.073z M424.933,314.481c0.008,12.666-2.068,29.924-7.384,48.202c-7.966,27.493-23.106,57.148-48.414,79.569 c-25.375,22.397-60.844,38.456-113.139,38.557c-34.86-0.016-62.236-7.274-84.135-18.625c-32.768-17.029-53.789-43.67-66.945-71.636 c-8.506-18.059-13.468-36.625-15.907-52.675c12.565,0,34.473,0,64.574,0c49.443,0,82.405-47.586,82.405-86.042 c0-29.578,0-106.228,0-140.076h7.021h25.984h54.869l2.109-13.097c0.025-0.414,3.392-19.536,11.797-37.012 c4.144-8.735,9.528-16.92,15.469-22.27c2.979-2.7,6.033-4.725,9.198-6.076c3.198-1.35,6.523-2.102,10.506-2.11 c8.439,0.084,14.734,2.768,21.173,8.245c9.553,8.118,17.908,23.586,23.114,41.198c5.308,17.518,7.73,36.928,7.706,51.915 C424.933,161.14,424.933,272.895,424.933,314.481z'/%3E%3Cpath class='st0' d='M253.397,350.86c-22.963,0-41.579,13.975-41.579,31.19c0,17.224,18.616,31.19,41.579,31.19 c22.97,0,41.586-13.966,41.586-31.19C294.984,364.835,276.368,350.86,253.397,350.86z'/%3E%3Ccircle class='st0' cx='333.971' cy='249.502' r='25.992'/%3E%3Cpath class='st0' d='M372.08,71.039c-17.316,0-20.793,36.388-20.793,36.388h38.126C389.413,107.426,389.396,71.039,372.08,71.039z' /%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.card .actions > button.use-for-litter:hover {
+  background: linear-gradient(135deg, #7FD4C4 0%, #6AC7B5 100%);
+}
+
+/* Delete Button */
+.card .actions > button.delete {
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%);
+  color: white;
+}
+
+.card .actions > button.delete:hover {
+  background: linear-gradient(135deg, #FF5252 0%, #FF3838 100%);
+}
+
+/* Card Image */
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.card-img-top.no-image {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.card-img-top.no-image i {
+  font-size: 4rem;
+}
+
+/* Card Body */
+.card-body {
+  padding: 1.5rem;
+  position: relative;
+  padding-top: 2.5rem;
+}
+
+/* Pet Name Badge */
 .pet-name {
-  top: -35px;
-  left: 10px;
-  height: 3rem;
-  background-color: #f5f5f5;
+  position: absolute;
+  top: -25px;
+  left: 16px;
+  height: 50px;
+  background: white;
   padding: 0 1.5rem;
   border-radius: 25px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 5;
 }
-.bi.fw-bold:before{
-  font-weight: 700!important;
+
+.pet-name h4 {
+  margin: 0 !important;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  text-transform: capitalize;
+}
+
+/* Gender Badge */
+.pet-gender {
+  position: absolute;
+  top: -25px;
+  right: 16px;
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.pet-gender i {
+  font-size: 1.75rem;
+}
+
+/* Breed */
+.breed {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
+}
+
+/* Date */
+time {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+/* Description */
+.card-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* More Button */
+.card-body .btn-primary {
+  width: 100%;
+  padding: 0.625rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: var(--primary-color);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.card-body .btn-primary:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.card-body .btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card .actions {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .card .actions > button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .pet-name {
+    height: 44px;
+    padding: 0 1.25rem;
+  }
+  
+  .pet-name h4 {
+    font-size: 1rem;
+  }
+  
+  .pet-gender {
+    width: 44px;
+    height: 44px;
+  }
+  
+  .pet-gender i {
+    font-size: 1.5rem;
+  }
+}
+
+/* Utility Classes */
+.bi.fw-bold:before {
+  font-weight: 700 !important;
 }

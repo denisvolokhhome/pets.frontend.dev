@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -16,7 +16,8 @@ export class LoginComponent {
     private builder: FormBuilder,
     private toastr: ToastrService,
     private service: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   response: any;
@@ -31,6 +32,17 @@ export class LoginComponent {
   emailFormControl = new FormControl('', [Validators.required, Validators.email])
 
   ngOnInit() {
+    // Check for email query parameter from registration redirect
+    this.route.queryParams.subscribe(params => {
+      if (params['email']) {
+        this.loginForm.patchValue({
+          email: params['email']
+        });
+        // Show a helpful message
+        this.toastr.info('Please enter your password to sign in.', 'Welcome Back');
+      }
+    });
+
     this.service.IsLoggedIn().subscribe(
       (user) => {
         if (user && user.id) {

@@ -38,31 +38,44 @@ export class DataService {
   }
 
   createPet(pet: IPet): Observable<IPet> {
+    // Convert breed name to breed ID
+    const breed = this.breeds.find(b => b.name === pet.breed_name);
+    const breedId = breed ? breed.id : null;
+    
+    // Convert location name to location ID
+    const location = this.locations.find(l => l.name === pet.location_name);
+    const locationId = location ? location.id : null;
 
-    let formData = new FormData();
-    formData.append("name", pet.name as string);
-    formData.append("breed_name", pet.breed_name as string);
-    formData.append("description", pet.description as string);
-    formData.append("date_of_birth", pet.pet_dob as string);
-    formData.append("gender", pet.gender as string);
-    formData.append("weight", pet.weight as string);
-    formData.append("location_name", pet.location_name as string);
-    formData.append("image", pet.image as any);
-    formData.append("is_puppy", pet.is_puppy as any);
-    formData.append("has_microchip", pet.has_microchip as any);
-    formData.append("has_vaccination", pet.has_vaccination as any);
-    formData.append("has_healthcertificate", pet.has_healthcertificate as any);
-    formData.append("has_dewormed", pet.has_dewormed as any);
-    formData.append("has_birthcertificate", pet.has_birthcertificate as any);
-    formData.append("id", pet.id as any);
+    // Prepare JSON payload for FastAPI
+    const petData = {
+      name: pet.name,
+      breed_id: breedId,
+      location_id: locationId,
+      date_of_birth: pet.pet_dob,
+      gender: pet.gender,
+      weight: parseFloat(pet.weight as string),
+      description: pet.description || null,
+      is_puppy: pet.is_puppy === 1,
+      has_microchip: pet.has_microchip === 1,
+      has_vaccination: pet.has_vaccination === 1,
+      has_healthcertificate: pet.has_healthcertificate === 1,
+      has_dewormed: pet.has_dewormed === 1,
+      has_birthcertificate: pet.has_birthcertificate === 1
+    };
+
+    let header = new HttpHeaders()
+      .set('Authorization', 'Bearer ' + localStorage.getItem('id_token'))
+      .set('Content-Type', 'application/json');
 
     return this.http
-      .post<IPet>(this.apiurl + '/pets', formData)
-      .pipe(tap(pet => {
-        this.pets.push(pet)
-        this.pets = [...this.pets]
-        }
-      ));
+      .post<IPet>(this.apiurl + '/pets', petData, { headers: header })
+      .pipe(
+        tap(pet => {
+          this.pets.push(pet);
+          this.pets = [...this.pets];
+        }),
+        catchError(this.handleError)
+      );
   }
 
   deletePet(pet_id: any){
@@ -88,10 +101,15 @@ export class DataService {
     );
   }
 
-  getLocations(id: any): Observable<ILocation[]> {
-    return this.http.get<ILocation[]>(this.apiurl + '/locations/'+ id).
+  getLocations(id?: any): Observable<ILocation[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<ILocation[]>(this.apiurl + '/locations', { headers: header }).
     pipe(
-      tap((locations) => (this.locations = locations))
+      tap((locations) => (this.locations = locations)),
+      catchError(this.handleError)
     );
   }
 

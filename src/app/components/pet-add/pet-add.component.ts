@@ -19,6 +19,8 @@ export class PetAddComponent implements OnInit{
 
   formModal: any;
   breeds: IBreed[];
+  filteredBreeds: IBreed[] = [];
+  showBreedDropdown: boolean = false;
   locations: ILocation[];
   maxDate: Date;
   image_path: any ;
@@ -53,11 +55,36 @@ export class PetAddComponent implements OnInit{
 
   this.DataService.getBreeds().subscribe(breeds => {
     this.breeds = breeds;
+    this.filteredBreeds = breeds;
   })
 
   this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
     this.locations = locations;
   })
+  }
+
+  filterBreeds(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+    if (!searchTerm) {
+      this.filteredBreeds = this.breeds;
+    } else {
+      this.filteredBreeds = this.breeds.filter(breed =>
+        breed.name.toLowerCase().includes(searchTerm)
+      );
+    }
+    this.showBreedDropdown = true;
+  }
+
+  selectBreed(breedName: string): void {
+    this.breed_name.setValue(breedName);
+    this.showBreedDropdown = false;
+  }
+
+  onBreedBlur(): void {
+    // Delay to allow click event on dropdown item to fire
+    setTimeout(() => {
+      this.showBreedDropdown = false;
+    }, 200);
   }
 
 
@@ -123,7 +150,7 @@ export class PetAddComponent implements OnInit{
 
   submit() {
 
-    const dateSendingToServer = new DatePipe('en-US').transform(this.form.value.pet_dob, 'yyyy/MM/dd')
+    const dateSendingToServer = new DatePipe('en-US').transform(this.form.value.pet_dob, 'yyyy-MM-dd')
 
      this.DataService.createPet({
       name: this.form.value.name as string,

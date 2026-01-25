@@ -73,16 +73,34 @@
             <div class="col-md-6">
               <div class="form-group-modern">
                 <label for="breed" class="form-label-modern">Breed *</label>
-                <select
-                  id="breed"
-                  class="form-control-modern form-select-modern"
-                  [formControl]="breed_name"
-                >
-                  <option value="">Select a breed</option>
-                  <option *ngFor="let breed of breeds" [value]="breed.name">
-                    {{ breed.name }}
-                  </option>
-                </select>
+                <div class="autocomplete-wrapper">
+                  <input
+                    type="text"
+                    id="breed"
+                    class="form-control-modern"
+                    placeholder="Start typing to search breeds..."
+                    [formControl]="breed_name"
+                    (input)="filterBreeds($event)"
+                    (focus)="showBreedDropdown = true"
+                    (blur)="onBreedBlur()"
+                    autocomplete="off"
+                  />
+                  <i class="bi bi-search autocomplete-icon"></i>
+                  <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length > 0">
+                    <div
+                      *ngFor="let breed of filteredBreeds"
+                      class="autocomplete-item"
+                      (mousedown)="selectBreed(breed.name)"
+                    >
+                      {{ breed.name }}
+                    </div>
+                  </div>
+                  <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length === 0 && breed_name.value">
+                    <div class="autocomplete-item no-results">
+                      No breeds found
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

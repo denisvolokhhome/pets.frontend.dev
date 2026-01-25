@@ -43,21 +43,18 @@ export class BreedingLocationsComponent implements OnInit {
 
   async loadLocations(): Promise<void> {
     this.isLoading = true;
-    const userId = localStorage.getItem('user_id');
-    if (userId) {
-      this.dataService.getLocations(userId).subscribe({
-        next: (locations) => {
-          this.locations = locations;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading locations:', error);
-          this.saveError = 'Failed to load locations';
-          this.toastr.error('Failed to load locations', 'Error');
-          this.isLoading = false;
-        }
-      });
-    }
+    this.dataService.getLocations().subscribe({
+      next: (locations) => {
+        this.locations = locations;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading locations:', error);
+        this.saveError = 'Failed to load locations';
+        this.toastr.error('Failed to load locations', 'Error');
+        this.isLoading = false;
+      }
+    });
   }
 
   showAddForm(): void {

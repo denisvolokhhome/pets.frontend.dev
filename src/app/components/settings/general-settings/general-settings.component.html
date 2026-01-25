@@ -1,141 +1,146 @@
 <div class="general-settings">
-  <h2 class="text-2xl font-bold mb-6">General Settings</h2>
+  <div class="settings-header">
+    <h2>General Settings</h2>
+    <p class="settings-subtitle">Manage your breedery profile and public information</p>
+  </div>
 
   <div *ngIf="isLoading" class="loading-spinner">
     <p>Loading...</p>
   </div>
 
   <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" *ngIf="!isLoading">
-    <!-- Breedery Name -->
-    <div class="form-group mb-4">
-      <label for="breedery_name" class="block text-sm font-medium mb-2">
-        Breedery Name
-      </label>
-      <input
-        type="text"
-        id="breedery_name"
-        formControlName="breedery_name"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Enter your breedery name"
-      />
+    <!-- Success/Error Messages -->
+    <div *ngIf="saveSuccess" class="alert alert-success">
+      <i class="bi bi-check-circle-fill"></i>
+      Profile saved successfully!
     </div>
 
-    <!-- Profile Image Upload -->
-    <div class="form-group mb-4">
-      <label class="block text-sm font-medium mb-2">
-        Profile Image
-      </label>
-      <div class="flex items-start gap-4">
-        <div class="image-preview-container">
-          <div
-            *ngIf="imagePreview"
-            class="w-32 h-32 border-2 border-gray-300 rounded-lg overflow-hidden"
-          >
-            <img
-              [src]="imagePreview"
-              alt="Profile preview"
-              class="w-full h-full object-cover"
-            />
+    <div *ngIf="saveError" class="alert alert-error">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      {{ saveError }}
+    </div>
+
+    <!-- Profile Image Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-image"></i>
+        <h3>Profile Image</h3>
+      </div>
+      
+      <div class="image-upload-section">
+        <div class="image-preview-wrapper">
+          <div *ngIf="imagePreview" class="image-preview has-image">
+            <img [src]="imagePreview" alt="Profile preview" />
           </div>
-          <div
-            *ngIf="!imagePreview"
-            class="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50"
-          >
-            <span class="text-gray-400 text-sm">No image</span>
+          <div *ngIf="!imagePreview" class="image-preview no-image">
+            <i class="bi bi-image"></i>
+            <span>No image</span>
           </div>
         </div>
-        <div class="flex-1">
+        
+        <div class="upload-controls">
+          <label for="profile_image" class="upload-label">
+            <i class="bi bi-upload"></i>
+            Choose Image
+          </label>
           <input
             type="file"
             id="profile_image"
             (change)="onFileSelected($event)"
             accept="image/jpeg,image/png,image/gif,image/webp"
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            class="file-input"
           />
-          <p class="text-xs text-gray-500 mt-1">
-            Allowed: JPEG, PNG, GIF, WebP. Max size: 5MB
+          <p class="upload-hint">
+            <i class="bi bi-info-circle"></i>
+            JPEG, PNG, GIF, WebP • Max 5MB
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Breedery Description -->
-    <div class="form-group mb-4">
-      <label for="breedery_description" class="block text-sm font-medium mb-2">
-        Breedery Description
-      </label>
-      <textarea
-        id="breedery_description"
-        formControlName="breedery_description"
-        rows="4"
-        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Describe your breedery..."
-      ></textarea>
+    <!-- Breedery Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-building"></i>
+        <h3>Breedery Information</h3>
+      </div>
+
+      <div class="form-group">
+        <label for="breedery_name">
+          <i class="bi bi-tag"></i>
+          Breedery Name
+        </label>
+        <input
+          type="text"
+          id="breedery_name"
+          formControlName="breedery_name"
+          placeholder="Enter your breedery name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="breedery_description">
+          <i class="bi bi-text-paragraph"></i>
+          Breedery Description
+        </label>
+        <textarea
+          id="breedery_description"
+          formControlName="breedery_description"
+          rows="4"
+          placeholder="Tell visitors about your breedery, breeding philosophy, and experience..."
+        ></textarea>
+      </div>
     </div>
 
-    <!-- Search Tags -->
-    <div class="form-group mb-6">
-      <label class="block text-sm font-medium mb-2">
-        Search Tags
-      </label>
-      <div class="flex gap-2 mb-2">
+    <!-- Search Tags Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-tags"></i>
+        <h3>Search Tags</h3>
+      </div>
+      
+      <p class="section-description">
+        Add tags to help people find your breedery (e.g., breed names, specialties, location)
+      </p>
+
+      <div class="tag-input-group">
         <input
           type="text"
           [(ngModel)]="tagInput"
           [ngModelOptions]="{standalone: true}"
           (keyup.enter)="addTag()"
-          class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Add a tag and press Enter"
+          placeholder="Type a tag and press Enter"
         />
-        <button
-          type="button"
-          (click)="addTag()"
-          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Add Tag
+        <button type="button" (click)="addTag()" class="btn-add-tag">
+          <i class="bi bi-plus-lg"></i>
+          Add
         </button>
       </div>
-      <div class="tags-container flex flex-wrap gap-2">
-        <span
-          *ngFor="let tag of tags; let i = index"
-          class="inline-flex items-center gap-1 px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm"
-        >
+
+      <div class="tags-display" *ngIf="tags.length > 0">
+        <span *ngFor="let tag of tags; let i = index" class="tag-badge">
           {{ tag }}
-          <button
-            type="button"
-            (click)="removeTag(i)"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          >
-            ×
+          <button type="button" (click)="removeTag(i)" class="tag-remove">
+            <i class="bi bi-x"></i>
           </button>
         </span>
       </div>
+      
+      <div *ngIf="tags.length === 0" class="empty-tags">
+        <i class="bi bi-tags"></i>
+        <p>No tags added yet. Add tags to improve discoverability.</p>
+      </div>
     </div>
 
-    <!-- Success Message -->
-    <div
-      *ngIf="saveSuccess"
-      class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md"
-    >
-      Profile saved successfully!
-    </div>
-
-    <!-- Error Message -->
-    <div
-      *ngIf="saveError"
-      class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md"
-    >
-      {{ saveError }}
-    </div>
-
-    <!-- Save Button -->
+    <!-- Form Actions -->
     <div class="form-actions">
       <button
         type="submit"
         [disabled]="isLoading || profileForm.invalid"
-        class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        class="btn-save"
       >
-        {{ isLoading ? 'Saving...' : 'Save Profile' }}
+        <i class="bi bi-check-lg"></i>
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
       </button>
     </div>
   </form>

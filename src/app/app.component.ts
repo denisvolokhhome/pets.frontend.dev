@@ -17,7 +17,9 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.router.events.subscribe((res) => {
-      this.route = this.loc.path();
+      // Get the path without query parameters
+      const fullPath = this.loc.path();
+      this.route = fullPath.split('?')[0]; // Remove query parameters
     });
   }
 }
