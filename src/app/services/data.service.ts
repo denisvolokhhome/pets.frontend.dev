@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPet } from '../models/pet';
-import { Observable, delay, retry, tap } from 'rxjs';
+import { Observable, delay, retry, tap, catchError, throwError } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
+import { IUser, IProfileImageResponse } from '../models/user';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -92,6 +93,108 @@ export class DataService {
     pipe(
       tap((locations) => (this.locations = locations))
     );
+  }
+
+  // User profile methods
+  getCurrentUserProfile(): Observable<IUser> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<IUser>(this.apiurl + '/users/me', { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateUserProfile(data: Partial<IUser>): Observable<IUser> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.patch<IUser>(this.apiurl + '/users/me', data, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  uploadProfileImage(file: File): Observable<IProfileImageResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post<IProfileImageResponse>(this.apiurl + '/users/me/profile-image', formData, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Location management methods
+  createLocation(location: Partial<ILocation>): Observable<ILocation> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post<ILocation>(this.apiurl + '/locations', location, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateLocation(id: number, location: Partial<ILocation>): Observable<ILocation> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.patch<ILocation>(this.apiurl + '/locations/' + id, location, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deleteLocation(id: number): Observable<void> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.delete<void>(this.apiurl + '/locations/' + id, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Error handling
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred';
+    
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      if (error.status === 401) {
+        errorMessage = 'Unauthorized. Please log in again.';
+      } else if (error.status === 403) {
+        errorMessage = 'Access forbidden.';
+      } else if (error.status === 404) {
+        errorMessage = 'Resource not found.';
+      } else if (error.status === 409) {
+        errorMessage = error.error?.detail || 'Conflict occurred.';
+      } else if (error.status === 413) {
+        errorMessage = 'File size too large.';
+      } else if (error.status === 422) {
+        errorMessage = error.error?.detail || 'Validation error.';
+      } else if (error.status >= 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else {
+        errorMessage = error.error?.detail || `Error: ${error.status} - ${error.statusText}`;
+      }
+    }
+    
+    return throwError(() => new Error(errorMessage));
   }
 
 }

@@ -1,0 +1,175 @@
+<div class="breeding-locations-container">
+  <div class="header">
+    <h2>Breeding Locations</h2>
+    <button 
+      class="btn btn-primary" 
+      (click)="showAddForm()"
+      *ngIf="!showForm">
+      Add Location
+    </button>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="saveSuccess">
+    Location saved successfully!
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="saveError">
+    {{ saveError }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading" *ngIf="isLoading && !showForm">
+    Loading locations...
+  </div>
+
+  <!-- Location List -->
+  <div class="locations-list" *ngIf="!showForm && !isLoading">
+    <div class="location-card" *ngFor="let location of locations">
+      <div class="location-info">
+        <h3>{{ location.name }}</h3>
+        <p>{{ location.address1 }}</p>
+        <p *ngIf="location.address2">{{ location.address2 }}</p>
+        <p>{{ location.city }}, {{ location.state }} {{ location.zipcode }}</p>
+        <p>{{ location.country }}</p>
+      </div>
+      <div class="location-actions">
+        <button class="btn btn-secondary" (click)="editLocation(location)">
+          Edit
+        </button>
+        <button class="btn btn-danger" (click)="confirmDelete(location)">
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="locations.length === 0">
+      <p>No breeding locations yet. Add your first location to get started.</p>
+    </div>
+  </div>
+
+  <!-- Location Form -->
+  <div class="location-form" *ngIf="showForm">
+    <h3>{{ editingLocation ? 'Edit Location' : 'Add New Location' }}</h3>
+    
+    <form [formGroup]="locationForm" (ngSubmit)="saveLocation()">
+      <div class="form-group">
+        <label for="name">Location Name *</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name"
+          [class.invalid]="isFieldInvalid('name')"
+          placeholder="e.g., Main Kennel">
+        <div class="error-message" *ngIf="isFieldInvalid('name')">
+          Location name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address1">Address Line 1 *</label>
+        <input 
+          type="text" 
+          id="address1" 
+          formControlName="address1"
+          [class.invalid]="isFieldInvalid('address1')"
+          placeholder="Street address">
+        <div class="error-message" *ngIf="isFieldInvalid('address1')">
+          Address is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="address2">Address Line 2</label>
+        <input 
+          type="text" 
+          id="address2" 
+          formControlName="address2"
+          placeholder="Apartment, suite, etc. (optional)">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City *</label>
+          <input 
+            type="text" 
+            id="city" 
+            formControlName="city"
+            [class.invalid]="isFieldInvalid('city')"
+            placeholder="City">
+          <div class="error-message" *ngIf="isFieldInvalid('city')">
+            City is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="state">State/Province *</label>
+          <input 
+            type="text" 
+            id="state" 
+            formControlName="state"
+            [class.invalid]="isFieldInvalid('state')"
+            placeholder="State">
+          <div class="error-message" *ngIf="isFieldInvalid('state')">
+            State is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="zipcode">Zip/Postal Code *</label>
+          <input 
+            type="text" 
+            id="zipcode" 
+            formControlName="zipcode"
+            [class.invalid]="isFieldInvalid('zipcode')"
+            placeholder="Zip code">
+          <div class="error-message" *ngIf="isFieldInvalid('zipcode')">
+            Zip code is required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="country">Country *</label>
+          <input 
+            type="text" 
+            id="country" 
+            formControlName="country"
+            [class.invalid]="isFieldInvalid('country')"
+            placeholder="Country">
+          <div class="error-message" *ngIf="isFieldInvalid('country')">
+            Country is required
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : 'Save Location' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cancelForm()" [disabled]="isLoading">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure you want to delete "{{ locationToDelete?.name }}"?</p>
+      <p class="warning">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-danger" (click)="deleteLocation()" [disabled]="isLoading">
+          {{ isLoading ? 'Deleting...' : 'Delete' }}
+        </button>
+        <button class="btn btn-secondary" (click)="cancelDelete()" [disabled]="isLoading">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

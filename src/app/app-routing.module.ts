@@ -8,6 +8,9 @@ import { AuthGuard } from './guard/auth.guard';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PetsComponent } from './components/pets/pets.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
+import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,12 +23,17 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard],
-  },
   { path: 'pets', component: PetsComponent, canActivate: [AuthGuard] },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'general', pathMatch: 'full' },
+      { path: 'general', component: GeneralSettingsComponent },
+      { path: 'locations', component: BreedingLocationsComponent }
+    ]
+  },
 ];
 
 @NgModule({

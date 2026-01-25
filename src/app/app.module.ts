@@ -34,6 +34,10 @@ import {MatCardModule} from '@angular/material/card';
 import { SearchPetsPipe } from './pipes/search-pets.pipe';
 import { PetDeleteComponent } from './components/pet-delete/pet-delete.component';
 import { PetEditComponent } from './components/pet-edit/pet-edit.component';
+import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
+import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
 
 
 
@@ -58,6 +62,10 @@ import { PetEditComponent } from './components/pet-edit/pet-edit.component';
     SearchPetsPipe,
     PetDeleteComponent,
     PetEditComponent,
+    ProfileMenuComponent,
+    SettingsComponent,
+    GeneralSettingsComponent,
+    BreedingLocationsComponent,
   ],
   imports: [
     BrowserModule,
