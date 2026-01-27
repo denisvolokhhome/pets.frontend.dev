@@ -1,6 +1,22 @@
-<div class="litters-layout">
-  <!-- Filters Sidebar -->
-  <aside class="filters-sidebar">
+<div class="litters-container">
+  <!-- Header Section -->
+  <header class="litters-header">
+    <h1 class="page-title">
+      <i class="bi bi-heart-fill"></i>
+      Litters Management
+    </h1>
+    <button 
+      class="fab-button fab-success"
+      (click)="addLitter()"
+      title="Add Litter">
+      <i class="bi bi-plus-circle"></i>
+    </button>
+  </header>
+
+  <!-- Content Section -->
+  <div class="litters-layout">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
       <div class="filters-header">
         <h3 class="filters-title">
           <i class="bi bi-funnel-fill"></i>
@@ -80,35 +96,21 @@
       </div>
     </aside>
 
-  <!-- Main Content -->
-  <main class="litters-content">
-    <!-- Top Bar with Title and Add Button -->
-    <div class="top-bar">
-      <h1 class="page-title">
-        <i class="bi bi-heart-fill"></i>
-        Litters Management
-      </h1>
-      <button 
-        class="fab-button fab-success"
-        (click)="addLitter()"
-        title="Add Litter">
-        <i class="bi bi-plus-circle"></i>
-      </button>
-    </div>
-
-    <!-- Litters Table -->
-    <div class="table-container">
-      <!-- Loading State -->
-      <div *ngIf="isLoading" class="loading-state">
-        <div class="spinner-container">
-          <svg class="spinner" viewBox="0 0 50 50">
-            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-          </svg>
+    <!-- Main Content -->
+    <main class="litters-content">
+      <!-- Table Container -->
+      <div class="table-container">
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-state">
+          <div class="spinner-container">
+            <svg class="spinner" viewBox="0 0 50 50">
+              <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+          </div>
+          <p>Loading litters...</p>
         </div>
-        <p>Loading litters...</p>
-      </div>
 
-      <table class="litters-table" *ngIf="!isLoading && filteredLitters && filteredLitters.length > 0">
+        <table class="litters-table" *ngIf="!isLoading && filteredLitters && filteredLitters.length > 0">
         <thead>
           <tr>
             <th>Created</th>
@@ -178,8 +180,9 @@
           Clear Filters
         </button>
       </div>
-    </div>
-  </main>
+      </div>
+    </main>
+  </div>
 </div>
 
 <!-- Litter Modal -->

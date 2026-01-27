@@ -1,8 +1,43 @@
+/* Container */
+.litters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: calc(100vh - 200px);
+}
+
+/* Header Section */
+.litters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.page-title i {
+  color: #ec4899;
+  font-size: 2rem;
+}
+
 /* Layout Container */
 .litters-layout {
   display: flex;
   gap: 1.5rem;
-  min-height: calc(100vh - 200px);
+  flex: 1;
 }
 
 /* Filters Sidebar */
@@ -15,8 +50,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
   height: fit-content;
-  position: sticky;
-  top: 20px;
   animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -35,29 +68,6 @@
 .litters-content {
   flex: 1;
   min-width: 0;
-}
-
-/* Top Bar with Title and Add Button */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0;
-}
-
-.page-title i {
-  color: #ec4899;
-  font-size: 2rem;
 }
 
 /* FAB Button */
@@ -231,6 +241,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
 }
 
 /* Litters Table */
@@ -447,24 +458,28 @@
 }
 
 @media (max-width: 992px) {
+  .litters-container {
+    gap: 1rem;
+  }
+
+  .litters-header {
+    padding: 1.25rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .page-title i {
+    font-size: 1.75rem;
+  }
+
   .litters-layout {
     flex-direction: column;
   }
 
   .filters-sidebar {
     width: 100%;
-    position: static;
-    margin-bottom: 1.5rem;
-  }
-
-  .litters-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .page-title {
-    font-size: 1.75rem;
   }
 }
 
