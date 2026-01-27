@@ -1,0 +1,67 @@
+<div class="pet-assignment-container">
+  <!-- First Parent Pet Selector -->
+  <div class="form-group">
+    <label for="firstPet">
+      First Parent Pet
+    </label>
+    <select
+      id="firstPet"
+      [(ngModel)]="selectedPet1"
+      (change)="onFirstPetSelected()"
+      [disabled]="isLoading || availablePets.length === 0"
+    >
+      <option value="">Select first parent pet...</option>
+      <option *ngFor="let pet of availablePets" [value]="pet.id">
+        {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
+      </option>
+    </select>
+    <p *ngIf="availablePets.length === 0" class="warning-text">
+      No adult pets available. Please add adult pets first.
+    </p>
+  </div>
+
+  <!-- Second Parent Pet Selector -->
+  <div class="form-group">
+    <label for="secondPet">
+      Second Parent Pet
+    </label>
+    <select
+      id="secondPet"
+      [(ngModel)]="selectedPet2"
+      [disabled]="!selectedPet1 || isLoading"
+    >
+      <option value="">Select second parent pet...</option>
+      <option *ngFor="let pet of filteredPets" [value]="pet.id">
+        {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
+      </option>
+    </select>
+    <p *ngIf="!selectedPet1">
+      Please select the first parent pet first
+    </p>
+  </div>
+
+  <!-- Error Message Display -->
+  <div *ngIf="locationError" class="error-message">
+    <svg fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+    </svg>
+    <span>{{ locationError }}</span>
+  </div>
+
+  <!-- Assign Pets Button -->
+  <div class="button-container">
+    <button
+      (click)="assignPets()"
+      [disabled]="!canAssign() || isLoading"
+    >
+      <span *ngIf="!isLoading">Assign Pets</span>
+      <span *ngIf="isLoading" class="loading-spinner">
+        <svg fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Assigning...
+      </span>
+    </button>
+  </div>
+</div>

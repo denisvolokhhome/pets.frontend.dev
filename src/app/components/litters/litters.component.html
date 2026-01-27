@@ -1,0 +1,190 @@
+<div class="litters-layout">
+  <!-- Filters Sidebar -->
+  <aside class="filters-sidebar">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <i class="bi bi-funnel-fill"></i>
+          Filters
+        </h3>
+        <button 
+          *ngIf="hasActiveFilters()" 
+          class="btn-clear-filters"
+          (click)="clearFilters()"
+          [disabled]="isLoading"
+          title="Clear all filters">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
+
+      <div class="filters-content">
+        <!-- Location Filter -->
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="bi bi-geo-alt-fill"></i>
+            Location
+          </label>
+          <select 
+            class="filter-select"
+            [(ngModel)]="selectedLocationId"
+            (change)="applyFilters()"
+            [disabled]="isLoading">
+            <option value="">All</option>
+            <option *ngFor="let location of locations" [value]="location.id">
+              {{ location.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="bi bi-flag-fill"></i>
+            Status
+          </label>
+          <select 
+            class="filter-select"
+            [(ngModel)]="selectedStatus"
+            (change)="applyFilters()"
+            [disabled]="isLoading">
+            <option value="">All Statuses</option>
+            <option [value]="LitterStatus.Started">Started</option>
+            <option [value]="LitterStatus.InProcess">In Process</option>
+            <option [value]="LitterStatus.Done">Done</option>
+            <option [value]="LitterStatus.Voided">Voided</option>
+          </select>
+        </div>
+
+        <!-- Breed Filter -->
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="bi bi-award-fill"></i>
+            Breed
+          </label>
+          <select 
+            class="filter-select"
+            [(ngModel)]="selectedBreedId"
+            (change)="applyFilters()"
+            [disabled]="isLoading">
+            <option value="">All Breeds</option>
+            <option *ngFor="let breed of breeds" [value]="breed.id">
+              {{ breed.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="results-count" *ngIf="filteredLitters && !isLoading">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>{{ filteredLitters.length }} of {{ litters.length }}</span>
+      </div>
+    </aside>
+
+  <!-- Main Content -->
+  <main class="litters-content">
+    <!-- Top Bar with Title and Add Button -->
+    <div class="top-bar">
+      <h1 class="page-title">
+        <i class="bi bi-heart-fill"></i>
+        Litters Management
+      </h1>
+      <button 
+        class="fab-button fab-success"
+        (click)="addLitter()"
+        title="Add Litter">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
+
+    <!-- Litters Table -->
+    <div class="table-container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner-container">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+        </div>
+        <p>Loading litters...</p>
+      </div>
+
+      <table class="litters-table" *ngIf="!isLoading && filteredLitters && filteredLitters.length > 0">
+        <thead>
+          <tr>
+            <th>Created</th>
+            <th>Modified</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Breed</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let litter of filteredLitters" [ngClass]="{'voided-row': litter.status === LitterStatus.Voided}">
+            <td>{{ formatDate(litter.created_at) }}</td>
+            <td>{{ formatDate(litter.updated_at) }}</td>
+            <td>
+              <span *ngIf="litter.description">{{ litter.description }}</span>
+              <span *ngIf="!litter.description" class="text-muted">-</span>
+            </td>
+            <td>{{ getLocationName(litter) }}</td>
+            <td>{{ getBreedDisplay(litter) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusBadgeClass(litter.status)">
+                {{ litter.status }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button 
+                class="btn-action btn-view" 
+                (click)="viewLitter(litter)"
+                title="View litter details">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+              <button 
+                class="btn-action btn-edit" 
+                (click)="updateLitter(litter)"
+                title="Update litter"
+                [disabled]="litter.status === LitterStatus.Voided || isVoiding[litter.id]">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+              <button 
+                class="btn-action btn-void" 
+                (click)="voidLitter(litter)"
+                title="Void litter"
+                [disabled]="litter.status === LitterStatus.Voided || isVoiding[litter.id]">
+                <span *ngIf="!isVoiding[litter.id]">
+                  <i class="bi bi-x-circle-fill"></i>
+                </span>
+                <span *ngIf="isVoiding[litter.id]" class="spinner-small">
+                  <svg class="spinner-icon" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                  </svg>
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && (!filteredLitters || filteredLitters.length === 0)" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No litters found</h3>
+        <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+        <p *ngIf="!hasActiveFilters()">Click the + button above to create your first litter.</p>
+        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Litter Modal -->
+<app-litter-modal
+  [mode]="modalMode"
+  [litter]="selectedLitter"
+  (litterSaved)="onLitterSaved($event)">
+</app-litter-modal>

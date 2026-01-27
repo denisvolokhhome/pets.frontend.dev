@@ -8,6 +8,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PetsComponent } from './components/pets/pets.component';
+import { LittersComponent } from './components/litters/litters.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'pets', component: PetsComponent, canActivate: [AuthGuard] },
+  { path: 'litters', component: LittersComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',
     component: SettingsComponent,

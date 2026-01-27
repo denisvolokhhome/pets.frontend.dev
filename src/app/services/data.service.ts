@@ -5,6 +5,7 @@ import { Observable, delay, retry, tap, catchError, throwError } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
 import { IUser, IProfileImageResponse } from '../models/user';
+import { ILitter, ILitterFilter, IPuppyInput } from '../models/litter';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -219,6 +220,119 @@ export class DataService {
       'Bearer ' + localStorage.getItem('id_token')
     );
     return this.http.delete<void>(this.apiurl + '/locations/' + id, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // Litter management methods
+  getLitters(filters?: ILitterFilter): Observable<ILitter[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    // Build query parameters from filters
+    let params: any = {};
+    if (filters) {
+      if (filters.location_id) params.location_id = filters.location_id;
+      if (filters.status) params.status = filters.status;
+      if (filters.breed_id) params.breed_id = filters.breed_id;
+    }
+    
+    return this.http.get<ILitter[]>(this.apiurl + '/litters', { 
+      headers: header,
+      params: params
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getLitter(id: string): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<ILitter>(this.apiurl + '/litters/' + id, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  createLitter(description?: string): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    const litterData = {
+      description: description || null
+    };
+    
+    return this.http.post<ILitter>(this.apiurl + '/litters', litterData, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  updateLitter(id: string, data: any): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.put<ILitter>(this.apiurl + '/litters/' + id, data, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  assignPets(litterId: string, petIds: string[]): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    const assignmentData = {
+      pet_ids: petIds
+    };
+    
+    return this.http.post<ILitter>(
+      this.apiurl + '/litters/' + litterId + '/assign-pets', 
+      assignmentData, 
+      { headers: header }
+    )
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  addPuppies(litterId: string, puppies: IPuppyInput[]): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    const puppyData = {
+      puppies: puppies
+    };
+    
+    return this.http.post<ILitter>(
+      this.apiurl + '/litters/' + litterId + '/add-puppies', 
+      puppyData, 
+      { headers: header }
+    )
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  voidLitter(id: string): Observable<ILitter> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.delete<ILitter>(this.apiurl + '/litters/' + id, { headers: header })
       .pipe(
         catchError(this.handleError)
       );

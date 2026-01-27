@@ -203,9 +203,6 @@ describe('PetEditComponent - Location Field Tests', () => {
       // Arrange - First set a valid location
       component.form.patchValue({
         name: 'Buddy',
-        breed_name: 'Labrador Retriever',
-        pet_dob: '2023-01-01',
-        gender: 'm',
         weight: '25',
         location_name: 'Main Kennel'
       });
@@ -224,9 +221,6 @@ describe('PetEditComponent - Location Field Tests', () => {
       // Arrange
       component.form.patchValue({
         name: 'Buddy',
-        breed_name: 'Labrador Retriever',
-        pet_dob: '2023-01-01',
-        gender: 'm',
         weight: '25',
         location_name: 'Main Kennel'
       });
@@ -240,9 +234,6 @@ describe('PetEditComponent - Location Field Tests', () => {
       // Arrange
       component.form.patchValue({
         name: 'Buddy',
-        breed_name: 'Labrador Retriever',
-        pet_dob: '2023-01-01',
-        gender: 'm',
         weight: '25',
         location_name: '' // Missing location
       });
@@ -255,9 +246,6 @@ describe('PetEditComponent - Location Field Tests', () => {
       // Arrange
       component.form.patchValue({
         name: 'Buddy',
-        breed_name: 'Labrador Retriever',
-        pet_dob: '2023-01-01',
-        gender: 'm',
         weight: '25',
         location_name: 'Main Kennel'
       });

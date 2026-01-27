@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { DataService } from './data.service';
 import { IUser, IProfileImageResponse } from '../models/user';
 import { ILocation } from '../models/location';
+import { ILitter, LitterStatus, ILitterFilter, IPuppyInput } from '../models/litter';
 import { environment } from 'src/environments/environment';
 
 describe('DataService', () => {
@@ -316,6 +317,358 @@ describe('DataService', () => {
 
       const req = httpMock.expectOne(`${apiUrl}/users/me`);
       req.flush({ detail: 'Internal server error' }, { status: 500, statusText: 'Internal Server Error' });
+    });
+  });
+
+  describe('Litter Management Methods', () => {
+    it('should get all litters without filters', () => {
+      const mockLitters: ILitter[] = [
+        {
+          id: 'litter-1',
+          description: 'Test Litter 1',
+          status: LitterStatus.Started,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+          parent_pets: [],
+          puppies: []
+        },
+        {
+          id: 'litter-2',
+          description: 'Test Litter 2',
+          status: LitterStatus.InProcess,
+          created_at: '2024-01-02T00:00:00Z',
+          updated_at: '2024-01-02T00:00:00Z',
+          parent_pets: [],
+          puppies: []
+        }
+      ];
+
+      service.getLitters().subscribe(litters => {
+        expect(litters).toEqual(mockLitters);
+        expect(litters.length).toBe(2);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters`);
+      expect(req.request.method).toBe('GET');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      req.flush(mockLitters);
+    });
+
+    it('should get litters with location filter', () => {
+      const filters: ILitterFilter = {
+        location_id: 'location-123'
+      };
+
+      const mockLitters: ILitter[] = [
+        {
+          id: 'litter-1',
+          description: 'Filtered Litter',
+          status: LitterStatus.Started,
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z'
+        }
+      ];
+
+      service.getLitters(filters).subscribe(litters => {
+        expect(litters).toEqual(mockLitters);
+        expect(litters.length).toBe(1);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/litters` && request.params.get('location_id') === 'location-123'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockLitters);
+    });
+
+    it('should get litters with status filter', () => {
+      const filters: ILitterFilter = {
+        status: LitterStatus.Done
+      };
+
+      const mockLitters: ILitter[] = [];
+
+      service.getLitters(filters).subscribe(litters => {
+        expect(litters).toEqual(mockLitters);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/litters` && request.params.get('status') === 'Done'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockLitters);
+    });
+
+    it('should get litters with breed filter', () => {
+      const filters: ILitterFilter = {
+        breed_id: 'breed-456'
+      };
+
+      service.getLitters(filters).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/litters` && request.params.get('breed_id') === 'breed-456'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush([]);
+    });
+
+    it('should get litters with multiple filters', () => {
+      const filters: ILitterFilter = {
+        location_id: 'location-123',
+        status: LitterStatus.InProcess,
+        breed_id: 'breed-456'
+      };
+
+      service.getLitters(filters).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/litters` && 
+          request.params.get('location_id') === 'location-123' &&
+          request.params.get('status') === 'InProcess' &&
+          request.params.get('breed_id') === 'breed-456'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush([]);
+    });
+
+    it('should get a single litter by id', () => {
+      const litterId = 'litter-123';
+      const mockLitter: ILitter = {
+        id: litterId,
+        description: 'Test Litter',
+        status: LitterStatus.Done,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z',
+        parent_pets: [],
+        puppies: []
+      };
+
+      service.getLitter(litterId).subscribe(litter => {
+        expect(litter).toEqual(mockLitter);
+        expect(litter.id).toBe(litterId);
+        expect(litter.status).toBe(LitterStatus.Done);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);
+      expect(req.request.method).toBe('GET');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      req.flush(mockLitter);
+    });
+
+    it('should create a new litter with description', () => {
+      const description = 'New litter description';
+      const mockResponse: ILitter = {
+        id: 'new-litter-id',
+        description: description,
+        status: LitterStatus.Started,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z'
+      };
+
+      service.createLitter(description).subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.status).toBe(LitterStatus.Started);
+        expect(litter.description).toBe(description);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      expect(req.request.body).toEqual({ description: description });
+      req.flush(mockResponse);
+    });
+
+    it('should create a new litter without description', () => {
+      const mockResponse: ILitter = {
+        id: 'new-litter-id',
+        description: null,
+        status: LitterStatus.Started,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z'
+      };
+
+      service.createLitter().subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.description).toBeNull();
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ description: null });
+      req.flush(mockResponse);
+    });
+
+    it('should update a litter', () => {
+      const litterId = 'litter-123';
+      const updateData = {
+        description: 'Updated description'
+      };
+      const mockResponse: ILitter = {
+        id: litterId,
+        description: 'Updated description',
+        status: LitterStatus.Started,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z'
+      };
+
+      service.updateLitter(litterId, updateData).subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.description).toBe('Updated description');
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      expect(req.request.body).toEqual(updateData);
+      req.flush(mockResponse);
+    });
+
+    it('should assign pets to a litter', () => {
+      const litterId = 'litter-123';
+      const petIds = ['pet-1', 'pet-2'];
+      const mockResponse: ILitter = {
+        id: litterId,
+        description: 'Test Litter',
+        status: LitterStatus.InProcess,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z',
+        parent_pets: []
+      };
+
+      service.assignPets(litterId, petIds).subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.status).toBe(LitterStatus.InProcess);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/assign-pets`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      expect(req.request.body).toEqual({ pet_ids: petIds });
+      req.flush(mockResponse);
+    });
+
+    it('should add puppies to a litter', () => {
+      const litterId = 'litter-123';
+      const puppies: IPuppyInput[] = [
+        {
+          name: 'Puppy 1',
+          gender: 'Male',
+          birth_date: '2024-01-01',
+          microchip: 'MC123'
+        },
+        {
+          name: 'Puppy 2',
+          gender: 'Female',
+          birth_date: '2024-01-01'
+        }
+      ];
+      const mockResponse: ILitter = {
+        id: litterId,
+        description: 'Test Litter',
+        status: LitterStatus.Done,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z',
+        puppies: []
+      };
+
+      service.addPuppies(litterId, puppies).subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.status).toBe(LitterStatus.Done);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/add-puppies`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      expect(req.request.body).toEqual({ puppies: puppies });
+      req.flush(mockResponse);
+    });
+
+    it('should void a litter', () => {
+      const litterId = 'litter-123';
+      const mockResponse: ILitter = {
+        id: litterId,
+        description: 'Test Litter',
+        status: LitterStatus.Voided,
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-02T00:00:00Z'
+      };
+
+      service.voidLitter(litterId).subscribe(litter => {
+        expect(litter).toEqual(mockResponse);
+        expect(litter.status).toBe(LitterStatus.Voided);
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);
+      expect(req.request.method).toBe('DELETE');
+      expect(req.request.headers.get('Authorization')).toBe('Bearer mock-token-123');
+      req.flush(mockResponse);
+    });
+
+    it('should handle 404 error when litter not found', () => {
+      const litterId = 'non-existent';
+
+      service.getLitter(litterId).subscribe({
+        next: () => fail('should have failed with 404 error'),
+        error: (error) => {
+          expect(error.message).toBe('Resource not found.');
+        }
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);
+      req.flush({ detail: 'Litter not found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should handle 400 error when assigning pets with location mismatch', () => {
+      const litterId = 'litter-123';
+      const petIds = ['pet-1', 'pet-2'];
+
+      service.assignPets(litterId, petIds).subscribe({
+        next: () => fail('should have failed with 400 error'),
+        error: (error) => {
+          expect(error.message).toContain('Pets must be from the same location');
+        }
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/assign-pets`);
+      req.flush(
+        { detail: 'Pets must be from the same location' },
+        { status: 400, statusText: 'Bad Request' }
+      );
+    });
+
+    it('should handle 422 validation error when adding invalid puppies', () => {
+      const litterId = 'litter-123';
+      const puppies: IPuppyInput[] = [
+        {
+          name: '',
+          gender: 'Male',
+          birth_date: '2024-01-01'
+        }
+      ];
+
+      service.addPuppies(litterId, puppies).subscribe({
+        next: () => fail('should have failed with 422 error'),
+        error: (error) => {
+          expect(error.message).toContain('Validation error');
+        }
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/add-puppies`);
+      req.flush({ detail: 'Validation error' }, { status: 422, statusText: 'Unprocessable Entity' });
+    });
+
+    it('should handle error when getting litters', () => {
+      service.getLitters().subscribe({
+        next: () => fail('should have failed'),
+        error: (error) => {
+          expect(error.message).toBe('Server error. Please try again later.');
+        }
+      });
+
+      const req = httpMock.expectOne(`${apiUrl}/litters`);
+      req.flush({ detail: 'Server error' }, { status: 500, statusText: 'Internal Server Error' });
     });
   });
 });

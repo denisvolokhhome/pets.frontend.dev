@@ -200,7 +200,7 @@ export class PetEditComponent implements OnInit, OnChanges {
         gender: this.pet.gender, // Use existing gender
         weight: parseFloat(this.form.value.weight as string),
         location_id: locationId,
-        is_puppy: false,
+        is_puppy: 0, // Adults are 0, puppies are 1
         has_microchip: !!this.form.value.has_microchip,
         has_vaccination: !!this.form.value.has_vaccination,
         has_healthcertificate: !!this.form.value.has_healthcertificate,

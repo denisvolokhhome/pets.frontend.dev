@@ -1,0 +1,159 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <!-- Modal Header with Icon -->
+    <div class="modal-header">
+      <div class="modal-header-content">
+        <div class="modal-icon">
+          <i class="bi" [ngClass]="{
+            'bi-plus-circle-fill': mode === 'create',
+            'bi-pencil-fill': mode === 'update',
+            'bi-eye-fill': mode === 'view'
+          }"></i>
+        </div>
+        <div class="modal-title-section">
+          <h2>{{ getTitle() }}</h2>
+          <p class="modal-subtitle" *ngIf="mode === 'create'">Create a new litter record</p>
+          <p class="modal-subtitle" *ngIf="mode === 'update'">Update litter information</p>
+          <p class="modal-subtitle" *ngIf="mode === 'view'">View litter details</p>
+        </div>
+      </div>
+      <button 
+        type="button" 
+        class="close-button"
+        (click)="close()"
+        aria-label="Close">
+        &times;
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Create/Update Mode -->
+      <div *ngIf="mode !== 'view'">
+        <!-- Description/Note Field -->
+        <div class="form-group">
+          <label for="description">
+            <i class="bi bi-card-text"></i>
+            Description/Note
+          </label>
+          <textarea 
+            id="description"
+            [(ngModel)]="formData.description"
+            rows="4"
+            placeholder="Enter litter description or notes...">
+          </textarea>
+        </div>
+
+        <!-- Pet Assignment Section (only if no pets assigned) -->
+        <div *ngIf="!hasParentPets() && litter" class="pet-assignment">
+          <h3>Assign Parent Pets</h3>
+          <app-pet-assignment 
+            [litter]="litter"
+            (petsAssigned)="onPetsAssigned($event)">
+          </app-pet-assignment>
+        </div>
+
+        <!-- Puppy Addition Section (only if pets assigned) -->
+        <div *ngIf="hasParentPets() && litter" class="puppy-section">
+          <h3>Add Puppies</h3>
+          <app-puppy-table 
+            [litter]="litter"
+            (puppiesAdded)="onPuppiesAdded($event)">
+          </app-puppy-table>
+        </div>
+      </div>
+
+      <!-- View Mode -->
+      <div *ngIf="mode === 'view' && litter" class="litter-details">
+        <!-- Basic Details -->
+        <div class="space-y-4 mb-6">
+          <div class="detail-row flex">
+            <span class="label font-semibold text-gray-700 w-32">Description:</span>
+            <span class="text-gray-600">{{ litter.description || 'No description' }}</span>
+          </div>
+          <div class="detail-row flex">
+            <span class="label font-semibold text-gray-700 w-32">Status:</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-800': litter.status === 'Started',
+                    'bg-yellow-100 text-yellow-800': litter.status === 'InProcess',
+                    'bg-green-100 text-green-800': litter.status === 'Done',
+                    'bg-gray-100 text-gray-800': litter.status === 'Voided'
+                  }">
+              {{ litter.status }}
+            </span>
+          </div>
+          <div class="detail-row flex">
+            <span class="label font-semibold text-gray-700 w-32">Created:</span>
+            <span class="text-gray-600">{{ litter.created_at | date:'medium' }}</span>
+          </div>
+          <div class="detail-row flex">
+            <span class="label font-semibold text-gray-700 w-32">Modified:</span>
+            <span class="text-gray-600">{{ litter.updated_at | date:'medium' }}</span>
+          </div>
+        </div>
+
+        <!-- Parent Pets Section -->
+        <div class="parent-pets mb-6" *ngIf="litter.parent_pets && litter.parent_pets.length > 0">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Parent Pets</h3>
+          <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+            <div *ngFor="let pet of litter.parent_pets" class="flex items-center space-x-3">
+              <span class="text-gray-700 font-medium">{{ pet.name }}</span>
+              <span class="text-gray-500">-</span>
+              <span class="text-gray-600">{{ pet.breed_name || 'Unknown breed' }}</span>
+              <span class="text-gray-500" *ngIf="pet.location_name">({{ pet.location_name }})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Puppies Section -->
+        <div class="puppies" *ngIf="litter.puppies && litter.puppies.length > 0">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Puppies</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Gender</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Birth Date</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Microchip</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <tr *ngFor="let puppy of litter.puppies" class="hover:bg-gray-50">
+                  <td class="px-4 py-3 text-sm text-gray-900">{{ puppy.name }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.gender }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.date_of_birth | date:'shortDate' }}</td>
+                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.has_microchip ? 'Yes' : 'No' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Empty States -->
+        <div *ngIf="!litter.parent_pets || litter.parent_pets.length === 0" class="text-center py-6 text-gray-500">
+          No parent pets assigned yet.
+        </div>
+        <div *ngIf="(!litter.puppies || litter.puppies.length === 0) && litter.parent_pets && litter.parent_pets.length > 0" class="text-center py-6 text-gray-500">
+          No puppies added yet.
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button 
+        *ngIf="mode !== 'view'"
+        type="button"
+        (click)="save()">
+        Save
+      </button>
+      <button 
+        type="button"
+        (click)="close()">
+        {{ mode === 'view' ? 'Close' : 'Cancel' }}
+      </button>
+    </div>
+  </div>
+</div>

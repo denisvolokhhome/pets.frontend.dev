@@ -38,6 +38,10 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
 import { SettingsComponent } from './components/settings/settings.component';
 import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
+import { LittersComponent } from './components/litters/litters.component';
+import { LitterModalComponent } from './components/litter-modal/litter-modal.component';
+import { PetAssignmentComponent } from './components/pet-assignment/pet-assignment.component';
+import { PuppyTableComponent } from './components/puppy-table/puppy-table.component';
 
 
 
@@ -66,6 +70,10 @@ import { BreedingLocationsComponent } from './components/settings/breeding-locat
     SettingsComponent,
     GeneralSettingsComponent,
     BreedingLocationsComponent,
+    LittersComponent,
+    LitterModalComponent,
+    PetAssignmentComponent,
+    PuppyTableComponent,
   ],
   imports: [
     BrowserModule,
