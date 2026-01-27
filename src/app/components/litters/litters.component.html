@@ -1,16 +1,35 @@
 <div class="litters-container">
   <!-- Header Section -->
   <header class="litters-header">
-    <h1 class="page-title">
-      <i class="bi bi-heart-fill"></i>
-      Litters Management
-    </h1>
-    <button 
-      class="fab-button fab-success"
-      (click)="addLitter()"
-      title="Add Litter">
-      <i class="bi bi-plus-circle"></i>
-    </button>
+    <div class="header-left">
+      <h1 class="page-title">
+        <i class="bi bi-heart-fill"></i>
+        Litters Management
+      </h1>
+    </div>
+    
+    <div class="header-center">
+      <!-- Search -->
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search litters..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <button 
+        class="fab-button fab-success"
+        (click)="addLitter()"
+        title="Add Litter">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
   </header>
 
   <!-- Content Section -->
@@ -118,6 +137,7 @@
             <th>Description</th>
             <th>Location</th>
             <th>Breed</th>
+            <th>Puppies</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -132,6 +152,9 @@
             </td>
             <td>{{ getLocationName(litter) }}</td>
             <td>{{ getBreedDisplay(litter) }}</td>
+            <td class="puppies-cell">
+              <span class="puppies-count">{{ getPuppiesCount(litter) }}</span>
+            </td>
             <td>
               <span class="status-badge" [ngClass]="getStatusBadgeClass(litter.status)">
                 {{ litter.status }}

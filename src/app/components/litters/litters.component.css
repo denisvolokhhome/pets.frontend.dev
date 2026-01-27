@@ -16,6 +16,11 @@
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
+  gap: 2rem;
+}
+
+.header-left {
+  flex-shrink: 0;
 }
 
 .page-title {
@@ -31,6 +36,48 @@
 .page-title i {
   color: #ec4899;
   font-size: 2rem;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 25px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 1.125rem;
+  pointer-events: none;
+}
+
+.header-right {
+  flex-shrink: 0;
 }
 
 /* Layout Container */
@@ -303,6 +350,26 @@
   font-style: italic;
 }
 
+/* Puppies Cell */
+.puppies-cell {
+  text-align: center;
+}
+
+/* Puppies Count */
+.puppies-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.25rem 0.5rem;
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(78, 205, 196, 0.08));
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 6px;
+  font-weight: 600;
+  color: #0d9488;
+  font-size: 0.875rem;
+}
+
 /* Status Badges */
 .status-badge {
   display: inline-block;
@@ -463,11 +530,34 @@
   }
 
   .litters-header {
+    flex-direction: column;
+    align-items: stretch;
     padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .header-left,
+  .header-center,
+  .header-right {
+    width: 100%;
+  }
+
+  .header-center {
+    justify-content: stretch;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .header-right {
+    display: flex;
+    justify-content: center;
   }
 
   .page-title {
     font-size: 1.75rem;
+    justify-content: center;
   }
 
   .page-title i {
@@ -492,6 +582,7 @@
   .litters-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
 
   .page-title {

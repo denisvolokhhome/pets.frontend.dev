@@ -28,6 +28,7 @@ export class LittersComponent implements OnInit {
   selectedLocationId: string = '';
   selectedStatus: string = '';
   selectedBreedId: string = '';
+  searchTerm: string = '';
   
   // Loading states
   isLoading: boolean = false;
@@ -88,6 +89,15 @@ export class LittersComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredLitters = this.litters.filter(litter => {
+      // Search filter - search in description
+      if (this.searchTerm) {
+        const searchLower = this.searchTerm.toLowerCase();
+        const description = litter.description?.toLowerCase() || '';
+        if (!description.includes(searchLower)) {
+          return false;
+        }
+      }
+
       // Location filter - compare by location name since location_id isn't in IPet
       if (this.selectedLocationId) {
         const selectedLocation = this.locations.find(loc => loc.id?.toString() === this.selectedLocationId);
@@ -115,15 +125,20 @@ export class LittersComponent implements OnInit {
     });
   }
 
+  onSearchChange(): void {
+    this.applyFilters();
+  }
+
   clearFilters(): void {
     this.selectedLocationId = '';
     this.selectedStatus = '';
     this.selectedBreedId = '';
+    this.searchTerm = '';
     this.applyFilters();
   }
 
   hasActiveFilters(): boolean {
-    return !!(this.selectedLocationId || this.selectedStatus || this.selectedBreedId);
+    return !!(this.selectedLocationId || this.selectedStatus || this.selectedBreedId || this.searchTerm);
   }
 
   getLocationName(litter: ILitter): string {
@@ -172,6 +187,13 @@ export class LittersComponent implements OnInit {
     return litter.parent_pets
       .map(pet => pet.breed_id)
       .filter((id, index, self) => id && self.indexOf(id) === index);
+  }
+
+  getPuppiesCount(litter: ILitter): number {
+    if (!litter.puppies || litter.puppies.length === 0) {
+      return 0;
+    }
+    return litter.puppies.length;
   }
 
   addLitter(): void {
