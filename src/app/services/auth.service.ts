@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private isLoggedInSubject = new Subject<boolean>();
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasValidToken());
+  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
   apiurl= environment.API_URL;
   response: any;
 
@@ -36,6 +38,7 @@ export class AuthService {
         // Store the JWT token
         if (response.access_token) {
           localStorage.setItem('id_token', response.access_token);
+          this.isLoggedInSubject.next(true);
         }
       })
     );
@@ -54,6 +57,11 @@ export class AuthService {
         tap((user) => {
           // If we get a user object back, we're logged in
           this.isLoggedInSubject.next(!!user);
+        }),
+        catchError((error) => {
+          // If there's an error (like 401), user is not logged in
+          this.isLoggedInSubject.next(false);
+          return of(null);
         })
       );
   }
@@ -66,6 +74,27 @@ export class AuthService {
     // Clear token from localStorage
     localStorage.removeItem('id_token');
     this.isLoggedInSubject.next(false);
-    return this.http.post(this.apiurl + '/auth/jwt/logout', {}, { headers: header });
+    
+    // Navigate to home
+    this.router.navigate(['/']);
+    
+    return this.http.post(this.apiurl + '/auth/jwt/logout', {}, { headers: header }).pipe(
+      catchError(() => {
+        // Even if logout fails on backend, we've already cleared local state
+        return of(null);
+      })
+    );
+  }
+
+  // Method to handle session expiration
+  handleSessionExpired() {
+    localStorage.removeItem('id_token');
+    this.isLoggedInSubject.next(false);
+    this.router.navigate(['/']);
+  }
+
+  // Check if user has a valid token
+  hasValidToken(): boolean {
+    return !!localStorage.getItem('id_token');
   }
 }

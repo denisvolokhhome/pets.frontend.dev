@@ -6,18 +6,18 @@ import {
   HttpInterceptor,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    // return next.handle(request);
     const idToken = localStorage.getItem('id_token');
 
     if (idToken) {
@@ -25,22 +25,17 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: request.headers.set('Authorization', 'Bearer ' + idToken),
       });
 
-      return next.handle(cloned);
+      return next.handle(cloned).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            // Token expired or invalid - handle session expiration
+            this.authService.handleSessionExpired();
+          }
+          return throwError(() => error);
+        })
+      );
     } else {
       return next.handle(request);
-      // .pipe(
-      //   tap(
-      //     () => {},
-      //     (err: any) => {
-      //       if (err instanceof HttpErrorResponse) {
-      //         if (err.status !== 401) {
-      //           return;
-      //         }
-      //         this.router.navigate(['login']);
-      //       }
-      //     }
-      //   )
-      // );
     }
   }
 }

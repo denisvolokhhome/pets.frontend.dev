@@ -1,35 +1,62 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subscription, filter } from 'rxjs';
 
 @Component({
   selector: 'app-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.css'],
 })
-export class TopMenuComponent implements OnInit {
+export class TopMenuComponent implements OnInit, OnDestroy {
   location: any;
   route: any;
+  isLoggedIn: boolean = false;
+  private authSubscription?: Subscription;
+  private routerSubscription?: Subscription;
+
   constructor(
     private service: AuthService,
     private router: Router,
-    private loc: Location
+    private loc: Location,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.router.events.subscribe((res) => {
+    // Subscribe to route changes
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
       this.route = this.loc.path();
+      this.updateAuthState();
     });
+
+    // Subscribe to auth state changes
+    this.authSubscription = this.service.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn;
+      this.cdr.detectChanges();
+    });
+
+    // Initial auth state check
+    this.updateAuthState();
   }
 
-  get checkToken() {
-    if (localStorage.getItem('id_token')) {
-      return true;
-    } else {
-      return false;
+  updateAuthState(): void {
+    this.isLoggedIn = this.service.hasValidToken();
+    this.cdr.detectChanges();
+  }
+
+  get checkToken(): boolean {
+    return this.isLoggedIn;
+  }
+
+  ngOnDestroy(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
     }
   }
-
-  ngOnDestroy() {}
 }
