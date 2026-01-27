@@ -118,14 +118,14 @@ export class PetsComponent implements OnInit {
     );
   }
 
-  changeLayout(emittedName: string) {
-    this.view = emittedName;
-    console.log('Layout change clicked.');
+  changeLayout(viewType: string) {
+    this.view = viewType;
+    console.log('Layout changed to: ' + viewType);
   }
 
-  searchPets(emittedSearch: string){
-    this.term = emittedSearch;
-    console.log('searching... ' + emittedSearch);
+  searchPets(event: any){
+    this.term = event.target.value;
+    console.log('searching... ' + this.term);
   }
 
   deletePet(emittedPetId: any){

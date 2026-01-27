@@ -1,10 +1,58 @@
-<app-sub-menu
-  (buttonClicked)="changeLayout($event)"
-  (searchingPet)="searchPets($event)"
-  class="w-100"
-></app-sub-menu>
+<div class="pets-container">
+  <!-- Header Section -->
+  <header class="pets-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <i class="bi bi-heart-fill"></i>
+        Pets Management
+      </h1>
+    </div>
+    
+    <div class="header-center">
+      <!-- Layout Switcher -->
+      <div class="layout-switcher">
+        <button 
+          class="layout-btn"
+          [class.active]="view === 'table'"
+          (click)="changeLayout('table')"
+          title="Table View">
+          <i class="bi bi-table"></i>
+        </button>
+        <button 
+          class="layout-btn"
+          [class.active]="view === 'cards'"
+          (click)="changeLayout('cards')"
+          title="Card View">
+          <i class="bi bi-postcard-heart"></i>
+        </button>
+      </div>
+      
+      <!-- Search -->
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search pets..."
+          (input)="searchPets($event)"
+          [(ngModel)]="term"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <button 
+        class="fab-button fab-success"
+        data-bs-toggle="modal"
+        data-bs-target="#addPetModal"
+        title="Add Pet">
+        <i class="bi bi-plus-circle"></i>
+      </button>
+    </div>
+  </header>
 
-<div class="pets-layout">
+  <!-- Content Section -->
+  <div class="pets-layout">
   <!-- Filters Sidebar -->
   <aside class="filters-sidebar">
     <div class="filters-header">
@@ -138,31 +186,32 @@
 
   <!-- Main Content -->
   <main class="pets-content">
-    <div class="container-fluid">
-      <div *ngIf="view == 'cards'">
-        <div *ngIf="filteredPets && filteredPets.length > 0" class="row">
-          <div
-            app-pet-card
-            (deletingPet)="deletePet($event)"
-            (editingPet)="editPet($event)"
-            class="col-xxl-4 col-lg-6 mt-3"
-            *ngFor="let pet of filteredPets | searchPets : term; let i = index"
-            [pet]="pet"
-          ></div>
-        </div>
-
-        <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
-          <i class="bi bi-search"></i>
-          <h3>No pets found</h3>
-          <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
-          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-          <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
-            Clear Filters
-          </button>
-        </div>
+    <div *ngIf="view == 'cards'">
+      <div *ngIf="filteredPets && filteredPets.length > 0" class="row">
+        <div
+          app-pet-card
+          (deletingPet)="deletePet($event)"
+          (editingPet)="editPet($event)"
+          class="col-xxl-4 col-lg-6 mt-3"
+          *ngFor="let pet of filteredPets | searchPets : term; let i = index"
+          [pet]="pet"
+        ></div>
       </div>
-      <div *ngIf="view == 'table'">
-        <table *ngIf="filteredPets && filteredPets.length > 0" class="table table-hover">
+
+      <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
+        <i class="bi bi-search"></i>
+        <h3>No pets found</h3>
+        <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+        <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="view == 'table'">
+      <div class="table-container">
+        <table *ngIf="filteredPets && filteredPets.length > 0" class="pets-table">
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -173,7 +222,7 @@
               <th scope="col">Weight</th>
             </tr>
           </thead>
-          <tbody class="bg-white dark:bg-slate-800">
+          <tbody>
             <tr
               app-pet-grid
               *ngFor="
@@ -197,6 +246,7 @@
       </div>
     </div>
   </main>
+  </div>
 </div>
 
 <!-- TODO: Make single modal for different actions -->
