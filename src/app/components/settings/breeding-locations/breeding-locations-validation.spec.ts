@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { BreedingLocationsComponent } from './breeding-locations.component';
 import { DataService } from '../../../services/data.service';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Property 10: Location Form Validation
@@ -58,13 +60,16 @@ describe('BreedingLocationsComponent - Property-Based Validation', () => {
       'updateLocation',
       'deleteLocation'
     ]);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     await TestBed.configureTestingModule({
       declarations: [ BreedingLocationsComponent ],
       imports: [ ReactiveFormsModule, HttpClientTestingModule ],
       providers: [
-        { provide: DataService, useValue: dataServiceSpy }
-      ]
+        { provide: DataService, useValue: dataServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 
