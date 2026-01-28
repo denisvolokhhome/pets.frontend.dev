@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ILitter, LitterStatus } from 'src/app/models/litter';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
@@ -11,7 +11,8 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './litters.component.html',
   styleUrls: ['./litters.component.css']
 })
-export class LittersComponent implements OnInit {
+export class LittersComponent implements OnInit, AfterViewInit {
+  @ViewChild('tableContainer') tableContainer?: ElementRef;
 
   constructor(
     public dataService: DataService,
@@ -45,6 +46,23 @@ export class LittersComponent implements OnInit {
     this.loadLitters();
     this.loadLocations();
     this.loadBreeds();
+  }
+
+  ngAfterViewInit(): void {
+    this.checkTableScroll();
+  }
+
+  checkTableScroll(): void {
+    setTimeout(() => {
+      if (this.tableContainer) {
+        const element = this.tableContainer.nativeElement;
+        if (element.scrollWidth > element.clientWidth) {
+          element.classList.add('has-scroll');
+        } else {
+          element.classList.remove('has-scroll');
+        }
+      }
+    }, 100);
   }
 
   loadLitters(): void {
@@ -123,6 +141,9 @@ export class LittersComponent implements OnInit {
 
       return true;
     });
+    
+    // Check scroll after filters are applied
+    this.checkTableScroll();
   }
 
   onSearchChange(): void {
