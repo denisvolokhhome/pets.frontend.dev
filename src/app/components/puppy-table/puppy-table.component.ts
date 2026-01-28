@@ -5,6 +5,7 @@ import { DataService } from '../../services/data.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-puppy-table',
   templateUrl: './puppy-table.component.html',
   styleUrls: ['./puppy-table.component.css']

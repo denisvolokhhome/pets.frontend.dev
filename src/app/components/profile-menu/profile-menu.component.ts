@@ -6,6 +6,7 @@ import { IUser } from '../../models/user';
 import { environment } from '../../../environments/environment';
 
 @Component({
+  standalone: false,
   selector: 'app-profile-menu',
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.css']

@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../environments/environment';
 
 @Component({
+  standalone: false,
   selector: 'app-general-settings',
   templateUrl: './general-settings.component.html',
   styleUrls: ['./general-settings.component.css']

@@ -26,7 +26,7 @@ export class DataService {
   getPetsByBreeder(id: any): Observable<IPet[]> {
     return this.http.get<IPet[]>(this.apiurl + '/pets/breeder/' + id).
     pipe(
-      tap(pets => this.pets = pets)
+      tap((pets: IPet[]) => this.pets = pets)
     );
   }
 
@@ -71,7 +71,7 @@ export class DataService {
     return this.http
       .post<IPet>(this.apiurl + '/pets', petData, { headers: header })
       .pipe(
-        tap(pet => {
+        tap((pet: IPet) => {
           this.pets.push(pet);
           this.pets = [...this.pets];
         }),
@@ -87,7 +87,7 @@ export class DataService {
     return this.http
       .put<IPet>(this.apiurl + '/pets/' + petId, petData, { headers: header })
       .pipe(
-        tap(updatedPet => {
+        tap((updatedPet: IPet) => {
           // Update the pet in the local array
           const index = this.pets.findIndex(p => p.id === petId);
           if (index !== -1) {
@@ -138,7 +138,7 @@ export class DataService {
   getBreeds(): Observable<IBreed[]> {
     return this.http.get<IBreed[]>(this.apiurl + '/breeds').
     pipe(
-      tap((breeds) => (this.breeds = breeds))
+      tap((breeds: IBreed[]) => (this.breeds = breeds))
     );
   }
 
@@ -149,7 +149,7 @@ export class DataService {
     );
     return this.http.get<ILocation[]>(this.apiurl + '/locations', { headers: header }).
     pipe(
-      tap((locations) => (this.locations = locations)),
+      tap((locations: ILocation[]) => (this.locations = locations)),
       catchError(this.handleError)
     );
   }

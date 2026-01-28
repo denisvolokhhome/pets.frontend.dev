@@ -5,6 +5,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 
 @Component({
+  standalone: false,
   selector: 'app-litter-modal',
   templateUrl: './litter-modal.component.html',
   styleUrls: ['./litter-modal.component.css']

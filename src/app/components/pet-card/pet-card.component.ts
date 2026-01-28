@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 
 
 @Component({
+  standalone: false,
   selector: '[app-pet-card]',
   templateUrl: './pet-card.component.html',
   styleUrls: ['./pet-card.component.css']

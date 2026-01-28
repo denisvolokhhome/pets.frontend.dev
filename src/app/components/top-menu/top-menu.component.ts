@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, filter } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-top-menu',
   templateUrl: './top-menu.component.html',
   styleUrls: ['./top-menu.component.css'],

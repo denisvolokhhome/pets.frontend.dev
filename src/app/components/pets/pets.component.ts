@@ -5,6 +5,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 
 @Component({
+  standalone: false,
   selector: 'app-pets',
   templateUrl: './pets.component.html',
   styleUrls: ['./pets.component.css']

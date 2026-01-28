@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],

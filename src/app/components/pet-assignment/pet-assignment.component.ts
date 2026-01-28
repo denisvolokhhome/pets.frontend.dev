@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-pet-assignment',
   templateUrl: './pet-assignment.component.html',
   styleUrls: ['./pet-assignment.component.css']

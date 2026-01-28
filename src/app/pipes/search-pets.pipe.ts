@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { IPet } from '../models/pet';
 
 @Pipe({
+  standalone: false,
   name: 'searchPets'
 })
 export class SearchPetsPipe implements PipeTransform {

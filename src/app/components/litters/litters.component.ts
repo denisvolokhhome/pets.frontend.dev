@@ -7,6 +7,7 @@ import { ModalService } from 'src/app/services/modal.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-litters',
   templateUrl: './litters.component.html',
   styleUrls: ['./litters.component.css']

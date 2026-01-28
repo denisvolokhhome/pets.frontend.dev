@@ -5,6 +5,7 @@ import { ILocation } from '../../../models/location';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-breeding-locations',
   templateUrl: './breeding-locations.component.html',
   styleUrls: ['./breeding-locations.component.css']

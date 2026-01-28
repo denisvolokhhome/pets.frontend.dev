@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalService } from 'src/app/services/modal.service';
 
 @Component({
+  standalone: false,
   selector: 'app-sub-menu',
   templateUrl: './sub-menu.component.html',
   styleUrls: ['./sub-menu.component.css']

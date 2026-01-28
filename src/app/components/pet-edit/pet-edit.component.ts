@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 declare var window: any;
 
 @Component({
+  standalone: false,
   selector: 'app-pet-edit',
   templateUrl: './pet-edit.component.html',
   styleUrls: ['./pet-edit.component.css']

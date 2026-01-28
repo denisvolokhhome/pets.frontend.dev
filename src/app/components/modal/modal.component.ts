@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 declare var window: any;
 
 @Component({
+  standalone: false,
   selector: '[app-modal]',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css'],

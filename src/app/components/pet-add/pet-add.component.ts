@@ -11,6 +11,7 @@ declare var window: any;
 
 
 @Component({
+  standalone: false,
   selector: 'app-pet-add',
   templateUrl: './pet-add.component.html',
   styleUrls: ['./pet-add.component.css']

@@ -5,6 +5,7 @@ import { ModalService } from 'src/app/services/modal.service';
 declare var window: any;
 
 @Component({
+  standalone: false,
   selector: 'app-pet-delete',
   templateUrl: './pet-delete.component.html',
   styleUrls: ['./pet-delete.component.css']
