@@ -64,7 +64,7 @@ describe('AppRoutingModule - Settings Routes', () => {
     });
 
     it('should prevent navigation to settings when not authenticated', async () => {
-      spyOn(authService, 'IsLoggedIn').and.returnValue(of(null));
+      spyOn(authService, 'hasValidToken').and.returnValue(false);
       
       await router.navigate(['/settings']);
       

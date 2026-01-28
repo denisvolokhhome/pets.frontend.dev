@@ -85,7 +85,7 @@ describe('GeneralSettingsComponent', () => {
     });
 
     it('should handle empty profile fields', () => {
-      const emptyUser = { ...mockUser, breedery_name: undefined, breedery_description: undefined, search_tags: undefined };
+      const emptyUser = { ...mockUser, breedery_name: undefined as any, breedery_description: undefined as any, search_tags: undefined as any };
       dataService.getCurrentUserProfile.and.returnValue(of(emptyUser));
       
       component.ngOnInit();
