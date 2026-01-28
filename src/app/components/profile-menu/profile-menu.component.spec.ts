@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { ProfileMenuComponent } from './profile-menu.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 describe('ProfileMenuComponent', () => {
   let component: ProfileMenuComponent;
@@ -14,13 +16,16 @@ describe('ProfileMenuComponent', () => {
     // Create mock services
     mockAuthService = jasmine.createSpyObj('AuthService', ['IsLoggedIn', 'LogoutUser']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     await TestBed.configureTestingModule({
       declarations: [ ProfileMenuComponent ],
       providers: [
         { provide: AuthService, useValue: mockAuthService },
-        { provide: Router, useValue: mockRouter }
-      ]
+        { provide: Router, useValue: mockRouter },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 

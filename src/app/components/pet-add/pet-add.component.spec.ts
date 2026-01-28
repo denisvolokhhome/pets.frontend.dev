@@ -1,12 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { PetAddComponent } from './pet-add.component';
 import { DataService } from '../../services/data.service';
 import { ILocation } from '../../models/location';
 import { IBreed } from '../../models/breed';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PetAddComponent - Location Field Tests', () => {
   let component: PetAddComponent;
@@ -65,6 +67,7 @@ describe('PetAddComponent - Location Field Tests', () => {
       'getBreeds',
       'createPet'
     ]);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     // Mock Bootstrap Modal
     (window as any).bootstrap = {
@@ -77,7 +80,11 @@ describe('PetAddComponent - Location Field Tests', () => {
     await TestBed.configureTestingModule({
       declarations: [PetAddComponent],
       imports: [ReactiveFormsModule, HttpClientTestingModule],
-      providers: [{ provide: DataService, useValue: dataServiceSpy }]
+      providers: [
+        { provide: DataService, useValue: dataServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     dataService = TestBed.inject(DataService) as jasmine.SpyObj<DataService>;

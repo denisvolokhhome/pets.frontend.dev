@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { PetEditComponent } from './pet-edit.component';
@@ -9,6 +9,7 @@ import { DataService } from '../../services/data.service';
 import { ILocation } from '../../models/location';
 import { IBreed } from '../../models/breed';
 import { IPet } from '../../models/pet';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PetEditComponent - Location Field Tests', () => {
   let component: PetEditComponent;
@@ -85,6 +86,7 @@ describe('PetEditComponent - Location Field Tests', () => {
       'getBreeds',
       'updatePet'
     ]);
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     // Mock Bootstrap Modal
     (window as any).bootstrap = {
@@ -98,8 +100,11 @@ describe('PetEditComponent - Location Field Tests', () => {
     await TestBed.configureTestingModule({
       declarations: [PetEditComponent],
       imports: [ReactiveFormsModule, HttpClientTestingModule],
-      providers: [{ provide: DataService, useValue: dataServiceSpy }],
-      schemas: [NO_ERRORS_SCHEMA] // Ignore Angular Material components
+      providers: [
+        { provide: DataService, useValue: dataServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     dataService = TestBed.inject(DataService) as jasmine.SpyObj<DataService>;

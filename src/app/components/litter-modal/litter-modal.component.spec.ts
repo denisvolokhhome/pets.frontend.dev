@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of, throwError } from 'rxjs';
 
 import { LitterModalComponent } from './litter-modal.component';
@@ -8,6 +9,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { ILitter, LitterStatus } from 'src/app/models/litter';
 import { IPet } from 'src/app/models/pet';
+import { ToastrService } from 'ngx-toastr';
 
 describe('LitterModalComponent', () => {
   let component: LitterModalComponent;
@@ -53,14 +55,17 @@ describe('LitterModalComponent', () => {
     const modalServiceSpy = jasmine.createSpyObj('ModalService', ['close'], {
       isVisible$: of(true)
     });
+    const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     await TestBed.configureTestingModule({
       declarations: [LitterModalComponent],
       imports: [FormsModule, HttpClientTestingModule],
       providers: [
         { provide: DataService, useValue: dataServiceSpy },
-        { provide: ModalService, useValue: modalServiceSpy }
-      ]
+        { provide: ModalService, useValue: modalServiceSpy },
+        { provide: ToastrService, useValue: toastrServiceSpy }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     dataService = TestBed.inject(DataService) as jasmine.SpyObj<DataService>;

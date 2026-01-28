@@ -14,17 +14,17 @@ describe('TopMenuComponent', () => {
   let compiled: HTMLElement;
 
   beforeEach(async () => {
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['IsLoggedIn', 'LogoutUser', 'hasValidToken', 'isLoggedIn$']);
+    authServiceSpy.isLoggedIn$ = of(false);
+    authServiceSpy.hasValidToken.and.returnValue(false);
+    authServiceSpy.IsLoggedIn.and.returnValue(of({ email: 'test@example.com', name: 'Test User' }));
+    authServiceSpy.LogoutUser.and.returnValue(of({}));
+
     await TestBed.configureTestingModule({
       declarations: [TopMenuComponent, ProfileMenuComponent],
       imports: [RouterTestingModule, HttpClientTestingModule],
       providers: [
-        {
-          provide: AuthService,
-          useValue: {
-            IsLoggedIn: () => of({ email: 'test@example.com', name: 'Test User' }),
-            LogoutUser: () => of({})
-          }
-        }
+        { provide: AuthService, useValue: authServiceSpy }
       ]
     }).compileComponents();
 

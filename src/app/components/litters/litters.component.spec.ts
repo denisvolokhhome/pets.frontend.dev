@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { LittersComponent } from './litters.component';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -128,7 +129,8 @@ describe('LittersComponent', () => {
         { provide: DataService, useValue: dataServiceSpy },
         { provide: ModalService, useValue: modalServiceSpy },
         { provide: ToastrService, useValue: toastrServiceSpy }
-      ]
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     dataService = TestBed.inject(DataService) as jasmine.SpyObj<DataService>;
