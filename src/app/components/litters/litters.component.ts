@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ILitter, LitterStatus } from 'src/app/models/litter';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
@@ -18,7 +18,8 @@ export class LittersComponent implements OnInit, AfterViewInit {
   constructor(
     public dataService: DataService,
     public modalService: ModalService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   litters: ILitter[] = [];
@@ -73,11 +74,13 @@ export class LittersComponent implements OnInit, AfterViewInit {
         this.litters = litters;
         this.applyFilters();
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading litters:', error);
         this.toastr.error('Failed to load litters', 'Error');
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
