@@ -59,6 +59,8 @@ export class PetEditComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pet'] && this.pet) {
+      // Clear image path first to prevent showing previous pet's image
+      this.image_path = null;
       this.populateForm();
     }
   }
@@ -66,9 +68,11 @@ export class PetEditComponent implements OnInit, OnChanges {
   populateForm(): void {
     if (!this.pet) return;
 
-    // Set image path if exists
+    // Set image path if exists, otherwise clear it
     if (this.pet.image_path) {
       this.image_path = this.getImageUrl(this.pet.image_path);
+    } else {
+      this.image_path = null;
     }
 
     // Populate form with pet data (only editable fields)
@@ -188,7 +192,7 @@ export class PetEditComponent implements OnInit, OnChanges {
     submit(): void {
       if (!this.pet) return;
 
-      // Use existing pet data for read-only fields (breed_id, date_of_birth, gender)
+      // Use existing pet data for read-only fields (breed_id, date_of_birth, gender, is_puppy)
       // Find location ID from location name
       const selectedLocation = this.locations.find(l => l.name === this.form.value.location_name);
       const locationId = selectedLocation ? selectedLocation.id : null;
@@ -201,7 +205,7 @@ export class PetEditComponent implements OnInit, OnChanges {
         gender: this.pet.gender, // Use existing gender
         weight: parseFloat(this.form.value.weight as string),
         location_id: locationId,
-        is_puppy: 0, // Adults are 0, puppies are 1
+        is_puppy: this.pet.is_puppy, // Use existing is_puppy value
         has_microchip: !!this.form.value.has_microchip,
         has_vaccination: !!this.form.value.has_vaccination,
         has_healthcertificate: !!this.form.value.has_healthcertificate,

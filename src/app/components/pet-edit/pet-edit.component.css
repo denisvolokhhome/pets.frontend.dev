@@ -579,6 +579,7 @@ textarea.form-control-modern {
 .gender-display {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .gender-badge {
@@ -606,7 +607,33 @@ textarea.form-control-modern {
   color: #db2777;
 }
 
+.gender-badge.not-specified {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.1), rgba(107, 114, 128, 0.05));
+  border-color: rgba(156, 163, 175, 0.3);
+  color: #6b7280;
+}
+
 .gender-badge i {
   font-size: 1.25rem;
+}
+
+/* Age Type Badge */
+.age-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 230, 109, 0.2), rgba(255, 219, 77, 0.1));
+  border: 2px solid rgba(255, 230, 109, 0.4);
+  border-radius: calc(var(--border-radius) * 0.75);
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #92400e;
+}
+
+.age-type-badge i {
+  font-size: 1.125rem;
+  color: #f59e0b;
 }
 
