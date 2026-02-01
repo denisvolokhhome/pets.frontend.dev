@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
 import { DataService } from 'src/app/services/data.service';
@@ -14,7 +14,8 @@ export class PetsComponent implements OnInit {
 
   constructor(
     public DataService: DataService,
-    public ModalService: ModalService
+    public ModalService: ModalService,
+    private cdr: ChangeDetectorRef
   ){}
 
   pets: IPet [] = [];
@@ -46,6 +47,7 @@ export class PetsComponent implements OnInit {
     this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
       this.pets = pets;
       this.applyFilters();
+      this.cdr.detectChanges();
     });
   }
 
