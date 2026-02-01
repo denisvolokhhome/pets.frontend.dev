@@ -38,11 +38,10 @@
     >
       <i
         class="bi fs-3 fw-bold"
-        [ngClass]="
-          pet.gender == 'm'
-            ? 'bi-gender-male text-color-blue-400'
-            : 'bi-gender-female text-color-pink-400'
-        "
+        [ngClass]="{
+          'bi-gender-male text-color-blue-400': pet.gender === 'm' || pet.gender === 'Male',
+          'bi-gender-female text-color-pink-400': pet.gender === 'f' || pet.gender === 'Female'
+        }"
       ></i>
     </div>
     <div
