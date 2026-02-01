@@ -111,6 +111,30 @@
         </div>
       </div>
 
+      <!-- Age Type Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="bi bi-calendar-heart"></i>
+          Age Type
+        </label>
+        <div class="gender-buttons">
+          <button 
+            class="gender-btn"
+            [class.active]="selectedAgeType === 'adult'"
+            (click)="onAgeTypeFilterChange(selectedAgeType === 'adult' ? '' : 'adult')">
+            <i class="bi bi-star-fill"></i>
+            Adult
+          </button>
+          <button 
+            class="gender-btn"
+            [class.active]="selectedAgeType === 'young'"
+            (click)="onAgeTypeFilterChange(selectedAgeType === 'young' ? '' : 'young')">
+            <i class="bi bi-heart-fill"></i>
+            Young
+          </button>
+        </div>
+      </div>
+
       <!-- Health Records Filter -->
       <div class="filter-group">
         <label class="filter-label">

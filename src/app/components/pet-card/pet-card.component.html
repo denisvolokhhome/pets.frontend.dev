@@ -46,6 +46,13 @@
       ></i>
     </div>
     <div
+      *ngIf="pet.is_puppy === 1"
+      class="pet-age-badge position-absolute shadow d-flex justify-content-center align-items-center"
+      title="Young Animal"
+    >
+      <i class="bi bi-heart-fill"></i>
+    </div>
+    <div
       class="pet-name position-absolute d-flex justify-content-center align-items-center shadow"
     >
       <h4 class="card-title fs-4 text-capitalize">{{ pet.name }}</h4>

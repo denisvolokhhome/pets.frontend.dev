@@ -170,6 +170,39 @@
   font-size: 1.75rem;
 }
 
+/* Age Badge (Young Animal) */
+.pet-age-badge {
+  position: absolute;
+  top: -25px;
+  right: 76px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #FFE66D 0%, #FFDB4D 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 230, 109, 0.4);
+  z-index: 5;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.pet-age-badge i {
+  font-size: 1.25rem;
+  color: #2C3E50;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(255, 230, 109, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 230, 109, 0.6);
+  }
+}
+
 /* Breed */
 .breed {
   font-size: 0.9375rem;
@@ -280,6 +313,16 @@ time {
   
   .pet-gender i {
     font-size: 1.5rem;
+  }
+  
+  .pet-age-badge {
+    width: 44px;
+    height: 44px;
+    right: 68px;
+  }
+  
+  .pet-age-badge i {
+    font-size: 1.125rem;
   }
 }
 

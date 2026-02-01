@@ -30,6 +30,7 @@ export class PetsComponent implements OnInit {
   // Filter states
   selectedLocation: string = '';
   selectedGender: string = '';
+  selectedAgeType: string = ''; // '' = all, 'adult' = adults only, 'young' = young only
   selectedHealthFilters = {
     vaccination: false,
     microchip: false,
@@ -69,6 +70,14 @@ export class PetsComponent implements OnInit {
         return false;
       }
 
+      // Age Type filter
+      if (this.selectedAgeType === 'adult' && pet.is_puppy === 1) {
+        return false;
+      }
+      if (this.selectedAgeType === 'young' && pet.is_puppy === 0) {
+        return false;
+      }
+
       // Health filters - pet must have ALL selected health records
       if (this.selectedHealthFilters.vaccination && !pet.has_vaccination) {
         return false;
@@ -100,9 +109,15 @@ export class PetsComponent implements OnInit {
     this.applyFilters();
   }
 
+  onAgeTypeFilterChange(ageType: string): void {
+    this.selectedAgeType = ageType;
+    this.applyFilters();
+  }
+
   clearFilters(): void {
     this.selectedLocation = '';
     this.selectedGender = '';
+    this.selectedAgeType = '';
     this.selectedHealthFilters = {
       vaccination: false,
       microchip: false,
@@ -117,6 +132,7 @@ export class PetsComponent implements OnInit {
     return !!(
       this.selectedLocation ||
       this.selectedGender ||
+      this.selectedAgeType ||
       Object.values(this.selectedHealthFilters).some(v => v)
     );
   }
