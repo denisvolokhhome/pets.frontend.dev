@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ILitter, IPuppyInput } from '../../models/litter';
+import { IBreeding, IPuppyInput } from '../../models/breeding';
 import { IPet } from '../../models/pet';
 import { DataService } from '../../services/data.service';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./puppy-table.component.css']
 })
 export class PuppyTableComponent implements OnInit {
-  @Input() litter!: ILitter;
+  @Input() litter!: IBreeding;
   @Output() puppiesAdded = new EventEmitter<IPet[]>();
 
   puppies: IPuppyInput[] = [];
@@ -32,8 +32,7 @@ export class PuppyTableComponent implements OnInit {
     this.puppies.push({
       name: '',
       gender: 'Male',
-      birth_date: '',
-      microchip: ''
+      birth_date: ''
     });
   }
 
@@ -67,12 +66,11 @@ export class PuppyTableComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // Clean up puppies data - remove empty microchip fields
-    const cleanedPuppies = this.puppies.map(puppy => ({
+    // Clean up puppies data
+    const cleanedPuppies: IPuppyInput[] = this.puppies.map(puppy => ({
       name: puppy.name.trim(),
       gender: puppy.gender,
-      birth_date: puppy.birth_date,
-      microchip: puppy.microchip?.trim() || undefined
+      birth_date: puppy.birth_date
     }));
 
     this.dataService.addPuppies(this.litter.id, cleanedPuppies).subscribe({

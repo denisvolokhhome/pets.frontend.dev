@@ -1,4 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
 import { DataService } from 'src/app/services/data.service';
@@ -15,7 +17,8 @@ export class PetsComponent implements OnInit {
   constructor(
     public DataService: DataService,
     public ModalService: ModalService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ){}
 
   pets: IPet [] = [];
@@ -42,6 +45,17 @@ export class PetsComponent implements OnInit {
   ngOnInit(): void {
     this.loadPets();
     this.loadLocations();
+    
+    // Reload pets when navigating back to this component
+    // This ensures newly added puppies from litter flow are displayed
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      // Only reload if we're on the pets route
+      if (this.router.url.includes('/pets')) {
+        this.loadPets();
+      }
+    });
   }
 
   loadPets(): void {

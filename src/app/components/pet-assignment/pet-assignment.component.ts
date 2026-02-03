@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ILitter } from '../../models/litter';
+import { IBreeding } from '../../models/breeding';
 import { IPet } from '../../models/pet';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./pet-assignment.component.css']
 })
 export class PetAssignmentComponent implements OnInit {
-  @Input() litter!: ILitter;
+  @Input() litter!: IBreeding;
   @Output() petsAssigned = new EventEmitter<IPet[]>();
 
   availablePets: IPet[] = [];

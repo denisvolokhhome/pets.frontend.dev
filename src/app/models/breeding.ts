@@ -1,25 +1,25 @@
 import { IPet } from './pet';
 
-export enum LitterStatus {
+export enum BreedingStatus {
   Started = 'Started',
   InProcess = 'InProcess',
   Done = 'Done',
   Voided = 'Voided'
 }
 
-export interface ILitter {
+export interface IBreeding {
   id: string;
   description?: string | null;
-  status: LitterStatus;
+  status: BreedingStatus;
   created_at: string;
   updated_at: string;
   parent_pets?: IPet[];
   puppies?: IPet[];
 }
 
-export interface ILitterFilter {
+export interface IBreedingFilter {
   location_id?: string;
-  status?: LitterStatus;
+  status?: BreedingStatus;
   breed_id?: string;
 }
 
@@ -31,5 +31,4 @@ export interface IPuppyInput {
   name: string;
   gender: 'Male' | 'Female';
   birth_date: string;
-  microchip?: string;
 }

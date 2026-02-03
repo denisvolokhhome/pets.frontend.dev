@@ -15,9 +15,6 @@
               Birth Date <span class="text-red-500">*</span>
             </th>
             <th>
-              Microchip
-            </th>
-            <th>
               Actions
             </th>
           </tr>
@@ -45,14 +42,6 @@
               <input
                 type="date"
                 [(ngModel)]="puppy.birth_date"
-                [disabled]="isLoading"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                [(ngModel)]="puppy.microchip"
-                placeholder="Optional"
                 [disabled]="isLoading"
               />
             </td>

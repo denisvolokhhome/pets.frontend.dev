@@ -5,7 +5,7 @@ import { Observable, delay, retry, tap, catchError, throwError } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
 import { IUser, IProfileImageResponse } from '../models/user';
-import { ILitter, ILitterFilter, IPuppyInput } from '../models/litter';
+import { IBreeding, IBreedingFilter, IPuppyInput } from '../models/breeding';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -226,7 +226,7 @@ export class DataService {
   }
 
   // Litter management methods
-  getLitters(filters?: ILitterFilter): Observable<ILitter[]> {
+  getLitters(filters?: IBreedingFilter): Observable<any[]> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -240,7 +240,7 @@ export class DataService {
       if (filters.breed_id) params.breed_id = filters.breed_id;
     }
     
-    return this.http.get<ILitter[]>(this.apiurl + '/litters', { 
+    return this.http.get<any[]>(this.apiurl + '/litters', { 
       headers: header,
       params: params
     })
@@ -249,18 +249,18 @@ export class DataService {
       );
   }
 
-  getLitter(id: string): Observable<ILitter> {
+  getLitter(id: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.get<ILitter>(this.apiurl + '/litters/' + id, { headers: header })
+    return this.http.get<any>(this.apiurl + '/litters/' + id, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  createLitter(description?: string): Observable<ILitter> {
+  createLitter(description?: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -270,24 +270,24 @@ export class DataService {
       description: description || null
     };
     
-    return this.http.post<ILitter>(this.apiurl + '/litters', litterData, { headers: header })
+    return this.http.post<any>(this.apiurl + '/litters', litterData, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateLitter(id: string, data: any): Observable<ILitter> {
+  updateLitter(id: string, data: any): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.put<ILitter>(this.apiurl + '/litters/' + id, data, { headers: header })
+    return this.http.put<any>(this.apiurl + '/litters/' + id, data, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  assignPets(litterId: string, petIds: string[]): Observable<ILitter> {
+  assignPets(litterId: string, petIds: string[]): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -297,7 +297,7 @@ export class DataService {
       pet_ids: petIds
     };
     
-    return this.http.post<ILitter>(
+    return this.http.post<any>(
       this.apiurl + '/litters/' + litterId + '/assign-pets', 
       assignmentData, 
       { headers: header }
@@ -307,17 +307,24 @@ export class DataService {
       );
   }
 
-  addPuppies(litterId: string, puppies: IPuppyInput[]): Observable<ILitter> {
+  addPuppies(litterId: string, puppies: IPuppyInput[]): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
     
+    // Convert gender from 'Male'/'Female' to 'm'/'f' for backend
+    const convertedPuppies = puppies.map(puppy => ({
+      name: puppy.name,
+      gender: puppy.gender === 'Male' ? 'm' : 'f',
+      birth_date: puppy.birth_date
+    }));
+    
     const puppyData = {
-      puppies: puppies
+      puppies: convertedPuppies
     };
     
-    return this.http.post<ILitter>(
+    return this.http.post<any>(
       this.apiurl + '/litters/' + litterId + '/add-puppies', 
       puppyData, 
       { headers: header }
@@ -327,12 +334,12 @@ export class DataService {
       );
   }
 
-  voidLitter(id: string): Observable<ILitter> {
+  voidLitter(id: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.delete<ILitter>(this.apiurl + '/litters/' + id, { headers: header })
+    return this.http.delete<any>(this.apiurl + '/litters/' + id, { headers: header })
       .pipe(
         catchError(this.handleError)
       );

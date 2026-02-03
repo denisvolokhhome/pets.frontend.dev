@@ -1,5 +1,5 @@
 /* Container */
-.litters-container {
+.breedings-container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -9,7 +9,7 @@
 }
 
 /* Header Section */
-.litters-header {
+.breedings-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,7 +83,7 @@
 }
 
 /* Layout Container */
-.litters-layout {
+.breedings-layout {
   display: flex;
   gap: 1.5rem;
   flex: 1;
@@ -114,7 +114,7 @@
 }
 
 /* Main Content */
-.litters-content {
+.breedings-content {
   flex: 1;
   min-width: 0;
   overflow-x: hidden;
@@ -361,18 +361,18 @@
 }
 
 /* Litters Table */
-.litters-table {
+.breedings-table {
   width: 100%;
   min-width: 1000px;
   border-collapse: collapse;
 }
 
-.litters-table thead {
+.breedings-table thead {
   background: #f9fafb;
   border-bottom: 2px solid #e5e7eb;
 }
 
-.litters-table th {
+.breedings-table th {
   padding: 1rem;
   text-align: left;
   font-size: 0.875rem;
@@ -383,68 +383,68 @@
   white-space: nowrap;
 }
 
-.litters-table th:first-child,
-.litters-table th:nth-child(2) {
+.breedings-table th:first-child,
+.breedings-table th:nth-child(2) {
   min-width: 100px;
 }
 
-.litters-table th:nth-child(3) {
+.breedings-table th:nth-child(3) {
   min-width: 200px;
 }
 
-.litters-table th:nth-child(4),
-.litters-table th:nth-child(5) {
+.breedings-table th:nth-child(4),
+.breedings-table th:nth-child(5) {
   min-width: 120px;
 }
 
-.litters-table th:nth-child(6) {
+.breedings-table th:nth-child(6) {
   min-width: 80px;
   text-align: center;
 }
 
-.litters-table th:nth-child(7) {
+.breedings-table th:nth-child(7) {
   min-width: 100px;
 }
 
-.litters-table th:nth-child(8) {
+.breedings-table th:nth-child(8) {
   min-width: 140px;
 }
 
-.litters-table tbody tr {
+.breedings-table tbody tr {
   border-bottom: 1px solid #e5e7eb;
   transition: background-color 0.2s;
 }
 
-.litters-table tbody tr:hover {
+.breedings-table tbody tr:hover {
   background: #f9fafb;
 }
 
-.litters-table tbody tr:last-child {
+.breedings-table tbody tr:last-child {
   border-bottom: none;
 }
 
 /* Voided Litter Row Styling */
-.litters-table tbody tr.voided-row {
+.breedings-table tbody tr.voided-row {
   background-color: #f9fafb;
   opacity: 0.7;
 }
 
-.litters-table tbody tr.voided-row:hover {
+.breedings-table tbody tr.voided-row:hover {
   background-color: #f3f4f6;
 }
 
-.litters-table tbody tr.voided-row td {
+.breedings-table tbody tr.voided-row td {
   color: #6b7280;
 }
 
-.litters-table td {
+.breedings-table td {
   padding: 1rem;
   font-size: 0.875rem;
   color: #1f2937;
   white-space: nowrap;
 }
 
-.litters-table td:nth-child(3) {
+.breedings-table td:nth-child(3) {
   white-space: normal;
   max-width: 300px;
   word-wrap: break-word;
@@ -630,11 +630,11 @@
 }
 
 @media (max-width: 992px) {
-  .litters-container {
+  .breedings-container {
     gap: 1rem;
   }
 
-  .litters-header {
+  .breedings-header {
     flex-direction: column;
     align-items: stretch;
     padding: 1.25rem;
@@ -669,7 +669,7 @@
     font-size: 1.75rem;
   }
 
-  .litters-layout {
+  .breedings-layout {
     flex-direction: column;
   }
 
@@ -679,12 +679,12 @@
 }
 
 @media (max-width: 768px) {
-  .litters-layout {
+  .breedings-layout {
     padding: 1rem;
     gap: 1rem;
   }
 
-  .litters-header {
+  .breedings-header {
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
@@ -702,12 +702,12 @@
     border-radius: 8px;
   }
 
-  .litters-table {
+  .breedings-table {
     min-width: 1000px;
   }
 
-  .litters-table th,
-  .litters-table td {
+  .breedings-table th,
+  .breedings-table td {
     padding: 0.75rem;
     font-size: 0.8125rem;
   }
@@ -806,7 +806,7 @@
 }
 
 /* Smooth Transitions */
-.litters-table tbody tr {
+.breedings-table tbody tr {
   transition: all 0.2s ease-in-out;
 }
 
@@ -828,7 +828,7 @@
 }
 
 /* Hover Effects Enhancement */
-.litters-table tbody tr:hover {
+.breedings-table tbody tr:hover {
   background: #f9fafb;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -839,7 +839,7 @@
 
 /* Mobile Optimizations */
 @media (max-width: 640px) {
-  .litters-header {
+  .breedings-header {
     gap: 0.75rem;
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ILitter, LitterStatus } from 'src/app/models/litter';
+import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
@@ -8,11 +8,11 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: false,
-  selector: 'app-litters',
-  templateUrl: './litters.component.html',
-  styleUrls: ['./litters.component.css']
+  selector: 'app-breedings',
+  templateUrl: './breedings.component.html',
+  styleUrls: ['./breedings.component.css']
 })
-export class LittersComponent implements OnInit, AfterViewInit {
+export class BreedingsComponent implements OnInit, AfterViewInit {
   @ViewChild('tableContainer') tableContainer?: ElementRef;
 
   constructor(
@@ -22,8 +22,8 @@ export class LittersComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  litters: ILitter[] = [];
-  filteredLitters: ILitter[] = [];
+  breedings: IBreeding[] = [];
+  filteredBreedings: IBreeding[] = [];
   locations: ILocation[] = [];
   breeds: IBreed[] = [];
   
@@ -38,14 +38,14 @@ export class LittersComponent implements OnInit, AfterViewInit {
   isVoiding: { [key: string]: boolean } = {};
   
   // Modal properties
-  selectedLitter: ILitter | null = null;
+  selectedBreeding: IBreeding | null = null;
   modalMode: 'create' | 'update' | 'view' = 'create';
   
   // Status enum for template
-  LitterStatus = LitterStatus;
+  BreedingStatus = BreedingStatus;
 
   ngOnInit(): void {
-    this.loadLitters();
+    this.loadBreedings();
     this.loadLocations();
     this.loadBreeds();
   }
@@ -67,18 +67,18 @@ export class LittersComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  loadLitters(): void {
+  loadBreedings(): void {
     this.isLoading = true;
     this.dataService.getLitters().subscribe({
-      next: (litters) => {
-        this.litters = litters;
+      next: (breedings: any) => {
+        this.breedings = breedings as IBreeding[];
         this.applyFilters();
         this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error loading litters:', error);
-        this.toastr.error('Failed to load litters', 'Error');
+        console.error('Error loading breedings:', error);
+        this.toastr.error('Failed to load breedings', 'Error');
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -110,11 +110,11 @@ export class LittersComponent implements OnInit, AfterViewInit {
   }
 
   applyFilters(): void {
-    this.filteredLitters = this.litters.filter(litter => {
+    this.filteredBreedings = this.breedings.filter(breeding => {
       // Search filter - search in description
       if (this.searchTerm) {
         const searchLower = this.searchTerm.toLowerCase();
-        const description = litter.description?.toLowerCase() || '';
+        const description = breeding.description?.toLowerCase() || '';
         if (!description.includes(searchLower)) {
           return false;
         }
@@ -123,22 +123,22 @@ export class LittersComponent implements OnInit, AfterViewInit {
       // Location filter - compare by location name since location_id isn't in IPet
       if (this.selectedLocationId) {
         const selectedLocation = this.locations.find(loc => loc.id?.toString() === this.selectedLocationId);
-        const litterLocation = this.getLocationName(litter);
-        if (selectedLocation && litterLocation !== selectedLocation.name) {
+        const breedingLocation = this.getLocationName(breeding);
+        if (selectedLocation && breedingLocation !== selectedLocation.name) {
           return false;
         }
       }
 
       // Status filter
-      if (this.selectedStatus && litter.status !== this.selectedStatus) {
+      if (this.selectedStatus && breeding.status !== this.selectedStatus) {
         return false;
       }
 
       // Breed filter - compare by breed ID
       if (this.selectedBreedId) {
-        const litterBreeds = this.getBreedIds(litter);
+        const breedingBreeds = this.getBreedIds(breeding);
         const selectedBreedIdNum = parseInt(this.selectedBreedId);
-        if (!litterBreeds.includes(selectedBreedIdNum)) {
+        if (!breedingBreeds.includes(selectedBreedIdNum)) {
           return false;
         }
       }
@@ -166,30 +166,30 @@ export class LittersComponent implements OnInit, AfterViewInit {
     return !!(this.selectedLocationId || this.selectedStatus || this.selectedBreedId || this.searchTerm);
   }
 
-  getLocationName(litter: ILitter): string {
-    if (!litter.parent_pets || litter.parent_pets.length === 0) {
+  getLocationName(breeding: IBreeding): string {
+    if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
       return '-';
     }
     // Get location from first parent pet
-    return litter.parent_pets[0].location_name || '-';
+    return breeding.parent_pets[0].location_name || '-';
   }
 
-  getLocationId(litter: ILitter): string | null {
-    if (!litter.parent_pets || litter.parent_pets.length === 0) {
+  getLocationId(breeding: IBreeding): string | null {
+    if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
       return null;
     }
     // Since location_id doesn't exist in IPet, we'll use location_name for filtering
     // This is a workaround - ideally the backend should provide location_id
-    return litter.parent_pets[0].location_name || null;
+    return breeding.parent_pets[0].location_name || null;
   }
 
-  getBreedDisplay(litter: ILitter): string {
-    if (!litter.parent_pets || litter.parent_pets.length === 0) {
+  getBreedDisplay(breeding: IBreeding): string {
+    if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
       return '-';
     }
 
     // Get unique breed names from parent pets
-    const breedNames = litter.parent_pets
+    const breedNames = breeding.parent_pets
       .map(pet => pet.breed_name)
       .filter((name, index, self) => name && self.indexOf(name) === index);
 
@@ -204,71 +204,71 @@ export class LittersComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getBreedIds(litter: ILitter): (number | undefined)[] {
-    if (!litter.parent_pets || litter.parent_pets.length === 0) {
+  getBreedIds(breeding: IBreeding): (number | undefined)[] {
+    if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
       return [];
     }
     // Get unique breed IDs from parent pets
-    return litter.parent_pets
+    return breeding.parent_pets
       .map(pet => pet.breed_id)
       .filter((id, index, self) => id && self.indexOf(id) === index);
   }
 
-  getPuppiesCount(litter: ILitter): number {
-    if (!litter.puppies || litter.puppies.length === 0) {
+  getPuppiesCount(breeding: IBreeding): number {
+    if (!breeding.puppies || breeding.puppies.length === 0) {
       return 0;
     }
-    return litter.puppies.length;
+    return breeding.puppies.length;
   }
 
-  addLitter(): void {
-    console.log('addLitter called');
+  addBreeding(): void {
+    console.log('addBreeding called');
     console.log('modalService:', this.modalService);
-    this.selectedLitter = null;
+    this.selectedBreeding = null;
     this.modalMode = 'create';
     console.log('Opening modal with mode:', this.modalMode);
     this.modalService.open();
     console.log('Modal service open() called');
   }
 
-  viewLitter(litter: ILitter): void {
-    this.selectedLitter = litter;
+  viewBreeding(breeding: IBreeding): void {
+    this.selectedBreeding = breeding;
     this.modalMode = 'view';
     this.modalService.open();
   }
 
-  updateLitter(litter: ILitter): void {
-    this.selectedLitter = litter;
+  updateBreeding(breeding: IBreeding): void {
+    this.selectedBreeding = breeding;
     this.modalMode = 'update';
     this.modalService.open();
   }
 
-  voidLitter(litter: ILitter): void {
-    if (confirm('Are you sure you want to void this litter? This action cannot be undone.')) {
-      this.isVoiding[litter.id] = true;
-      this.dataService.voidLitter(litter.id).subscribe({
+  voidBreeding(breeding: IBreeding): void {
+    if (confirm('Are you sure you want to void this breeding? This action cannot be undone.')) {
+      this.isVoiding[breeding.id] = true;
+      this.dataService.voidLitter(breeding.id).subscribe({
         next: () => {
-          this.toastr.success('Litter voided successfully', 'Success');
-          this.isVoiding[litter.id] = false;
-          this.loadLitters();
+          this.toastr.success('Breeding voided successfully', 'Success');
+          this.isVoiding[breeding.id] = false;
+          this.loadBreedings();
         },
         error: (error) => {
-          console.error('Error voiding litter:', error);
+          console.error('Error voiding breeding:', error);
           const errorMessage = error.error?.detail || error.message || 'Unknown error';
-          this.toastr.error('Failed to void litter: ' + errorMessage, 'Error');
-          this.isVoiding[litter.id] = false;
+          this.toastr.error('Failed to void breeding: ' + errorMessage, 'Error');
+          this.isVoiding[breeding.id] = false;
         }
       });
     }
   }
 
-  onLitterSaved(litter: ILitter): void {
-    // Reload litters after save
-    this.loadLitters();
+  onBreedingSaved(breeding: any): void {
+    // Reload breedings after save
+    this.loadBreedings();
     if (this.modalMode === 'create') {
-      this.toastr.success('Litter created successfully', 'Success');
+      this.toastr.success('Breeding created successfully', 'Success');
     } else if (this.modalMode === 'update') {
-      this.toastr.success('Litter updated successfully', 'Success');
+      this.toastr.success('Breeding updated successfully', 'Success');
     }
   }
 
@@ -278,15 +278,15 @@ export class LittersComponent implements OnInit, AfterViewInit {
     return date.toLocaleDateString();
   }
 
-  getStatusBadgeClass(status: LitterStatus): string {
+  getStatusBadgeClass(status: BreedingStatus): string {
     switch (status) {
-      case LitterStatus.Started:
+      case BreedingStatus.Started:
         return 'badge-started';
-      case LitterStatus.InProcess:
+      case BreedingStatus.InProcess:
         return 'badge-inprocess';
-      case LitterStatus.Done:
+      case BreedingStatus.Done:
         return 'badge-done';
-      case LitterStatus.Voided:
+      case BreedingStatus.Voided:
         return 'badge-voided';
       default:
         return '';

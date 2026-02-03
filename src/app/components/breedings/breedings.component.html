@@ -1,10 +1,10 @@
-<div class="litters-container">
+<div class="breedings-container">
   <!-- Header Section -->
-  <header class="litters-header">
+  <header class="breedings-header">
     <div class="header-left">
       <h1 class="page-title">
         <i class="bi bi-heart-fill"></i>
-        Litters Management
+        Breedings Management
       </h1>
     </div>
     
@@ -14,7 +14,7 @@
         <input
           type="text"
           class="search-input"
-          placeholder="Search litters..."
+          placeholder="Search breedings..."
           [(ngModel)]="searchTerm"
           (input)="onSearchChange()"
         />
@@ -25,15 +25,15 @@
     <div class="header-right">
       <button 
         class="fab-button fab-success"
-        (click)="addLitter()"
-        title="Add Litter">
+        (click)="addBreeding()"
+        title="Add Breeding">
         <i class="bi bi-plus-circle"></i>
       </button>
     </div>
   </header>
 
   <!-- Content Section -->
-  <div class="litters-layout">
+  <div class="breedings-layout">
     <!-- Filters Sidebar -->
     <aside class="filters-sidebar">
       <div class="filters-header">
@@ -82,10 +82,10 @@
             (change)="applyFilters()"
             [disabled]="isLoading">
             <option value="">All Statuses</option>
-            <option [value]="LitterStatus.Started">Started</option>
-            <option [value]="LitterStatus.InProcess">In Process</option>
-            <option [value]="LitterStatus.Done">Done</option>
-            <option [value]="LitterStatus.Voided">Voided</option>
+            <option [value]="BreedingStatus.Started">Started</option>
+            <option [value]="BreedingStatus.InProcess">In Process</option>
+            <option [value]="BreedingStatus.Done">Done</option>
+            <option [value]="BreedingStatus.Voided">Voided</option>
           </select>
         </div>
 
@@ -109,14 +109,14 @@
       </div>
 
       <!-- Results Count -->
-      <div class="results-count" *ngIf="filteredLitters && !isLoading">
+      <div class="results-count" *ngIf="filteredBreedings && !isLoading">
         <i class="bi bi-check-circle-fill"></i>
-        <span>{{ filteredLitters.length }} of {{ litters.length }}</span>
+        <span>{{ filteredBreedings.length }} of {{ breedings.length }}</span>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="litters-content">
+    <main class="breedings-content">
       <!-- Table Container -->
       <div class="table-container" #tableContainer>
         <!-- Loading State -->
@@ -126,10 +126,10 @@
               <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
             </svg>
           </div>
-          <p>Loading litters...</p>
+          <p>Loading breedings...</p>
         </div>
 
-        <table class="litters-table" *ngIf="!isLoading && filteredLitters && filteredLitters.length > 0">
+        <table class="breedings-table" *ngIf="!isLoading && filteredBreedings && filteredBreedings.length > 0">
         <thead>
           <tr>
             <th>Created</th>
@@ -143,46 +143,46 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let litter of filteredLitters" [ngClass]="{'voided-row': litter.status === LitterStatus.Voided}">
-            <td>{{ formatDate(litter.created_at) }}</td>
-            <td>{{ formatDate(litter.updated_at) }}</td>
+          <tr *ngFor="let breeding of filteredBreedings" [ngClass]="{'voided-row': breeding.status === BreedingStatus.Voided}">
+            <td>{{ formatDate(breeding.created_at) }}</td>
+            <td>{{ formatDate(breeding.updated_at) }}</td>
             <td>
-              <span *ngIf="litter.description">{{ litter.description }}</span>
-              <span *ngIf="!litter.description" class="text-muted">-</span>
+              <span *ngIf="breeding.description">{{ breeding.description }}</span>
+              <span *ngIf="!breeding.description" class="text-muted">-</span>
             </td>
-            <td>{{ getLocationName(litter) }}</td>
-            <td>{{ getBreedDisplay(litter) }}</td>
+            <td>{{ getLocationName(breeding) }}</td>
+            <td>{{ getBreedDisplay(breeding) }}</td>
             <td class="puppies-cell">
-              <span class="puppies-count">{{ getPuppiesCount(litter) }}</span>
+              <span class="puppies-count">{{ getPuppiesCount(breeding) }}</span>
             </td>
             <td>
-              <span class="status-badge" [ngClass]="getStatusBadgeClass(litter.status)">
-                {{ litter.status }}
+              <span class="status-badge" [ngClass]="getStatusBadgeClass(breeding.status)">
+                {{ breeding.status }}
               </span>
             </td>
             <td class="actions-cell">
               <button 
                 class="btn-action btn-view" 
-                (click)="viewLitter(litter)"
-                title="View litter details">
+                (click)="viewBreeding(breeding)"
+                title="View breeding details">
                 <i class="bi bi-eye-fill"></i>
               </button>
               <button 
                 class="btn-action btn-edit" 
-                (click)="updateLitter(litter)"
-                title="Update litter"
-                [disabled]="litter.status === LitterStatus.Voided || isVoiding[litter.id]">
+                (click)="updateBreeding(breeding)"
+                title="Update breeding"
+                [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
                 <i class="bi bi-pencil-fill"></i>
               </button>
               <button 
                 class="btn-action btn-void" 
-                (click)="voidLitter(litter)"
-                title="Void litter"
-                [disabled]="litter.status === LitterStatus.Voided || isVoiding[litter.id]">
-                <span *ngIf="!isVoiding[litter.id]">
+                (click)="voidBreeding(breeding)"
+                title="Void breeding"
+                [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
+                <span *ngIf="!isVoiding[breeding.id]">
                   <i class="bi bi-x-circle-fill"></i>
                 </span>
-                <span *ngIf="isVoiding[litter.id]" class="spinner-small">
+                <span *ngIf="isVoiding[breeding.id]" class="spinner-small">
                   <svg class="spinner-icon" viewBox="0 0 50 50">
                     <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                   </svg>
@@ -200,11 +200,11 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="!isLoading && (!filteredLitters || filteredLitters.length === 0)" class="empty-state">
+      <div *ngIf="!isLoading && (!filteredBreedings || filteredBreedings.length === 0)" class="empty-state">
         <i class="bi bi-inbox"></i>
-        <h3>No litters found</h3>
+        <h3>No breedings found</h3>
         <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
-        <p *ngIf="!hasActiveFilters()">Click the + button above to create your first litter.</p>
+        <p *ngIf="!hasActiveFilters()">Click the + button above to create your first breeding.</p>
         <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
           Clear Filters
         </button>
@@ -214,9 +214,9 @@
   </div>
 </div>
 
-<!-- Litter Modal -->
-<app-litter-modal
+<!-- Breeding Modal -->
+<app-breeding-modal
   [mode]="modalMode"
-  [litter]="selectedLitter"
-  (litterSaved)="onLitterSaved($event)">
-</app-litter-modal>
+  [breeding]="selectedBreeding"
+  (breedingSaved)="onBreedingSaved($event)">
+</app-breeding-modal>
