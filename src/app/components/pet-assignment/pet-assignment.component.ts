@@ -46,20 +46,22 @@ export class PetAssignmentComponent implements OnInit {
                 name: p.name, 
                 is_puppy: p.is_puppy,
                 is_puppy_type: typeof p.is_puppy,
+                litter_id: p.litter_id ?? null,
                 location: p.location_name 
               })));
               
               // Filter out puppies - only adult pets can be parents
-              // Check for 0 or falsy values to handle data inconsistencies
-              this.availablePets = pets.filter(pet => !pet.is_puppy || pet.is_puppy === 0);
+              // is_puppy is a number: 0 = adult, 1 = puppy
+              // Note: litter_id just tracks where a pet was born, not whether it's currently a puppy
+              this.availablePets = pets.filter(pet => pet.is_puppy === 0);
               console.log('Available adult pets:', this.availablePets);
               
               if (this.availablePets.length === 0 && pets.length > 0) {
-                this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents.';
-                this.toastr.warning('All your pets are marked as puppies. Please edit your pets and save them again to fix the data.', 'No Adult Pets');
+                this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents. You can edit a pet and uncheck "Is Puppy" to mark it as an adult.';
+                this.toastr.warning('All your pets are marked as puppies. Edit a pet and uncheck "Is Puppy" to mark it as an adult.', 'No Adult Pets');
               } else if (pets.length === 0) {
-                this.locationError = 'No pets found. Please add pets first.';
-                this.toastr.warning('No pets found. Please add pets first.', 'Warning');
+                this.locationError = 'No pets found. Please add adult pets first.';
+                this.toastr.warning('No pets found. Please add adult pets first.', 'Warning');
               }
               
               this.isLoading = false;

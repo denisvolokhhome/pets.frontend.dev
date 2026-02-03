@@ -235,28 +235,58 @@
     
     <div *ngIf="view == 'table'">
       <div class="table-container">
-        <table *ngIf="filteredPets && filteredPets.length > 0" class="pets-table">
-          <thead>
+        <p-table 
+          [value]="filteredPets | searchPets : term" 
+          [paginator]="true" 
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 25, 50, 100]"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} pets"
+          [globalFilterFields]="['name', 'breed_name', 'description', 'gender']"
+          styleClass="p-datatable-sm p-datatable-striped"
+          responsiveLayout="scroll"
+          *ngIf="filteredPets && filteredPets.length > 0">
+          
+          <ng-template pTemplate="header">
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Breed</th>
-              <th scope="col">Description</th>
-              <th scope="col">Date of Birth</th>
-              <th scope="col">Gender</th>
-              <th scope="col">Weight</th>
+              <th pSortableColumn="name">
+                Name <p-sortIcon field="name"></p-sortIcon>
+              </th>
+              <th pSortableColumn="breed_name">
+                Breed <p-sortIcon field="breed_name"></p-sortIcon>
+              </th>
+              <th pSortableColumn="description">
+                Description <p-sortIcon field="description"></p-sortIcon>
+              </th>
+              <th pSortableColumn="date_of_birth">
+                Date of Birth <p-sortIcon field="date_of_birth"></p-sortIcon>
+              </th>
+              <th pSortableColumn="gender">
+                Gender <p-sortIcon field="gender"></p-sortIcon>
+              </th>
+              <th pSortableColumn="weight">
+                Weight <p-sortIcon field="weight"></p-sortIcon>
+              </th>
             </tr>
-          </thead>
-          <tbody>
-            <tr
-              app-pet-grid
-              *ngFor="
-                let pet of filteredPets | searchPets : term;
-                let i = index
-              "
-              [pet]="pet"
-            ></tr>
-          </tbody>
-        </table>
+          </ng-template>
+          
+          <ng-template pTemplate="body" let-pet>
+            <tr>
+              <td>{{ pet.name }}</td>
+              <td>{{ pet.breed_name }}</td>
+              <td>{{ pet.description }}</td>
+              <td>{{ pet.date_of_birth }}</td>
+              <td>{{ pet.gender }}</td>
+              <td>{{ pet.weight }}</td>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center">No pets found</td>
+            </tr>
+          </ng-template>
+        </p-table>
 
         <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
           <i class="bi bi-search"></i>

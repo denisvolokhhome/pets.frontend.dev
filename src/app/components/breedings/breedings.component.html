@@ -129,75 +129,95 @@
           <p>Loading breedings...</p>
         </div>
 
-        <table class="breedings-table" *ngIf="!isLoading && filteredBreedings && filteredBreedings.length > 0">
-        <thead>
-          <tr>
-            <th>Created</th>
-            <th>Modified</th>
-            <th>Description</th>
-            <th>Location</th>
-            <th>Breed</th>
-            <th>Puppies</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let breeding of filteredBreedings" [ngClass]="{'voided-row': breeding.status === BreedingStatus.Voided}">
-            <td>{{ formatDate(breeding.created_at) }}</td>
-            <td>{{ formatDate(breeding.updated_at) }}</td>
-            <td>
-              <span *ngIf="breeding.description">{{ breeding.description }}</span>
-              <span *ngIf="!breeding.description" class="text-muted">-</span>
-            </td>
-            <td>{{ getLocationName(breeding) }}</td>
-            <td>{{ getBreedDisplay(breeding) }}</td>
-            <td class="puppies-cell">
-              <span class="puppies-count">{{ getPuppiesCount(breeding) }}</span>
-            </td>
-            <td>
-              <span class="status-badge" [ngClass]="getStatusBadgeClass(breeding.status)">
-                {{ breeding.status }}
-              </span>
-            </td>
-            <td class="actions-cell">
-              <button 
-                class="btn-action btn-view" 
-                (click)="viewBreeding(breeding)"
-                title="View breeding details">
-                <i class="bi bi-eye-fill"></i>
-              </button>
-              <button 
-                class="btn-action btn-edit" 
-                (click)="updateBreeding(breeding)"
-                title="Update breeding"
-                [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
-                <i class="bi bi-pencil-fill"></i>
-              </button>
-              <button 
-                class="btn-action btn-void" 
-                (click)="voidBreeding(breeding)"
-                title="Void breeding"
-                [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
-                <span *ngIf="!isVoiding[breeding.id]">
-                  <i class="bi bi-x-circle-fill"></i>
+        <p-table 
+          [value]="filteredBreedings" 
+          [paginator]="true" 
+          [rows]="10"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} breedings"
+          [globalFilterFields]="['description', 'status']"
+          styleClass="p-datatable-sm p-datatable-striped"
+          responsiveLayout="scroll"
+          *ngIf="!isLoading && filteredBreedings && filteredBreedings.length > 0">
+          
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="created_at">
+                Created <p-sortIcon field="created_at"></p-sortIcon>
+              </th>
+              <th pSortableColumn="updated_at">
+                Modified <p-sortIcon field="updated_at"></p-sortIcon>
+              </th>
+              <th pSortableColumn="description">
+                Description <p-sortIcon field="description"></p-sortIcon>
+              </th>
+              <th>Location</th>
+              <th>Breed</th>
+              <th>Puppies</th>
+              <th pSortableColumn="status">
+                Status <p-sortIcon field="status"></p-sortIcon>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="body" let-breeding>
+            <tr [ngClass]="{'voided-row': breeding.status === BreedingStatus.Voided}">
+              <td>{{ formatDate(breeding.created_at) }}</td>
+              <td>{{ formatDate(breeding.updated_at) }}</td>
+              <td>
+                <span *ngIf="breeding.description">{{ breeding.description }}</span>
+                <span *ngIf="!breeding.description" class="text-muted">-</span>
+              </td>
+              <td>{{ getLocationName(breeding) }}</td>
+              <td>{{ getBreedDisplay(breeding) }}</td>
+              <td class="puppies-cell">
+                <span class="puppies-count">{{ getPuppiesCount(breeding) }}</span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusBadgeClass(breeding.status)">
+                  {{ breeding.status }}
                 </span>
-                <span *ngIf="isVoiding[breeding.id]" class="spinner-small">
-                  <svg class="spinner-icon" viewBox="0 0 50 50">
-                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                  </svg>
-                </span>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Scroll Hint for Mobile -->
-      <div class="scroll-hint">
-        <i class="bi bi-arrow-left-right"></i>
-        <span>Scroll horizontally to see more</span>
-      </div>
+              </td>
+              <td class="actions-cell">
+                <button 
+                  class="btn-action btn-view" 
+                  (click)="viewBreeding(breeding)"
+                  title="View breeding details">
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+                <button 
+                  class="btn-action btn-edit" 
+                  (click)="updateBreeding(breeding)"
+                  title="Update breeding"
+                  [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button 
+                  class="btn-action btn-void" 
+                  (click)="voidBreeding(breeding)"
+                  title="Void breeding"
+                  [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
+                  <span *ngIf="!isVoiding[breeding.id]">
+                    <i class="bi bi-x-circle-fill"></i>
+                  </span>
+                  <span *ngIf="isVoiding[breeding.id]" class="spinner-small">
+                    <svg class="spinner-icon" viewBox="0 0 50 50">
+                      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                    </svg>
+                  </span>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8" class="text-center">No breedings found</td>
+            </tr>
+          </ng-template>
+        </p-table>
 
       <!-- Empty State -->
       <div *ngIf="!isLoading && (!filteredBreedings || filteredBreedings.length === 0)" class="empty-state">

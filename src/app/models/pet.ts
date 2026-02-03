@@ -13,6 +13,7 @@ export interface IPet {
   image_path?: string;
   image_name?: string;
   is_puppy: number;
+  litter_id?: number | null;
   has_microchip: number;
   has_vaccination: number;
   has_healthcertificate: number;

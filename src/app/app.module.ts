@@ -44,6 +44,11 @@ import { BreedingModalComponent } from './components/breeding-modal/breeding-mod
 import { PetAssignmentComponent } from './components/pet-assignment/pet-assignment.component';
 import { PuppyTableComponent } from './components/puppy-table/puppy-table.component';
 
+// PrimeNG imports
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+
 
 
 
@@ -94,6 +99,9 @@ import { PuppyTableComponent } from './components/puppy-table/puppy-table.compon
     MatNativeDateModule,
     MatDatepickerModule,
     MatCardModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
 
   ],
   providers: [
