@@ -159,11 +159,11 @@
 
 /* Filters Sidebar */
 .filters-sidebar {
-  width: 280px;
+  width: 220px;
   flex-shrink: 0;
   background: white;
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
   height: fit-content;
