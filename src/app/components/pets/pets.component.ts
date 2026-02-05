@@ -33,7 +33,6 @@ export class PetsComponent implements OnInit {
   // Filter states
   selectedLocation: string = '';
   selectedGender: string = '';
-  selectedAgeType: string = ''; // '' = all, 'adult' = adults only, 'young' = young only
   selectedHealthFilters = {
     vaccination: false,
     microchip: false,
@@ -60,6 +59,8 @@ export class PetsComponent implements OnInit {
 
   loadPets(): void {
     this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
+      console.log('All pets loaded:', pets);
+      console.log('Pets with is_puppy values:', pets.map(p => ({ name: p.name, is_puppy: p.is_puppy, type: typeof p.is_puppy })));
       this.pets = pets;
       this.applyFilters();
       this.cdr.detectChanges();
@@ -74,6 +75,13 @@ export class PetsComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredPets = this.pets.filter(pet => {
+      // Always exclude puppies from the pets screen
+      // Check for truthy values: 1, true, or any truthy value
+      if (pet.is_puppy) {
+        console.log('Filtering out puppy:', pet.name, 'is_puppy:', pet.is_puppy);
+        return false;
+      }
+
       // Location filter
       if (this.selectedLocation && pet.location_name !== this.selectedLocation) {
         return false;
@@ -81,14 +89,6 @@ export class PetsComponent implements OnInit {
 
       // Gender filter
       if (this.selectedGender && pet.gender !== this.selectedGender) {
-        return false;
-      }
-
-      // Age Type filter
-      if (this.selectedAgeType === 'adult' && pet.is_puppy === 1) {
-        return false;
-      }
-      if (this.selectedAgeType === 'young' && pet.is_puppy === 0) {
         return false;
       }
 
@@ -111,6 +111,7 @@ export class PetsComponent implements OnInit {
 
       return true;
     });
+    console.log('Filtered pets count:', this.filteredPets.length);
   }
 
   onLocationFilterChange(location: string): void {
@@ -123,15 +124,9 @@ export class PetsComponent implements OnInit {
     this.applyFilters();
   }
 
-  onAgeTypeFilterChange(ageType: string): void {
-    this.selectedAgeType = ageType;
-    this.applyFilters();
-  }
-
   clearFilters(): void {
     this.selectedLocation = '';
     this.selectedGender = '';
-    this.selectedAgeType = '';
     this.selectedHealthFilters = {
       vaccination: false,
       microchip: false,
@@ -146,7 +141,6 @@ export class PetsComponent implements OnInit {
     return !!(
       this.selectedLocation ||
       this.selectedGender ||
-      this.selectedAgeType ||
       Object.values(this.selectedHealthFilters).some(v => v)
     );
   }
@@ -161,13 +155,19 @@ export class PetsComponent implements OnInit {
     console.log('searching... ' + this.term);
   }
 
+  openAddPetModal(): void {
+    this.ModalService.open('addPetModal');
+  }
+
   deletePet(emittedPetId: any){
     this.petId = emittedPetId;
+    this.ModalService.open('deletePetModal');
     console.log('deleting pet id: ' + emittedPetId);
   }
 
   editPet(emittedPet: any){
     this.pet = emittedPet;
+    this.ModalService.open('editPetModal');
   }
 
 }

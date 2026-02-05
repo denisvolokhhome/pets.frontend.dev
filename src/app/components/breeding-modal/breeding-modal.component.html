@@ -1,8 +1,8 @@
 <div class="modal-overlay" *ngIf="isOpen" (click)="close()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-content max-w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-4" (click)="$event.stopPropagation()">
     <!-- Modal Header with Icon -->
     <div class="modal-header">
-      <div class="modal-header-content">
+      <div class="modal-header-content flex-col sm:flex-row">
         <div class="modal-icon">
           <i class="bi" [ngClass]="{
             'bi-plus-circle-fill': mode === 'create',
@@ -11,10 +11,10 @@
           }"></i>
         </div>
         <div class="modal-title-section">
-          <h2>{{ getTitle() }}</h2>
-          <p class="modal-subtitle" *ngIf="mode === 'create'">Create a new breeding record</p>
-          <p class="modal-subtitle" *ngIf="mode === 'update'">Update breeding information</p>
-          <p class="modal-subtitle" *ngIf="mode === 'view'">View breeding details</p>
+          <h2 class="text-lg sm:text-xl md:text-2xl">{{ getTitle() }}</h2>
+          <p class="modal-subtitle text-sm sm:text-base" *ngIf="mode === 'create'">Create a new breeding record</p>
+          <p class="modal-subtitle text-sm sm:text-base" *ngIf="mode === 'update'">Update breeding information</p>
+          <p class="modal-subtitle text-sm sm:text-base" *ngIf="mode === 'view'">View breeding details</p>
         </div>
       </div>
       <button 

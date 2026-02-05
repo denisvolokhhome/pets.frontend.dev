@@ -2,7 +2,7 @@
   <div class="header">
     <h2>Breeding Locations</h2>
     <button 
-      class="btn btn-primary" 
+      class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" 
       (click)="showAddForm()"
       *ngIf="!showForm">
       Add Location
@@ -10,12 +10,12 @@
   </div>
 
   <!-- Success Message -->
-  <div class="alert alert-success" *ngIf="saveSuccess">
+  <div class="p-4 mb-4 bg-green-100 border border-green-400 text-green-700 rounded-lg" *ngIf="saveSuccess">
     Location saved successfully!
   </div>
 
   <!-- Error Message (only for non-409 errors) -->
-  <div class="alert alert-error" *ngIf="saveError && deleteErrorPets.length === 0">
+  <div class="p-4 mb-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" *ngIf="saveError && deleteErrorPets.length === 0">
     {{ saveError }}
   </div>
 
@@ -48,10 +48,10 @@
         </div>
       </div>
       <div class="location-actions">
-        <button class="btn btn-secondary" (click)="editLocation(location)">
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="editLocation(location)">
           Edit
         </button>
-        <button class="btn btn-danger" (click)="confirmDelete(location)">
+        <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" (click)="confirmDelete(location)">
           Delete
         </button>
       </div>
@@ -159,10 +159,10 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" [disabled]="isLoading">
           {{ isLoading ? 'Saving...' : 'Save Location' }}
         </button>
-        <button type="button" class="btn btn-secondary" (click)="cancelForm()" [disabled]="isLoading">
+        <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="cancelForm()" [disabled]="isLoading">
           Cancel
         </button>
       </div>
@@ -180,7 +180,7 @@
       </div>
       
       <div *ngIf="deleteErrorPets.length > 0" class="error-content">
-        <div class="alert alert-error">
+        <div class="p-4 mb-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
           <i class="bi bi-exclamation-triangle-fill"></i>
           {{ saveError }}
         </div>
@@ -197,12 +197,12 @@
       <div class="modal-actions">
         <button 
           *ngIf="deleteErrorPets.length === 0"
-          class="btn btn-danger" 
+          class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" 
           (click)="deleteLocation()" 
           [disabled]="isLoading">
           {{ isLoading ? 'Deleting...' : 'Delete' }}
         </button>
-        <button class="btn btn-secondary" (click)="cancelDelete()" [disabled]="isLoading">
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="cancelDelete()" [disabled]="isLoading">
           {{ deleteErrorPets.length > 0 ? 'Close' : 'Cancel' }}
         </button>
       </div>

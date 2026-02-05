@@ -26,16 +26,12 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/primeicons/primeicons.css",
               "src/styles.css"
 
             ],
-            "scripts": [
-              
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -101,12 +97,9 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/pink-bluegrey.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"            ],
-            "scripts": [
-              
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+              "@angular/material/prebuilt-themes/pink-bluegrey.css"
+            ],
+            "scripts": []
           }
         }
       }

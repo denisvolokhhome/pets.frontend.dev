@@ -44,7 +44,7 @@ describe('TopMenuComponent', () => {
 
   describe('Branding', () => {
     it('should display "Breedly" as the brand name', () => {
-      const brandElement = compiled.querySelector('.navbar-brand');
+      const brandElement = compiled.querySelector('a[href="/"][aria-label="Breedly home"]');
       expect(brandElement?.textContent).toContain('Breedly');
     });
 
@@ -110,20 +110,19 @@ describe('TopMenuComponent', () => {
 
   describe('Navigation Structure', () => {
     it('should have a mobile menu toggle button', () => {
-      const toggleButton = compiled.querySelector('.navbar-toggler');
+      const toggleButton = compiled.querySelector('button[aria-label="Toggle navigation menu"]');
       expect(toggleButton).toBeTruthy();
-      expect(toggleButton?.getAttribute('data-bs-toggle')).toBe('collapse');
-      expect(toggleButton?.getAttribute('data-bs-target')).toBe('#navbarNav');
+      expect(toggleButton?.getAttribute('aria-controls')).toBe('navbarNav');
     });
 
     it('should have proper ARIA labels for accessibility', () => {
-      const toggleButton = compiled.querySelector('.navbar-toggler');
+      const toggleButton = compiled.querySelector('button[aria-label="Toggle navigation menu"]');
       expect(toggleButton?.getAttribute('aria-label')).toBe('Toggle navigation menu');
       expect(toggleButton?.getAttribute('aria-controls')).toBe('navbarNav');
     });
 
     it('should have Home link', () => {
-      const homeLink = compiled.querySelector('a.nav-link[href="/"]');
+      const homeLink = compiled.querySelector('a[href="/"]');
       expect(homeLink?.textContent?.trim()).toContain('Home');
     });
 
@@ -137,15 +136,15 @@ describe('TopMenuComponent', () => {
     it('should mark Home as active when on root route', () => {
       component.route = '/';
       fixture.detectChanges();
-      const homeLink = compiled.querySelector('a.nav-link[href="/"]');
-      expect(homeLink?.classList.contains('active')).toBe(true);
+      const homeLink = compiled.querySelector('a[href="/"]');
+      expect(homeLink?.classList.contains('font-semibold')).toBe(true);
     });
 
     it('should mark Home as active when route is empty string', () => {
       component.route = '';
       fixture.detectChanges();
-      const homeLink = compiled.querySelector('a.nav-link[href="/"]');
-      expect(homeLink?.classList.contains('active')).toBe(true);
+      const homeLink = compiled.querySelector('a[href="/"]');
+      expect(homeLink?.classList.contains('font-semibold')).toBe(true);
     });
   });
 

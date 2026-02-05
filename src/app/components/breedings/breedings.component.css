@@ -6,6 +6,8 @@
   min-height: calc(100vh - 200px);
   max-width: 100%;
   overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Header Section */
@@ -87,6 +89,9 @@
   display: flex;
   gap: 1.5rem;
   flex: 1;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Filters Sidebar */
@@ -117,7 +122,9 @@
 .breedings-content {
   flex: 1;
   min-width: 0;
-  overflow-x: hidden;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* FAB Button */
@@ -291,16 +298,34 @@
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: hidden;
   max-width: 100%;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
   position: relative;
+}
+
+/* Ensure PrimeNG table wrapper is scrollable */
+::ng-deep .table-container .p-datatable-wrapper {
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Prevent PrimeNG table from expanding container */
+::ng-deep .table-container .p-datatable {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+::ng-deep .table-container .p-datatable table {
+  min-width: 100% !important;
+  width: max-content !important;
+  table-layout: auto !important;
 }
 
 /* Scrollbar styling for webkit browsers */
 .table-container::-webkit-scrollbar {
-  height: 8px;
+  height: 10px;
 }
 
 .table-container::-webkit-scrollbar-track {
@@ -310,29 +335,11 @@
 
 .table-container::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-
-/* Scroll indicator shadow */
-.table-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 30px;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.9), transparent);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.table-container.has-scroll::after {
-  opacity: 1;
 }
 
 /* Scroll hint for mobile */
@@ -894,4 +901,121 @@
   .btn-clear-filters {
     min-height: 44px;
   }
+}
+
+/* ============================================
+   PRIMENG TABLE OVERRIDES - CLEAN TAILWIND STYLE
+   ============================================ */
+
+::ng-deep .p-datatable {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .p-datatable .p-datatable-wrapper {
+  overflow-x: auto !important;
+}
+
+::ng-deep .p-datatable table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+/* Table header - clean gray background */
+::ng-deep .p-datatable thead tr th {
+  background: #f9fafb !important;
+  padding: 0.75rem 1.5rem !important;
+  text-align: left !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Table body rows */
+::ng-deep .p-datatable tbody tr {
+  background: white !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+::ng-deep .p-datatable tbody tr:hover {
+  background: #f9fafb !important;
+}
+
+::ng-deep .p-datatable tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+/* Table cells */
+::ng-deep .p-datatable tbody tr td {
+  padding: 1rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+  border: none !important;
+}
+
+/* Sortable columns */
+::ng-deep .p-datatable .p-sortable-column:hover {
+  background: #f3f4f6 !important;
+}
+
+::ng-deep .p-datatable .p-sortable-column.p-highlight {
+  color: #111827 !important;
+}
+
+::ng-deep .p-datatable .p-sortable-column-icon {
+  color: #9ca3af !important;
+  font-size: 0.875rem !important;
+  margin-left: 0.5rem !important;
+}
+
+/* Pagination */
+::ng-deep .p-paginator {
+  background: white !important;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  color: #374151 !important;
+  border-radius: 0.375rem !important;
+  margin: 0 0.125rem !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #111827 !important;
+  color: white !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page:hover:not(.p-highlight) {
+  background: #f3f4f6 !important;
+}
+
+::ng-deep .p-paginator .p-paginator-first,
+::ng-deep .p-paginator .p-paginator-prev,
+::ng-deep .p-paginator .p-paginator-next,
+::ng-deep .p-paginator .p-paginator-last {
+  color: #374151 !important;
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  border-radius: 0.375rem !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-paginator .p-paginator-first:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-prev:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-next:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-last:hover:not(.p-disabled) {
+  background: #f3f4f6 !important;
 }

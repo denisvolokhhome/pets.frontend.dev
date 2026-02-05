@@ -1,7 +1,7 @@
 <div class="pet-assignment-container">
   <!-- First Parent Pet Selector -->
-  <div class="form-group">
-    <label for="firstPet">
+  <div class="form-group w-full">
+    <label for="firstPet" class="block text-sm font-medium mb-2">
       First Parent Pet
     </label>
     <select
@@ -9,33 +9,35 @@
       [(ngModel)]="selectedPet1"
       (change)="onFirstPetSelected()"
       [disabled]="isLoading || availablePets.length === 0"
+      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
     >
       <option value="">Select first parent pet...</option>
       <option *ngFor="let pet of availablePets" [value]="pet.id">
         {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
       </option>
     </select>
-    <p *ngIf="availablePets.length === 0" class="warning-text">
+    <p *ngIf="availablePets.length === 0" class="warning-text text-sm mt-1">
       No adult pets available. Please add adult pets first.
     </p>
   </div>
 
   <!-- Second Parent Pet Selector -->
-  <div class="form-group">
-    <label for="secondPet">
+  <div class="form-group w-full">
+    <label for="secondPet" class="block text-sm font-medium mb-2">
       Second Parent Pet
     </label>
     <select
       id="secondPet"
       [(ngModel)]="selectedPet2"
       [disabled]="!selectedPet1 || isLoading"
+      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
     >
       <option value="">Select second parent pet...</option>
       <option *ngFor="let pet of filteredPets" [value]="pet.id">
         {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
       </option>
     </select>
-    <p *ngIf="!selectedPet1">
+    <p *ngIf="!selectedPet1" class="text-sm text-gray-600 mt-1">
       Please select the first parent pet first
     </p>
   </div>

@@ -14,12 +14,12 @@
       <p class="pet-form-subtitle">Update your pet's information</p>
     </div>
 
-    <div class="row g-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
       <!-- Image Upload Section -->
-      <div class="col-lg-5">
+      <div class="lg:col-span-5">
         <div class="form-section">
           <label class="section-label">
-            <i class="bi bi-image me-2"></i>Pet Photo
+            <i class="bi bi-image mr-2"></i>Pet Photo
           </label>
           <div class="image-upload-modern">
             <div
@@ -41,7 +41,7 @@
             <input
               type="file"
               id="image"
-              class="d-none"
+              class="hidden"
               (change)="readURL($event)"
               formControlName="image"
               #selectImage
@@ -52,10 +52,10 @@
       </div>
 
       <!-- Pet Details Section -->
-      <div class="col-lg-7">
+      <div class="lg:col-span-7">
         <div class="form-section">
           <label class="section-label">
-            <i class="bi bi-info-circle me-2"></i>Basic Information
+            <i class="bi bi-info-circle mr-2"></i>Basic Information
           </label>
           
           <div class="form-group-modern">
@@ -70,24 +70,20 @@
             />
           </div>
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="form-group-modern">
-                <label class="form-label-modern">Breed</label>
-                <div class="read-only-field">
-                  <i class="bi bi-lock-fill me-2"></i>
-                  <span>{{ getBreedName() || 'Not specified' }}</span>
-                </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="form-group-modern">
+              <label class="form-label-modern">Breed</label>
+              <div class="read-only-field">
+                <i class="bi bi-lock-fill mr-2"></i>
+                <span>{{ getBreedName() || 'Not specified' }}</span>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group-modern">
-                <label class="form-label-modern">Date of Birth</label>
-                <div class="read-only-field">
-                  <i class="bi bi-lock-fill me-2"></i>
-                  <span>{{ pet?.date_of_birth ? (pet.date_of_birth | date:'MMM d, yyyy') : 'Not specified' }}</span>
-                </div>
+            <div class="form-group-modern">
+              <label class="form-label-modern">Date of Birth</label>
+              <div class="read-only-field">
+                <i class="bi bi-lock-fill mr-2"></i>
+                <span>{{ pet?.date_of_birth ? (pet.date_of_birth | date:'MMM d, yyyy') : 'Not specified' }}</span>
               </div>
             </div>
           </div>
@@ -120,58 +116,52 @@
     </div>
 
     <!-- Additional Details -->
-    <div class="row g-4 mt-2">
-      <div class="col-lg-6">
-        <div class="form-group-modern">
-          <label for="weight" class="form-label-modern">Weight (kg) *</label>
-          <input
-            type="text"
-            id="weight"
-            class="form-control-modern"
-            placeholder="e.g., 25.5"
-            formControlName="weight"
-          />
-        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
+      <div class="form-group-modern">
+        <label for="weight" class="form-label-modern">Weight (kg) *</label>
+        <input
+          type="text"
+          id="weight"
+          class="form-control-modern"
+          placeholder="e.g., 25.5"
+          formControlName="weight"
+        />
       </div>
 
-      <div class="col-lg-6">
-        <div class="form-group-modern">
-          <label for="location" class="form-label-modern">Location *</label>
-          <select
-            id="location"
-            class="form-control-modern form-select-modern"
-            [formControl]="location_name"
-          >
-            <option value="">Select a location</option>
-            <option *ngFor="let location of locations" [value]="location.name">
-              {{ location.name }}
-            </option>
-          </select>
-        </div>
+      <div class="form-group-modern">
+        <label for="location" class="form-label-modern">Location *</label>
+        <select
+          id="location"
+          class="form-control-modern form-select-modern"
+          [formControl]="location_name"
+        >
+          <option value="">Select a location</option>
+          <option *ngFor="let location of locations" [value]="location.name">
+            {{ location.name }}
+          </option>
+        </select>
       </div>
     </div>
 
-    <div class="row g-4 mt-2">
-      <div class="col-12">
-        <div class="form-group-modern">
-          <label for="description" class="form-label-modern">Description</label>
-          <textarea
-            id="description"
-            class="form-control-modern"
-            rows="3"
-            placeholder="Tell us about your pet's personality, habits, or any special notes..."
-            formControlName="pet_desc"
-            maxlength="200"
-          ></textarea>
-          <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
-        </div>
+    <div class="grid grid-cols-1 gap-4 mt-2">
+      <div class="form-group-modern">
+        <label for="description" class="form-label-modern">Description</label>
+        <textarea
+          id="description"
+          class="form-control-modern"
+          rows="3"
+          placeholder="Tell us about your pet's personality, habits, or any special notes..."
+          formControlName="pet_desc"
+          maxlength="200"
+        ></textarea>
+        <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
       </div>
     </div>
 
     <!-- Health Records -->
     <div class="form-section mt-4">
       <label class="section-label">
-        <i class="bi bi-heart-pulse me-2"></i>Health Records
+        <i class="bi bi-heart-pulse mr-2"></i>Health Records
       </label>
       <div class="health-checkboxes">
         <label class="checkbox-modern">
@@ -199,11 +189,11 @@
   </div>
 
   <div class="modal-footer-modern">
-    <button type="button" class="btn btn-secondary-modern" (click)="modalClose()">
-      <i class="bi bi-x-lg me-2"></i>Cancel
+    <button type="button" class="btn-secondary-modern" (click)="modalClose()">
+      <i class="bi bi-x-lg mr-2"></i>Cancel
     </button>
-    <button type="submit" class="btn btn-primary-modern">
-      <i class="bi bi-check-lg me-2"></i>Update Pet
+    <button type="submit" class="btn-primary-modern">
+      <i class="bi bi-check-lg mr-2"></i>Update Pet
     </button>
   </div>
 </form>

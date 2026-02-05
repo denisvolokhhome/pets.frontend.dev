@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -19,7 +19,8 @@ export class ProfileMenuComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +32,8 @@ export class ProfileMenuComponent implements OnInit {
     this.dataService.getCurrentUserProfile().subscribe({
       next: (user) => {
         this.user = user;
+        // Manually trigger change detection to avoid ExpressionChangedAfterItHasBeenCheckedError
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Failed to load user profile', err);

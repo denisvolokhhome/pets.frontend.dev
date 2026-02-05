@@ -9,78 +9,70 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="proceedRegistration()" class="auth-form">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="firstName" class="form-label">First Name</label>
-            <input
-              type="text"
-              id="firstName"
-              class="form-control"
-              formControlName="firstName"
-              placeholder="Enter your first name"
-              aria-label="First name"
-            />
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="input-field-group">
+          <label for="firstName" class="input-label">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            class="input-field"
+            formControlName="firstName"
+            placeholder="Enter your first name"
+            aria-label="First name"
+          />
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input
-              type="text"
-              id="lastName"
-              class="form-control"
-              formControlName="LastName"
-              placeholder="Enter your last name"
-              aria-label="Last name"
-            />
-          </div>
+        <div class="input-field-group">
+          <label for="lastName" class="input-label">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            class="input-field"
+            formControlName="LastName"
+            placeholder="Enter your last name"
+            aria-label="Last name"
+          />
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="email" class="form-label">Email Address</label>
+      <div class="input-field-group">
+        <label for="email" class="input-label">Email Address</label>
         <input
           type="email"
           id="email"
-          class="form-control"
+          class="input-field"
           formControlName="email"
           placeholder="your.email@example.com"
           aria-label="Email address"
         />
       </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="password" class="form-label">Password</label>
-            <input
-              type="password"
-              id="password"
-              class="form-control"
-              formControlName="password"
-              placeholder="Create a strong password"
-              aria-label="Password"
-            />
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="input-field-group">
+          <label for="password" class="input-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="input-field"
+            formControlName="password"
+            placeholder="Create a strong password"
+            aria-label="Password"
+          />
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="password_confirmation" class="form-label">Confirm Password</label>
-            <input
-              type="password"
-              id="password_confirmation"
-              class="form-control"
-              formControlName="password_confirmation"
-              placeholder="Re-enter your password"
-              aria-label="Confirm password"
-            />
-          </div>
+        <div class="input-field-group">
+          <label for="password_confirmation" class="input-label">Confirm Password</label>
+          <input
+            type="password"
+            id="password_confirmation"
+            class="input-field"
+            formControlName="password_confirmation"
+            placeholder="Re-enter your password"
+            aria-label="Confirm password"
+          />
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg w-100 auth-submit-btn">
-        <i class="bi bi-person-plus me-2" aria-hidden="true"></i>Create Account
+      <button type="submit" class="w-full auth-submit-btn">
+        <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>Create Account
       </button>
 
       <div class="auth-footer">

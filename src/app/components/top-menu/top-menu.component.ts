@@ -14,6 +14,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   location: any;
   route: any;
   isLoggedIn: boolean = false;
+  isMobileMenuOpen: boolean = false;
   private authSubscription?: Subscription;
   private routerSubscription?: Subscription;
 
@@ -31,6 +32,8 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
       this.route = this.loc.path();
       this.updateAuthState();
+      // Close mobile menu on route change
+      this.isMobileMenuOpen = false;
     });
 
     // Subscribe to auth state changes
@@ -50,6 +53,10 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
   get checkToken(): boolean {
     return this.isLoggedIn;
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
   ngOnDestroy(): void {

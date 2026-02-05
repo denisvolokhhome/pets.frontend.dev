@@ -18,7 +18,6 @@ declare var window: any;
 })
 export class PetAddComponent implements OnInit{
 
-  formModal: any;
   breeds: IBreed[];
   filteredBreeds: IBreed[] = [];
   showBreedDropdown: boolean = false;
@@ -29,7 +28,10 @@ export class PetAddComponent implements OnInit{
 
   @ViewChild('addPet') public addPetForm:NgForm;
 
-  constructor(private DataService: DataService )
+  constructor(
+    private DataService: DataService,
+    private modalService: ModalService
+  )
   {
     this.maxDate = new Date();
   }
@@ -49,19 +51,14 @@ export class PetAddComponent implements OnInit{
   }
 
   ngOnInit(): void {
-  this.formModal = new window.bootstrap.Modal(
-    document.getElementById('addPetModal')
-  );
+    this.DataService.getBreeds().subscribe(breeds => {
+      this.breeds = breeds;
+      this.filteredBreeds = breeds;
+    })
 
-
-  this.DataService.getBreeds().subscribe(breeds => {
-    this.breeds = breeds;
-    this.filteredBreeds = breeds;
-  })
-
-  this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
-    this.locations = locations;
-  })
+    this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
+      this.locations = locations;
+    })
   }
 
   filterBreeds(event: any): void {
@@ -199,8 +196,12 @@ export class PetAddComponent implements OnInit{
     Object.keys(this.addPetForm.form.controls).forEach(key => {
       this.addPetForm.form.controls[key].setErrors(null)
     });
-    this.formModal.hide();
+    this.modalService.close('addPetModal');
     window.location.reload();
+  }
+
+  modalClose() {
+    this.modalService.close('addPetModal');
   }
 
 }
