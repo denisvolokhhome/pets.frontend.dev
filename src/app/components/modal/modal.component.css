@@ -1,0 +1,89 @@
+/* Modal host element acts as backdrop */
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+/* Show modal when visible */
+:host(.visible) {
+  display: flex;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal content animation */
+:host(.visible) > div {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Ensure modal content is scrollable if needed */
+:host ::ng-deep .modal-body {
+  max-height: calc(90vh - 8rem);
+  overflow-y: auto;
+}
+
+/* Scrollbar styling */
+:host ::ng-deep .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+:host ::ng-deep .modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  :host {
+    padding: 1rem;
+  }
+  
+  :host > div {
+    max-width: 100% !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  :host button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

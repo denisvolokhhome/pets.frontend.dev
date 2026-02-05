@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
 import { AuthService } from '../../../services/auth.service';
@@ -28,7 +28,8 @@ export class GeneralSettingsComponent implements OnInit {
     private fb: FormBuilder,
     private dataService: DataService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {
     this.profileForm = this.fb.group({
       breedery_name: [''],
@@ -52,8 +53,22 @@ export class GeneralSettingsComponent implements OnInit {
 
   loadProfile(): void {
     this.isLoading = true;
+    this.saveError = null;
+    
+    // Set a timeout to prevent infinite loading
+    const loadingTimeout = setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('Loading profile timed out after 10 seconds');
+        this.isLoading = false;
+        this.saveError = 'Loading timed out. Please refresh the page.';
+        this.toastr.error('Loading timed out. Please refresh the page.', 'Error');
+        this.cdr.detectChanges();
+      }
+    }, 10000);
+    
     this.dataService.getCurrentUserProfile().subscribe({
       next: (user) => {
+        clearTimeout(loadingTimeout);
         this.currentUser = user;
         this.profileForm.patchValue({
           breedery_name: user.breedery_name || '',
@@ -64,11 +79,20 @@ export class GeneralSettingsComponent implements OnInit {
           this.imagePreview = this.getImageUrl(user.profile_image_path);
         }
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
+        clearTimeout(loadingTimeout);
         console.error('Error loading profile:', error);
         this.toastr.error('Failed to load profile information', 'Error');
         this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      complete: () => {
+        clearTimeout(loadingTimeout);
+        // Ensure loading is set to false even if next wasn't called
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

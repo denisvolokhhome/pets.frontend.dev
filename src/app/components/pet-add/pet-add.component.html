@@ -14,12 +14,12 @@
       <p class="pet-form-subtitle">Fill in the details about your pet</p>
     </div>
 
-    <div class="row g-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
       <!-- Image Upload Section -->
-      <div class="col-lg-5">
+      <div class="lg:col-span-5">
         <div class="form-section">
           <label class="section-label">
-            <i class="bi bi-image me-2"></i>Pet Photo
+            <i class="bi bi-image mr-2"></i>Pet Photo
           </label>
           <div class="image-upload-modern">
             <div
@@ -40,7 +40,7 @@
             <input
               type="file"
               id="image"
-              class="d-none"
+              class="hidden"
               (change)="readURL($event)"
               formControlName="image"
               #selectImage
@@ -51,10 +51,10 @@
       </div>
 
       <!-- Pet Details Section -->
-      <div class="col-lg-7">
+      <div class="lg:col-span-7">
         <div class="form-section">
           <label class="section-label">
-            <i class="bi bi-info-circle me-2"></i>Basic Information
+            <i class="bi bi-info-circle mr-2"></i>Basic Information
           </label>
           
           <div class="form-group-modern">
@@ -69,52 +69,48 @@
             />
           </div>
 
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="form-group-modern">
-                <label for="breed" class="form-label-modern">Breed *</label>
-                <div class="autocomplete-wrapper">
-                  <input
-                    type="text"
-                    id="breed"
-                    class="form-control-modern"
-                    placeholder="Start typing to search breeds..."
-                    [formControl]="breed_name"
-                    (input)="filterBreeds($event)"
-                    (focus)="showBreedDropdown = true"
-                    (blur)="onBreedBlur()"
-                    autocomplete="off"
-                  />
-                  <i class="bi bi-search autocomplete-icon"></i>
-                  <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length > 0">
-                    <div
-                      *ngFor="let breed of filteredBreeds"
-                      class="autocomplete-item"
-                      (mousedown)="selectBreed(breed.name)"
-                    >
-                      {{ breed.name }}
-                    </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="form-group-modern">
+              <label for="breed" class="form-label-modern">Breed *</label>
+              <div class="autocomplete-wrapper">
+                <input
+                  type="text"
+                  id="breed"
+                  class="form-control-modern"
+                  placeholder="Start typing to search breeds..."
+                  [formControl]="breed_name"
+                  (input)="filterBreeds($event)"
+                  (focus)="showBreedDropdown = true"
+                  (blur)="onBreedBlur()"
+                  autocomplete="off"
+                />
+                <i class="bi bi-search autocomplete-icon"></i>
+                <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length > 0">
+                  <div
+                    *ngFor="let breed of filteredBreeds"
+                    class="autocomplete-item"
+                    (mousedown)="selectBreed(breed.name)"
+                  >
+                    {{ breed.name }}
                   </div>
-                  <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length === 0 && breed_name.value">
-                    <div class="autocomplete-item no-results">
-                      No breeds found
-                    </div>
+                </div>
+                <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length === 0 && breed_name.value">
+                  <div class="autocomplete-item no-results">
+                    No breeds found
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="form-group-modern">
-                <label for="dob" class="form-label-modern">Date of Birth *</label>
-                <input
-                  type="date"
-                  id="dob"
-                  class="form-control-modern"
-                  formControlName="pet_dob"
-                  [max]="maxDate | date:'yyyy-MM-dd'"
-                />
-              </div>
+            <div class="form-group-modern">
+              <label for="dob" class="form-label-modern">Date of Birth *</label>
+              <input
+                type="date"
+                id="dob"
+                class="form-control-modern"
+                formControlName="pet_dob"
+                [max]="maxDate | date:'yyyy-MM-dd'"
+              />
             </div>
           </div>
 
@@ -126,7 +122,7 @@
                   type="radio"
                   formControlName="gender"
                   value="m"
-                  class="d-none"
+                  class="hidden"
                 />
                 <i class="bi bi-gender-male"></i>
                 <span>Male</span>
@@ -136,7 +132,7 @@
                   type="radio"
                   formControlName="gender"
                   value="f"
-                  class="d-none"
+                  class="hidden"
                 />
                 <i class="bi bi-gender-female"></i>
                 <span>Female</span>
@@ -148,58 +144,52 @@
     </div>
 
     <!-- Additional Details -->
-    <div class="row g-4 mt-2">
-      <div class="col-lg-6">
-        <div class="form-group-modern">
-          <label for="weight" class="form-label-modern">Weight (kg) *</label>
-          <input
-            type="text"
-            id="weight"
-            class="form-control-modern"
-            placeholder="e.g., 25.5"
-            formControlName="weight"
-          />
-        </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
+      <div class="form-group-modern">
+        <label for="weight" class="form-label-modern">Weight (kg) *</label>
+        <input
+          type="text"
+          id="weight"
+          class="form-control-modern"
+          placeholder="e.g., 25.5"
+          formControlName="weight"
+        />
       </div>
 
-      <div class="col-lg-6">
-        <div class="form-group-modern">
-          <label for="location" class="form-label-modern">Location *</label>
-          <select
-            id="location"
-            class="form-control-modern form-select-modern"
-            [formControl]="location_name"
-          >
-            <option value="">Select a location</option>
-            <option *ngFor="let location of locations" [value]="location.name">
-              {{ location.name }}
-            </option>
-          </select>
-        </div>
+      <div class="form-group-modern">
+        <label for="location" class="form-label-modern">Location *</label>
+        <select
+          id="location"
+          class="form-control-modern form-select-modern"
+          [formControl]="location_name"
+        >
+          <option value="">Select a location</option>
+          <option *ngFor="let location of locations" [value]="location.name">
+            {{ location.name }}
+          </option>
+        </select>
       </div>
     </div>
 
-    <div class="row g-4 mt-2">
-      <div class="col-12">
-        <div class="form-group-modern">
-          <label for="description" class="form-label-modern">Description</label>
-          <textarea
-            id="description"
-            class="form-control-modern"
-            rows="3"
-            placeholder="Tell us about your pet's personality, habits, or any special notes..."
-            formControlName="pet_desc"
-            maxlength="200"
-          ></textarea>
-          <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
-        </div>
+    <div class="grid grid-cols-1 gap-4 mt-2">
+      <div class="form-group-modern">
+        <label for="description" class="form-label-modern">Description</label>
+        <textarea
+          id="description"
+          class="form-control-modern"
+          rows="3"
+          placeholder="Tell us about your pet's personality, habits, or any special notes..."
+          formControlName="pet_desc"
+          maxlength="200"
+        ></textarea>
+        <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
       </div>
     </div>
 
     <!-- Health Records -->
     <div class="form-section mt-4">
       <label class="section-label">
-        <i class="bi bi-heart-pulse me-2"></i>Health Records
+        <i class="bi bi-heart-pulse mr-2"></i>Health Records
       </label>
       <div class="health-checkboxes">
         <label class="checkbox-modern">
@@ -227,11 +217,11 @@
   </div>
 
   <div class="modal-footer-modern">
-    <button type="button" class="btn btn-secondary-modern" data-bs-dismiss="modal">
-      <i class="bi bi-x-lg me-2"></i>Cancel
+    <button type="button" class="btn-secondary-modern" (click)="modalClose()">
+      <i class="bi bi-x-lg mr-2"></i>Cancel
     </button>
-    <button type="submit" class="btn btn-primary-modern" [disabled]="!form.valid">
-      <i class="bi bi-check-lg me-2"></i>Save Pet
+    <button type="submit" class="btn-primary-modern" [disabled]="!form.valid">
+      <i class="bi bi-check-lg mr-2"></i>Save Pet
     </button>
   </div>
 </form>

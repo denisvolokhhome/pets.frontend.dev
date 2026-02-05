@@ -1,24 +1,46 @@
 
-<div class="d-flex flex-column flex-shrink-0 p-3 h-100" style="width: 280px;">
-  <ul class="nav nav-pills flex-column mb-auto ">
-    <li class="mb-2">
-      <a href="/dashboard"  [ngClass]="this.route == '/dashboard' ? 'active' : ''" class="w-100 btn btn-outline-primary shadow">
-        <i class="bi bi-speedometer2"></i>
-        Dashboard
-      </a>
-    </li>
-    <li class="mb-2">
-      <a href="/pets" [ngClass]="this.route == '/pets' ? 'active' : ''" class="w-100 btn btn-outline-primary shadow">
-        <i class="bi bi-card-list"></i>
-        Pets
-      </a>
-    </li>
-    <li class="mb-2">
-      <a href="/breedings" [ngClass]="this.route == '/breedings' ? 'active' : ''" class="w-100 btn btn-outline-primary shadow">
-        <i class="bi bi-water"></i>
-        Breedings
-      </a>
-    </li>
+<div [ngClass]="isCollapsed ? 'w-[80px]' : 'w-[280px]'" class="flex flex-col shrink-0 p-3 h-full transition-all duration-300">
+  <!-- Toggle Button -->
+  <button 
+    (click)="toggleMenu()"
+    class="mb-4 p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center"
+    [title]="isCollapsed ? 'Expand menu' : 'Collapse menu'">
+    <i [ngClass]="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'" class="bi text-xl"></i>
+  </button>
 
+  <ul class="flex flex-col mb-auto">
+    <li class="mb-2">
+      <a 
+        [routerLink]="['/dashboard']"
+        routerLinkActive="bg-primary text-white"
+        [routerLinkActiveOptions]="{exact: true}"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [title]="isCollapsed ? 'Dashboard' : ''">
+        <i class="bi bi-speedometer2 text-xl"></i>
+        <span *ngIf="!isCollapsed">Dashboard</span>
+      </a>
+    </li>
+    <li class="mb-2">
+      <a 
+        [routerLink]="['/pets']"
+        routerLinkActive="bg-primary text-white"
+        [routerLinkActiveOptions]="{exact: true}"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [title]="isCollapsed ? 'Pets' : ''">
+        <i class="bi bi-card-list text-xl"></i>
+        <span *ngIf="!isCollapsed">Pets</span>
+      </a>
+    </li>
+    <li class="mb-2">
+      <a 
+        [routerLink]="['/breedings']"
+        routerLinkActive="bg-primary text-white"
+        [routerLinkActiveOptions]="{exact: true}"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [title]="isCollapsed ? 'Breedings' : ''">
+        <i class="bi bi-water text-xl"></i>
+        <span *ngIf="!isCollapsed">Breedings</span>
+      </a>
+    </li>
   </ul>
 </div>

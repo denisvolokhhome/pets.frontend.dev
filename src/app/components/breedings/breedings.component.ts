@@ -89,6 +89,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     this.dataService.getLocations().subscribe({
       next: (locations) => {
         this.locations = locations;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading locations:', error);
@@ -101,6 +102,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     this.dataService.getBreeds().subscribe({
       next: (breeds) => {
         this.breeds = breeds;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading breeds:', error);

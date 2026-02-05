@@ -4,6 +4,7 @@ import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
 import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
+import { ModalService } from 'src/app/services/modal.service';
 import { DatePipe } from '@angular/common';
 declare var window: any;
 
@@ -15,7 +16,10 @@ declare var window: any;
 })
 export class PetEditComponent implements OnInit, OnChanges {
 
-  constructor(private DataService: DataService){
+  constructor(
+    private DataService: DataService,
+    private modalService: ModalService
+  ){
     this.maxDate = new Date();
   }
 
@@ -27,7 +31,6 @@ export class PetEditComponent implements OnInit, OnChanges {
   locations: ILocation[];
   pets: IPet[] = [];
   maxDate: Date;
-  formModal: any;
   image_path: any;
 
   readURL(event: any): void {
@@ -43,10 +46,6 @@ export class PetEditComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.formModal = new window.bootstrap.Modal(
-      document.getElementById('editPetModal')
-    );
-
     this.DataService.getBreeds().subscribe(breeds => {
       this.breeds = breeds;
       this.filteredBreeds = breeds;
@@ -113,7 +112,7 @@ export class PetEditComponent implements OnInit, OnChanges {
   }
 
   modalClose(): void {
-    this.formModal.hide();
+    this.modalService.close('editPetModal');
   }
 
   getBreedName(): string {
@@ -221,18 +220,18 @@ export class PetEditComponent implements OnInit, OnChanges {
           if (imageFile && imageFile instanceof File) {
             this.DataService.uploadPetImage(this.pet.id, imageFile as File).subscribe({
               next: () => {
-                this.formModal.hide();
+                this.modalService.close('editPetModal');
                 window.location.reload();
               },
               error: (error) => {
                 console.error('Error uploading image:', error);
                 alert('Pet updated but image upload failed. Please try again.');
-                this.formModal.hide();
+                this.modalService.close('editPetModal');
                 window.location.reload();
               }
             });
           } else {
-            this.formModal.hide();
+            this.modalService.close('editPetModal');
             window.location.reload();
           }
         },

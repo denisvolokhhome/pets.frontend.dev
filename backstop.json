@@ -1,0 +1,131 @@
+{
+  "id": "bootstrap-to-tailwind-migration",
+  "viewports": [
+    {
+      "label": "mobile",
+      "width": 375,
+      "height": 667
+    },
+    {
+      "label": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "label": "desktop",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "onBeforeScript": "puppet/onBefore.js",
+  "onReadyScript": "puppet/onReady.js",
+  "scenarios": [
+    {
+      "label": "Login Component",
+      "url": "http://localhost:4200/login",
+      "delay": 500,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Register Component",
+      "url": "http://localhost:4200/register",
+      "delay": 500,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Dashboard Component",
+      "url": "http://localhost:4200/dashboard",
+      "delay": 1000,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Pets List Component",
+      "url": "http://localhost:4200/pets",
+      "delay": 1000,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Pet Add Component",
+      "url": "http://localhost:4200/pets/add",
+      "delay": 1000,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Breedings Component",
+      "url": "http://localhost:4200/breedings",
+      "delay": 1000,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Settings Component",
+      "url": "http://localhost:4200/settings",
+      "delay": 1000,
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Top Menu Navigation",
+      "url": "http://localhost:4200/dashboard",
+      "delay": 500,
+      "selectors": ["app-top-menu"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Left Menu Navigation",
+      "url": "http://localhost:4200/dashboard",
+      "delay": 500,
+      "selectors": ["app-left-menu"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Pet Card Component",
+      "url": "http://localhost:4200/pets",
+      "delay": 1000,
+      "selectors": ["app-pet-card"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Pet Grid Component",
+      "url": "http://localhost:4200/pets",
+      "delay": 1000,
+      "selectors": ["app-pet-grid"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Profile Menu Dropdown",
+      "url": "http://localhost:4200/dashboard",
+      "delay": 500,
+      "clickSelector": ".profile-menu-trigger",
+      "postInteractionWait": 300,
+      "selectors": ["app-profile-menu"],
+      "misMatchThreshold": 0.1,
+      "requireSameDimensions": true
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "backstop_data/bitmaps_reference",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "engine_scripts": "backstop_data/engine_scripts",
+    "html_report": "backstop_data/html_report",
+    "ci_report": "backstop_data/ci_report"
+  },
+  "report": ["browser", "CI"],
+  "engine": "puppeteer",
+  "engineOptions": {
+    "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+  },
+  "asyncCaptureLimit": 5,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false
+}

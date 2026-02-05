@@ -75,13 +75,13 @@
   gap: 1.5rem;
 }
 
-.form-group {
+.input-field-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-label {
+.input-label {
   font-family: var(--font-primary);
   font-weight: 600;
   font-size: 0.875rem;
@@ -89,7 +89,7 @@
   margin-bottom: 0;
 }
 
-.form-control {
+.input-field {
   font-family: var(--font-secondary);
   padding: 0.875rem 1rem;
   border: 2px solid #E5E7EB;
@@ -99,18 +99,18 @@
   background-color: #F9FAFB;
 }
 
-.form-control:focus {
+.input-field:focus {
   outline: none;
   border-color: var(--primary-color);
   background-color: white;
   box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
-.form-control::placeholder {
+.input-field::placeholder {
   color: #9CA3AF;
 }
 
-.form-control.is-invalid {
+.input-field.is-invalid {
   border-color: #EF4444;
 }
 

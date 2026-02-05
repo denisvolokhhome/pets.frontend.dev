@@ -1,19 +1,30 @@
 <!-- Modal -->
-<div
-  class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-  [ngClass]="modalSize == 'large' ? 'modal-lg' : ''"
->
-  <div class="modal-content">
-    <div class="modal-header">
-      <h1 class="modal-title fs-5" id="staticBackdropLabel">
+<div class="flex items-center justify-center min-h-screen p-4">
+  <div
+    class="bg-white rounded-lg shadow-xl w-full overflow-hidden"
+    [ngClass]="modalSize == 'large' ? 'max-w-4xl' : 'max-w-lg'"
+    (click)="$event.stopPropagation()"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'modal-title-' + title"
+  >
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h1 
+        class="text-xl font-semibold text-gray-900"
+        [id]="'modal-title-' + title"
+      >
         {{ title | titlecase }}
       </h1>
       <button
         type="button"
-        class="btn-close"
-        data-bs-dismiss="modal"
+        class="text-gray-400 hover:text-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
+        (click)="closeModal()"
         aria-label="Close"
-      ></button>
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
 
     <ng-content></ng-content>

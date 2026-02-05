@@ -1,17 +1,18 @@
-<div class="profile-menu-container">
+<div class="relative inline-block profile-menu-container">
   <!-- Profile Button -->
   <button 
-    class="profile-button" 
+    class="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center transition-all duration-300 ease-in-out relative hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:rounded-full" 
     (click)="toggleMenu()"
     aria-label="User profile menu"
     [attr.aria-expanded]="isOpen"
     aria-haspopup="true">
     <div 
-      class="profile-avatar"
-      [class.has-image]="user?.profile_image_path"
+      class="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-cyan-500 flex items-center justify-center text-white shadow-md transition-all duration-300 ease-in-out relative overflow-hidden bg-cover bg-center bg-no-repeat hover:scale-110 hover:shadow-lg"
+      [class.bg-none]="user?.profile_image_path"
       [style.background-image]="getProfileImageStyle()">
       <svg 
         *ngIf="!user?.profile_image_path"
+        class="w-6 h-6 relative z-10 drop-shadow-sm"
         xmlns="http://www.w3.org/2000/svg" 
         fill="none" 
         viewBox="0 0 24 24" 
@@ -22,32 +23,44 @@
   </button>
 
   <!-- Dropdown Menu -->
-  <div class="dropdown-menu" [class.show]="isOpen" role="menu">
-    <div class="dropdown-header" *ngIf="user">
-      <div class="user-info">
-        <p class="user-name">{{ user.name || user.email }}</p>
-        <p class="user-email">{{ user.email }}</p>
+  <div 
+    class="absolute top-[calc(100%+12px)] right-0 bg-white rounded-xl shadow-2xl min-w-[260px] z-[1000] overflow-hidden backdrop-blur-sm transition-all duration-250 ease-in-out"
+    [class.opacity-0]="!isOpen"
+    [class.invisible]="!isOpen"
+    [class.-translate-y-3]="!isOpen"
+    [class.scale-95]="!isOpen"
+    [class.opacity-100]="isOpen"
+    [class.visible]="isOpen"
+    [class.translate-y-0]="isOpen"
+    [class.scale-100]="isOpen"
+    role="menu">
+    <div class="absolute -top-1.5 right-4 w-3 h-3 bg-white transform rotate-45 shadow-sm -z-10"></div>
+    <div class="p-5 bg-gradient-to-br from-secondary to-cyan-500 text-white relative overflow-hidden" *ngIf="user">
+      <div class="absolute -top-1/2 -right-1/2 w-[200%] h-[200%] bg-gradient-radial from-white/10 to-transparent"></div>
+      <div class="flex flex-col gap-1 relative z-10">
+        <p class="font-semibold text-[15px] m-0 whitespace-nowrap overflow-hidden text-ellipsis tracking-wide">{{ user.name || user.email }}</p>
+        <p class="text-[13px] m-0 opacity-95 whitespace-nowrap overflow-hidden text-ellipsis">{{ user.email }}</p>
       </div>
     </div>
-    <div class="dropdown-divider"></div>
+    <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     <button 
-      class="dropdown-item" 
+      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm text-gray-700 transition-all duration-200 ease-in-out text-left relative overflow-hidden hover:bg-gray-50 hover:pl-6 hover:text-gray-900 active:bg-gray-100 active:scale-[0.98] focus:outline-none focus:bg-gray-100 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-secondary before:to-cyan-500 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
       (click)="navigateToSettings()"
       role="menuitem">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="w-5 h-5 shrink-0 transition-transform duration-200 hover:scale-110 hover:rotate-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
-      <span>Settings</span>
+      <span class="flex-1 font-medium">Settings</span>
     </button>
     <button 
-      class="dropdown-item logout" 
+      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm transition-all duration-200 ease-in-out text-left relative overflow-hidden border-t border-gray-100 mt-1 text-red-600 hover:bg-red-50 hover:pl-6 hover:text-red-700 active:bg-red-100 active:scale-[0.98] focus:outline-none focus:bg-red-50 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-red-600 before:to-red-700 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
       (click)="logout()"
       role="menuitem">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg class="w-5 h-5 shrink-0 transition-transform duration-200 hover:scale-110 hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
       </svg>
-      <span>Logout</span>
+      <span class="flex-1 font-medium">Logout</span>
     </button>
   </div>
 </div>

@@ -1,49 +1,106 @@
 <header>
-  <nav class="top-menu navbar navbar-dark navbar-expand-lg mt-3 mx-3" aria-label="Main navigation">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/" aria-label="Breedly home">Breedly</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation menu"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item" *ngIf="this.route != '' && this.route != '/'">
-            <a
-              [ngClass]="this.route == '' || this.route == '/' ? 'active' : ''"
-              href="/"
-              class="nav-link"
-              [attr.aria-current]="this.route == '' || this.route == '/' ? 'page' : null"
-              >Home</a
-            >
-          </li>
-        </ul>
-        <div class="" *ngIf="!checkToken">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="/login" class="nav-link">Sign In</a>
-            </li>
+  <nav class="top-menu bg-gradient-to-r from-primary to-secondary shadow-md mt-3 mx-3 rounded-default" aria-label="Main navigation">
+    <div class="w-full px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Brand -->
+        <a class="text-xl font-bold text-white hover:text-gray-100 transition-colors" href="/" aria-label="Breedly home">Breedly</a>
+        
+        <!-- Mobile menu button -->
+        <button
+          class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white transition-colors"
+          type="button"
+          (click)="toggleMobileMenu()"
+          [attr.aria-controls]="'navbarNav'"
+          [attr.aria-expanded]="isMobileMenuOpen"
+          aria-label="Toggle navigation menu"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
 
-            <span class="slash-devider" aria-hidden="true">/</span>
-            <li class="nav-item">
-              <a href="/register" class="nav-link">Get Started</a>
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex lg:items-center lg:space-x-4 lg:flex-1 lg:ml-8">
+          <ul class="flex space-x-4 flex-1">
+            <li *ngIf="this.route != '' && this.route != '/'">
+              <a
+                [ngClass]="this.route == '' || this.route == '/' ? 'text-white font-semibold' : 'text-white/90 hover:text-white'"
+                href="/"
+                class="px-3 py-2 transition-colors"
+                [attr.aria-current]="this.route == '' || this.route == '/' ? 'page' : null"
+                >Home</a
+              >
             </li>
           </ul>
+          
+          <!-- Auth links (not logged in) -->
+          <div class="flex items-center" *ngIf="!checkToken">
+            <ul class="flex items-center space-x-2">
+              <li>
+                <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
+              </li>
+              <span class="text-white/70 text-base" aria-hidden="true">/</span>
+              <li>
+                <a href="/register" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Get Started</a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Auth links (logged in) -->
+          <div class="flex items-center gap-3" *ngIf="checkToken">
+            <ul class="flex">
+              <li>
+                <a href="/dashboard" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Dashboard</a>
+              </li>
+            </ul>
+            <app-profile-menu></app-profile-menu>
+          </div>
         </div>
-        <div class="d-flex align-items-center gap-3" *ngIf="checkToken">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a href="/dashboard" class="nav-link">Dashboard</a>
+      </div>
+
+      <!-- Mobile menu -->
+      <div 
+        class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out"
+        [class.max-h-0]="!isMobileMenuOpen"
+        [class.max-h-96]="isMobileMenuOpen"
+        id="navbarNav">
+        <div class="py-4 space-y-2 border-t border-white/20">
+          <ul class="space-y-2">
+            <li *ngIf="this.route != '' && this.route != '/'">
+              <a
+                [ngClass]="this.route == '' || this.route == '/' ? 'text-white font-semibold bg-white/10' : 'text-white/90 hover:text-white hover:bg-white/5'"
+                href="/"
+                class="block px-3 py-2 rounded-lg transition-colors"
+                [attr.aria-current]="this.route == '' || this.route == '/' ? 'page' : null"
+                >Home</a
+              >
             </li>
           </ul>
-          <app-profile-menu></app-profile-menu>
+          
+          <!-- Auth links (not logged in) - Mobile -->
+          <div *ngIf="!checkToken">
+            <ul class="space-y-2">
+              <li>
+                <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
+              </li>
+              <li>
+                <a href="/register" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Get Started</a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- Auth links (logged in) - Mobile -->
+          <div *ngIf="checkToken">
+            <ul class="space-y-2">
+              <li>
+                <a href="/dashboard" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Dashboard</a>
+              </li>
+            </ul>
+            <div class="px-3 py-2">
+              <app-profile-menu></app-profile-menu>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 <div class="puppy-table-container">
   <div class="space-y-4">
     <!-- Puppies Table -->
-    <div class="overflow-x-auto">
-      <table>
+    <div class="table-container-unified">
+      <table class="table-unified">
         <thead>
           <tr>
             <th>
@@ -27,12 +27,14 @@
                 [(ngModel)]="puppy.name"
                 placeholder="Enter puppy name"
                 [disabled]="isLoading"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </td>
             <td>
               <select
                 [(ngModel)]="puppy.gender"
                 [disabled]="isLoading"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -43,6 +45,7 @@
                 type="date"
                 [(ngModel)]="puppy.birth_date"
                 [disabled]="isLoading"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </td>
             <td>
@@ -50,6 +53,7 @@
                 (click)="removePuppy(i)"
                 [disabled]="puppies.length === 1 || isLoading"
                 title="Remove puppy"
+                class="px-3 py-1.5 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
                 Remove
               </button>
@@ -68,12 +72,13 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex justify-between items-center">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
       <button
         (click)="addPuppyRow()"
         [disabled]="isLoading"
+        class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors inline-flex items-center justify-center gap-2"
       >
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
         </svg>
         Add Puppy
@@ -82,11 +87,11 @@
       <button
         (click)="savePuppies()"
         [disabled]="!isValid() || isLoading"
-        class="save-button"
+        class="save-button w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-md hover:shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
       >
         <span *ngIf="!isLoading">Save Puppies</span>
-        <span *ngIf="isLoading">
-          <svg fill="none" viewBox="0 0 24 24">
+        <span *ngIf="isLoading" class="flex items-center gap-2">
+          <svg fill="none" viewBox="0 0 24 24" class="w-5 h-5 animate-spin">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -96,7 +101,7 @@
     </div>
 
     <!-- Helper Text -->
-    <p class="text-sm">
+    <p class="text-sm text-gray-500 italic">
       <span class="text-red-500">*</span> Required fields
     </p>
   </div>

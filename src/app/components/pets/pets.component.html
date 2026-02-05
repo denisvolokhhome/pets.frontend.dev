@@ -43,8 +43,7 @@
     <div class="header-right">
       <button 
         class="fab-button fab-success"
-        data-bs-toggle="modal"
-        data-bs-target="#addPetModal"
+        (click)="openAddPetModal()"
         title="Add Pet">
         <i class="bi bi-plus-circle"></i>
       </button>
@@ -107,30 +106,6 @@
             (click)="onGenderFilterChange(selectedGender === 'f' ? '' : 'f')">
             <i class="bi bi-gender-female"></i>
             Female
-          </button>
-        </div>
-      </div>
-
-      <!-- Age Type Filter -->
-      <div class="filter-group">
-        <label class="filter-label">
-          <i class="bi bi-calendar-heart"></i>
-          Age Type
-        </label>
-        <div class="gender-buttons">
-          <button 
-            class="gender-btn"
-            [class.active]="selectedAgeType === 'adult'"
-            (click)="onAgeTypeFilterChange(selectedAgeType === 'adult' ? '' : 'adult')">
-            <i class="bi bi-star-fill"></i>
-            Adult
-          </button>
-          <button 
-            class="gender-btn"
-            [class.active]="selectedAgeType === 'young'"
-            (click)="onAgeTypeFilterChange(selectedAgeType === 'young' ? '' : 'young')">
-            <i class="bi bi-heart-fill"></i>
-            Young
           </button>
         </div>
       </div>
@@ -211,12 +186,11 @@
   <!-- Main Content -->
   <main class="pets-content">
     <div *ngIf="view == 'cards'">
-      <div *ngIf="filteredPets && filteredPets.length > 0" class="row">
+      <div *ngIf="filteredPets && filteredPets.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <div
           app-pet-card
           (deletingPet)="deletePet($event)"
           (editingPet)="editPet($event)"
-          class="col-xxl-4 col-lg-6 mt-3"
           *ngFor="let pet of filteredPets | searchPets : term; let i = index"
           [pet]="pet"
         ></div>
@@ -227,7 +201,7 @@
         <h3>No pets found</h3>
         <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
         <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="clearFilters()">
           Clear Filters
         </button>
       </div>
@@ -293,7 +267,7 @@
           <h3>No pets found</h3>
           <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
           <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-          <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+          <button *ngIf="hasActiveFilters()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" (click)="clearFilters()">
             Clear Filters
           </button>
         </div>
@@ -308,11 +282,8 @@
   app-modal
   title="Add a pet"
   modalSize="large"
-  class="modal fade"
-  tabindex="-1"
+  modalId="addPetModal"
   aria-labelledby="PetAddModal"
-  aria-hidden="true"
-  id="addPetModal"
 >
   <app-pet-add></app-pet-add>
 </div>
@@ -320,11 +291,8 @@
   app-modal
   title="Confirmation"
   modalSize="small"
-  class="modal fade"
-  tabindex="-1"
+  modalId="deletePetModal"
   aria-labelledby="PetDeleteModal"
-  aria-hidden="true"
-  id="deletePetModal"
 >
   <app-pet-delete [pet_id]="petId"></app-pet-delete>
 </div>
@@ -332,11 +300,8 @@
   app-modal
   title="Edit"
   modalSize="large"
-  class="modal fade"
-  tabindex="-1"
+  modalId="editPetModal"
   aria-labelledby="PetEditModal"
-  aria-hidden="true"
-  id="editPetModal"
 >
   <app-pet-edit [pet]="pet"></app-pet-edit>
 </div>

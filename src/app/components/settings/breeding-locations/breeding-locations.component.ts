@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
 import { ILocation } from '../../../models/location';
@@ -25,7 +25,8 @@ export class BreedingLocationsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {
     this.locationForm = this.fb.group({
       name: ['', Validators.required],
@@ -45,18 +46,48 @@ export class BreedingLocationsComponent implements OnInit {
 
   async loadLocations(): Promise<void> {
     this.isLoading = true;
-    this.dataService.getLocations().subscribe({
-      next: (locations) => {
-        this.locations = locations;
+    this.saveError = null;
+    
+    // Set a timeout to prevent infinite loading
+    const loadingTimeout = setTimeout(() => {
+      if (this.isLoading) {
+        console.warn('Loading locations timed out after 10 seconds');
         this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading locations:', error);
-        this.saveError = 'Failed to load locations';
-        this.toastr.error('Failed to load locations', 'Error');
-        this.isLoading = false;
+        this.saveError = 'Loading timed out. Please refresh the page.';
+        this.toastr.error('Loading timed out. Please refresh the page.', 'Error');
+        this.cdr.detectChanges();
       }
-    });
+    }, 10000);
+    
+    try {
+      this.dataService.getLocations().subscribe({
+        next: (locations) => {
+          clearTimeout(loadingTimeout);
+          this.locations = locations;
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          clearTimeout(loadingTimeout);
+          console.error('Error loading locations:', error);
+          this.saveError = 'Failed to load locations';
+          this.toastr.error('Failed to load locations', 'Error');
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+        complete: () => {
+          clearTimeout(loadingTimeout);
+          // Ensure loading is set to false even if next wasn't called
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } catch (error) {
+      clearTimeout(loadingTimeout);
+      console.error('Unexpected error loading locations:', error);
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }
   }
 
   showAddForm(): void {

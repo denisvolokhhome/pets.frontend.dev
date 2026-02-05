@@ -198,7 +198,7 @@
                   class="btn-action btn-void" 
                   (click)="voidBreeding(breeding)"
                   title="Void breeding"
-                  [disabled]="breeding.status === BreedingStatus.Voided || isVoiding[breeding.id]">
+                  [disabled]="breeding.status === BreedingStatus.Voided || breeding.status === BreedingStatus.Done || isVoiding[breeding.id]">
                   <span *ngIf="!isVoiding[breeding.id]">
                     <i class="bi bi-x-circle-fill"></i>
                   </span>
@@ -225,7 +225,7 @@
         <h3>No breedings found</h3>
         <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
         <p *ngIf="!hasActiveFilters()">Click the + button above to create your first breeding.</p>
-        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">
+        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="clearFilters()">
           Clear Filters
         </button>
       </div>

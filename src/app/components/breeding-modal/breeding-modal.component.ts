@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { IBreeding } from 'src/app/models/breeding';
 import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
@@ -22,7 +22,8 @@ export class BreedingModalComponent implements OnInit, OnChanges {
 
   constructor(
     private dataService: DataService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +31,7 @@ export class BreedingModalComponent implements OnInit, OnChanges {
     this.modalService.isVisible$.subscribe(isVisible => {
       console.log('Modal visibility changed:', isVisible);
       this.isOpen = isVisible;
+      this.cdr.detectChanges();
     });
   }
 
