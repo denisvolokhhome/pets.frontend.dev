@@ -23,4 +23,13 @@ export class AppComponent {
       this.route = fullPath.split('?')[0]; // Remove query parameters
     });
   }
+
+  /**
+   * Check if current route is a public-facing page
+   * Public pages should have a friendly design without sidebar
+   */
+  isPublicPage(): boolean {
+    const publicRoutes = ['', '/', '/login', '/register', '/search-pets'];
+    return publicRoutes.includes(this.route);
+  }
 }

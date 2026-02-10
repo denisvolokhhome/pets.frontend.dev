@@ -1,0 +1,59 @@
+<div 
+  class="breeder-card" 
+  [class.highlighted]="isHighlighted"
+  (click)="onCardClick()"
+  (mouseenter)="onCardHover()">
+  
+  <!-- Thumbnail Image -->
+  <div class="breeder-card__image">
+    <img 
+      [src]="getImageUrl(breeder.thumbnail_url)" 
+      [alt]="breeder.breeder_name"
+      class="breeder-card__thumbnail"
+      loading="lazy"
+      decoding="async">
+  </div>
+
+  <!-- Breeder Information -->
+  <div class="breeder-card__info">
+    <!-- Breeder Name -->
+    <h3 class="breeder-card__name">{{ breeder.breeder_name }}</h3>
+    
+    <!-- Distance -->
+    <p class="breeder-card__distance">
+      <i class="pi pi-map-marker"></i>
+      {{ formatDistance(breeder.distance) }} away
+    </p>
+    
+    <!-- Available Breeds -->
+    <p class="breeder-card__breeds">
+      <i class="pi pi-heart"></i>
+      {{ getBreedNames() }}
+    </p>
+    
+    <!-- Rating (if available) -->
+    <div class="breeder-card__rating" *ngIf="breeder.rating">
+      <i class="pi pi-star-fill"></i>
+      <span>{{ breeder.rating.toFixed(1) }}</span>
+    </div>
+    
+    <!-- Description -->
+    <p class="breeder-card__description">
+      {{ truncateDescription(breeder.location_description) }}
+    </p>
+    
+    <!-- Action Buttons -->
+    <div class="breeder-card__actions">
+      <button 
+        class="breeder-card__button breeder-card__button--primary"
+        (click)="onViewProfile($event)">
+        View Profile
+      </button>
+      <button 
+        class="breeder-card__button breeder-card__button--secondary"
+        (click)="onContactBreeder($event)">
+        Contact
+      </button>
+    </div>
+  </div>
+</div>

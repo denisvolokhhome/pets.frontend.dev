@@ -1,0 +1,308 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { BreederCardListComponent } from './breeder-card-list.component';
+import { BreederCardComponent } from '../breeder-card/breeder-card.component';
+import { BreederSearchResult } from 'src/app/models/search';
+
+describe('BreederCardListComponent', () => {
+  let component: BreederCardListComponent;
+  let fixture: ComponentFixture<BreederCardListComponent>;
+  let compiled: HTMLElement;
+
+  // Helper function to create mock breeder data
+  const createMockBreeder = (id: string, name: string, distance: number): BreederSearchResult => ({
+    location_id: parseInt(id),
+    user_id: id,
+    breeder_name: name,
+    latitude: 40.7128,
+    longitude: -74.0060,
+    distance: distance,
+    available_breeds: [
+      { breed_id: 1, breed_name: 'Golden Retriever', pet_count: 3 }
+    ],
+    thumbnail_url: 'test-image.jpg',
+    location_description: 'Test location',
+    rating: 4.5
+  });
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [BreederCardListComponent, BreederCardComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BreederCardListComponent);
+    component = fixture.componentInstance;
+    compiled = fixture.nativeElement;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  describe('Empty State', () => {
+    it('should display empty state when no breeders are provided', () => {
+      component.breeders = [];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const emptyState = compiled.querySelector('.empty-state');
+      expect(emptyState).toBeTruthy();
+      expect(emptyState?.textContent).toContain('No breeders found');
+    });
+
+    it('should not display empty state when loading', () => {
+      component.breeders = [];
+      component.isLoading = true;
+      fixture.detectChanges();
+
+      const emptyState = compiled.querySelector('.empty-state');
+      expect(emptyState).toBeFalsy();
+    });
+
+    it('should not display empty state when breeders exist', () => {
+      component.breeders = [createMockBreeder('1', 'Test Breeder', 10)];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const emptyState = compiled.querySelector('.empty-state');
+      expect(emptyState).toBeFalsy();
+    });
+  });
+
+  describe('Loading State', () => {
+    it('should display skeleton loaders when loading', () => {
+      component.isLoading = true;
+      fixture.detectChanges();
+
+      const skeletonContainer = compiled.querySelector('.skeleton-container');
+      expect(skeletonContainer).toBeTruthy();
+
+      const skeletonCards = compiled.querySelectorAll('.skeleton-card');
+      expect(skeletonCards.length).toBe(component.skeletonCount);
+    });
+
+    it('should not display skeleton loaders when not loading', () => {
+      component.isLoading = false;
+      component.breeders = [createMockBreeder('1', 'Test Breeder', 10)];
+      fixture.detectChanges();
+
+      const skeletonContainer = compiled.querySelector('.skeleton-container');
+      expect(skeletonContainer).toBeFalsy();
+    });
+  });
+
+  describe('Breeder Cards Display', () => {
+    it('should display breeder cards when breeders are provided', () => {
+      const mockBreeders = [
+        createMockBreeder('1', 'Breeder 1', 10),
+        createMockBreeder('2', 'Breeder 2', 20),
+        createMockBreeder('3', 'Breeder 3', 30)
+      ];
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const cards = compiled.querySelectorAll('app-breeder-card');
+      expect(cards.length).toBe(3);
+    });
+
+    it('should pass correct breeder data to child components', () => {
+      const mockBreeder = createMockBreeder('1', 'Test Breeder', 10);
+      component.breeders = [mockBreeder];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const cardComponent = fixture.debugElement.query(By.directive(BreederCardComponent));
+      expect(cardComponent.componentInstance.breeder).toEqual(mockBreeder);
+    });
+
+    it('should set data-breeder-id attribute on card wrappers', () => {
+      const mockBreeders = [
+        createMockBreeder('breeder-1', 'Breeder 1', 10),
+        createMockBreeder('breeder-2', 'Breeder 2', 20)
+      ];
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const wrapper1 = compiled.querySelector('[data-breeder-id="breeder-1"]');
+      const wrapper2 = compiled.querySelector('[data-breeder-id="breeder-2"]');
+      expect(wrapper1).toBeTruthy();
+      expect(wrapper2).toBeTruthy();
+    });
+  });
+
+  describe('Lazy Loading', () => {
+    it('should initially load only INITIAL_LOAD_COUNT breeders', () => {
+      const mockBreeders = Array.from({ length: 50 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      expect(component.visibleBreeders.length).toBe(20); // INITIAL_LOAD_COUNT
+    });
+
+    it('should show load more indicator when more breeders are available', () => {
+      const mockBreeders = Array.from({ length: 30 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const loadMoreIndicator = compiled.querySelector('.load-more-indicator');
+      expect(loadMoreIndicator).toBeTruthy();
+    });
+
+    it('should not show load more indicator when all breeders are loaded', () => {
+      const mockBreeders = Array.from({ length: 10 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const loadMoreIndicator = compiled.querySelector('.load-more-indicator');
+      expect(loadMoreIndicator).toBeFalsy();
+    });
+
+    it('should correctly report hasMoreToLoad', () => {
+      const mockBreeders = Array.from({ length: 30 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      expect(component.hasMoreToLoad()).toBe(true);
+
+      // Load all breeders
+      component.breeders = Array.from({ length: 10 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      fixture.detectChanges();
+
+      expect(component.hasMoreToLoad()).toBe(false);
+    });
+  });
+
+  describe('Highlighting', () => {
+    it('should pass isHighlighted=true to highlighted breeder card', () => {
+      const mockBreeders = [
+        createMockBreeder('1', 'Breeder 1', 10),
+        createMockBreeder('2', 'Breeder 2', 20)
+      ];
+      component.breeders = mockBreeders;
+      component.highlightedId = '2';
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const cardComponents = fixture.debugElement.queryAll(By.directive(BreederCardComponent));
+      expect(cardComponents[0].componentInstance.isHighlighted).toBe(false);
+      expect(cardComponents[1].componentInstance.isHighlighted).toBe(true);
+    });
+
+    it('should pass isHighlighted=false when no breeder is highlighted', () => {
+      const mockBreeder = createMockBreeder('1', 'Breeder 1', 10);
+      component.breeders = [mockBreeder];
+      component.highlightedId = null;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const cardComponent = fixture.debugElement.query(By.directive(BreederCardComponent));
+      expect(cardComponent.componentInstance.isHighlighted).toBe(false);
+    });
+  });
+
+  describe('Event Handling', () => {
+    it('should emit cardClick event when child card is clicked', () => {
+      const mockBreeder = createMockBreeder('1', 'Test Breeder', 10);
+      component.breeders = [mockBreeder];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      spyOn(component.cardClick, 'emit');
+
+      const cardComponent = fixture.debugElement.query(By.directive(BreederCardComponent));
+      cardComponent.componentInstance.cardClick.emit('1');
+
+      expect(component.cardClick.emit).toHaveBeenCalledWith('1');
+    });
+
+    it('should emit cardHover event when child card is hovered', () => {
+      const mockBreeder = createMockBreeder('1', 'Test Breeder', 10);
+      component.breeders = [mockBreeder];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      spyOn(component.cardHover, 'emit');
+
+      const cardComponent = fixture.debugElement.query(By.directive(BreederCardComponent));
+      cardComponent.componentInstance.cardHover.emit('1');
+
+      expect(component.cardHover.emit).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('Results Count', () => {
+    it('should display correct results count', () => {
+      const mockBreeders = Array.from({ length: 25 }, (_, i) => 
+        createMockBreeder(`${i}`, `Breeder ${i}`, i * 5)
+      );
+      component.breeders = mockBreeders;
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const resultsCount = compiled.querySelector('.results-count');
+      expect(resultsCount?.textContent).toContain('Showing 20 of 25 breeders');
+    });
+
+    it('should not display results count when loading', () => {
+      component.isLoading = true;
+      fixture.detectChanges();
+
+      const resultsCount = compiled.querySelector('.results-count');
+      expect(resultsCount).toBeFalsy();
+    });
+
+    it('should not display results count when no breeders', () => {
+      component.breeders = [];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const resultsCount = compiled.querySelector('.results-count');
+      expect(resultsCount).toBeFalsy();
+    });
+  });
+
+  describe('Track By Function', () => {
+    it('should return user_id for trackBy', () => {
+      const mockBreeder = createMockBreeder('test-id', 'Test Breeder', 10);
+      const result = component.trackByBreederId(0, mockBreeder);
+      expect(result).toBe('test-id');
+    });
+  });
+
+  describe('Skeleton Array Generation', () => {
+    it('should generate correct skeleton array', () => {
+      component.skeletonCount = 5;
+      const skeletonArray = component.getSkeletonArray();
+      expect(skeletonArray.length).toBe(5);
+      expect(skeletonArray).toEqual([0, 1, 2, 3, 4]);
+    });
+  });
+
+  describe('Responsive Behavior', () => {
+    it('should have appropriate CSS classes for responsive layout', () => {
+      component.breeders = [createMockBreeder('1', 'Test Breeder', 10)];
+      component.isLoading = false;
+      fixture.detectChanges();
+
+      const listElement = compiled.querySelector('.breeder-card-list');
+      expect(listElement).toBeTruthy();
+    });
+  });
+});

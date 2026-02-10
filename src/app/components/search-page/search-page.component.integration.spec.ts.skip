@@ -1,0 +1,562 @@
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { of, throwError } from 'rxjs';
+import { SearchPageComponent } from './search-page.component';
+import { SearchService } from '../../services/search.service';
+import { MapComponent } from '../map/map.component';
+import { SearchControlsComponent } from '../search-controls/search-controls.component';
+import { BreederCardListComponent } from '../breeder-card-list/breeder-card-list.component';
+import { BreederCardComponent } from '../breeder-card/breeder-card.component';
+import { Coordinates, BreederSearchResult, Breed } from '../../models/search';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+/**
+ * Integration Tests for SearchPageComponent
+ * 
+ * These tests validate the complete search flow and interaction
+ * between SearchPageComponent and its child components.
+ */
+describe('SearchPageComponent - Integration Tests', () => {
+  let component: SearchPageComponent;
+  let fixture: ComponentFixture<SearchPageComponent>;
+  let searchService: jasmine.SpyObj<SearchService>;
+  let mockGeolocation: jasmine.SpyObj<Geolocation>;
+  let compiled: HTMLElement;
+
+  const mockCoordinates: Coordinates = {
+    latitude: 40.7128,
+    longitude: -74.0060
+  };
+
+  const mockAddress = {
+    zip_code: '10001',
+    city: 'New York',
+    state: 'NY',
+    country: 'USA'
+  };
+
+  const mockBreederResults: BreederSearchResult[] = [
+    {
+      location_id: 1,
+      user_id: 'breeder-1',
+      breeder_name: 'Golden Paws Kennel',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      distance: 5.2,
+      available_breeds: [
+        { breed_id: 1, breed_name: 'Golden Retriever', pet_count: 3 }
+      ],
+      thumbnail_url: 'https://example.com/image1.jpg',
+      location_description: 'Premium Golden Retriever breeder in NYC',
+      rating: 4.5
+    },
+    {
+      location_id: 2,
+      user_id: 'breeder-2',
+      breeder_name: 'Lab Lovers',
+      latitude: 40.7589,
+      longitude: -73.9851,
+      distance: 8.7,
+      available_breeds: [
+        { breed_id: 2, breed_name: 'Labrador Retriever', pet_count: 2 }
+      ],
+      thumbnail_url: 'https://example.com/image2.jpg',
+      location_description: 'Family-friendly Labrador breeder',
+      rating: 4.8
+    }
+  ];
+
+  const mockBreeds: Breed[] = [
+    { id: 1, name: 'Golden Retriever', code: 'GR' },
+    { id: 2, name: 'Labrador Retriever', code: 'LR' }
+  ];
+
+  function createMockPosition(latitude: number, longitude: number): GeolocationPosition {
+    return {
+      coords: {
+        latitude,
+        longitude,
+        accuracy: 100,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+        toJSON: () => ({})
+      },
+      timestamp: Date.now(),
+      toJSON: () => ({})
+    };
+  }
+
+  beforeEach(async () => {
+    const searchServiceSpy = jasmine.createSpyObj('SearchService', [
+      'searchBreeders',
+      'searchBreeds',
+      'geocodeZipCode',
+      'reverseGeocode'
+    ]);
+
+    mockGeolocation = jasmine.createSpyObj('Geolocation', ['getCurrentPosition']);
+
+    await TestBed.configureTestingModule({
+      declarations: [
+        SearchPageComponent,
+        MapComponent,
+        SearchControlsComponent,
+        BreederCardListComponent,
+        BreederCardComponent
+      ],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        CommonModule
+      ],
+      providers: [
+        { provide: SearchService, useValue: searchServiceSpy }
+      ]
+    }).compileComponents();
+
+    searchService = TestBed.inject(SearchService) as jasmine.SpyObj<SearchService>;
+
+    Object.defineProperty(navigator, 'geolocation', {
+      value: mockGeolocation,
+      configurable: true
+    });
+
+    fixture = TestBed.createComponent(SearchPageComponent);
+    component = fixture.componentInstance;
+    compiled = fixture.nativeElement as HTMLElement;
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+  });
+
+  describe('Complete Search Flow', () => {
+    it('should complete full search flow from geolocation to results display', fakeAsync(() => {
+      // Setup mocks
+      const mockPosition = createMockPosition(mockCoordinates.latitude, mockCoordinates.longitude);
+      searchService.reverseGeocode.and.returnValue(of(mockAddress));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      mockGeolocation.getCurrentPosition.and.callFake((success) => {
+        success(mockPosition);
+      });
+
+      // Initialize component
+      fixture.detectChanges();
+      component.ngOnInit();
+      tick();
+      fixture.detectChanges();
+
+      // Verify geolocation was requested
+      expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
+
+      // Verify reverse geocoding was called
+      expect(searchService.reverseGeocode).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude
+      );
+
+      // Verify ZIP code was populated
+      expect(component.zipCode).toBe('10001');
+
+      // Verify search was automatically triggered
+      expect(searchService.searchBreeders).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude,
+        40, // default radius
+        undefined // no breed filter
+      );
+
+      // Verify results are displayed
+      expect(component.searchResults.length).toBe(2);
+      expect(component.breederMarkers.length).toBe(2);
+      expect(component.hasSearched).toBe(true);
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should complete manual search flow with ZIP entry', fakeAsync(() => {
+      // Skip geolocation
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+
+      // Setup mocks for manual search
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      // User enters ZIP code
+      component.zipCode = '10001';
+      component.radius = 40;
+
+      // User clicks search
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      // Verify geocoding was called
+      expect(searchService.geocodeZipCode).toHaveBeenCalledWith('10001');
+
+      // Verify search was called
+      expect(searchService.searchBreeders).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude,
+        40,
+        undefined
+      );
+
+      // Verify results
+      expect(component.searchResults.length).toBe(2);
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBeNull();
+    }));
+
+    it('should complete search flow with breed filter', fakeAsync(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+
+      const mockBreed: Breed = { id: 1, name: 'Golden Retriever', code: 'GR' };
+      const filteredResults = [mockBreederResults[0]]; // Only Golden Retriever breeder
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(filteredResults));
+
+      // User enters search criteria
+      component.zipCode = '10001';
+      component.radius = 40;
+      component.selectedBreed = mockBreed;
+
+      // User clicks search
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      // Verify search was called with breed filter
+      expect(searchService.searchBreeders).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude,
+        40,
+        1 // breed ID
+      );
+
+      // Verify filtered results
+      expect(component.searchResults.length).toBe(1);
+      expect(component.searchResults[0].available_breeds[0].breed_name).toBe('Golden Retriever');
+    }));
+  });
+
+  describe('Geolocation Handling', () => {
+    it('should handle geolocation permission denied gracefully', fakeAsync(() => {
+      const mockError: GeolocationPositionError = {
+        code: 1, // PERMISSION_DENIED
+        message: 'User denied geolocation',
+        PERMISSION_DENIED: 1,
+        POSITION_UNAVAILABLE: 2,
+        TIMEOUT: 3
+      };
+
+      mockGeolocation.getCurrentPosition.and.callFake((success, error) => {
+        error!(mockError);
+      });
+
+      fixture.detectChanges();
+      component.ngOnInit();
+      tick();
+      fixture.detectChanges();
+
+      // Verify error message is displayed
+      expect(component.geolocationError).toContain('Location access denied');
+      expect(component.isLoading).toBe(false);
+
+      // Verify user can still search manually
+      expect(component.zipCode).toBe('');
+
+      // User can enter ZIP manually
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.zipCode = '10001';
+      component.onSearch();
+      tick();
+
+      expect(searchService.geocodeZipCode).toHaveBeenCalled();
+      expect(component.searchResults.length).toBe(2);
+    }));
+
+    it('should handle reverse geocoding failure', fakeAsync(() => {
+      const mockPosition = createMockPosition(mockCoordinates.latitude, mockCoordinates.longitude);
+
+      searchService.reverseGeocode.and.returnValue(
+        throwError(() => ({ message: 'Geocoding service unavailable' }))
+      );
+
+      mockGeolocation.getCurrentPosition.and.callFake((success) => {
+        success(mockPosition);
+      });
+
+      fixture.detectChanges();
+      component.ngOnInit();
+      tick();
+      fixture.detectChanges();
+
+      // Verify error is handled
+      expect(component.geolocationError).toContain('Failed to convert location');
+      expect(component.isLoading).toBe(false);
+      expect(component.zipCode).toBe('');
+    }));
+  });
+
+  describe('Map-Card Interaction', () => {
+    beforeEach(fakeAsync(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      fixture.detectChanges();
+      component.zipCode = '10001';
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      // Mock map component
+      component.mapComponent = jasmine.createSpyObj('MapComponent', [
+        'zoomToMarker',
+        'bounceMarker'
+      ]);
+    }));
+
+    it('should highlight card when marker is clicked', () => {
+      const breederId = 'breeder-1';
+
+      component.onMarkerClick(breederId);
+      fixture.detectChanges();
+
+      expect(component.highlightedBreederId).toBe(breederId);
+    });
+
+    it('should zoom to marker when card is clicked', () => {
+      const breederId = 'breeder-1';
+
+      component.onCardClick(breederId);
+      fixture.detectChanges();
+
+      expect(component.mapComponent.zoomToMarker).toHaveBeenCalledWith(breederId);
+      expect(component.highlightedBreederId).toBe(breederId);
+    });
+
+    it('should bounce marker when card is hovered', () => {
+      const breederId = 'breeder-1';
+
+      component.onCardHover(breederId);
+      fixture.detectChanges();
+
+      expect(component.mapComponent.bounceMarker).toHaveBeenCalledWith(breederId);
+      expect(component.highlightedBreederId).toBe(breederId);
+    });
+
+    it('should maintain synchronization across multiple interactions', () => {
+      // Click marker
+      component.onMarkerClick('breeder-1');
+      expect(component.highlightedBreederId).toBe('breeder-1');
+
+      // Click different card
+      component.onCardClick('breeder-2');
+      expect(component.highlightedBreederId).toBe('breeder-2');
+      expect(component.mapComponent.zoomToMarker).toHaveBeenCalledWith('breeder-2');
+
+      // Hover over first card
+      component.onCardHover('breeder-1');
+      expect(component.highlightedBreederId).toBe('breeder-1');
+      expect(component.mapComponent.bounceMarker).toHaveBeenCalledWith('breeder-1');
+    });
+  });
+
+  describe('Error Handling', () => {
+    beforeEach(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+    });
+
+    it('should display error for invalid ZIP code', () => {
+      component.zipCode = 'abc12';
+      component.onSearch();
+      fixture.detectChanges();
+
+      expect(component.error).toContain('valid 5-digit ZIP code');
+      expect(searchService.geocodeZipCode).not.toHaveBeenCalled();
+    });
+
+    it('should handle geocoding API error', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(
+        throwError(() => ({ message: 'Geocoding failed' }))
+      );
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.error).toContain('Failed to geocode');
+      expect(component.isLoading).toBe(false);
+      expect(component.searchResults.length).toBe(0);
+    }));
+
+    it('should handle search API error', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(
+        throwError(() => ({ message: 'Search failed' }))
+      );
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.error).toContain('Failed to search');
+      expect(component.isLoading).toBe(false);
+      expect(component.searchResults.length).toBe(0);
+    }));
+
+    it('should allow retry after error', fakeAsync(() => {
+      component.zipCode = '10001';
+      component.error = 'Previous error';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.retrySearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.error).toBeNull();
+      expect(component.searchResults.length).toBe(2);
+    }));
+  });
+
+  describe('Loading States', () => {
+    beforeEach(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+    });
+
+    it('should show loading state during search', () => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+
+      expect(component.isLoading).toBe(true);
+    });
+
+    it('should hide loading state after successful search', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+      flush(); // Clear any remaining timers
+      fixture.detectChanges();
+
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should hide loading state after error', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(
+        throwError(() => ({ message: 'Error' }))
+      );
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should show no results message when search returns empty', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of([]));
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.hasNoResults()).toBe(true);
+      expect(component.searchResults.length).toBe(0);
+      expect(component.hasSearched).toBe(true);
+    }));
+  });
+
+  describe('State Management', () => {
+    it('should update map center when search location changes', fakeAsync(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+
+      const newCoordinates: Coordinates = {
+        latitude: 34.0522,
+        longitude: -118.2437
+      };
+
+      component.zipCode = '90001';
+
+      searchService.geocodeZipCode.and.returnValue(of(newCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.mapCenter).toEqual(newCoordinates);
+    }));
+
+    it('should clear errors on successful search', fakeAsync(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+
+      component.error = 'Previous error';
+      component.geolocationError = 'Previous geolocation error';
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.error).toBeNull();
+      expect(component.geolocationError).toBeNull();
+    }));
+
+    it('should convert search results to breeder markers', fakeAsync(() => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      fixture.detectChanges();
+
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+      fixture.detectChanges();
+
+      expect(component.breederMarkers.length).toBe(2);
+      expect(component.breederMarkers[0].id).toBe('breeder-1');
+      expect(component.breederMarkers[0].position.latitude).toBe(40.7128);
+      expect(component.breederMarkers[1].id).toBe('breeder-2');
+    }));
+  });
+});

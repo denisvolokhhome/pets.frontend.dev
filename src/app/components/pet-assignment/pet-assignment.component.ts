@@ -46,15 +46,27 @@ export class PetAssignmentComponent implements OnInit {
                 name: p.name, 
                 is_puppy: p.is_puppy,
                 is_puppy_type: typeof p.is_puppy,
+                is_puppy_value: p.is_puppy,
+                is_puppy_strict_false: p.is_puppy === false,
+                is_puppy_strict_zero: p.is_puppy === 0,
+                is_puppy_loose_false: p.is_puppy == false,
+                is_puppy_negated: !p.is_puppy,
                 litter_id: p.litter_id ?? null,
                 location: p.location_name 
               })));
               
               // Filter out puppies - only adult pets can be parents
-              // is_puppy is a number: 0 = adult, 1 = puppy
+              // is_puppy can be either boolean (false = adult, true = puppy) or number (0 = adult, 1 = puppy)
               // Note: litter_id just tracks where a pet was born, not whether it's currently a puppy
-              this.availablePets = pets.filter(pet => pet.is_puppy === 0);
+              this.availablePets = pets.filter(pet => {
+                // Handle both boolean and numeric values using loose comparison
+                // This will match: true, 1, '1' as puppy and false, 0, '0' as adult
+                const isAdult = !pet.is_puppy;
+                console.log(`Pet ${pet.name}: is_puppy=${pet.is_puppy}, isAdult=${isAdult}`);
+                return isAdult;
+              });
               console.log('Available adult pets:', this.availablePets);
+              console.log('Available adult pets count:', this.availablePets.length);
               
               if (this.availablePets.length === 0 && pets.length > 0) {
                 this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents. You can edit a pet and uncheck "Is Puppy" to mark it as an adult.';

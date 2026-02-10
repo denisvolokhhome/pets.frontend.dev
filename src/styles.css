@@ -771,55 +771,94 @@ button.fab-button.fab-success {
 
 /* ===== Mobile Touch Interactions ===== */
 
-/* Ensure all interactive elements meet minimum touch target size on mobile */
+/* Ensure all interactive elements meet minimum touch target size (WCAG 2.1 Level AA) */
+/* Applies to all viewports to ensure consistent accessibility */
+
+/* Links */
+a {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
+}
+
+a:active {
+  opacity: 0.7;
+}
+
+/* Buttons - enforce minimum touch target size globally */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
+}
+
+/* Remove default tap highlight and add custom feedback */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active,
+[role="button"]:active {
+  opacity: 0.9;
+}
+
+/* Ensure adequate spacing between interactive elements */
+button + button {
+  margin-left: 0.5rem;
+}
+
+/* Icon buttons */
+button[aria-label],
+[role="button"][aria-label] {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0.75rem;
+}
+
+/* Ensure modal close buttons are touch-friendly */
+.modal-header .btn-close {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 1rem;
+}
+
+/* Checkbox and radio inputs */
+input[type="checkbox"],
+input[type="radio"] {
+  min-width: 24px;
+  min-height: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Select dropdowns */
+select {
+  min-height: 44px;
+}
+
+/* Mobile-specific enhancements */
 @media (max-width: 767px) {
-  /* Links */
-  a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
-  }
-
-  a:active {
-    opacity: 0.7;
-  }
-
-  /* Buttons */
-  button,
-  [role="button"] {
-    min-height: 44px;
-    min-width: 44px;
-    -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
-  }
-
-  /* Remove default tap highlight and add custom feedback */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  button:active,
-  [role="button"]:active {
-    opacity: 0.9;
-  }
-
-  /* Ensure adequate spacing between interactive elements */
-  button + button {
-    margin-left: 0.5rem;
-  }
-
-  /* Icon buttons */
-  button[aria-label] {
+  /* Increase touch targets on mobile */
+  button[aria-label],
+  [role="button"][aria-label] {
     min-width: 48px;
     min-height: 48px;
-    padding: 0.75rem;
   }
 
-  /* Ensure modal close buttons are touch-friendly */
-  .modal-header .btn-close {
-    min-width: 44px;
-    min-height: 44px;
-    padding: 1rem;
+  /* Ensure form controls are touch-friendly */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 28px;
+    min-height: 28px;
+    width: 28px;
+    height: 28px;
   }
 }
 
@@ -1306,4 +1345,58 @@ button.fab-button.fab-success {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
+}
+
+/* ===== Touch Target Size Enforcement for Specific Components ===== */
+
+/* Breeder card buttons */
+.breeder-card__button,
+.breeder-card__button--primary,
+.breeder-card__button--secondary {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.625rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Radius selection buttons */
+.radius-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.625rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Search button */
+.search-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.625rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Breed dropdown options */
+.breed-option {
+  min-height: 44px;
+  padding: 0.625rem 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Dismiss and retry buttons */
+.dismiss-button,
+.retry-button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.625rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

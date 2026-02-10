@@ -7,7 +7,7 @@ import { of, throwError } from 'rxjs';
 import { PuppyTableComponent } from './puppy-table.component';
 import { DataService } from 'src/app/services/data.service';
 import { ToastrService } from 'ngx-toastr';
-import { ILitter, IPuppyInput } from 'src/app/models/litter';
+import { IBreeding, IPuppyInput, BreedingStatus } from 'src/app/models/breeding';
 import { IPet } from 'src/app/models/pet';
 
 /**
@@ -20,10 +20,10 @@ describe('PuppyTableComponent', () => {
   let dataService: jasmine.SpyObj<DataService>;
   let toastrService: jasmine.SpyObj<ToastrService>;
 
-  const mockLitter: ILitter = {
+  const mockLitter: IBreeding = {
     id: 'litter-1',
     description: 'Test litter',
-    status: 'InProcess' as any,
+    status: BreedingStatus.InProcess,
     created_at: '2023-01-01',
     updated_at: '2023-01-01',
     parent_pets: [
@@ -38,11 +38,11 @@ describe('PuppyTableComponent', () => {
         weight: '30',
         description: 'Adult dog',
         is_puppy: 0,
-        has_microchip: 1,
         has_vaccination: 1,
         has_healthcertificate: 1,
         has_dewormed: 1,
-        has_birthcertificate: 1
+        has_birthcertificate: 1,
+      has_microchip: 1
       },
       {
         id: 'pet-2',
@@ -55,11 +55,11 @@ describe('PuppyTableComponent', () => {
         weight: '28',
         description: 'Adult dog',
         is_puppy: 0,
-        has_microchip: 1,
         has_vaccination: 1,
         has_healthcertificate: 1,
         has_dewormed: 1,
-        has_birthcertificate: 1
+        has_birthcertificate: 1,
+      has_microchip: 1
       }
     ]
   };
@@ -77,11 +77,11 @@ describe('PuppyTableComponent', () => {
       weight: '5',
       description: 'Puppy',
       is_puppy: 1,
-      has_microchip: 1,
       has_vaccination: 0,
       has_healthcertificate: 0,
       has_dewormed: 1,
-      has_birthcertificate: 0
+      has_birthcertificate: 0,
+      has_microchip: 0
     },
     {
       id: 'puppy-2',
@@ -95,11 +95,11 @@ describe('PuppyTableComponent', () => {
       weight: '4.5',
       description: 'Puppy',
       is_puppy: 1,
-      has_microchip: 0,
       has_vaccination: 0,
       has_healthcertificate: 0,
       has_dewormed: 1,
-      has_birthcertificate: 0
+      has_birthcertificate: 0,
+      has_microchip: 0
     }
   ];
 
@@ -141,7 +141,6 @@ describe('PuppyTableComponent', () => {
       expect(component.puppies[0].name).toBe('');
       expect(component.puppies[0].gender).toBe('Male');
       expect(component.puppies[0].birth_date).toBe('');
-      expect(component.puppies[0].microchip).toBe('');
     });
   });
 
@@ -168,7 +167,6 @@ describe('PuppyTableComponent', () => {
       expect(newPuppy.name).toBe('');
       expect(newPuppy.gender).toBe('Male');
       expect(newPuppy.birth_date).toBe('');
-      expect(newPuppy.microchip).toBe('');
     });
 
     it('should allow adding multiple puppy rows', () => {
@@ -200,7 +198,7 @@ describe('PuppyTableComponent', () => {
 
     it('should not remove puppy if only one remains', () => {
       component.puppies = [
-        { name: 'Solo Puppy', gender: 'Male', birth_date: '2024-01-15', microchip: '' }
+        { name: 'Solo Puppy', gender: 'Male', birth_date: '2024-01-15' }
       ];
 
       component.removePuppy(0);
@@ -241,7 +239,6 @@ describe('PuppyTableComponent', () => {
         name: '',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(false);
@@ -252,7 +249,6 @@ describe('PuppyTableComponent', () => {
         name: '   ',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(false);
@@ -265,7 +261,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       // This should be valid
@@ -277,7 +272,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy',
         gender: 'Male',
         birth_date: '',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(false);
@@ -288,18 +282,16 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(true);
     });
 
-    it('should return true when microchip is empty (optional field)', () => {
+    it('should validate female gender', () => {
       component.puppies[0] = {
         name: 'Puppy',
         gender: 'Female',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(true);
@@ -311,13 +303,11 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: '123456'
       };
       component.puppies[1] = {
         name: 'Puppy 2',
         gender: 'Female',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(true);
@@ -329,13 +319,11 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
       component.puppies[1] = {
         name: '',
         gender: 'Female',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isValid()).toBe(false);
@@ -356,7 +344,6 @@ describe('PuppyTableComponent', () => {
         name: '',
         gender: 'Male',
         birth_date: '',
-        microchip: ''
       };
 
       component.savePuppies();
@@ -366,7 +353,7 @@ describe('PuppyTableComponent', () => {
     });
 
     it('should call addPuppies API with correct data', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -377,7 +364,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: '123456'
       };
 
       component.savePuppies();
@@ -387,13 +373,12 @@ describe('PuppyTableComponent', () => {
           name: 'Puppy 1',
           gender: 'Male',
           birth_date: '2024-01-15',
-          microchip: '123456'
         }
       ]);
     });
 
     it('should trim whitespace from puppy names', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -404,7 +389,6 @@ describe('PuppyTableComponent', () => {
         name: '  Puppy 1  ',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       component.savePuppies();
@@ -413,8 +397,8 @@ describe('PuppyTableComponent', () => {
       expect(callArgs[0].name).toBe('Puppy 1');
     });
 
-    it('should remove empty microchip fields', () => {
-      const updatedLitter: ILitter = {
+    it('should handle empty microchip field', () => {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -425,40 +409,38 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       component.savePuppies();
 
       const callArgs = dataService.addPuppies.calls.mostRecent().args[1];
-      expect(callArgs[0].microchip).toBeUndefined();
+      expect(callArgs[0].name).toBe('Puppy 1');
     });
 
     it('should emit puppiesAdded event on successful save', (done) => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
       };
       dataService.addPuppies.and.returnValue(of(updatedLitter));
+
+      component.puppies[0] = {
+        name: 'Puppy 1',
+        gender: 'Male',
+        birth_date: '2024-01-15',
+      };
 
       component.puppiesAdded.subscribe((puppies) => {
         expect(puppies).toEqual(mockPuppies);
         done();
       });
 
-      component.puppies[0] = {
-        name: 'Puppy 1',
-        gender: 'Male',
-        birth_date: '2024-01-15',
-        microchip: ''
-      };
-
       component.savePuppies();
     });
 
     it('should clear error message on successful save', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -470,7 +452,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       component.savePuppies();
@@ -489,7 +470,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       component.savePuppies();
@@ -505,7 +485,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       component.savePuppies();
@@ -514,7 +493,7 @@ describe('PuppyTableComponent', () => {
     });
 
     it('should handle multiple puppies', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -527,19 +506,16 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: '123456'
       };
       component.puppies[1] = {
         name: 'Puppy 2',
         gender: 'Female',
         birth_date: '2024-01-15',
-        microchip: ''
       };
       component.puppies[2] = {
         name: 'Puppy 3',
         gender: 'Male',
         birth_date: '2024-01-16',
-        microchip: '789012'
       };
 
       component.savePuppies();
@@ -550,7 +526,7 @@ describe('PuppyTableComponent', () => {
     });
 
     it('should set loading state during save', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'Done' as any,
         puppies: mockPuppies
@@ -561,7 +537,6 @@ describe('PuppyTableComponent', () => {
         name: 'Puppy 1',
         gender: 'Male',
         birth_date: '2024-01-15',
-        microchip: ''
       };
 
       expect(component.isLoading).toBe(false);

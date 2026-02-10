@@ -1,0 +1,703 @@
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { 
+  SearchService, 
+  BreederSearchResult, 
+  BreedAutocomplete, 
+  Coordinates, 
+  Address,
+  BreedInfo
+} from './search.service';
+import { environment } from 'src/environments/environment';
+
+describe('SearchService', () => {
+  let service: SearchService;
+  let httpMock: HttpTestingController;
+  const apiUrl = environment.API_URL;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [SearchService]
+    });
+    service = TestBed.inject(SearchService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  describe('searchBreeders', () => {
+    it('should search breeders with valid parameters', () => {
+      const mockResults: BreederSearchResult[] = [
+        {
+          location_id: 1,
+          user_id: 'user-123',
+          breeder_name: 'Test Breeder',
+          latitude: 40.7128,
+          longitude: -74.0060,
+          distance: 5.2,
+          available_breeds: [
+            {
+              breed_id: 1,
+              breed_name: 'Golden Retriever',
+              pet_count: 3
+            }
+          ],
+          thumbnail_url: '/path/to/image.jpg',
+          location_description: 'Test Location',
+          rating: 4.5
+        }
+      ];
+
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe(results => {
+        expect(results).toEqual(mockResults);
+        expect(results.length).toBe(1);
+        expect(results[0].breeder_name).toBe('Test Breeder');
+      });
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/search/breeders` &&
+          request.params.get('latitude') === '40.7128' &&
+          request.params.get('longitude') === '-74.006' &&
+          request.params.get('radius') === '20'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResults);
+    });
+
+    it('should search breeders with breed filter', () => {
+      const mockResults: BreederSearchResult[] = [];
+
+      service.searchBreeders(40.7128, -74.0060, 20, 5).subscribe(results => {
+        expect(results).toEqual(mockResults);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/search/breeders` &&
+          request.params.get('breed_id') === '5'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResults);
+    });
+
+    it('should not include breed_id parameter when not provided', () => {
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/search/breeders` &&
+          !request.params.has('breed_id')
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush([]);
+    });
+
+    it('should format parameters correctly', () => {
+      service.searchBreeders(40.123456, -74.987654, 15.5, 10).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/search/breeders` &&
+          request.params.get('latitude') === '40.123456' &&
+          request.params.get('longitude') === '-74.987654' &&
+          request.params.get('radius') === '15.5' &&
+          request.params.get('breed_id') === '10'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush([]);
+    });
+
+    it('should handle 404 error when no breeders found', (done) => {
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe({
+        next: () => {
+          fail('should have failed with 404 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Resource not found');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      req.flush({ detail: 'No breeders found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should handle 400 error for invalid parameters', (done) => {
+      service.searchBreeders(91, -74.0060, 20).subscribe({
+        next: () => {
+          fail('should have failed with 400 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Invalid request parameters');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      req.flush({ detail: 'Invalid latitude' }, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('should handle 500 server error', (done) => {
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe({
+        next: () => {
+          fail('should have failed with 500 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Server error. Please try again later.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      req.flush({ detail: 'Internal server error' }, { status: 500, statusText: 'Internal Server Error' });
+    });
+
+    it('should handle network error', (done) => {
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe({
+        next: () => {
+          fail('should have failed with network error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toContain('Network error');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      req.error(new ProgressEvent('error'));
+    });
+  });
+
+  describe('searchBreeds', () => {
+    it('should search breeds with valid search term', () => {
+      const mockBreeds: BreedAutocomplete[] = [
+        { id: 1, name: 'Golden Retriever', code: 'GR' },
+        { id: 2, name: 'Golden Doodle', code: 'GD' }
+      ];
+
+      service.searchBreeds('golden').subscribe(breeds => {
+        expect(breeds).toEqual(mockBreeds);
+        expect(breeds.length).toBe(2);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/breeds/autocomplete` &&
+          request.params.get('search_term') === 'golden'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockBreeds);
+    });
+
+    it('should return empty array when no breeds match', () => {
+      service.searchBreeds('xyz').subscribe(breeds => {
+        expect(breeds).toEqual([]);
+        expect(breeds.length).toBe(0);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/breeds/autocomplete`
+      );
+      req.flush([]);
+    });
+
+    it('should reject search term less than 2 characters', (done) => {
+      service.searchBreeds('a').subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Search term must be at least 2 characters');
+          done();
+        }
+      });
+    });
+
+    it('should reject empty search term', (done) => {
+      service.searchBreeds('').subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Search term must be at least 2 characters');
+          done();
+        }
+      });
+    });
+
+    it('should handle 404 error when no breeds found', (done) => {
+      service.searchBreeds('nonexistent').subscribe({
+        next: () => {
+          fail('should have failed with 404 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Resource not found');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/breeds/autocomplete`
+      );
+      req.flush({ detail: 'No breeds found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should handle server error', (done) => {
+      service.searchBreeds('golden').subscribe({
+        next: () => {
+          fail('should have failed with server error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Server error. Please try again later.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/breeds/autocomplete`
+      );
+      req.flush({ detail: 'Server error' }, { status: 500, statusText: 'Internal Server Error' });
+    });
+  });
+
+  describe('geocodeZipCode', () => {
+    it('should geocode valid ZIP code', () => {
+      const mockCoordinates: Coordinates = {
+        latitude: 40.7128,
+        longitude: -74.0060
+      };
+
+      service.geocodeZipCode('10001').subscribe(coords => {
+        expect(coords).toEqual(mockCoordinates);
+        expect(coords.latitude).toBe(40.7128);
+        expect(coords.longitude).toBe(-74.0060);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/geocode/zip` &&
+          request.params.get('zip') === '10001'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockCoordinates);
+    });
+
+    it('should reject invalid ZIP code format', (done) => {
+      service.geocodeZipCode('abc12').subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid ZIP code format. Must be 5 digits.');
+          done();
+        }
+      });
+    });
+
+    it('should reject ZIP code with less than 5 digits', (done) => {
+      service.geocodeZipCode('1234').subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid ZIP code format. Must be 5 digits.');
+          done();
+        }
+      });
+    });
+
+    it('should reject ZIP code with more than 5 digits', (done) => {
+      service.geocodeZipCode('123456').subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid ZIP code format. Must be 5 digits.');
+          done();
+        }
+      });
+    });
+
+    it('should handle 404 error when ZIP code not found', (done) => {
+      service.geocodeZipCode('99999').subscribe({
+        next: () => fail('should have failed with 404 error'),
+        error: (error) => {
+          expect(error.message).toBe('ZIP code not found');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush({ detail: 'ZIP code not found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should handle 429 rate limit error', (done) => {
+      service.geocodeZipCode('10001').subscribe({
+        next: () => {
+          fail('should have failed with 429 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Too many requests. Please try again later.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush({ detail: 'Rate limit exceeded' }, { status: 429, statusText: 'Too Many Requests' });
+    });
+
+    it('should handle 502 geocoding service error', (done) => {
+      service.geocodeZipCode('10001').subscribe({
+        next: () => {
+          fail('should have failed with 502 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Geocoding service unavailable. Please try again.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush({ detail: 'Bad gateway' }, { status: 502, statusText: 'Bad Gateway' });
+    });
+
+    it('should handle 503 service unavailable error', (done) => {
+      service.geocodeZipCode('10001').subscribe({
+        next: () => {
+          fail('should have failed with 503 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Service temporarily unavailable. Please try again.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush({ detail: 'Service unavailable' }, { status: 503, statusText: 'Service Unavailable' });
+    });
+
+    it('should handle 504 timeout error', (done) => {
+      service.geocodeZipCode('10001').subscribe({
+        next: () => {
+          fail('should have failed with 504 error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Request timeout. Please try again.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush({ detail: 'Gateway timeout' }, { status: 504, statusText: 'Gateway Timeout' });
+    });
+  });
+
+  describe('reverseGeocode', () => {
+    it('should reverse geocode valid coordinates', () => {
+      const mockAddress: Address = {
+        zip_code: '10001',
+        city: 'New York',
+        state: 'NY',
+        country: 'United States'
+      };
+
+      service.reverseGeocode(40.7128, -74.0060).subscribe(address => {
+        expect(address).toEqual(mockAddress);
+        expect(address.zip_code).toBe('10001');
+        expect(address.city).toBe('New York');
+      });
+
+      const req = httpMock.expectOne(
+        (request) => 
+          request.url === `${apiUrl}/geocode/reverse` &&
+          request.params.get('lat') === '40.7128' &&
+          request.params.get('lon') === '-74.006'
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockAddress);
+    });
+
+    it('should reject invalid latitude (> 90)', (done) => {
+      service.reverseGeocode(91, -74.0060).subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid coordinates');
+          done();
+        }
+      });
+    });
+
+    it('should reject invalid latitude (< -90)', (done) => {
+      service.reverseGeocode(-91, -74.0060).subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid coordinates');
+          done();
+        }
+      });
+    });
+
+    it('should reject invalid longitude (> 180)', (done) => {
+      service.reverseGeocode(40.7128, 181).subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid coordinates');
+          done();
+        }
+      });
+    });
+
+    it('should reject invalid longitude (< -180)', (done) => {
+      service.reverseGeocode(40.7128, -181).subscribe({
+        next: () => fail('should have failed with validation error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid coordinates');
+          done();
+        }
+      });
+    });
+
+    it('should handle 404 error when address not found', (done) => {
+      service.reverseGeocode(0, 0).subscribe({
+        next: () => fail('should have failed with 404 error'),
+        error: (error) => {
+          expect(error.message).toBe('Address not found');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/reverse`
+      );
+      req.flush({ detail: 'Address not found' }, { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should handle 400 error for invalid coordinates', (done) => {
+      service.reverseGeocode(40.7128, -74.0060).subscribe({
+        next: () => fail('should have failed with 400 error'),
+        error: (error) => {
+          expect(error.message).toBe('Invalid coordinates');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/reverse`
+      );
+      req.flush({ detail: 'Invalid coordinates' }, { status: 400, statusText: 'Bad Request' });
+    });
+
+    it('should handle server error', (done) => {
+      service.reverseGeocode(40.7128, -74.0060).subscribe({
+        next: () => {
+          fail('should have failed with server error');
+          done();
+        },
+        error: (error) => {
+          expect(error.message).toBe('Server error. Please try again later.');
+          done();
+        }
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/reverse`
+      );
+      req.flush({ detail: 'Server error' }, { status: 500, statusText: 'Internal Server Error' });
+    });
+  });
+
+  describe('Parameter Formatting', () => {
+    it('should format latitude with proper precision', () => {
+      service.searchBreeders(40.123456789, -74.0060, 20).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      expect(req.request.params.get('latitude')).toBe('40.123456789');
+      req.flush([]);
+    });
+
+    it('should format longitude with proper precision', () => {
+      service.searchBreeders(40.7128, -74.123456789, 20).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      expect(req.request.params.get('longitude')).toBe('-74.123456789');
+      req.flush([]);
+    });
+
+    it('should format radius as string', () => {
+      service.searchBreeders(40.7128, -74.0060, 25.5).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      expect(req.request.params.get('radius')).toBe('25.5');
+      req.flush([]);
+    });
+
+    it('should format breed_id as string', () => {
+      service.searchBreeders(40.7128, -74.0060, 20, 123).subscribe();
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      expect(req.request.params.get('breed_id')).toBe('123');
+      req.flush([]);
+    });
+  });
+
+  describe('Response Parsing', () => {
+    it('should parse breeder search results correctly', () => {
+      const mockResults: BreederSearchResult[] = [
+        {
+          location_id: 1,
+          user_id: 'user-123',
+          breeder_name: 'Test Breeder',
+          latitude: 40.7128,
+          longitude: -74.0060,
+          distance: 5.2,
+          available_breeds: [
+            {
+              breed_id: 1,
+              breed_name: 'Golden Retriever',
+              pet_count: 3
+            },
+            {
+              breed_id: 2,
+              breed_name: 'Labrador',
+              pet_count: 2
+            }
+          ],
+          thumbnail_url: '/path/to/image.jpg',
+          location_description: 'Test Location',
+          rating: 4.5
+        }
+      ];
+
+      service.searchBreeders(40.7128, -74.0060, 20).subscribe(results => {
+        expect(results[0].location_id).toBe(1);
+        expect(results[0].user_id).toBe('user-123');
+        expect(results[0].breeder_name).toBe('Test Breeder');
+        expect(results[0].latitude).toBe(40.7128);
+        expect(results[0].longitude).toBe(-74.0060);
+        expect(results[0].distance).toBe(5.2);
+        expect(results[0].available_breeds.length).toBe(2);
+        expect(results[0].available_breeds[0].breed_name).toBe('Golden Retriever');
+        expect(results[0].thumbnail_url).toBe('/path/to/image.jpg');
+        expect(results[0].location_description).toBe('Test Location');
+        expect(results[0].rating).toBe(4.5);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/search/breeders`
+      );
+      req.flush(mockResults);
+    });
+
+    it('should parse breed autocomplete results correctly', () => {
+      const mockBreeds: BreedAutocomplete[] = [
+        { id: 1, name: 'Golden Retriever', code: 'GR' },
+        { id: 2, name: 'Golden Doodle', code: null }
+      ];
+
+      service.searchBreeds('golden').subscribe(breeds => {
+        expect(breeds[0].id).toBe(1);
+        expect(breeds[0].name).toBe('Golden Retriever');
+        expect(breeds[0].code).toBe('GR');
+        expect(breeds[1].code).toBeNull();
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/breeds/autocomplete`
+      );
+      req.flush(mockBreeds);
+    });
+
+    it('should parse coordinates correctly', () => {
+      const mockCoordinates: Coordinates = {
+        latitude: 40.7128,
+        longitude: -74.0060
+      };
+
+      service.geocodeZipCode('10001').subscribe(coords => {
+        expect(coords.latitude).toBe(40.7128);
+        expect(coords.longitude).toBe(-74.0060);
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/zip`
+      );
+      req.flush(mockCoordinates);
+    });
+
+    it('should parse address with all fields', () => {
+      const mockAddress: Address = {
+        zip_code: '10001',
+        city: 'New York',
+        state: 'NY',
+        country: 'United States'
+      };
+
+      service.reverseGeocode(40.7128, -74.0060).subscribe(address => {
+        expect(address.zip_code).toBe('10001');
+        expect(address.city).toBe('New York');
+        expect(address.state).toBe('NY');
+        expect(address.country).toBe('United States');
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/reverse`
+      );
+      req.flush(mockAddress);
+    });
+
+    it('should parse address with null fields', () => {
+      const mockAddress: Address = {
+        zip_code: '10001',
+        city: null,
+        state: null,
+        country: null
+      };
+
+      service.reverseGeocode(40.7128, -74.0060).subscribe(address => {
+        expect(address.zip_code).toBe('10001');
+        expect(address.city).toBeNull();
+        expect(address.state).toBeNull();
+        expect(address.country).toBeNull();
+      });
+
+      const req = httpMock.expectOne(
+        (request) => request.url === `${apiUrl}/geocode/reverse`
+      );
+      req.flush(mockAddress);
+    });
+  });
+});

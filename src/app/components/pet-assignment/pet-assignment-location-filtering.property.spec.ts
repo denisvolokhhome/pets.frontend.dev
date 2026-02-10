@@ -50,6 +50,10 @@ describe('PetAssignmentComponent - Location Filtering Properties', () => {
     };
   });
 
+  afterEach(() => {
+    fixture.destroy();
+  });
+
   // Helper function to create a test pet
   function createTestPet(
     id: string, 
@@ -94,6 +98,10 @@ describe('PetAssignmentComponent - Location Filtering Properties', () => {
       'Beagle', 'Poodle', 'Rottweiler', 'Yorkshire Terrier', 'Boxer', 'Dachshund'
     ];
 
+    // Set up spies once before the loop
+    const authSpy = spyOn(authService, 'IsLoggedIn');
+    const dataSpy = spyOn(dataService, 'getPetsByBreeder');
+
     // Run 100 iterations with random pet configurations
     for (let i = 0; i < 100; i++) {
       // Generate random number of pets (5-20 pets)
@@ -108,9 +116,9 @@ describe('PetAssignmentComponent - Location Filtering Properties', () => {
         allPets.push(pet);
       }
 
-      // Mock the auth and data services to return our test data
-      spyOn(authService, 'IsLoggedIn').and.returnValue(of({ id: 'test-user-id', email: 'test@example.com' }));
-      spyOn(dataService, 'getPetsByBreeder').and.returnValue(of(allPets));
+      // Update spy return values for this iteration
+      authSpy.and.returnValue(of({ id: 'test-user-id', email: 'test@example.com' }));
+      dataSpy.and.returnValue(of(allPets));
 
       // Initialize component
       component.ngOnInit();

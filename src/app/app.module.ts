@@ -43,11 +43,20 @@ import { BreedingsComponent } from './components/breedings/breedings.component';
 import { BreedingModalComponent } from './components/breeding-modal/breeding-modal.component';
 import { PetAssignmentComponent } from './components/pet-assignment/pet-assignment.component';
 import { PuppyTableComponent } from './components/puppy-table/puppy-table.component';
+import { MapComponent } from './components/map/map.component';
+import { SearchControlsComponent } from './components/search-controls/search-controls.component';
+import { BreederCardComponent } from './components/breeder-card/breeder-card.component';
+import { BreederCardListComponent } from './components/breeder-card-list/breeder-card-list.component';
+import { SearchPageComponent } from './components/search-page/search-page.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+
+// Leaflet imports
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
 
 
 
@@ -80,6 +89,12 @@ import { InputTextModule } from 'primeng/inputtext';
     BreedingModalComponent,
     PetAssignmentComponent,
     PuppyTableComponent,
+    MapComponent,
+    SearchControlsComponent,
+    BreederCardComponent,
+    BreederCardListComponent,
+    SearchPageComponent,
+    ToastComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,6 +117,7 @@ import { InputTextModule } from 'primeng/inputtext';
     TableModule,
     ButtonModule,
     InputTextModule,
+    LeafletModule,
 
   ],
   providers: [

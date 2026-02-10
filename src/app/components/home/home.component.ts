@@ -112,4 +112,8 @@ export class HomeComponent {
   navigateToPets(): void {
     this.router.navigate(['/pets']);
   }
+
+  navigateToSearchPets(): void {
+    this.router.navigate(['/search-pets']);
+  }
 }

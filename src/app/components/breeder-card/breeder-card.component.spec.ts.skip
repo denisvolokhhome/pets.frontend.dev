@@ -1,0 +1,398 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BreederCardComponent } from './breeder-card.component';
+import { BreederSearchResult, BreedInfo } from '../../models/search';
+
+describe('BreederCardComponent', () => {
+  let component: BreederCardComponent;
+  let fixture: ComponentFixture<BreederCardComponent>;
+
+  const mockBreedInfo: BreedInfo = {
+    breed_id: 1,
+    breed_name: 'Golden Retriever',
+    pet_count: 3
+  };
+
+  const mockBreeder: BreederSearchResult = {
+    location_id: 1,
+    user_id: '123e4567-e89b-12d3-a456-426614174000',
+    breeder_name: 'Happy Paws Kennel',
+    latitude: 40.7128,
+    longitude: -74.0060,
+    distance: 12.5,
+    available_breeds: [mockBreedInfo],
+    thumbnail_url: 'app/test-image.jpg',
+    location_description: 'A wonderful breeding location with excellent facilities',
+    rating: 4.5
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [BreederCardComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BreederCardComponent);
+    component = fixture.componentInstance;
+  });
+
+  describe('Component Initialization', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should have default isHighlighted as false', () => {
+      expect(component.isHighlighted).toBe(false);
+    });
+  });
+
+  describe('Rendering with Various Breeder Data', () => {
+    it('should render breeder name', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const nameElement = compiled.querySelector('.breeder-card__name');
+      
+      expect(nameElement).toBeTruthy();
+      expect(nameElement?.textContent).toContain('Happy Paws Kennel');
+    });
+
+    it('should render formatted distance', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const distanceElement = compiled.querySelector('.breeder-card__distance');
+      
+      expect(distanceElement).toBeTruthy();
+      expect(distanceElement?.textContent).toContain('12.5 miles');
+    });
+
+    it('should render available breeds', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const breedsElement = compiled.querySelector('.breeder-card__breeds');
+      
+      expect(breedsElement).toBeTruthy();
+      expect(breedsElement?.textContent).toContain('Golden Retriever');
+    });
+
+    it('should render multiple breeds separated by commas', () => {
+      const breederWithMultipleBreeds: BreederSearchResult = {
+        ...mockBreeder,
+        available_breeds: [
+          { breed_id: 1, breed_name: 'Golden Retriever', pet_count: 2 },
+          { breed_id: 2, breed_name: 'Labrador', pet_count: 3 },
+          { breed_id: 3, breed_name: 'Poodle', pet_count: 1 }
+        ]
+      };
+
+      component.breeder = breederWithMultipleBreeds;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const breedsElement = compiled.querySelector('.breeder-card__breeds');
+      
+      expect(breedsElement?.textContent).toContain('Golden Retriever, Labrador, Poodle');
+    });
+
+    it('should render thumbnail image', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const imageElement = compiled.querySelector('.breeder-card__thumbnail') as HTMLImageElement;
+      
+      expect(imageElement).toBeTruthy();
+      expect(imageElement.src).toContain('test-image.jpg');
+    });
+
+    it('should render default image when thumbnail_url is null', () => {
+      const breederWithoutImage: BreederSearchResult = {
+        ...mockBreeder,
+        thumbnail_url: null
+      };
+
+      component.breeder = breederWithoutImage;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const imageElement = compiled.querySelector('.breeder-card__thumbnail') as HTMLImageElement;
+      
+      expect(imageElement).toBeTruthy();
+      expect(imageElement.src).toContain('default-breeder.png');
+    });
+
+    it('should render description', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const descriptionElement = compiled.querySelector('.breeder-card__description');
+      
+      expect(descriptionElement).toBeTruthy();
+      expect(descriptionElement?.textContent).toContain('A wonderful breeding location');
+    });
+
+    it('should render default description when location_description is null', () => {
+      const breederWithoutDescription: BreederSearchResult = {
+        ...mockBreeder,
+        location_description: null
+      };
+
+      component.breeder = breederWithoutDescription;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const descriptionElement = compiled.querySelector('.breeder-card__description');
+      
+      expect(descriptionElement).toBeTruthy();
+      expect(descriptionElement?.textContent).toContain('No description available');
+    });
+
+    it('should render rating when available', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const ratingElement = compiled.querySelector('.breeder-card__rating');
+      
+      expect(ratingElement).toBeTruthy();
+      expect(ratingElement?.textContent).toContain('4.5');
+    });
+
+    it('should not render rating when rating is null', () => {
+      const breederWithoutRating: BreederSearchResult = {
+        ...mockBreeder,
+        rating: null
+      };
+
+      component.breeder = breederWithoutRating;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const ratingElement = compiled.querySelector('.breeder-card__rating');
+      
+      expect(ratingElement).toBeFalsy();
+    });
+
+    it('should render action buttons', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const buttons = compiled.querySelectorAll('.breeder-card__button');
+      
+      expect(buttons.length).toBe(2);
+      expect(buttons[0].textContent).toContain('View Profile');
+      expect(buttons[1].textContent).toContain('Contact');
+    });
+
+    it('should truncate long descriptions', () => {
+      const longDescription = 'A'.repeat(150);
+      const breederWithLongDescription: BreederSearchResult = {
+        ...mockBreeder,
+        location_description: longDescription
+      };
+
+      component.breeder = breederWithLongDescription;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const descriptionElement = compiled.querySelector('.breeder-card__description');
+      
+      expect(descriptionElement?.textContent?.length).toBeLessThanOrEqual(103); // 100 + '...'
+      expect(descriptionElement?.textContent).toContain('...');
+    });
+  });
+
+  describe('Highlight State', () => {
+    it('should not have highlighted class by default', () => {
+      component.breeder = mockBreeder;
+      component.isHighlighted = false;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const cardElement = compiled.querySelector('.breeder-card');
+      
+      expect(cardElement?.classList.contains('highlighted')).toBe(false);
+    });
+
+    it('should have highlighted class when isHighlighted is true', () => {
+      component.breeder = mockBreeder;
+      component.isHighlighted = true;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const cardElement = compiled.querySelector('.breeder-card');
+      
+      expect(cardElement?.classList.contains('highlighted')).toBe(true);
+    });
+
+    it('should toggle highlighted class when isHighlighted changes', () => {
+      component.breeder = mockBreeder;
+      component.isHighlighted = false;
+      fixture.detectChanges();
+
+      let compiled = fixture.nativeElement as HTMLElement;
+      let cardElement = compiled.querySelector('.breeder-card');
+      expect(cardElement?.classList.contains('highlighted')).toBe(false);
+
+      component.isHighlighted = true;
+      fixture.detectChanges();
+
+      compiled = fixture.nativeElement as HTMLElement;
+      cardElement = compiled.querySelector('.breeder-card');
+      expect(cardElement?.classList.contains('highlighted')).toBe(true);
+    });
+  });
+
+  describe('Button Clicks', () => {
+    it('should emit cardClick event when card is clicked', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component.cardClick, 'emit');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const cardElement = compiled.querySelector('.breeder-card') as HTMLElement;
+      cardElement.click();
+
+      expect(component.cardClick.emit).toHaveBeenCalledWith(mockBreeder.user_id);
+    });
+
+    it('should call onViewProfile when View Profile button is clicked', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component, 'onViewProfile');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const viewProfileButton = compiled.querySelector('.breeder-card__button--primary') as HTMLElement;
+      viewProfileButton.click();
+
+      expect(component.onViewProfile).toHaveBeenCalled();
+    });
+
+    it('should call onContactBreeder when Contact button is clicked', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component, 'onContactBreeder');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const contactButton = compiled.querySelector('.breeder-card__button--secondary') as HTMLElement;
+      contactButton.click();
+
+      expect(component.onContactBreeder).toHaveBeenCalled();
+    });
+
+    it('should stop propagation when View Profile button is clicked', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component.cardClick, 'emit');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const viewProfileButton = compiled.querySelector('.breeder-card__button--primary') as HTMLElement;
+      viewProfileButton.click();
+
+      // Card click should not be emitted when button is clicked
+      expect(component.cardClick.emit).not.toHaveBeenCalled();
+    });
+
+    it('should stop propagation when Contact button is clicked', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component.cardClick, 'emit');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const contactButton = compiled.querySelector('.breeder-card__button--secondary') as HTMLElement;
+      contactButton.click();
+
+      // Card click should not be emitted when button is clicked
+      expect(component.cardClick.emit).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Hover Events', () => {
+    it('should emit cardHover event when card is hovered', () => {
+      component.breeder = mockBreeder;
+      fixture.detectChanges();
+
+      spyOn(component.cardHover, 'emit');
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const cardElement = compiled.querySelector('.breeder-card') as HTMLElement;
+      
+      const mouseEnterEvent = new MouseEvent('mouseenter');
+      cardElement.dispatchEvent(mouseEnterEvent);
+
+      expect(component.cardHover.emit).toHaveBeenCalledWith(mockBreeder.user_id);
+    });
+  });
+
+  describe('Helper Methods', () => {
+    it('should format distance correctly', () => {
+      expect(component.formatDistance(12.5)).toBe('12.5 miles');
+      expect(component.formatDistance(0.5)).toBe('0.5 miles');
+      expect(component.formatDistance(100)).toBe('100.0 miles');
+    });
+
+    it('should get breed names as comma-separated string', () => {
+      component.breeder = {
+        ...mockBreeder,
+        available_breeds: [
+          { breed_id: 1, breed_name: 'Golden Retriever', pet_count: 2 },
+          { breed_id: 2, breed_name: 'Labrador', pet_count: 3 }
+        ]
+      };
+
+      expect(component.getBreedNames()).toBe('Golden Retriever, Labrador');
+    });
+
+    it('should return "No breeds listed" when no breeds available', () => {
+      component.breeder = {
+        ...mockBreeder,
+        available_breeds: []
+      };
+
+      expect(component.getBreedNames()).toBe('No breeds listed');
+    });
+
+    it('should truncate description to specified length', () => {
+      const longText = 'A'.repeat(150);
+      const truncated = component.truncateDescription(longText, 100);
+
+      expect(truncated.length).toBe(103); // 100 + '...'
+      expect(truncated.endsWith('...')).toBe(true);
+    });
+
+    it('should not truncate short descriptions', () => {
+      const shortText = 'Short description';
+      const result = component.truncateDescription(shortText, 100);
+
+      expect(result).toBe(shortText);
+      expect(result.endsWith('...')).toBe(false);
+    });
+
+    it('should handle null description', () => {
+      const result = component.truncateDescription(null, 100);
+
+      expect(result).toBe('No description available');
+    });
+
+    it('should get correct image URL', () => {
+      const url = component.getImageUrl('app/test-image.jpg');
+      expect(url).toContain('test-image.jpg');
+      expect(url).not.toContain('app/');
+    });
+
+    it('should return default image for null thumbnail', () => {
+      const url = component.getImageUrl(null);
+      expect(url).toContain('default-breeder.png');
+    });
+  });
+});

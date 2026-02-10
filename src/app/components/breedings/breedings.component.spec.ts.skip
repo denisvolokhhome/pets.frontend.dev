@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { LittersComponent } from './litters.component';
+import { BreedingsComponent } from './breedings.component';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
-import { ILitter, LitterStatus } from 'src/app/models/litter';
+import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
 import { IPet } from 'src/app/models/pet';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
-describe('LittersComponent', () => {
-  let component: LittersComponent;
-  let fixture: ComponentFixture<LittersComponent>;
+describe('BreedingsComponent', () => {
+  let component: BreedingsComponent;
+  let fixture: ComponentFixture<BreedingsComponent>;
   let dataService: jasmine.SpyObj<DataService>;
   let modalService: jasmine.SpyObj<ModalService>;
   let toastrService: jasmine.SpyObj<ToastrService>;
@@ -85,27 +85,27 @@ describe('LittersComponent', () => {
     has_birthcertificate: 1
   };
 
-  const mockLitters: ILitter[] = [
+  const mockBreedings: IBreeding[] = [
     {
-      id: 'litter-1',
-      description: 'Test litter 1',
-      status: LitterStatus.InProcess,
+      id: 'breeding-1',
+      description: 'Test breeding 1',
+      status: BreedingStatus.InProcess,
       created_at: '2023-01-01',
       updated_at: '2023-01-02',
       parent_pets: [mockPet1, mockPet1]
     },
     {
-      id: 'litter-2',
-      description: 'Test litter 2',
-      status: LitterStatus.Done,
+      id: 'breeding-2',
+      description: 'Test breeding 2',
+      status: BreedingStatus.Done,
       created_at: '2023-02-01',
       updated_at: '2023-02-15',
       parent_pets: [mockPet1, mockPet2]
     },
     {
-      id: 'litter-3',
+      id: 'breeding-3',
       description: null,
-      status: LitterStatus.Started,
+      status: BreedingStatus.Started,
       created_at: '2023-03-01',
       updated_at: '2023-03-01',
       parent_pets: []
@@ -114,16 +114,16 @@ describe('LittersComponent', () => {
 
   beforeEach(async () => {
     const dataServiceSpy = jasmine.createSpyObj('DataService', [
-      'getLitters',
+      'getBreedings',
       'getLocations',
       'getBreeds',
-      'voidLitter'
+      'voidBreeding'
     ]);
     const modalServiceSpy = jasmine.createSpyObj('ModalService', ['open', 'close']);
     const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error', 'info', 'warning']);
 
     await TestBed.configureTestingModule({
-      declarations: [LittersComponent],
+      declarations: [BreedingsComponent],
       imports: [HttpClientTestingModule, FormsModule],
       providers: [
         { provide: DataService, useValue: dataServiceSpy },
@@ -138,11 +138,11 @@ describe('LittersComponent', () => {
     toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
 
     // Setup default spy returns
-    dataService.getLitters.and.returnValue(of(mockLitters));
+    dataService.getBreedings.and.returnValue(of(mockBreedings));
     dataService.getLocations.and.returnValue(of(mockLocations));
     dataService.getBreeds.and.returnValue(of(mockBreeds));
 
-    fixture = TestBed.createComponent(LittersComponent);
+    fixture = TestBed.createComponent(BreedingsComponent);
     component = fixture.componentInstance;
   });
 
@@ -154,22 +154,22 @@ describe('LittersComponent', () => {
     it('should load litters, locations, and breeds on init', () => {
       fixture.detectChanges(); // triggers ngOnInit
 
-      expect(dataService.getLitters).toHaveBeenCalled();
+      expect(dataService.getBreedings).toHaveBeenCalled();
       expect(dataService.getLocations).toHaveBeenCalled();
       expect(dataService.getBreeds).toHaveBeenCalled();
-      expect(component.litters.length).toBe(3);
+      expect(component.breedings.length).toBe(3);
       expect(component.locations.length).toBe(2);
       expect(component.breeds.length).toBe(2);
     });
 
-    it('should populate filteredLitters on init', () => {
+    it('should populate filteredBreedings on init', () => {
       fixture.detectChanges();
 
-      expect(component.filteredLitters.length).toBe(3);
+      expect(component.filteredBreedings.length).toBe(3);
     });
 
     it('should handle error when loading litters fails', () => {
-      dataService.getLitters.and.returnValue(throwError(() => new Error('Load error')));
+      dataService.getBreedings.and.returnValue(throwError(() => new Error('Load error')));
       spyOn(console, 'error');
 
       fixture.detectChanges();
@@ -187,40 +187,40 @@ describe('LittersComponent', () => {
       component.selectedLocationId = '1';
       component.applyFilters();
 
-      expect(component.filteredLitters.length).toBe(2);
-      component.filteredLitters.forEach(litter => {
-        expect(component.getLocationName(litter)).toBe('Location 1');
+      expect(component.filteredBreedings.length).toBe(2);
+      component.filteredBreedings.forEach((breeding: IBreeding) => {
+        expect(component.getLocationName(breeding)).toBe('Location 1');
       });
     });
 
     it('should filter by status', () => {
-      component.selectedStatus = LitterStatus.Done;
+      component.selectedStatus = BreedingStatus.Done;
       component.applyFilters();
 
-      expect(component.filteredLitters.length).toBe(1);
-      expect(component.filteredLitters[0].status).toBe(LitterStatus.Done);
+      expect(component.filteredBreedings.length).toBe(1);
+      expect(component.filteredBreedings[0].status).toBe(BreedingStatus.Done);
     });
 
     it('should filter by breed', () => {
       component.selectedBreedId = '1';
       component.applyFilters();
 
-      expect(component.filteredLitters.length).toBe(2);
+      expect(component.filteredBreedings.length).toBe(2);
     });
 
     it('should apply multiple filters together', () => {
       component.selectedLocationId = '1';
-      component.selectedStatus = LitterStatus.InProcess;
+      component.selectedStatus = BreedingStatus.InProcess;
       component.applyFilters();
 
-      expect(component.filteredLitters.length).toBe(1);
-      expect(component.filteredLitters[0].id).toBe('litter-1');
+      expect(component.filteredBreedings.length).toBe(1);
+      expect(component.filteredBreedings[0].id).toBe('breeding-1');
     });
 
     it('should show all litters when no filters are applied', () => {
       component.clearFilters();
 
-      expect(component.filteredLitters.length).toBe(3);
+      expect(component.filteredBreedings.length).toBe(3);
     });
   });
 
@@ -231,7 +231,7 @@ describe('LittersComponent', () => {
 
     it('should clear all filter selections', () => {
       component.selectedLocationId = '1';
-      component.selectedStatus = LitterStatus.Done;
+      component.selectedStatus = BreedingStatus.Done;
       component.selectedBreedId = '1';
 
       component.clearFilters();
@@ -241,29 +241,29 @@ describe('LittersComponent', () => {
       expect(component.selectedBreedId).toBe('');
     });
 
-    it('should reset filteredLitters to show all litters', () => {
-      component.selectedStatus = LitterStatus.Done;
+    it('should reset filteredBreedings to show all litters', () => {
+      component.selectedStatus = BreedingStatus.Done;
       component.applyFilters();
-      expect(component.filteredLitters.length).toBe(1);
+      expect(component.filteredBreedings.length).toBe(1);
 
       component.clearFilters();
 
-      expect(component.filteredLitters.length).toBe(3);
+      expect(component.filteredBreedings.length).toBe(3);
     });
   });
 
   describe('Breed Display Formatting', () => {
     it('should display single breed name for same-breed litters', () => {
-      const litter = mockLitters[0]; // Both pets are Labrador Retriever
-      const breedDisplay = component.getBreedDisplay(litter);
+      const breeding = mockBreedings[0]; // Both pets are Labrador Retriever
+      const breedDisplay = component.getBreedDisplay(breeding);
 
       expect(breedDisplay).toBe('Labrador Retriever');
       expect(breedDisplay).not.toContain('+');
     });
 
     it('should display both breeds with plus sign for mixed-breed litters', () => {
-      const litter = mockLitters[1]; // Labrador + German Shepherd
-      const breedDisplay = component.getBreedDisplay(litter);
+      const breeding = mockBreedings[1]; // Labrador + German Shepherd
+      const breedDisplay = component.getBreedDisplay(breeding);
 
       expect(breedDisplay).toContain('+');
       expect(breedDisplay).toContain('Labrador Retriever');
@@ -271,8 +271,8 @@ describe('LittersComponent', () => {
     });
 
     it('should display "-" when no parent pets are assigned', () => {
-      const litter = mockLitters[2]; // No parent pets
-      const breedDisplay = component.getBreedDisplay(litter);
+      const breeding = mockBreedings[2]; // No parent pets
+      const breedDisplay = component.getBreedDisplay(breeding);
 
       expect(breedDisplay).toBe('-');
     });
@@ -280,15 +280,15 @@ describe('LittersComponent', () => {
 
   describe('Location Display', () => {
     it('should display location name from parent pets', () => {
-      const litter = mockLitters[0];
-      const locationName = component.getLocationName(litter);
+      const breeding = mockBreedings[0];
+      const locationName = component.getLocationName(breeding);
 
       expect(locationName).toBe('Location 1');
     });
 
     it('should display "-" when no parent pets are assigned', () => {
-      const litter = mockLitters[2];
-      const locationName = component.getLocationName(litter);
+      const breeding = mockBreedings[2];
+      const locationName = component.getLocationName(breeding);
 
       expect(locationName).toBe('-');
     });
@@ -299,55 +299,55 @@ describe('LittersComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should call addLitter when add button is clicked', () => {
+    it('should call addBreeding when add button is clicked', () => {
       spyOn(console, 'log');
-      component.addLitter();
+      component.addBreeding();
 
-      expect(console.log).toHaveBeenCalledWith('Add litter clicked');
+      expect(console.log).toHaveBeenCalledWith('Add breeding clicked');
     });
 
-    it('should call viewLitter with correct litter', () => {
+    it('should call viewBreeding with correct litter', () => {
       spyOn(console, 'log');
-      const litter = mockLitters[0];
-      component.viewLitter(litter);
+      const breeding = mockBreedings[0];
+      component.viewBreeding(breeding);
 
-      expect(console.log).toHaveBeenCalledWith('View litter:', litter.id);
+      expect(console.log).toHaveBeenCalledWith('View breeding:', breeding.id);
     });
 
-    it('should call updateLitter with correct litter', () => {
+    it('should call updateBreeding with correct litter', () => {
       spyOn(console, 'log');
-      const litter = mockLitters[0];
-      component.updateLitter(litter);
+      const breeding = mockBreedings[0];
+      component.updateBreeding(breeding);
 
-      expect(console.log).toHaveBeenCalledWith('Update litter:', litter.id);
+      expect(console.log).toHaveBeenCalledWith('Update breeding:', breeding.id);
     });
 
-    it('should void litter when confirmed', () => {
+    it('should void breeding when confirmed', () => {
       spyOn(window, 'confirm').and.returnValue(true);
-      dataService.voidLitter.and.returnValue(of(mockLitters[0]));
-      spyOn(component, 'loadLitters');
+      dataService.voidBreeding.and.returnValue(of(mockBreedings[0]));
+      spyOn(component, 'loadBreedings');
 
-      component.voidLitter(mockLitters[0]);
+      component.voidBreeding(mockBreedings[0]);
 
-      expect(dataService.voidLitter).toHaveBeenCalledWith('litter-1');
-      expect(component.loadLitters).toHaveBeenCalled();
+      expect(dataService.voidBreeding).toHaveBeenCalledWith('breeding-1');
+      expect(component.loadBreedings).toHaveBeenCalled();
     });
 
-    it('should not void litter when cancelled', () => {
+    it('should not void breeding when cancelled', () => {
       spyOn(window, 'confirm').and.returnValue(false);
 
-      component.voidLitter(mockLitters[0]);
+      component.voidBreeding(mockBreedings[0]);
 
-      expect(dataService.voidLitter).not.toHaveBeenCalled();
+      expect(dataService.voidBreeding).not.toHaveBeenCalled();
     });
 
-    it('should handle error when voiding litter fails', () => {
+    it('should handle error when voiding breeding fails', () => {
       spyOn(window, 'confirm').and.returnValue(true);
-      dataService.voidLitter.and.returnValue(throwError(() => ({ error: { detail: 'Void error' } })));
+      dataService.voidBreeding.and.returnValue(throwError(() => ({ error: { detail: 'Void error' } })));
 
-      component.voidLitter(mockLitters[0]);
+      component.voidBreeding(mockBreedings[0]);
 
-      expect(toastrService.error).toHaveBeenCalledWith('Failed to void litter: Void error', 'Error');
+      expect(toastrService.error).toHaveBeenCalledWith('Failed to void breeding: Void error', 'Error');
     });
   });
 
@@ -366,10 +366,10 @@ describe('LittersComponent', () => {
     });
 
     it('should return correct status badge class', () => {
-      expect(component.getStatusBadgeClass(LitterStatus.Started)).toBe('badge-started');
-      expect(component.getStatusBadgeClass(LitterStatus.InProcess)).toBe('badge-inprocess');
-      expect(component.getStatusBadgeClass(LitterStatus.Done)).toBe('badge-done');
-      expect(component.getStatusBadgeClass(LitterStatus.Voided)).toBe('badge-voided');
+      expect(component.getStatusBadgeClass(BreedingStatus.Started)).toBe('badge-started');
+      expect(component.getStatusBadgeClass(BreedingStatus.InProcess)).toBe('badge-inprocess');
+      expect(component.getStatusBadgeClass(BreedingStatus.Done)).toBe('badge-done');
+      expect(component.getStatusBadgeClass(BreedingStatus.Voided)).toBe('badge-voided');
     });
 
     it('should detect active filters', () => {
@@ -382,7 +382,7 @@ describe('LittersComponent', () => {
       expect(component.hasActiveFilters()).toBe(true);
 
       component.selectedLocationId = '';
-      component.selectedStatus = LitterStatus.Done;
+      component.selectedStatus = BreedingStatus.Done;
       expect(component.hasActiveFilters()).toBe(true);
 
       component.selectedStatus = '';

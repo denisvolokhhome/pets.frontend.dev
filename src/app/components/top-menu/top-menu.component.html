@@ -37,11 +37,13 @@
           <!-- Auth links (not logged in) -->
           <div class="flex items-center" *ngIf="!checkToken">
             <ul class="flex items-center space-x-2">
-              <li>
+              <!-- Show Sign In when NOT on login page -->
+              <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true">/</span>
-              <li>
+              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && this.route !== '/register'">/</span>
+              <!-- Show Get Started when NOT on register page -->
+              <li *ngIf="this.route !== '/register'">
                 <a href="/register" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Get Started</a>
               </li>
             </ul>
@@ -81,10 +83,12 @@
           <!-- Auth links (not logged in) - Mobile -->
           <div *ngIf="!checkToken">
             <ul class="space-y-2">
-              <li>
+              <!-- Show Sign In when NOT on login page -->
+              <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
               </li>
-              <li>
+              <!-- Show Get Started when NOT on register page -->
+              <li *ngIf="this.route !== '/register'">
                 <a href="/register" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Get Started</a>
               </li>
             </ul>

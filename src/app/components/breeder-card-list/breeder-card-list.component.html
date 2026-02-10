@@ -1,0 +1,55 @@
+<div class="breeder-card-list" #cardListContainer>
+  <!-- Loading state with skeleton loaders -->
+  <div *ngIf="isLoading" class="skeleton-container">
+    <div *ngFor="let i of getSkeletonArray()" class="skeleton-card">
+      <div class="skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton-line skeleton-title"></div>
+        <div class="skeleton-line skeleton-text"></div>
+        <div class="skeleton-line skeleton-text short"></div>
+        <div class="skeleton-buttons">
+          <div class="skeleton-button"></div>
+          <div class="skeleton-button"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && breeders.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </div>
+    <h3>No breeders found</h3>
+    <p>Try adjusting your search criteria or expanding your search radius.</p>
+  </div>
+
+  <!-- Breeder cards -->
+  <div *ngIf="!isLoading && breeders.length > 0" class="cards-container">
+    <div 
+      *ngFor="let breeder of visibleBreeders; trackBy: trackByBreederId"
+      class="breeder-card-wrapper"
+      [attr.data-breeder-id]="breeder.user_id">
+      <app-breeder-card
+        [breeder]="breeder"
+        [isHighlighted]="isBreederHighlighted(breeder.user_id)"
+        (cardClick)="onCardClick($event)"
+        (cardHover)="onCardHover($event)">
+      </app-breeder-card>
+    </div>
+
+    <!-- Load more indicator -->
+    <div *ngIf="hasMoreToLoad()" class="load-more-indicator">
+      <div class="spinner"></div>
+      <p>Loading more breeders...</p>
+    </div>
+  </div>
+
+  <!-- Results count -->
+  <div *ngIf="!isLoading && breeders.length > 0" class="results-count">
+    Showing {{ visibleBreeders.length }} of {{ breeders.length }} breeders
+  </div>
+</div>

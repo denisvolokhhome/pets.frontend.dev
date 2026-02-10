@@ -3,10 +3,13 @@
 <main id="main-content" class="main-wrapper flex flex-row h-100">
   <app-left-menu
     *ngIf="
-      !(this.route == '/login' || this.route == '/register' || this.route == '')
+      !(this.route == '/login' || this.route == '/register' || this.route == '' || this.route == '/search-pets')
     "
   ></app-left-menu>
-  <div class="content-wrapper w-100 mx-3 mt-3">
+  <div class="content-wrapper w-100 mx-3 mt-3" [ngClass]="{'public-page': isPublicPage()}">
     <router-outlet></router-outlet>
   </div>
 </main>
+
+<!-- Global Toast Notifications -->
+<app-toast></app-toast>

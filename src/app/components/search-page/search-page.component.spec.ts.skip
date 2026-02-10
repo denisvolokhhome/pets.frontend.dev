@@ -1,0 +1,457 @@
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, throwError } from 'rxjs';
+import { SearchPageComponent } from './search-page.component';
+import { SearchService } from '../../services/search.service';
+import { ToastService } from '../../services/toast.service';
+import { MapComponent } from '../map/map.component';
+import { SearchControlsComponent } from '../search-controls/search-controls.component';
+import { BreederCardListComponent } from '../breeder-card-list/breeder-card-list.component';
+import { Coordinates, BreederSearchResult, Breed } from '../../models/search';
+
+describe('SearchPageComponent', () => {
+  let component: SearchPageComponent;
+  let fixture: ComponentFixture<SearchPageComponent>;
+  let searchService: jasmine.SpyObj<SearchService>;
+  let toastService: jasmine.SpyObj<ToastService>;
+  let mockGeolocation: jasmine.SpyObj<Geolocation>;
+
+  /**
+   * Helper function to create a mock GeolocationPosition
+   */
+  function createMockPosition(latitude: number, longitude: number): GeolocationPosition {
+    return {
+      coords: {
+        latitude,
+        longitude,
+        accuracy: 100,
+        altitude: null,
+        altitudeAccuracy: null,
+        heading: null,
+        speed: null,
+        toJSON: () => ({})
+      },
+      timestamp: Date.now(),
+      toJSON: () => ({})
+    };
+  }
+
+  const mockCoordinates: Coordinates = {
+    latitude: 40.7128,
+    longitude: -74.0060
+  };
+
+  const mockAddress = {
+    zip_code: '10001',
+    city: 'New York',
+    state: 'NY',
+    country: 'USA'
+  };
+
+  const mockBreederResults: BreederSearchResult[] = [
+    {
+      location_id: 1,
+      user_id: 'breeder-1',
+      breeder_name: 'Test Breeder 1',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      distance: 5.2,
+      available_breeds: [
+        { breed_id: 1, breed_name: 'Golden Retriever', pet_count: 3 }
+      ],
+      thumbnail_url: 'https://example.com/image1.jpg',
+      location_description: 'Test location 1',
+      rating: 4.5
+    },
+    {
+      location_id: 2,
+      user_id: 'breeder-2',
+      breeder_name: 'Test Breeder 2',
+      latitude: 40.7589,
+      longitude: -73.9851,
+      distance: 8.7,
+      available_breeds: [
+        { breed_id: 2, breed_name: 'Labrador Retriever', pet_count: 2 }
+      ],
+      thumbnail_url: 'https://example.com/image2.jpg',
+      location_description: 'Test location 2',
+      rating: 4.8
+    }
+  ];
+
+  beforeEach(async () => {
+    // Create spy for SearchService
+    const searchServiceSpy = jasmine.createSpyObj('SearchService', [
+      'searchBreeders',
+      'searchBreeds',
+      'geocodeZipCode',
+      'reverseGeocode'
+    ]);
+
+    // Create spy for Geolocation
+    mockGeolocation = jasmine.createSpyObj('Geolocation', ['getCurrentPosition']);
+
+    // Create spy for ToastService
+    const toastServiceSpy = jasmine.createSpyObj('ToastService', [
+      'success',
+      'error',
+      'warning',
+      'info'
+    ]);
+
+    await TestBed.configureTestingModule({
+      declarations: [
+        SearchPageComponent,
+        MapComponent,
+        SearchControlsComponent,
+        BreederCardListComponent
+      ],
+      imports: [HttpClientTestingModule],
+      providers: [
+        { provide: SearchService, useValue: searchServiceSpy },
+        { provide: ToastService, useValue: toastServiceSpy }
+      ]
+    }).compileComponents();
+
+    searchService = TestBed.inject(SearchService) as jasmine.SpyObj<SearchService>;
+    toastService = TestBed.inject(ToastService) as jasmine.SpyObj<ToastService>;
+
+    // Mock navigator.geolocation
+    Object.defineProperty(navigator, 'geolocation', {
+      value: mockGeolocation,
+      configurable: true
+    });
+
+    fixture = TestBed.createComponent(SearchPageComponent);
+    component = fixture.componentInstance;
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+  });
+
+  describe('Component Initialization', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should initialize with default values', () => {
+      expect(component.zipCode).toBe('');
+      expect(component.selectedBreed).toBeNull();
+      expect(component.radius).toBe(40);
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBeNull();
+      expect(component.searchResults).toEqual([]);
+      expect(component.breederMarkers).toEqual([]);
+    });
+
+    it('should have default map center (center of US)', () => {
+      expect(component.mapCenter.latitude).toBe(39.8283);
+      expect(component.mapCenter.longitude).toBe(-98.5795);
+    });
+  });
+
+  describe('Geolocation Handling', () => {
+    it('should request geolocation on ngOnInit', () => {
+      mockGeolocation.getCurrentPosition.and.stub();
+      
+      component.ngOnInit();
+      
+      expect(mockGeolocation.getCurrentPosition).toHaveBeenCalled();
+    });
+
+    it('should handle geolocation success and populate ZIP code', fakeAsync(() => {
+      const mockPosition = createMockPosition(mockCoordinates.latitude, mockCoordinates.longitude);
+
+      searchService.reverseGeocode.and.returnValue(of(mockAddress));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      mockGeolocation.getCurrentPosition.and.callFake((success) => {
+        success(mockPosition);
+      });
+
+      component.ngOnInit();
+      tick();
+
+      expect(component.zipCode).toBe('10001');
+      expect(component.mapCenter).toEqual(mockCoordinates);
+      expect(searchService.reverseGeocode).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude
+      );
+    }));
+
+    it('should handle geolocation permission denied', fakeAsync(() => {
+      const mockError: GeolocationPositionError = {
+        code: 1, // PERMISSION_DENIED
+        message: 'User denied geolocation',
+        PERMISSION_DENIED: 1,
+        POSITION_UNAVAILABLE: 2,
+        TIMEOUT: 3
+      };
+
+      mockGeolocation.getCurrentPosition.and.callFake((success, error) => {
+        error!(mockError);
+      });
+
+      component.ngOnInit();
+      tick();
+
+      expect(component.geolocationError).toContain('Location access denied');
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should handle geolocation timeout', fakeAsync(() => {
+      const mockError: GeolocationPositionError = {
+        code: 3, // TIMEOUT
+        message: 'Timeout',
+        PERMISSION_DENIED: 1,
+        POSITION_UNAVAILABLE: 2,
+        TIMEOUT: 3
+      };
+
+      mockGeolocation.getCurrentPosition.and.callFake((success, error) => {
+        error!(mockError);
+      });
+
+      component.ngOnInit();
+      tick();
+
+      expect(component.geolocationError).toContain('timed out');
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should handle missing geolocation API', () => {
+      Object.defineProperty(navigator, 'geolocation', {
+        value: undefined,
+        configurable: true
+      });
+
+      component.ngOnInit();
+
+      expect(component.geolocationError).toContain('not supported');
+    });
+  });
+
+  describe('Manual Search', () => {
+    it('should perform search with valid ZIP code', fakeAsync(() => {
+      component.zipCode = '10001';
+      component.radius = 40;
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+
+      expect(searchService.geocodeZipCode).toHaveBeenCalledWith('10001');
+      expect(searchService.searchBreeders).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude,
+        40,
+        undefined
+      );
+      expect(component.searchResults).toEqual(mockBreederResults);
+      expect(component.breederMarkers.length).toBe(2);
+      expect(component.isLoading).toBe(false);
+      expect(component.error).toBeNull();
+    }));
+
+    it('should perform search with breed filter', fakeAsync(() => {
+      const mockBreed: Breed = { id: 1, name: 'Golden Retriever', code: 'GR' };
+      component.zipCode = '10001';
+      component.radius = 40;
+      component.selectedBreed = mockBreed;
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+
+      expect(searchService.searchBreeders).toHaveBeenCalledWith(
+        mockCoordinates.latitude,
+        mockCoordinates.longitude,
+        40,
+        1
+      );
+    }));
+
+    it('should show error for invalid ZIP code', () => {
+      component.zipCode = 'abc12';
+
+      component.onSearch();
+
+      expect(component.error).toContain('valid 5-digit ZIP code');
+      expect(searchService.geocodeZipCode).not.toHaveBeenCalled();
+    });
+
+    it('should handle geocoding error', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(
+        throwError(() => ({ message: 'Geocoding failed' }))
+      );
+
+      component.onSearch();
+      tick();
+
+      expect(component.error).toContain('Failed to geocode');
+      expect(component.isLoading).toBe(false);
+    }));
+
+    it('should handle search API error', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(
+        throwError(() => ({ message: 'Search failed' }))
+      );
+
+      component.onSearch();
+      tick();
+
+      expect(component.error).toContain('Failed to search');
+      expect(component.searchResults).toEqual([]);
+      expect(component.breederMarkers).toEqual([]);
+      expect(component.isLoading).toBe(false);
+    }));
+  });
+
+  describe('Map-Card Synchronization', () => {
+    beforeEach(() => {
+      component.searchResults = mockBreederResults;
+      component.mapComponent = jasmine.createSpyObj('MapComponent', [
+        'zoomToMarker',
+        'bounceMarker'
+      ]);
+    });
+
+    it('should highlight card when marker is clicked', () => {
+      component.onMarkerClick('breeder-1');
+
+      expect(component.highlightedBreederId).toBe('breeder-1');
+    });
+
+    it('should zoom to marker when card is clicked', () => {
+      component.onCardClick('breeder-1');
+
+      expect(component.mapComponent.zoomToMarker).toHaveBeenCalledWith('breeder-1');
+      expect(component.highlightedBreederId).toBe('breeder-1');
+    });
+
+    it('should bounce marker when card is hovered', () => {
+      component.onCardHover('breeder-1');
+
+      expect(component.mapComponent.bounceMarker).toHaveBeenCalledWith('breeder-1');
+      expect(component.highlightedBreederId).toBe('breeder-1');
+    });
+
+    it('should highlight card when marker is hovered', () => {
+      component.onMarkerHover('breeder-1');
+
+      expect(component.highlightedBreederId).toBe('breeder-1');
+    });
+  });
+
+  describe('Loading and Error States', () => {
+    it('should show loading state during search', () => {
+      component.zipCode = '10001';
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+
+      expect(component.isLoading).toBe(true);
+    });
+
+    it('should detect no results state', () => {
+      component.hasSearched = true;
+      component.isLoading = false;
+      component.searchResults = [];
+
+      expect(component.hasNoResults()).toBe(true);
+    });
+
+    it('should not show no results before search', () => {
+      component.hasSearched = false;
+      component.searchResults = [];
+
+      expect(component.hasNoResults()).toBe(false);
+    });
+
+    it('should not show no results while loading', () => {
+      component.hasSearched = true;
+      component.isLoading = true;
+      component.searchResults = [];
+
+      expect(component.hasNoResults()).toBe(false);
+    });
+
+    it('should retry search on retry button click', fakeAsync(() => {
+      component.zipCode = '10001';
+      component.error = 'Previous error';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.retrySearch();
+      tick();
+
+      expect(component.error).toBeNull();
+      expect(searchService.geocodeZipCode).toHaveBeenCalled();
+    }));
+
+    it('should dismiss geolocation error', () => {
+      component.geolocationError = 'Test error';
+
+      component.dismissGeolocationError();
+
+      expect(component.geolocationError).toBeNull();
+    });
+  });
+
+  describe('State Management', () => {
+    it('should update map center when coordinates change', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+
+      expect(component.mapCenter).toEqual(mockCoordinates);
+    }));
+
+    it('should clear errors on successful search', fakeAsync(() => {
+      component.error = 'Previous error';
+      component.geolocationError = 'Previous geolocation error';
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+
+      expect(component.error).toBeNull();
+      expect(component.geolocationError).toBeNull();
+    }));
+
+    it('should convert search results to breeder markers', fakeAsync(() => {
+      component.zipCode = '10001';
+
+      searchService.geocodeZipCode.and.returnValue(of(mockCoordinates));
+      searchService.searchBreeders.and.returnValue(of(mockBreederResults));
+
+      component.onSearch();
+      tick();
+
+      expect(component.breederMarkers.length).toBe(2);
+      expect(component.breederMarkers[0].id).toBe('breeder-1');
+      expect(component.breederMarkers[0].position.latitude).toBe(40.7128);
+      expect(component.breederMarkers[1].id).toBe('breeder-2');
+    }));
+  });
+});

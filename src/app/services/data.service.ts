@@ -225,7 +225,11 @@ export class DataService {
       );
   }
 
-  // Litter management methods
+  // Litter management methods (aliased as Breedings in frontend)
+  getBreedings(filters?: IBreedingFilter): Observable<any[]> {
+    return this.getLitters(filters);
+  }
+
   getLitters(filters?: IBreedingFilter): Observable<any[]> {
     let header = new HttpHeaders().set(
       'Authorization',
@@ -332,6 +336,10 @@ export class DataService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  voidBreeding(id: string): Observable<any> {
+    return this.voidLitter(id);
   }
 
   voidLitter(id: string): Observable<any> {

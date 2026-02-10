@@ -1,0 +1,263 @@
+/* Mobile-First Base Styles (< 768px) */
+.breeder-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  touch-action: manipulation; /* Optimize touch response */
+}
+
+.breeder-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.breeder-card.highlighted {
+  border: 2px solid #4CAF50;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
+/* Image Section - Mobile */
+.breeder-card__image {
+  flex-shrink: 0;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.breeder-card__thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast; /* Optimize for mobile */
+  loading: lazy; /* Native lazy loading */
+}
+
+/* Info Section - Mobile */
+.breeder-card__info {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.breeder-card__name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+
+.breeder-card__distance {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.breeder-card__distance i {
+  color: #4CAF50;
+}
+
+.breeder-card__breeds {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.breeder-card__breeds i {
+  color: #E91E63;
+}
+
+.breeder-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #FF9800;
+}
+
+.breeder-card__rating i {
+  color: #FF9800;
+}
+
+.breeder-card__description {
+  margin: 0;
+  font-size: 13px;
+  color: #777;
+  line-height: 1.4;
+  flex: 1;
+}
+
+/* Action Buttons - Mobile (Stacked) */
+.breeder-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.breeder-card__button {
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px; /* Minimum touch target size */
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+.breeder-card__button--primary {
+  background: #4CAF50;
+  color: white;
+}
+
+.breeder-card__button--primary:hover {
+  background: #45a049;
+}
+
+.breeder-card__button--primary:active {
+  background: #3d8b40;
+}
+
+.breeder-card__button--secondary {
+  background: white;
+  color: #4CAF50;
+  border: 1px solid #4CAF50;
+}
+
+.breeder-card__button--secondary:hover {
+  background: #f1f8f4;
+}
+
+.breeder-card__button--secondary:active {
+  background: #e8f5e9;
+}
+
+/* Tablet - Horizontal Layout (769px - 1024px) */
+@media (min-width: 769px) {
+  .breeder-card {
+    flex-direction: row;
+  }
+
+  .breeder-card__image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .breeder-card__info {
+    padding: 12px;
+  }
+
+  .breeder-card__actions {
+    flex-direction: row;
+  }
+
+  .breeder-card__button {
+    flex: 1;
+  }
+}
+
+/* Desktop - Standard Layout (1025px+) */
+@media (min-width: 1025px) {
+  .breeder-card__image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .breeder-card__info {
+    padding: 16px;
+  }
+
+  .breeder-card__name {
+    font-size: 18px;
+  }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .breeder-card {
+    flex-direction: row;
+  }
+
+  .breeder-card__image {
+    width: 150px;
+    height: 120px;
+  }
+
+  .breeder-card__actions {
+    flex-direction: row;
+  }
+
+  .breeder-card__button {
+    flex: 1;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .breeder-card__thumbnail {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Accessibility - Focus states */
+.breeder-card:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+.breeder-card__button:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .breeder-card {
+    transition: none;
+  }
+
+  .breeder-card:hover {
+    transform: none;
+  }
+
+  .breeder-card__button {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .breeder-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+
+  .breeder-card__actions {
+    display: none;
+  }
+}

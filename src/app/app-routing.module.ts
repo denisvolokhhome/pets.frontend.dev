@@ -12,9 +12,11 @@ import { BreedingsComponent } from './components/breedings/breedings.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
+import { SearchPageComponent } from './components/search-page/search-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'search-pets', component: SearchPageComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,

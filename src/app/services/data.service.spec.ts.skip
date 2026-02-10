@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { DataService } from './data.service';
 import { IUser, IProfileImageResponse } from '../models/user';
 import { ILocation } from '../models/location';
-import { ILitter, LitterStatus, ILitterFilter, IPuppyInput } from '../models/litter';
+import { IBreeding, BreedingStatus, IBreedingFilter, IPuppyInput } from '../models/breeding';
 import { environment } from 'src/environments/environment';
 
 describe('DataService', () => {
@@ -322,11 +322,11 @@ describe('DataService', () => {
 
   describe('Litter Management Methods', () => {
     it('should get all litters without filters', () => {
-      const mockLitters: ILitter[] = [
+      const mockLitters: IBreeding[] = [
         {
           id: 'litter-1',
           description: 'Test Litter 1',
-          status: LitterStatus.Started,
+          status: BreedingStatus.Started,
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z',
           parent_pets: [],
@@ -335,7 +335,7 @@ describe('DataService', () => {
         {
           id: 'litter-2',
           description: 'Test Litter 2',
-          status: LitterStatus.InProcess,
+          status: BreedingStatus.InProcess,
           created_at: '2024-01-02T00:00:00Z',
           updated_at: '2024-01-02T00:00:00Z',
           parent_pets: [],
@@ -355,15 +355,15 @@ describe('DataService', () => {
     });
 
     it('should get litters with location filter', () => {
-      const filters: ILitterFilter = {
+      const filters: IBreedingFilter = {
         location_id: 'location-123'
       };
 
-      const mockLitters: ILitter[] = [
+      const mockLitters: IBreeding[] = [
         {
           id: 'litter-1',
           description: 'Filtered Litter',
-          status: LitterStatus.Started,
+          status: BreedingStatus.Started,
           created_at: '2024-01-01T00:00:00Z',
           updated_at: '2024-01-01T00:00:00Z'
         }
@@ -382,11 +382,11 @@ describe('DataService', () => {
     });
 
     it('should get litters with status filter', () => {
-      const filters: ILitterFilter = {
-        status: LitterStatus.Done
+      const filters: IBreedingFilter = {
+        status: BreedingStatus.Done
       };
 
-      const mockLitters: ILitter[] = [];
+      const mockLitters: IBreeding[] = [];
 
       service.getLitters(filters).subscribe(litters => {
         expect(litters).toEqual(mockLitters);
@@ -400,7 +400,7 @@ describe('DataService', () => {
     });
 
     it('should get litters with breed filter', () => {
-      const filters: ILitterFilter = {
+      const filters: IBreedingFilter = {
         breed_id: 'breed-456'
       };
 
@@ -414,9 +414,9 @@ describe('DataService', () => {
     });
 
     it('should get litters with multiple filters', () => {
-      const filters: ILitterFilter = {
+      const filters: IBreedingFilter = {
         location_id: 'location-123',
-        status: LitterStatus.InProcess,
+        status: BreedingStatus.InProcess,
         breed_id: 'breed-456'
       };
 
@@ -435,10 +435,10 @@ describe('DataService', () => {
 
     it('should get a single litter by id', () => {
       const litterId = 'litter-123';
-      const mockLitter: ILitter = {
+      const mockLitter: IBreeding = {
         id: litterId,
         description: 'Test Litter',
-        status: LitterStatus.Done,
+        status: BreedingStatus.Done,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-02T00:00:00Z',
         parent_pets: [],
@@ -448,7 +448,7 @@ describe('DataService', () => {
       service.getLitter(litterId).subscribe(litter => {
         expect(litter).toEqual(mockLitter);
         expect(litter.id).toBe(litterId);
-        expect(litter.status).toBe(LitterStatus.Done);
+        expect(litter.status).toBe(BreedingStatus.Done);
       });
 
       const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);
@@ -459,17 +459,17 @@ describe('DataService', () => {
 
     it('should create a new litter with description', () => {
       const description = 'New litter description';
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: 'new-litter-id',
         description: description,
-        status: LitterStatus.Started,
+        status: BreedingStatus.Started,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-01T00:00:00Z'
       };
 
       service.createLitter(description).subscribe(litter => {
         expect(litter).toEqual(mockResponse);
-        expect(litter.status).toBe(LitterStatus.Started);
+        expect(litter.status).toBe(BreedingStatus.Started);
         expect(litter.description).toBe(description);
       });
 
@@ -481,10 +481,10 @@ describe('DataService', () => {
     });
 
     it('should create a new litter without description', () => {
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: 'new-litter-id',
         description: null,
-        status: LitterStatus.Started,
+        status: BreedingStatus.Started,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-01T00:00:00Z'
       };
@@ -505,10 +505,10 @@ describe('DataService', () => {
       const updateData = {
         description: 'Updated description'
       };
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: litterId,
         description: 'Updated description',
-        status: LitterStatus.Started,
+        status: BreedingStatus.Started,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-02T00:00:00Z'
       };
@@ -528,10 +528,10 @@ describe('DataService', () => {
     it('should assign pets to a litter', () => {
       const litterId = 'litter-123';
       const petIds = ['pet-1', 'pet-2'];
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: litterId,
         description: 'Test Litter',
-        status: LitterStatus.InProcess,
+        status: BreedingStatus.InProcess,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-02T00:00:00Z',
         parent_pets: []
@@ -539,7 +539,7 @@ describe('DataService', () => {
 
       service.assignPets(litterId, petIds).subscribe(litter => {
         expect(litter).toEqual(mockResponse);
-        expect(litter.status).toBe(LitterStatus.InProcess);
+        expect(litter.status).toBe(BreedingStatus.InProcess);
       });
 
       const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/assign-pets`);
@@ -555,8 +555,7 @@ describe('DataService', () => {
         {
           name: 'Puppy 1',
           gender: 'Male',
-          birth_date: '2024-01-01',
-          microchip: 'MC123'
+          birth_date: '2024-01-01'
         },
         {
           name: 'Puppy 2',
@@ -564,10 +563,10 @@ describe('DataService', () => {
           birth_date: '2024-01-01'
         }
       ];
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: litterId,
         description: 'Test Litter',
-        status: LitterStatus.Done,
+        status: BreedingStatus.Done,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-02T00:00:00Z',
         puppies: []
@@ -575,7 +574,7 @@ describe('DataService', () => {
 
       service.addPuppies(litterId, puppies).subscribe(litter => {
         expect(litter).toEqual(mockResponse);
-        expect(litter.status).toBe(LitterStatus.Done);
+        expect(litter.status).toBe(BreedingStatus.Done);
       });
 
       const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}/add-puppies`);
@@ -587,17 +586,17 @@ describe('DataService', () => {
 
     it('should void a litter', () => {
       const litterId = 'litter-123';
-      const mockResponse: ILitter = {
+      const mockResponse: IBreeding = {
         id: litterId,
         description: 'Test Litter',
-        status: LitterStatus.Voided,
+        status: BreedingStatus.Voided,
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-02T00:00:00Z'
       };
 
       service.voidLitter(litterId).subscribe(litter => {
         expect(litter).toEqual(mockResponse);
-        expect(litter.status).toBe(LitterStatus.Voided);
+        expect(litter.status).toBe(BreedingStatus.Voided);
       });
 
       const req = httpMock.expectOne(`${apiUrl}/litters/${litterId}`);

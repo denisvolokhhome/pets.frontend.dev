@@ -9,7 +9,7 @@ import { DataService } from 'src/app/services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { IPet } from 'src/app/models/pet';
-import { ILitter } from 'src/app/models/litter';
+import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
 
 /**
  * Unit Tests for PetAssignmentComponent
@@ -95,10 +95,10 @@ describe('PetAssignmentComponent', () => {
     }
   ];
 
-  const mockLitter: ILitter = {
+  const mockLitter: IBreeding = {
     id: 'litter-1',
     description: 'Test litter',
-    status: 'Started' as any,
+    status: BreedingStatus.Started,
     created_at: '2023-01-01',
     updated_at: '2023-01-01'
   };
@@ -305,7 +305,7 @@ describe('PetAssignmentComponent', () => {
     });
 
     it('should call assignPets API with correct pet IDs', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'InProcess' as any,
         parent_pets: [mockPets[0], mockPets[1]]
@@ -320,7 +320,7 @@ describe('PetAssignmentComponent', () => {
     });
 
     it('should emit petsAssigned event on successful assignment', (done) => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'InProcess' as any,
         parent_pets: [mockPets[0], mockPets[1]]
@@ -338,7 +338,7 @@ describe('PetAssignmentComponent', () => {
     });
 
     it('should clear location error on successful assignment', () => {
-      const updatedLitter: ILitter = {
+      const updatedLitter: IBreeding = {
         ...mockLitter,
         status: 'InProcess' as any,
         parent_pets: [mockPets[0], mockPets[1]]

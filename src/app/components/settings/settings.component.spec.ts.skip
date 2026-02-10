@@ -52,12 +52,14 @@ describe('SettingsComponent', () => {
 
   describe('Navigation', () => {
     it('should navigate to general settings when navigateToSection is called with general', async () => {
-      await component.navigateToSection('general');
+      component.navigateToSection('general');
+      await fixture.whenStable();
       expect(location.path()).toBe('/settings/general');
     });
 
     it('should navigate to locations when navigateToSection is called with locations', async () => {
-      await component.navigateToSection('locations');
+      component.navigateToSection('locations');
+      await fixture.whenStable();
       expect(location.path()).toBe('/settings/locations');
     });
 
