@@ -125,8 +125,31 @@ export class GeneralSettingsComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
+        // Trigger change detection to update the view immediately
+        this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
+      
+      // Automatically upload the image
+      this.uploadImageImmediately();
+    }
+  }
+
+  async uploadImageImmediately(): Promise<void> {
+    if (!this.selectedFile) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      await this.uploadImage();
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    } catch (error) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -147,21 +170,24 @@ export class GeneralSettingsComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-    this.dataService.uploadProfileImage(this.selectedFile).subscribe({
-      next: (response) => {
-        this.imagePreview = this.getImageUrl(response.profile_image_path);
-        this.selectedFile = null;
-        this.isLoading = false;
-        this.toastr.success('Profile image uploaded successfully', 'Success');
-      },
-      error: (error) => {
-        console.error('Error uploading image:', error);
-        this.saveError = 'Failed to upload image';
-        const errorMessage = error.error?.detail || 'Failed to upload image';
-        this.toastr.error(errorMessage, 'Error');
-        this.isLoading = false;
-      }
+    return new Promise((resolve, reject) => {
+      this.dataService.uploadProfileImage(this.selectedFile!).subscribe({
+        next: (response) => {
+          this.imagePreview = this.getImageUrl(response.profile_image_path);
+          this.selectedFile = null;
+          this.toastr.success('Profile image uploaded successfully', 'Success');
+          this.cdr.detectChanges();
+          resolve();
+        },
+        error: (error) => {
+          console.error('Error uploading image:', error);
+          this.saveError = 'Failed to upload image';
+          const errorMessage = error.error?.detail || 'Failed to upload image';
+          this.toastr.error(errorMessage, 'Error');
+          this.cdr.detectChanges();
+          reject(error);
+        }
+      });
     });
   }
 
@@ -175,34 +201,39 @@ export class GeneralSettingsComponent implements OnInit {
     this.saveSuccess = false;
     this.saveError = null;
 
-    // Upload image first if selected
-    if (this.selectedFile) {
-      await this.uploadImage();
+    try {
+      // Note: Image is uploaded immediately when selected, so no need to upload here
+
+      // Prepare profile data
+      const profileData = {
+        breedery_name: this.profileForm.value.breedery_name,
+        breedery_description: this.profileForm.value.breedery_description,
+        search_tags: this.tags
+      };
+
+      this.dataService.updateUserProfile(profileData).subscribe({
+        next: (response) => {
+          this.saveSuccess = true;
+          this.isLoading = false;
+          this.toastr.success('Profile updated successfully', 'Success');
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.saveSuccess = false;
+            this.cdr.detectChanges();
+          }, 3000);
+        },
+        error: (error) => {
+          console.error('Error saving profile:', error);
+          this.saveError = error.error?.detail || 'Failed to save profile';
+          const errorMessage = error.error?.detail || 'Failed to save profile';
+          this.toastr.error(errorMessage, 'Error');
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } catch (error) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
     }
-
-    // Prepare profile data
-    const profileData = {
-      breedery_name: this.profileForm.value.breedery_name,
-      breedery_description: this.profileForm.value.breedery_description,
-      search_tags: this.tags
-    };
-
-    this.dataService.updateUserProfile(profileData).subscribe({
-      next: (response) => {
-        this.saveSuccess = true;
-        this.isLoading = false;
-        this.toastr.success('Profile updated successfully', 'Success');
-        setTimeout(() => {
-          this.saveSuccess = false;
-        }, 3000);
-      },
-      error: (error) => {
-        console.error('Error saving profile:', error);
-        this.saveError = error.error?.detail || 'Failed to save profile';
-        const errorMessage = error.error?.detail || 'Failed to save profile';
-        this.toastr.error(errorMessage, 'Error');
-        this.isLoading = false;
-      }
-    });
   }
 }

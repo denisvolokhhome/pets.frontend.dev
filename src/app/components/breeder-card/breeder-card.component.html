@@ -36,24 +36,19 @@
       <i class="pi pi-star-fill"></i>
       <span>{{ breeder.rating.toFixed(1) }}</span>
     </div>
-    
-    <!-- Description -->
-    <p class="breeder-card__description">
-      {{ truncateDescription(breeder.location_description) }}
-    </p>
-    
-    <!-- Action Buttons -->
-    <div class="breeder-card__actions">
-      <button 
-        class="breeder-card__button breeder-card__button--primary"
-        (click)="onViewProfile($event)">
-        View Profile
-      </button>
-      <button 
-        class="breeder-card__button breeder-card__button--secondary"
-        (click)="onContactBreeder($event)">
-        Contact
-      </button>
-    </div>
+  </div>
+
+  <!-- Action Buttons Footer -->
+  <div class="breeder-card__footer">
+    <button 
+      class="breeder-card__button breeder-card__button--primary"
+      (click)="onViewProfile($event)">
+      View Profile
+    </button>
+    <button 
+      class="breeder-card__button breeder-card__button--secondary"
+      (click)="onContactBreeder($event)">
+      Contact
+    </button>
   </div>
 </div>
