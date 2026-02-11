@@ -28,7 +28,8 @@ export class RegisterComponent {
   }
   // TODO: Make better password validation and confirm email validation
   registerForm = this.builder.group({
-    name: this.builder.control(''),
+    firstName: this.builder.control('', Validators.required),
+    lastName: this.builder.control('', Validators.required),
     email: this.builder.control(
       '',
       Validators.compose([Validators.required, Validators.email])
@@ -43,7 +44,17 @@ export class RegisterComponent {
 
   proceedRegistration() {
     if (this.registerForm.valid) {
-      this.service.RegisterUser(this.registerForm.value).subscribe({
+      // Combine first and last name into a single name field for the API
+      const formValue = {
+        ...this.registerForm.value,
+        name: `${this.registerForm.value.firstName} ${this.registerForm.value.lastName}`.trim()
+      };
+      
+      // Remove firstName and lastName as they're not needed by the API
+      delete formValue.firstName;
+      delete formValue.lastName;
+      
+      this.service.RegisterUser(formValue).subscribe({
         next: () => {
           this.toastr.success(
             'Please contact admin to enable it',

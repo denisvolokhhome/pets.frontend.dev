@@ -225,12 +225,8 @@ export class DataService {
       );
   }
 
-  // Litter management methods (aliased as Breedings in frontend)
+  // Breeding management methods (formerly Litters)
   getBreedings(filters?: IBreedingFilter): Observable<any[]> {
-    return this.getLitters(filters);
-  }
-
-  getLitters(filters?: IBreedingFilter): Observable<any[]> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -244,7 +240,7 @@ export class DataService {
       if (filters.breed_id) params.breed_id = filters.breed_id;
     }
     
-    return this.http.get<any[]>(this.apiurl + '/litters', { 
+    return this.http.get<any[]>(this.apiurl + '/breedings', { 
       headers: header,
       params: params
     })
@@ -253,45 +249,65 @@ export class DataService {
       );
   }
 
-  getLitter(id: string): Observable<any> {
+  // Deprecated: Use getBreedings instead
+  getLitters(filters?: IBreedingFilter): Observable<any[]> {
+    return this.getBreedings(filters);
+  }
+
+  getBreeding(id: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.get<any>(this.apiurl + '/litters/' + id, { headers: header })
+    return this.http.get<any>(this.apiurl + '/breedings/' + id, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  createLitter(description?: string): Observable<any> {
+  // Deprecated: Use getBreeding instead
+  getLitter(id: string): Observable<any> {
+    return this.getBreeding(id);
+  }
+
+  createBreeding(description?: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
     
-    const litterData = {
+    const breedingData = {
       description: description || null
     };
     
-    return this.http.post<any>(this.apiurl + '/litters', litterData, { headers: header })
+    return this.http.post<any>(this.apiurl + '/breedings', breedingData, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  updateLitter(id: string, data: any): Observable<any> {
+  // Deprecated: Use createBreeding instead
+  createLitter(description?: string): Observable<any> {
+    return this.createBreeding(description);
+  }
+
+  updateBreeding(id: string, data: any): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.put<any>(this.apiurl + '/litters/' + id, data, { headers: header })
+    return this.http.put<any>(this.apiurl + '/breedings/' + id, data, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  assignPets(litterId: string, petIds: string[]): Observable<any> {
+  // Deprecated: Use updateBreeding instead
+  updateLitter(id: string, data: any): Observable<any> {
+    return this.updateBreeding(id, data);
+  }
+
+  assignPetsToBreeding(breedingId: string, petIds: string[]): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -302,7 +318,7 @@ export class DataService {
     };
     
     return this.http.post<any>(
-      this.apiurl + '/litters/' + litterId + '/assign-pets', 
+      this.apiurl + '/breedings/' + breedingId + '/assign-pets', 
       assignmentData, 
       { headers: header }
     )
@@ -311,7 +327,12 @@ export class DataService {
       );
   }
 
-  addPuppies(litterId: string, puppies: IPuppyInput[]): Observable<any> {
+  // Deprecated: Use assignPetsToBreeding instead
+  assignPets(litterId: string, petIds: string[]): Observable<any> {
+    return this.assignPetsToBreeding(litterId, petIds);
+  }
+
+  addPuppiesToBreeding(breedingId: string, puppies: IPuppyInput[]): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
@@ -329,7 +350,7 @@ export class DataService {
     };
     
     return this.http.post<any>(
-      this.apiurl + '/litters/' + litterId + '/add-puppies', 
+      this.apiurl + '/breedings/' + breedingId + '/add-puppies', 
       puppyData, 
       { headers: header }
     )
@@ -338,19 +359,25 @@ export class DataService {
       );
   }
 
-  voidBreeding(id: string): Observable<any> {
-    return this.voidLitter(id);
+  // Deprecated: Use addPuppiesToBreeding instead
+  addPuppies(litterId: string, puppies: IPuppyInput[]): Observable<any> {
+    return this.addPuppiesToBreeding(litterId, puppies);
   }
 
-  voidLitter(id: string): Observable<any> {
+  voidBreeding(id: string): Observable<any> {
     let header = new HttpHeaders().set(
       'Authorization',
       'Bearer ' + localStorage.getItem('id_token')
     );
-    return this.http.delete<any>(this.apiurl + '/litters/' + id, { headers: header })
+    return this.http.delete<any>(this.apiurl + '/breedings/' + id, { headers: header })
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  // Deprecated: Use voidBreeding instead
+  voidLitter(id: string): Observable<any> {
+    return this.voidBreeding(id);
   }
 
   // Error handling

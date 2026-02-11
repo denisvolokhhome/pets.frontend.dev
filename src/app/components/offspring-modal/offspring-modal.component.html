@@ -1,0 +1,162 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <i class="bi bi-plus-circle"></i>
+        Add Offspring
+      </h2>
+      <button class="close-button" (click)="onClose()" type="button">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form [formGroup]="offspringForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <!-- Offspring Name -->
+          <div class="form-group full-width">
+            <label for="name" class="form-label">
+              Name <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              class="form-input"
+              formControlName="name"
+              placeholder="Enter offspring name"
+            />
+          </div>
+
+          <!-- Breed (Read-only) -->
+          <div class="form-group">
+            <label class="form-label">Breed</label>
+            <input
+              type="text"
+              class="form-input"
+              [value]="breedDisplay"
+              readonly
+              disabled
+            />
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="form-group">
+            <label for="date_of_birth" class="form-label">
+              Date of Birth <span class="required">*</span>
+            </label>
+            <input
+              type="date"
+              id="date_of_birth"
+              class="form-input"
+              formControlName="date_of_birth"
+            />
+          </div>
+
+          <!-- Gender Selection -->
+          <div class="form-group full-width">
+            <label class="form-label">
+              Gender <span class="required">*</span>
+            </label>
+            <div class="gender-selection">
+              <button
+                type="button"
+                class="gender-button"
+                [class.selected]="selectedGender === 'Male'"
+                (click)="selectGender('Male')"
+              >
+                <i class="bi bi-gender-male"></i>
+                <span>Male</span>
+              </button>
+              <button
+                type="button"
+                class="gender-button"
+                [class.selected]="selectedGender === 'Female'"
+                (click)="selectGender('Female')"
+              >
+                <i class="bi bi-gender-female"></i>
+                <span>Female</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div class="form-group">
+            <label for="weight" class="form-label">Weight (kg)</label>
+            <input
+              type="number"
+              id="weight"
+              class="form-input"
+              formControlName="weight"
+              placeholder="e.g., 2.5"
+              step="0.1"
+            />
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label for="location_id" class="form-label">
+              Location <span class="required">*</span>
+            </label>
+            <select
+              id="location_id"
+              class="form-select"
+              formControlName="location_id"
+            >
+              <option value="">Select a location</option>
+              <option *ngFor="let location of locations" [value]="location.id">
+                {{ location.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Microchip -->
+          <div class="form-group full-width">
+            <label for="microchip" class="form-label">Microchip Number</label>
+            <input
+              type="text"
+              id="microchip"
+              class="form-input"
+              formControlName="microchip"
+              placeholder="Enter microchip number"
+            />
+          </div>
+
+          <!-- Description -->
+          <div class="form-group full-width">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              id="description"
+              class="form-textarea"
+              formControlName="description"
+              rows="3"
+              placeholder="Tell us about this offspring's personality, habits, or any special notes..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="onClose()"
+            [disabled]="isSubmitting"
+          >
+            <i class="bi bi-x-circle"></i>
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="save-button"
+            [disabled]="offspringForm.invalid || isSubmitting"
+          >
+            <i class="bi bi-check-circle"></i>
+            {{ isSubmitting ? 'Saving...' : 'Save Offspring' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { GeneralSettingsComponent } from './components/settings/general-settings/general-settings.component';
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
+import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
   { path: 'pets', component: PetsComponent, canActivate: [AuthGuard] },
   { path: 'breedings', component: BreedingsComponent, canActivate: [AuthGuard] },
+  { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',
     component: SettingsComponent,

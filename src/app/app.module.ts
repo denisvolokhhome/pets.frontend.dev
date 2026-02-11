@@ -49,6 +49,8 @@ import { BreederCardComponent } from './components/breeder-card/breeder-card.com
 import { BreederCardListComponent } from './components/breeder-card-list/breeder-card-list.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
+import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -95,6 +97,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     BreederCardListComponent,
     SearchPageComponent,
     ToastComponent,
+    BreedingDetailComponent,
+    OffspringModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +107,16 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      closeButton: true,
+      progressBar: true,
+      enableHtml: true,
+      tapToDismiss: true,
+      newestOnTop: true
+    }),
     MatButtonModule,
     MatCheckboxModule,
     MatRadioModule,

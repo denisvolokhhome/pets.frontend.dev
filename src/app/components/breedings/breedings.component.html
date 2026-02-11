@@ -163,7 +163,11 @@
           </ng-template>
           
           <ng-template pTemplate="body" let-breeding>
-            <tr [ngClass]="{'voided-row': breeding.status === BreedingStatus.Voided}">
+            <tr 
+              [ngClass]="{'voided-row': breeding.status === BreedingStatus.Voided}"
+              (dblclick)="onRowDoubleClick(breeding)"
+              style="cursor: pointer;"
+              title="Double-click to view details">
               <td>{{ formatDate(breeding.created_at) }}</td>
               <td>{{ formatDate(breeding.updated_at) }}</td>
               <td>

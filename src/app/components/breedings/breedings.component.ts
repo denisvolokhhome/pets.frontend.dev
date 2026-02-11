@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
@@ -19,7 +20,8 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     public dataService: DataService,
     public modalService: ModalService,
     private toastr: ToastrService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   breedings: IBreeding[] = [];
@@ -234,9 +236,13 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   }
 
   viewBreeding(breeding: IBreeding): void {
-    this.selectedBreeding = breeding;
-    this.modalMode = 'view';
-    this.modalService.open();
+    // Navigate to breeding detail page instead of opening modal
+    this.router.navigate(['/breeding', breeding.id]);
+  }
+
+  onRowDoubleClick(breeding: IBreeding): void {
+    // Navigate to breeding detail page on double-click
+    this.router.navigate(['/breeding', breeding.id]);
   }
 
   updateBreeding(breeding: IBreeding): void {
