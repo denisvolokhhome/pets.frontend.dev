@@ -176,6 +176,31 @@ export class BreedingLocationsComponent implements OnInit {
     }
   }
 
+  togglePublished(location: ILocation, event: Event): void {
+    event.stopPropagation();
+    
+    const newPublishedState = !location.is_published;
+    
+    this.dataService.updateLocation(location.id!, { is_published: newPublishedState }).subscribe({
+      next: (updatedLocation) => {
+        location.is_published = updatedLocation.is_published;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error toggling published status:', error);
+        // Revert the toggle on error
+        location.is_published = !newPublishedState;
+        const errorMessage = error.error?.detail || 'Failed to update location';
+        
+        setTimeout(() => {
+          this.toastr.error(errorMessage, 'Error');
+        });
+        
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   confirmDelete(location: ILocation): void {
     this.locationToDelete = location;
     this.deleteErrorPets = [];

@@ -229,6 +229,109 @@
   letter-spacing: -0.01em;
 }
 
+/* Location Header with Toggle */
+.location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.location-header h3 {
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* Published Toggle */
+.published-toggle {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  min-width: 60px;
+  text-align: right;
+}
+
+.toggle-button {
+  position: relative;
+  width: 44px!important;
+  height: 24px!important;
+  min-width: none;
+  min-height: 24px;
+  background-color: #d1d5db;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.toggle-button:hover {
+  background-color: #9ca3af;
+  border-color: #d1d5db;
+}
+
+.toggle-button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+  border-color: var(--secondary-color);
+}
+
+.toggle-button.active {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.toggle-button.active:hover {
+  background-color: #0d9488;
+  border-color: #0d9488;
+}
+
+.toggle-button.active .toggle-text {
+  color: var(--secondary-color);
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button.active .toggle-slider {
+  transform: translateX(20px);
+}
+
+.toggle-label:hover .toggle-text {
+  color: var(--dark-color);
+}
+
+.toggle-button.active + .toggle-text,
+.toggle-label:has(.toggle-button.active) .toggle-text {
+  color: var(--secondary-color);
+}
+
 .location-info p {
   margin: 0.5rem 0;
   color: var(--text-secondary);

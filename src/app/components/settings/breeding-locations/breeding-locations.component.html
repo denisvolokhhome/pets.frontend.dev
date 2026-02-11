@@ -28,7 +28,25 @@
   <div class="locations-list" *ngIf="!showForm && !isLoading">
     <div class="location-card" *ngFor="let location of locations">
       <div class="location-info">
-        <h3>{{ location.name }}</h3>
+        <div class="location-header">
+          <h3>{{ location.name }}</h3>
+          <!-- Published Toggle -->
+          <div class="published-toggle">
+            <label class="toggle-label">
+              <span class="toggle-text">{{ location.is_published ? 'Published' : 'Private' }}</span>
+              <button 
+                type="button"
+                role="switch"
+                [attr.aria-checked]="location.is_published"
+                class="toggle-button"
+                [class.active]="location.is_published"
+                (click)="togglePublished(location, $event)"
+                title="{{ location.is_published ? 'Click to unpublish (hide from map)' : 'Click to publish (show on map)' }}">
+                <span class="toggle-slider"></span>
+              </button>
+            </label>
+          </div>
+        </div>
         <p>{{ location.address1 }}</p>
         <p *ngIf="location.address2">{{ location.address2 }}</p>
         <p>{{ location.city }}, {{ location.state }} {{ location.zipcode }}</p>

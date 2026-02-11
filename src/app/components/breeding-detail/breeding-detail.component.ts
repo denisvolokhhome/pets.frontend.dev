@@ -66,7 +66,7 @@ export class BreedingDetailComponent implements OnInit {
     const uniqueBreeds = [...new Set<string>(breeds)];
     
     if (uniqueBreeds.length === 1) {
-      return uniqueBreeds[0];
+      return uniqueBreeds[0] as string;
     }
 
     return `Mixed (${uniqueBreeds.join(' + ')})`;
@@ -88,6 +88,9 @@ export class BreedingDetailComponent implements OnInit {
     const uniqueBreedIds = [...new Set<number>(breedIds)];
     
     // If all parents have the same breed, return that breed_id
+    if (uniqueBreedIds.length === 1) {
+      return uniqueBreedIds[0] as number;
+    }
     if (uniqueBreedIds.length === 1) {
       return uniqueBreedIds[0];
     }
