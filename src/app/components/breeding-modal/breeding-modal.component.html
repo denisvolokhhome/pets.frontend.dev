@@ -44,8 +44,94 @@
           </textarea>
         </div>
 
-        <!-- Pet Assignment Section (only if no pets assigned) -->
-        <div *ngIf="!hasParentPets() && breeding" class="pet-assignment">
+        <!-- Pet Selection Section (only in create mode) -->
+        <div *ngIf="mode === 'create'" class="pet-selection-section">
+          <h3>Select Parent Pets</h3>
+          <p class="text-sm text-gray-600 mb-4">
+            <i class="bi bi-info-circle"></i>
+            Choose 2 adult pets from the same location to create a breeding.
+          </p>
+
+          <!-- Loading State -->
+          <div *ngIf="isLoadingPets" class="text-center py-4">
+            <i class="bi bi-hourglass-split animate-spin text-2xl text-teal-500"></i>
+            <p class="text-gray-600 mt-2">Loading available pets...</p>
+          </div>
+
+          <!-- Pet Selection Form -->
+          <div *ngIf="!isLoadingPets" class="space-y-4">
+            <!-- First Pet Selection -->
+            <div class="form-group">
+              <label for="pet1">
+                <i class="bi bi-1-circle-fill"></i>
+                First Parent Pet
+              </label>
+              <select 
+                id="pet1"
+                [(ngModel)]="selectedPet1"
+                (change)="onFirstPetSelected()"
+                class="form-select">
+                <option value="">-- Select First Pet --</option>
+                <option *ngFor="let pet of availablePets" [value]="pet.id">
+                  {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
+                </option>
+              </select>
+            </div>
+
+            <!-- Second Pet Selection -->
+            <div class="form-group">
+              <label for="pet2">
+                <i class="bi bi-2-circle-fill"></i>
+                Second Parent Pet
+              </label>
+              <select 
+                id="pet2"
+                [(ngModel)]="selectedPet2"
+                [disabled]="!selectedPet1 || filteredPets.length === 0"
+                class="form-select">
+                <option value="">-- Select Second Pet --</option>
+                <option *ngFor="let pet of filteredPets" [value]="pet.id">
+                  {{ pet.name }} - {{ pet.breed_name }} ({{ pet.location_name }})
+                </option>
+              </select>
+              <p *ngIf="selectedPet1 && filteredPets.length === 0" class="text-sm text-orange-600 mt-2">
+                <i class="bi bi-exclamation-triangle"></i>
+                No other pets available at the same location
+              </p>
+            </div>
+
+            <!-- Selected Pets Preview -->
+            <div *ngIf="selectedPet1 && selectedPet2" class="selected-pets-preview">
+              <h4>Selected Parent Pets:</h4>
+              <div class="pet-preview-cards">
+                <div class="pet-preview-card" *ngFor="let petId of [selectedPet1, selectedPet2]">
+                  <ng-container *ngFor="let pet of availablePets">
+                    <div *ngIf="pet.id === petId" class="flex items-center space-x-3">
+                      <i class="bi bi-check-circle-fill text-teal-500 text-xl"></i>
+                      <div>
+                        <p class="font-semibold text-gray-800">{{ pet.name }}</p>
+                        <p class="text-sm text-gray-600">{{ pet.breed_name }}</p>
+                        <p class="text-xs text-gray-500">
+                          <i class="bi bi-geo-alt"></i>
+                          {{ pet.location_name }}
+                        </p>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="locationError" class="error-message">
+              <i class="bi bi-exclamation-triangle"></i>
+              {{ locationError }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Pet Assignment Section (only if no pets assigned in update mode) -->
+        <div *ngIf="mode === 'update' && !hasParentPets() && breeding" class="pet-assignment">
           <h3>Assign Parent Pets</h3>
           <app-pet-assignment 
             [litter]="breeding"
@@ -53,8 +139,8 @@
           </app-pet-assignment>
         </div>
 
-        <!-- Puppy Addition Section (only if pets assigned) -->
-        <div *ngIf="hasParentPets() && breeding" class="puppy-section">
+        <!-- Puppy Addition Section (only if pets assigned in update mode) -->
+        <div *ngIf="mode === 'update' && hasParentPets() && breeding" class="puppy-section">
           <h3>Add Puppies</h3>
           <app-puppy-table 
             [litter]="breeding"
@@ -146,11 +232,14 @@
       <button 
         *ngIf="mode !== 'view'"
         type="button"
+        [disabled]="!canSave()"
         (click)="save()">
-        Save
+        <i class="bi" [ngClass]="isSaving ? 'bi-hourglass-split' : 'bi-check-circle'"></i>
+        {{ isSaving ? 'Saving...' : 'Save' }}
       </button>
       <button 
         type="button"
+        [disabled]="isSaving"
         (click)="close()">
         {{ mode === 'view' ? 'Close' : 'Cancel' }}
       </button>
