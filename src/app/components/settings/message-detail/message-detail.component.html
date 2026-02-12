@@ -1,0 +1,141 @@
+<div class="message-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner-large"></div>
+    <p>Loading message...</p>
+  </div>
+
+  <!-- Message Content -->
+  <div *ngIf="!isLoading && message" class="message-content">
+    <!-- Header with Back Button -->
+    <div class="message-header">
+      <button class="btn-back" (click)="goBack()" aria-label="Back to messages">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Back to Messages
+      </button>
+
+      <div class="header-actions">
+        <span class="message-status" [class.unread]="!message.is_read" [class.responded]="hasResponse()">
+          <span *ngIf="!message.is_read">New</span>
+          <span *ngIf="message.is_read && !hasResponse()">Read</span>
+          <span *ngIf="hasResponse()">Responded</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Sender Information Card -->
+    <div class="sender-card">
+      <div class="sender-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </div>
+      <div class="sender-details">
+        <h2 class="sender-name">{{ message.sender_name }}</h2>
+        <a [href]="'mailto:' + message.sender_email" class="sender-email">
+          {{ message.sender_email }}
+        </a>
+        <p class="message-date">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          {{ formatDate(message.created_at) }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Message Content Card -->
+    <div class="message-card">
+      <h3 class="card-title">Message</h3>
+      <div class="message-text">
+        <p *ngIf="message.message">{{ message.message }}</p>
+        <p *ngIf="!message.message" class="no-message">No message content provided</p>
+      </div>
+    </div>
+
+    <!-- Existing Response (if any) -->
+    <div *ngIf="hasResponse()" class="response-card">
+      <div class="response-header">
+        <h3 class="card-title">Your Response</h3>
+        <span class="response-date">{{ formatDate(message.responded_at!) }}</span>
+      </div>
+      <div class="response-text">
+        <p>{{ message.response_text }}</p>
+      </div>
+      <button 
+        *ngIf="!showResponseForm"
+        class="btn-secondary"
+        (click)="toggleResponseForm()">
+        Edit Response
+      </button>
+    </div>
+
+    <!-- Response Form -->
+    <div *ngIf="showResponseForm" class="response-form-card">
+      <h3 class="card-title">
+        {{ hasResponse() ? 'Edit Response' : 'Send Response' }}
+      </h3>
+      <p class="form-description">
+        Your response will be saved in the system. Consider copying the sender's email to send them a direct reply.
+      </p>
+
+      <form [formGroup]="responseForm" (ngSubmit)="onSubmitResponse()">
+        <div class="form-group">
+          <label for="response_text" class="form-label">
+            Response <span class="required">*</span>
+          </label>
+          <textarea
+            id="response_text"
+            formControlName="response_text"
+            class="form-control"
+            [class.is-invalid]="responseText?.invalid && responseText?.touched"
+            placeholder="Type your response here..."
+            rows="6"
+            maxlength="5000"
+          ></textarea>
+          <div class="char-count">
+            {{ responseText?.value?.length || 0 }} / 5000 characters
+          </div>
+          <div class="invalid-feedback" *ngIf="responseText?.invalid && responseText?.touched">
+            <span *ngIf="responseText?.errors?.['required']">Response is required</span>
+            <span *ngIf="responseText?.errors?.['minlength']">Response must be at least 1 character</span>
+            <span *ngIf="responseText?.errors?.['maxlength']">Response is too long (max 5000 characters)</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="toggleResponseForm()"
+            [disabled]="isSubmitting">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="responseForm.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">Send Response</span>
+            <span *ngIf="isSubmitting">
+              <span class="spinner"></span> Sending...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Show Response Button (if not responded yet and form is hidden) -->
+    <div *ngIf="!hasResponse() && !showResponseForm" class="action-section">
+      <button class="btn-primary btn-large" (click)="toggleResponseForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Respond to Message
+      </button>
+    </div>
+  </div>
+</div>

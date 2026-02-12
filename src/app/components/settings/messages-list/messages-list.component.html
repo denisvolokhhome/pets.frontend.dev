@@ -1,0 +1,142 @@
+<div class="messages-list-container">
+  <!-- Header -->
+  <div class="messages-header">
+    <div class="header-content">
+      <h1 class="page-title">Messages</h1>
+      <p class="page-subtitle">
+        Manage inquiries from potential customers
+        <span *ngIf="unreadCount > 0" class="unread-indicator">
+          ({{ unreadCount }} unread)
+        </span>
+      </p>
+    </div>
+    <button class="btn-refresh" (click)="refresh()" [disabled]="isLoading" title="Refresh messages">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Filters and Controls -->
+  <div class="controls-bar">
+    <!-- Status Filter Tabs -->
+    <div class="filter-tabs">
+      <button
+        class="filter-tab"
+        [class.active]="statusFilter === 'all'"
+        (click)="onFilterChange('all')">
+        All Messages
+      </button>
+      <button
+        class="filter-tab"
+        [class.active]="statusFilter === 'unread'"
+        (click)="onFilterChange('unread')">
+        Unread
+        <span *ngIf="unreadCount > 0" class="tab-badge">{{ unreadCount }}</span>
+      </button>
+      <button
+        class="filter-tab"
+        [class.active]="statusFilter === 'read'"
+        (click)="onFilterChange('read')">
+        Read
+      </button>
+    </div>
+
+    <!-- Sort Dropdown -->
+    <div class="sort-control">
+      <label for="sort-select" class="sort-label">Sort by:</label>
+      <select
+        id="sort-select"
+        class="sort-select"
+        [(ngModel)]="sortOrder"
+        (change)="onSortChange(sortOrder)">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner-large"></div>
+    <p>Loading messages...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && messages.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+        <polyline points="22,6 12,13 2,6"></polyline>
+      </svg>
+    </div>
+    <h3>No messages yet</h3>
+    <p *ngIf="statusFilter === 'all'">You haven't received any messages from potential customers.</p>
+    <p *ngIf="statusFilter === 'unread'">You don't have any unread messages.</p>
+    <p *ngIf="statusFilter === 'read'">You don't have any read messages.</p>
+  </div>
+
+  <!-- Messages List -->
+  <div *ngIf="!isLoading && messages.length > 0" class="messages-list">
+    <div
+      *ngFor="let message of messages"
+      class="message-item"
+      [class.unread]="!message.is_read"
+      (click)="viewMessage(message.id)">
+      
+      <!-- Message Status Indicator -->
+      <div class="message-indicator" [class]="getStatusClass(message)"></div>
+
+      <!-- Message Content -->
+      <div class="message-content">
+        <!-- Sender Info -->
+        <div class="message-header">
+          <div class="sender-info">
+            <span class="sender-name">{{ message.sender_name }}</span>
+            <span class="sender-email">{{ message.sender_email }}</span>
+          </div>
+          <div class="message-meta">
+            <span class="message-time">{{ formatDate(message.created_at) }}</span>
+            <span class="message-status" [class]="getStatusClass(message)">
+              {{ getStatusText(message) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Message Preview -->
+        <div class="message-preview">
+          <p *ngIf="message.message_preview">{{ message.message_preview }}</p>
+          <p *ngIf="!message.message_preview" class="no-message">No message content</p>
+        </div>
+      </div>
+
+      <!-- Arrow Icon -->
+      <div class="message-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && messages.length > 0" class="pagination">
+    <div class="pagination-info">
+      {{ getPageRangeText() }}
+    </div>
+    <div class="pagination-controls">
+      <button
+        class="btn-pagination"
+        (click)="previousPage()"
+        [disabled]="!hasPreviousPage()">
+        Previous
+      </button>
+      <button
+        class="btn-pagination"
+        (click)="nextPage()"
+        [disabled]="!hasNextPage()">
+        Next
+      </button>
+    </div>
+  </div>
+</div>

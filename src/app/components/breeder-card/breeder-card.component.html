@@ -52,3 +52,11 @@
     </button>
   </div>
 </div>
+
+<!-- Contact Breeder Modal -->
+<app-contact-breeder
+  [breederId]="breeder.user_id"
+  [breederName]="breeder.breeder_name"
+  [(visible)]="showContactModal"
+  (messageSent)="onMessageSent()">
+</app-contact-breeder>

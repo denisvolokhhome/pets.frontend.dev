@@ -51,6 +51,10 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { ToastComponent } from './components/toast/toast.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
+import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
+import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
+import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
+import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -99,6 +103,10 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     ToastComponent,
     BreedingDetailComponent,
     OffspringModalComponent,
+    ContactBreederComponent,
+    NotificationIconComponent,
+    MessagesListComponent,
+    MessageDetailComponent,
   ],
   imports: [
     BrowserModule,

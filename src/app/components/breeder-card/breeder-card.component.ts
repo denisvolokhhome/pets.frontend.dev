@@ -16,6 +16,7 @@ export class BreederCardComponent {
   @Output() cardHover = new EventEmitter<string>();
 
   apihost = environment.API_HOST;
+  showContactModal: boolean = false;
 
   /**
    * Get the full image URL for the breeder thumbnail
@@ -77,8 +78,21 @@ export class BreederCardComponent {
    */
   onContactBreeder(event: Event): void {
     event.stopPropagation(); // Prevent card click event
-    // TODO: Open contact modal or navigate to contact page
-    console.log('Contact breeder:', this.breeder.user_id);
+    this.showContactModal = true;
+  }
+
+  /**
+   * Handle contact modal close
+   */
+  onContactModalClose(): void {
+    this.showContactModal = false;
+  }
+
+  /**
+   * Handle message sent successfully
+   */
+  onMessageSent(): void {
+    this.showContactModal = false;
   }
 
   /**

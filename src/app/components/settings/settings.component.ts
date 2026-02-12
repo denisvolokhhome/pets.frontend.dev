@@ -11,7 +11,7 @@ export class SettingsComponent {
   
   constructor(private router: Router) {}
   
-  navigateToSection(section: 'general' | 'locations'): void {
+  navigateToSection(section: 'general' | 'locations' | 'messages'): void {
     this.router.navigate(['/settings', section]);
   }
   

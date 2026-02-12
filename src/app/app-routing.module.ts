@@ -14,6 +14,8 @@ import { GeneralSettingsComponent } from './components/settings/general-settings
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
+import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
+import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,7 +39,9 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'general', pathMatch: 'full' },
       { path: 'general', component: GeneralSettingsComponent },
-      { path: 'locations', component: BreedingLocationsComponent }
+      { path: 'locations', component: BreedingLocationsComponent },
+      { path: 'messages', component: MessagesListComponent },
+      { path: 'messages/:id', component: MessageDetailComponent }
     ]
   },
 ];
