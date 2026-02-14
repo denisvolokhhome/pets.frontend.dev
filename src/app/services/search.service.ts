@@ -227,7 +227,9 @@ export class SearchService {
           errorMessage = 'Server error. Please try again later.';
           break;
         case 502:
-          errorMessage = 'Geocoding service unavailable. Please try again.';
+        case 503:
+          errorMessage = 'Geocoding service temporarily unavailable';
+          break;
           break;
         case 503:
           errorMessage = 'Service temporarily unavailable. Please try again.';

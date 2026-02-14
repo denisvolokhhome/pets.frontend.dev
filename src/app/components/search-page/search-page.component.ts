@@ -115,11 +115,11 @@ export class SearchPageComponent implements OnInit {
           }
         },
         error: (err) => {
-          const message = err.message || 'Failed to convert location to ZIP code. Please enter your ZIP code manually.';
+          // Geocoding failed - that's okay, user can enter ZIP manually
+          const message = 'Could not detect your location automatically. Please enter your ZIP code to search.';
           this.geolocationError = message;
-          this.toastService.error(message);
+          this.toastService.info(message);
           this.cdr.detectChanges();
-          console.error('Reverse geocoding error:', err);
         }
       });
   }
