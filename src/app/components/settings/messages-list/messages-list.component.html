@@ -1,141 +1,182 @@
-<div class="messages-list-container">
-  <!-- Header -->
-  <div class="messages-header">
-    <div class="header-content">
-      <h1 class="page-title">Messages</h1>
-      <p class="page-subtitle">
-        {{ getSubtitle() }}
-        <span *ngIf="unreadCount > 0" class="unread-indicator">
-          ({{ unreadCount }} {{ isBreeder ? 'unread' : 'pending response' }})
-        </span>
-      </p>
+<div class="messages-container">
+  <!-- Header Section -->
+  <header class="messages-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <i class="bi bi-envelope-fill"></i>
+        Messages
+      </h1>
     </div>
-    <button class="btn-refresh" (click)="refresh()" [disabled]="isLoading" title="Refresh messages">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
-      </svg>
-    </button>
-  </div>
-
-  <!-- Filters and Controls -->
-  <div class="controls-bar">
-    <!-- Status Filter Tabs -->
-    <div class="filter-tabs">
-      <button
-        class="filter-tab"
-        [class.active]="statusFilter === 'all'"
-        (click)="onFilterChange('all')">
-        All Messages
-      </button>
-      <button
-        class="filter-tab"
-        [class.active]="statusFilter === 'unread'"
-        (click)="onFilterChange('unread')">
-        Unread
-        <span *ngIf="unreadCount > 0" class="tab-badge">{{ unreadCount }}</span>
-      </button>
-      <button
-        class="filter-tab"
-        [class.active]="statusFilter === 'read'"
-        (click)="onFilterChange('read')">
-        Read
+    
+    <div class="header-center">
+      <!-- Search -->
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search messages..."
+          [(ngModel)]="searchTerm"
+        />
+        <i class="bi bi-search search-icon"></i>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <button 
+        class="fab-button fab-refresh"
+        (click)="refresh()"
+        [disabled]="isLoading"
+        title="Refresh Messages">
+        <i class="bi bi-arrow-clockwise"></i>
       </button>
     </div>
+  </header>
 
-    <!-- Sort Dropdown -->
-    <div class="sort-control">
-      <label for="sort-select" class="sort-label">Sort by:</label>
-      <select
-        id="sort-select"
-        class="sort-select"
-        [(ngModel)]="sortOrder"
-        (change)="onSortChange(sortOrder)">
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
-    </div>
-  </div>
+  <!-- Content Section -->
+  <div class="messages-layout">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+      <div class="filters-header">
+        <h3 class="filters-title">
+          <i class="bi bi-funnel-fill"></i>
+          Filters
+        </h3>
+        <button 
+          *ngIf="statusFilter !== 'all'" 
+          class="btn-clear-filters"
+          (click)="onFilterChange('all')"
+          title="Clear filters">
+          <i class="bi bi-x-circle-fill"></i>
+        </button>
+      </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner-large"></div>
-    <p>Loading messages...</p>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!isLoading && messages.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-        <polyline points="22,6 12,13 2,6"></polyline>
-      </svg>
-    </div>
-    <h3>No messages yet</h3>
-    <p>{{ getEmptyStateMessage() }}</p>
-  </div>
-
-  <!-- Messages List -->
-  <div *ngIf="!isLoading && messages.length > 0" class="messages-list">
-    <div
-      *ngFor="let message of messages"
-      class="message-item"
-      [class.unread]="!message.is_read"
-      [class.pending-response]="isPetSeeker && !message.responded_at"
-      (click)="viewMessage(message.id)">
-      
-      <!-- Message Status Indicator -->
-      <div class="message-indicator" [class]="getStatusClass(message)"></div>
-
-      <!-- Message Content -->
-      <div class="message-content">
-        <!-- Sender Info (Breeder View) or Recipient Info (Pet Seeker View) -->
-        <div class="message-header">
-          <div class="sender-info">
-            <span class="sender-name">{{ message.sender_name }}</span>
-            <span class="sender-email">{{ message.sender_email }}</span>
-          </div>
-          <div class="message-meta">
-            <span class="message-time">{{ formatDate(message.created_at) }}</span>
-            <span class="message-status" [class]="getStatusClass(message)">
-              {{ getStatusText(message) }}
-            </span>
-          </div>
+      <div class="filters-content">
+        <!-- Status Filter -->
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="bi bi-flag-fill"></i>
+            Status
+          </label>
+          <select 
+            class="filter-select"
+            [(ngModel)]="statusFilter"
+            (change)="onFilterChange(statusFilter)">
+            <option value="all">All Messages</option>
+            <option value="unread">{{ isBreeder ? 'Unread' : 'Pending Response' }}</option>
+            <option value="read">{{ isBreeder ? 'Read' : 'Responded' }}</option>
+          </select>
         </div>
 
-        <!-- Message Preview -->
-        <div class="message-preview">
-          <p *ngIf="message.message_preview">{{ message.message_preview }}</p>
-          <p *ngIf="!message.message_preview" class="no-message">No message content</p>
+        <!-- Sort Order -->
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="bi bi-sort-down"></i>
+            Sort By
+          </label>
+          <select 
+            class="filter-select"
+            [(ngModel)]="sortOrder"
+            (change)="onSortChange(sortOrder)">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
         </div>
       </div>
 
-      <!-- Arrow Icon -->
-      <div class="message-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
+      <!-- Results Count -->
+      <div class="results-count" *ngIf="!isLoading">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>{{ totalMessages }} message{{ totalMessages !== 1 ? 's' : '' }}</span>
+        <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }} unread</span>
       </div>
-    </div>
-  </div>
+    </aside>
 
-  <!-- Pagination -->
-  <div *ngIf="!isLoading && messages.length > 0" class="pagination">
-    <div class="pagination-info">
-      {{ getPageRangeText() }}
-    </div>
-    <div class="pagination-controls">
-      <button
-        class="btn-pagination"
-        (click)="previousPage()"
-        [disabled]="!hasPreviousPage()">
-        Previous
-      </button>
-      <button
-        class="btn-pagination"
-        (click)="nextPage()"
-        [disabled]="!hasNextPage()">
-        Next
-      </button>
-    </div>
+    <!-- Main Content -->
+    <main class="messages-content">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner-container">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+        </div>
+        <p>Loading messages...</p>
+      </div>
+
+      <!-- Messages List -->
+      <div *ngIf="!isLoading && messages.length > 0" class="messages-list">
+        <div
+          *ngFor="let message of messages"
+          class="message-item"
+          [class.unread]="!message.is_read && isBreeder"
+          [class.pending-response]="isPetSeeker && !message.responded_at"
+          (click)="viewMessage(message.id)">
+          
+          <!-- Message Status Indicator -->
+          <div class="message-indicator" [class]="getStatusClass(message)"></div>
+
+          <!-- Message Content -->
+          <div class="message-content">
+            <!-- Sender Info -->
+            <div class="message-header">
+              <div class="sender-info">
+                <span class="sender-name">{{ message.sender_name }}</span>
+                <span class="sender-email">{{ message.sender_email }}</span>
+              </div>
+              <div class="message-meta">
+                <span class="message-time">{{ formatDate(message.created_at) }}</span>
+                <span class="message-status-badge" [class]="getStatusClass(message)">
+                  {{ getStatusText(message) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Message Preview -->
+            <div class="message-preview">
+              <p *ngIf="message.message_preview">{{ message.message_preview }}</p>
+              <p *ngIf="!message.message_preview" class="no-message">No message content</p>
+            </div>
+          </div>
+
+          <!-- Arrow Icon -->
+          <div class="message-arrow">
+            <i class="bi bi-chevron-right"></i>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info">
+            {{ getPageRangeText() }}
+          </div>
+          <div class="pagination-controls">
+            <button
+              class="btn-pagination"
+              (click)="previousPage()"
+              [disabled]="!hasPreviousPage()">
+              <i class="bi bi-chevron-left"></i>
+              Previous
+            </button>
+            <button
+              class="btn-pagination"
+              (click)="nextPage()"
+              [disabled]="!hasNextPage()">
+              Next
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && messages.length === 0" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No messages yet</h3>
+        <p>{{ getEmptyStateMessage() }}</p>
+        <button *ngIf="statusFilter !== 'all'" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onFilterChange('all')">
+          Clear Filters
+        </button>
+      </div>
+    </main>
   </div>
 </div>

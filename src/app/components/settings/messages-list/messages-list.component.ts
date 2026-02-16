@@ -15,6 +15,7 @@ export class MessagesListComponent implements OnInit {
   totalMessages: number = 0;
   unreadCount: number = 0;
   isLoading: boolean = false;
+  searchTerm: string = '';
   
   // Filters
   statusFilter: 'all' | 'read' | 'unread' = 'all';

@@ -64,7 +64,7 @@ export class NotificationIconComponent implements OnInit, OnDestroy {
    * Navigate to messages page
    */
   navigateToMessages(): void {
-    this.router.navigate(['/settings/messages']);
+    this.router.navigate(['/messages']);
   }
 
   /**

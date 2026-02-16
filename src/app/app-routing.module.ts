@@ -37,6 +37,8 @@ const routes: Routes = [
   { path: 'pets', component: PetsComponent, canActivate: [BreederGuard] },
   { path: 'breedings', component: BreedingsComponent, canActivate: [BreederGuard] },
   { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [BreederGuard] },
+  { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
+  { path: 'messages/:id', component: MessageDetailComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',
     component: SettingsComponent,
@@ -44,9 +46,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'general', pathMatch: 'full' },
       { path: 'general', component: GeneralSettingsComponent },
-      { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] },
-      { path: 'messages', component: MessagesListComponent },
-      { path: 'messages/:id', component: MessageDetailComponent }
+      { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] }
     ]
   },
 ];
