@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, MessageListItem } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
@@ -30,7 +30,8 @@ export class MessagesListComponent implements OnInit {
     private messageService: MessageService,
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +43,8 @@ export class MessagesListComponent implements OnInit {
    */
   loadMessages(): void {
     this.isLoading = true;
+    this.cdr.detectChanges(); // Force change detection
+    
     const skip = this.currentPage * this.pageSize;
 
     this.messageService.getMessages(this.statusFilter, skip, this.pageSize, this.sortOrder)
@@ -51,11 +54,13 @@ export class MessagesListComponent implements OnInit {
           this.totalMessages = response.total;
           this.unreadCount = response.unread_count;
           this.isLoading = false;
+          this.cdr.detectChanges(); // Force change detection after data loads
         },
         error: (error) => {
           console.error('Error loading messages:', error);
           this.toastr.error('Failed to load messages', 'Error');
           this.isLoading = false;
+          this.cdr.detectChanges(); // Force change detection on error
         }
       });
   }

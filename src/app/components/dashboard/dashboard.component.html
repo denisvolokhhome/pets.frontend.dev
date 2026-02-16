@@ -43,10 +43,10 @@
     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
       <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a [routerLink]="['/pets/add']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+        <button (click)="openAddPetModal()" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors cursor-pointer">
           <i class="bi bi-plus-circle text-2xl"></i>
           <span class="font-medium">Add New Pet</span>
-        </a>
+        </button>
         <a [routerLink]="['/breedings']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
           <i class="bi bi-water text-2xl"></i>
           <span class="font-medium">Manage Breedings</span>
@@ -123,4 +123,15 @@
     <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4"></i>
     <p class="text-gray-600">Loading dashboard...</p>
   </div>
+</div>
+
+<!-- Add Pet Modal -->
+<div
+  app-modal
+  title="Add a pet"
+  modalSize="large"
+  modalId="addPetModal"
+  aria-labelledby="PetAddModal"
+>
+  <app-pet-add></app-pet-add>
 </div>

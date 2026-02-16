@@ -25,6 +25,7 @@ export class LoginComponent {
   response: any;
   error: any;
   loginError: string | null = null;
+  showUserTypeModal: boolean = false;
 
   loginForm = this.builder.group({
     email: this.builder.control('', [Validators.required, Validators.email]),
@@ -147,5 +148,9 @@ export class LoginComponent {
         this.cdr.detectChanges();
       }, 0);
     }
+  }
+
+  signInWithGoogle() {
+    this.service.signInWithGoogle();
   }
 }
