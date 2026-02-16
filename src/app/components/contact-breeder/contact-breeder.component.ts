@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService, MessageCreate } from '../../services/message.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -18,11 +19,14 @@ export class ContactBreederComponent {
 
   contactForm: FormGroup;
   isSubmitting: boolean = false;
+  showAccountPrompt: boolean = false;
+  submittedEmail: string = '';
 
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.contactForm = this.fb.group({
       sender_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
@@ -71,10 +75,16 @@ export class ContactBreederComponent {
             progressBar: true
           }
         );
+        
+        // Store the submitted email for the account prompt
+        this.submittedEmail = this.contactForm.value.sender_email.trim();
+        
         this.contactForm.reset();
         this.isSubmitting = false;
         this.messageSent.emit();
-        this.closeDialog();
+        
+        // Show account creation prompt instead of closing immediately
+        this.showAccountPrompt = true;
       },
       error: (error) => {
         console.error('Error sending message:', error);
@@ -95,9 +105,24 @@ export class ContactBreederComponent {
     this.visible = false;
     this.visibleChange.emit(this.visible);
     this.contactForm.reset();
+    this.showAccountPrompt = false;
+    this.submittedEmail = '';
   }
 
   onCancel(): void {
+    this.closeDialog();
+  }
+
+  onCreateAccount(): void {
+    // Navigate to guest-to-account component with pre-filled email
+    this.router.navigate(['/guest-to-account'], {
+      queryParams: { email: this.submittedEmail }
+    });
+    this.closeDialog();
+  }
+
+  onSkipAccountCreation(): void {
+    // User chose not to create an account, just close the dialog
     this.closeDialog();
   }
 }

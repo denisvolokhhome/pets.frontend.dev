@@ -5,6 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
 import { AuthGuard } from './guard/auth.guard';
+import { BreederGuard } from './guard/breeder.guard';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PetsComponent } from './components/pets/pets.component';
@@ -16,6 +17,8 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
+import { PetSeekerRegistrationComponent } from './components/pet-seeker-registration/pet-seeker-registration.component';
+import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,12 +29,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
+  { path: 'register/pet-seeker', component: PetSeekerRegistrationComponent },
+  { path: 'register/from-message', component: GuestToAccountComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
-  { path: 'pets', component: PetsComponent, canActivate: [AuthGuard] },
-  { path: 'breedings', component: BreedingsComponent, canActivate: [AuthGuard] },
-  { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [AuthGuard] },
+  { path: 'pets', component: PetsComponent, canActivate: [BreederGuard] },
+  { path: 'breedings', component: BreedingsComponent, canActivate: [BreederGuard] },
+  { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [BreederGuard] },
   {
     path: 'settings',
     component: SettingsComponent,
@@ -39,7 +44,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'general', pathMatch: 'full' },
       { path: 'general', component: GeneralSettingsComponent },
-      { path: 'locations', component: BreedingLocationsComponent },
+      { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] },
       { path: 'messages', component: MessagesListComponent },
       { path: 'messages/:id', component: MessageDetailComponent }
     ]

@@ -1,1 +1,126 @@
-<p>dashboard works!</p>
+<div class="container mx-auto p-6">
+  <!-- Breeder Dashboard -->
+  <div *ngIf="isBreeder" class="breeder-dashboard">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Breeder Dashboard</h1>
+      <p class="text-gray-600 mt-2">Welcome back, {{ currentUser?.name || currentUser?.email }}!</p>
+    </div>
+
+    <!-- Breeder Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Total Pets</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+          </div>
+          <i class="bi bi-card-list text-4xl text-blue-500"></i>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Active Breedings</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+          </div>
+          <i class="bi bi-water text-4xl text-green-500"></i>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Unread Messages</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+          </div>
+          <i class="bi bi-envelope text-4xl text-purple-500"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a [routerLink]="['/pets/add']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          <i class="bi bi-plus-circle text-2xl"></i>
+          <span class="font-medium">Add New Pet</span>
+        </a>
+        <a [routerLink]="['/breedings']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          <i class="bi bi-water text-2xl"></i>
+          <span class="font-medium">Manage Breedings</span>
+        </a>
+        <a [routerLink]="['/settings/messages']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          <i class="bi bi-envelope text-2xl"></i>
+          <span class="font-medium">View Messages</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Messages</h2>
+      <app-messages-list></app-messages-list>
+    </div>
+  </div>
+
+  <!-- Pet Seeker Dashboard -->
+  <div *ngIf="isPetSeeker" class="pet-seeker-dashboard">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Pet Seeker Dashboard</h1>
+      <p class="text-gray-600 mt-2">Welcome, {{ currentUser?.name || currentUser?.email }}!</p>
+    </div>
+
+    <!-- Pet Seeker Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Messages Sent</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+          </div>
+          <i class="bi bi-envelope text-4xl text-purple-500"></i>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm font-medium">Favorites</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+          </div>
+          <i class="bi bi-heart text-4xl text-red-500"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a [routerLink]="['/search']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          <i class="bi bi-search text-2xl"></i>
+          <span class="font-medium">Search Pets</span>
+        </a>
+        <a [routerLink]="['/settings/messages']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+          <i class="bi bi-envelope text-2xl"></i>
+          <span class="font-medium">View Messages</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Your Messages</h2>
+      <p class="text-gray-600 mb-4">View your conversations with breeders</p>
+      <app-messages-list></app-messages-list>
+    </div>
+  </div>
+
+  <!-- Fallback for unauthenticated or loading state -->
+  <div *ngIf="!isBreeder && !isPetSeeker" class="text-center py-12">
+    <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4"></i>
+    <p class="text-gray-600">Loading dashboard...</p>
+  </div>
+</div>

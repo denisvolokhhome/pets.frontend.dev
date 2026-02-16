@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   standalone: false,
@@ -16,7 +17,8 @@ export class LeftMenuComponent implements OnInit {
   constructor(
     private router: Router, 
     private loc: Location,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -34,5 +36,18 @@ export class LeftMenuComponent implements OnInit {
     this.isCollapsed = !this.isCollapsed;
     // Save state to localStorage
     localStorage.setItem('leftMenuCollapsed', this.isCollapsed.toString());
+  }
+
+  // Computed properties for user type checks
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+
+  get isPetSeeker(): boolean {
+    return this.authService.isPetSeeker;
+  }
+
+  get isAuthenticated(): boolean {
+    return this.authService.hasValidToken();
   }
 }

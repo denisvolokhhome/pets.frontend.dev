@@ -149,6 +149,13 @@
   text-decoration: underline;
 }
 
+.sender-email-text {
+  display: inline-block;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
 .message-date {
   display: flex;
   align-items: center;
@@ -371,6 +378,28 @@ textarea.form-control {
   display: flex;
   justify-content: center;
   padding: 1rem 0;
+}
+
+/* Info Message */
+.info-message {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.75rem;
+  color: #1e40af;
+}
+
+.info-message svg {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.info-message p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 /* Responsive Design */

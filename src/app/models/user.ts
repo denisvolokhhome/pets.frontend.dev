@@ -11,6 +11,7 @@ export interface IUser {
   is_active?: boolean;
   is_superuser?: boolean;
   is_verified?: boolean;
+  is_breeder: boolean;
 }
 
 export interface IProfileImageResponse {

@@ -55,6 +55,8 @@ import { ContactBreederComponent } from './components/contact-breeder/contact-br
 import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
+import { PetSeekerRegistrationComponent } from './components/pet-seeker-registration/pet-seeker-registration.component';
+import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -107,6 +109,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     NotificationIconComponent,
     MessagesListComponent,
     MessageDetailComponent,
+    PetSeekerRegistrationComponent,
+    GuestToAccountComponent,
   ],
   imports: [
     BrowserModule,

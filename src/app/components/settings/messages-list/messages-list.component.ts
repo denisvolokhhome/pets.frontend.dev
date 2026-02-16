@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, MessageListItem } from '../../../services/message.service';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -27,6 +28,7 @@ export class MessagesListComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
+    private authService: AuthService,
     private router: Router,
     private toastr: ToastrService
   ) {}
@@ -154,12 +156,22 @@ export class MessagesListComponent implements OnInit {
    * Get status badge class
    */
   getStatusClass(message: MessageListItem): string {
-    if (message.responded_at) {
-      return 'status-responded';
-    } else if (message.is_read) {
-      return 'status-read';
+    if (this.isPetSeeker) {
+      // Pet seeker view: highlight pending responses
+      if (message.responded_at) {
+        return 'status-responded';
+      } else {
+        return 'status-pending';
+      }
     } else {
-      return 'status-unread';
+      // Breeder view: show read status
+      if (message.responded_at) {
+        return 'status-responded';
+      } else if (message.is_read) {
+        return 'status-read';
+      } else {
+        return 'status-unread';
+      }
     }
   }
 
@@ -167,12 +179,22 @@ export class MessagesListComponent implements OnInit {
    * Get status text
    */
   getStatusText(message: MessageListItem): string {
-    if (message.responded_at) {
-      return 'Responded';
-    } else if (message.is_read) {
-      return 'Read';
+    if (this.isPetSeeker) {
+      // Pet seeker view: show if breeder has responded
+      if (message.responded_at) {
+        return 'Responded';
+      } else {
+        return 'Pending';
+      }
     } else {
-      return 'New';
+      // Breeder view: show read status
+      if (message.responded_at) {
+        return 'Responded';
+      } else if (message.is_read) {
+        return 'Read';
+      } else {
+        return 'New';
+      }
     }
   }
 
@@ -181,5 +203,49 @@ export class MessagesListComponent implements OnInit {
    */
   refresh(): void {
     this.loadMessages();
+  }
+
+  /**
+   * Check if current user is a breeder
+   */
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+
+  /**
+   * Check if current user is a pet seeker
+   */
+  get isPetSeeker(): boolean {
+    return this.authService.isPetSeeker;
+  }
+
+  /**
+   * Get appropriate subtitle based on user type
+   */
+  getSubtitle(): string {
+    if (this.isBreeder) {
+      return 'Manage inquiries from potential customers';
+    } else {
+      return 'View your conversations with breeders';
+    }
+  }
+
+  /**
+   * Get appropriate empty state message based on user type and filter
+   */
+  getEmptyStateMessage(): string {
+    if (this.statusFilter === 'all') {
+      return this.isBreeder 
+        ? "You haven't received any messages from potential customers."
+        : "You haven't sent any messages to breeders yet.";
+    } else if (this.statusFilter === 'unread') {
+      return this.isBreeder
+        ? "You don't have any unread messages."
+        : "You don't have any messages without responses.";
+    } else {
+      return this.isBreeder
+        ? "You don't have any read messages."
+        : "You don't have any messages with responses.";
+    }
   }
 }

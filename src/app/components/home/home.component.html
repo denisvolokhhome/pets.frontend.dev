@@ -39,15 +39,15 @@
           <div class="hero-cta-buttons" role="group" aria-label="Get started options">
             <button 
               class="px-6 py-3 text-lg bg-primary text-white rounded-lg hover:bg-red-500 transition-colors cta-breeder" 
-              (click)="navigateToRegister()"
+              (click)="navigateToBreederRegister()"
               aria-label="Register as a breeder">
-              <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>I'm a Breeder
+              <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>Register as Breeder
             </button>
             <button 
               class="px-6 py-3 text-lg bg-secondary text-white rounded-lg hover:bg-teal-500 transition-colors cta-pet-seeker" 
-              (click)="navigateToSearchPets()"
-              aria-label="Find pets near you">
-              <i class="bi bi-search mr-2" aria-hidden="true"></i>Find a Pet
+              (click)="navigateToPetSeekerRegister()"
+              aria-label="Register as a pet seeker">
+              <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>Register as Pet Seeker
             </button>
           </div>
         </div>
@@ -153,12 +153,20 @@
       <div class="w-full lg:w-8/12 text-center">
         <h2 id="cta-footer-heading" class="cta-footer-title">Ready to Get Started?</h2>
         <p class="cta-footer-subtitle">Join Breedly today and connect with responsible breeders or find your perfect companion</p>
-        <button 
-          class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button" 
-          (click)="navigateToRegister()"
-          aria-label="Sign up for Breedly">
-          <i class="bi bi-rocket-takeoff mr-2" aria-hidden="true"></i>Sign Up Now
-        </button>
+        <div class="flex flex-wrap justify-center gap-4">
+          <button 
+            class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button" 
+            (click)="navigateToBreederRegister()"
+            aria-label="Sign up as a breeder">
+            <i class="bi bi-person-badge mr-2" aria-hidden="true"></i>Register as Breeder
+          </button>
+          <button 
+            class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button" 
+            (click)="navigateToPetSeekerRegister()"
+            aria-label="Sign up as a pet seeker">
+            <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>Register as Pet Seeker
+          </button>
+        </div>
       </div>
     </div>
   </div>

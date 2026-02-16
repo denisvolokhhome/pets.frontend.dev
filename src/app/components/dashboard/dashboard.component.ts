@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   standalone: false,
@@ -6,6 +7,26 @@ import { Component } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  
+  constructor(public authService: AuthService) {}
 
+  ngOnInit(): void {
+    // Load user data if not already loaded
+    if (!this.authService.currentUser) {
+      this.authService.IsLoggedIn().subscribe();
+    }
+  }
+
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+
+  get isPetSeeker(): boolean {
+    return this.authService.isPetSeeker;
+  }
+
+  get currentUser() {
+    return this.authService.currentUser;
+  }
 }

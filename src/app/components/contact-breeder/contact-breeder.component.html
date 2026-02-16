@@ -1,101 +1,159 @@
 <div class="modal-overlay" *ngIf="visible" (click)="closeDialog()">
   <div class="modal-dialog" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2 class="modal-title">Contact {{ breederName }}</h2>
-      <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <!-- Contact Form View -->
+    <div *ngIf="!showAccountPrompt">
+      <div class="modal-header">
+        <h2 class="modal-title">Contact {{ breederName }}</h2>
+        <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <p class="modal-description">
+            Send a message to this breeder. They will receive your contact information and message.
+          </p>
+
+          <!-- Full Name Field -->
+          <div class="form-group">
+            <label for="sender_name" class="form-label">
+              Full Name <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="sender_name"
+              formControlName="sender_name"
+              class="form-control"
+              [class.is-invalid]="senderName?.invalid && senderName?.touched"
+              placeholder="Enter your full name"
+              maxlength="255"
+            />
+            <div class="invalid-feedback" *ngIf="senderName?.invalid && senderName?.touched">
+              <span *ngIf="senderName?.errors?.['required']">Full name is required</span>
+              <span *ngIf="senderName?.errors?.['minlength']">Name must be at least 2 characters</span>
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="sender_email" class="form-label">
+              Email Address <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="sender_email"
+              formControlName="sender_email"
+              class="form-control"
+              [class.is-invalid]="senderEmail?.invalid && senderEmail?.touched"
+              placeholder="your.email@example.com"
+              maxlength="255"
+            />
+            <div class="invalid-feedback" *ngIf="senderEmail?.invalid && senderEmail?.touched">
+              <span *ngIf="senderEmail?.errors?.['required']">Email is required</span>
+              <span *ngIf="senderEmail?.errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <!-- Message Field -->
+          <div class="form-group">
+            <label for="message" class="form-label">
+              Message <span class="optional">(optional)</span>
+            </label>
+            <textarea
+              id="message"
+              formControlName="message"
+              class="form-control"
+              [class.is-invalid]="message?.invalid && message?.touched"
+              placeholder="Tell the breeder about your interest..."
+              rows="5"
+              maxlength="2000"
+            ></textarea>
+            <div class="char-count">
+              {{ message?.value?.length || 0 }} / 2000 characters
+            </div>
+            <div class="invalid-feedback" *ngIf="message?.invalid && message?.touched">
+              <span *ngIf="message?.errors?.['maxlength']">Message is too long (max 2000 characters)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCancel()"
+            [disabled]="isSubmitting"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="contactForm.invalid || isSubmitting"
+          >
+            <span *ngIf="!isSubmitting">Send Message</span>
+            <span *ngIf="isSubmitting">
+              <span class="spinner"></span> Sending...
+            </span>
+          </button>
+        </div>
+      </form>
     </div>
 
-    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+    <!-- Account Creation Prompt View -->
+    <div *ngIf="showAccountPrompt">
+      <div class="modal-header">
+        <h2 class="modal-title">Create an Account?</h2>
+        <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
       <div class="modal-body">
-        <p class="modal-description">
-          Send a message to this breeder. They will receive your contact information and message.
+        <div class="prompt-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        
+        <h3 class="prompt-title">Message Sent Successfully!</h3>
+        
+        <p class="prompt-description">
+          Your message has been sent to {{ breederName }}. To receive and read their reply, you'll need to create an account.
         </p>
 
-        <!-- Full Name Field -->
-        <div class="form-group">
-          <label for="sender_name" class="form-label">
-            Full Name <span class="required">*</span>
-          </label>
-          <input
-            type="text"
-            id="sender_name"
-            formControlName="sender_name"
-            class="form-control"
-            [class.is-invalid]="senderName?.invalid && senderName?.touched"
-            placeholder="Enter your full name"
-            maxlength="255"
-          />
-          <div class="invalid-feedback" *ngIf="senderName?.invalid && senderName?.touched">
-            <span *ngIf="senderName?.errors?.['required']">Full name is required</span>
-            <span *ngIf="senderName?.errors?.['minlength']">Name must be at least 2 characters</span>
-          </div>
+        <div class="prompt-benefits">
+          <h4 class="benefits-title">With an account, you can:</h4>
+          <ul class="benefits-list">
+            <li>Read breeder replies to your messages</li>
+            <li>Track all your conversations in one place</li>
+            <li>Save your favorite breeders and pets</li>
+            <li>Get notified when breeders respond</li>
+          </ul>
         </div>
 
-        <!-- Email Field -->
-        <div class="form-group">
-          <label for="sender_email" class="form-label">
-            Email Address <span class="required">*</span>
-          </label>
-          <input
-            type="email"
-            id="sender_email"
-            formControlName="sender_email"
-            class="form-control"
-            [class.is-invalid]="senderEmail?.invalid && senderEmail?.touched"
-            placeholder="your.email@example.com"
-            maxlength="255"
-          />
-          <div class="invalid-feedback" *ngIf="senderEmail?.invalid && senderEmail?.touched">
-            <span *ngIf="senderEmail?.errors?.['required']">Email is required</span>
-            <span *ngIf="senderEmail?.errors?.['email']">Please enter a valid email address</span>
-          </div>
-        </div>
-
-        <!-- Message Field -->
-        <div class="form-group">
-          <label for="message" class="form-label">
-            Message <span class="optional">(optional)</span>
-          </label>
-          <textarea
-            id="message"
-            formControlName="message"
-            class="form-control"
-            [class.is-invalid]="message?.invalid && message?.touched"
-            placeholder="Tell the breeder about your interest..."
-            rows="5"
-            maxlength="2000"
-          ></textarea>
-          <div class="char-count">
-            {{ message?.value?.length || 0 }} / 2000 characters
-          </div>
-          <div class="invalid-feedback" *ngIf="message?.invalid && message?.touched">
-            <span *ngIf="message?.errors?.['maxlength']">Message is too long (max 2000 characters)</span>
-          </div>
-        </div>
+        <p class="prompt-email">
+          We'll use your email: <strong>{{ submittedEmail }}</strong>
+        </p>
       </div>
 
       <div class="modal-footer">
         <button
           type="button"
           class="btn btn-secondary"
-          (click)="onCancel()"
-          [disabled]="isSubmitting"
+          (click)="onSkipAccountCreation()"
         >
-          Cancel
+          Maybe Later
         </button>
         <button
-          type="submit"
+          type="button"
           class="btn btn-primary"
-          [disabled]="contactForm.invalid || isSubmitting"
+          (click)="onCreateAccount()"
         >
-          <span *ngIf="!isSubmitting">Send Message</span>
-          <span *ngIf="isSubmitting">
-            <span class="spinner"></span> Sending...
-          </span>
+          Create Account
         </button>
       </div>
-    </form>
+    </div>
   </div>
 </div>

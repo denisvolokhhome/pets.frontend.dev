@@ -105,8 +105,12 @@ export class HomeComponent {
     return this.selectedFlow === 'breeder' ? this.breederSteps : this.petSeekerSteps;
   }
 
-  navigateToRegister(): void {
+  navigateToBreederRegister(): void {
     this.router.navigate(['/register']);
+  }
+
+  navigateToPetSeekerRegister(): void {
+    this.router.navigate(['/register/pet-seeker']);
   }
 
   navigateToPets(): void {

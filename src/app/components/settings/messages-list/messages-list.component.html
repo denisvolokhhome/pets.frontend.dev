@@ -4,9 +4,9 @@
     <div class="header-content">
       <h1 class="page-title">Messages</h1>
       <p class="page-subtitle">
-        Manage inquiries from potential customers
+        {{ getSubtitle() }}
         <span *ngIf="unreadCount > 0" class="unread-indicator">
-          ({{ unreadCount }} unread)
+          ({{ unreadCount }} {{ isBreeder ? 'unread' : 'pending response' }})
         </span>
       </p>
     </div>
@@ -71,9 +71,7 @@
       </svg>
     </div>
     <h3>No messages yet</h3>
-    <p *ngIf="statusFilter === 'all'">You haven't received any messages from potential customers.</p>
-    <p *ngIf="statusFilter === 'unread'">You don't have any unread messages.</p>
-    <p *ngIf="statusFilter === 'read'">You don't have any read messages.</p>
+    <p>{{ getEmptyStateMessage() }}</p>
   </div>
 
   <!-- Messages List -->
@@ -82,6 +80,7 @@
       *ngFor="let message of messages"
       class="message-item"
       [class.unread]="!message.is_read"
+      [class.pending-response]="isPetSeeker && !message.responded_at"
       (click)="viewMessage(message.id)">
       
       <!-- Message Status Indicator -->
@@ -89,7 +88,7 @@
 
       <!-- Message Content -->
       <div class="message-content">
-        <!-- Sender Info -->
+        <!-- Sender Info (Breeder View) or Recipient Info (Pet Seeker View) -->
         <div class="message-header">
           <div class="sender-info">
             <span class="sender-name">{{ message.sender_name }}</span>

@@ -264,3 +264,75 @@ textarea.form-control {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
+
+/* Account Creation Prompt Styles */
+.prompt-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.prompt-icon svg {
+  width: 4rem;
+  height: 4rem;
+  color: #10b981;
+}
+
+.prompt-title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.prompt-description {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.prompt-benefits {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.benefits-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.75rem 0;
+}
+
+.benefits-list {
+  margin: 0;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}
+
+.benefits-list li {
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.benefits-list li:last-child {
+  margin-bottom: 0;
+}
+
+.prompt-email {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.prompt-email strong {
+  color: #111827;
+  font-weight: 600;
+}

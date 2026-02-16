@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { ContactBreederComponent } from './contact-breeder.component';
@@ -13,27 +14,31 @@ describe('ContactBreederComponent', () => {
   let fixture: ComponentFixture<ContactBreederComponent>;
   let messageService: jasmine.SpyObj<MessageService>;
   let toastrService: jasmine.SpyObj<ToastrService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     const messageServiceSpy = jasmine.createSpyObj('MessageService', ['sendMessage']);
     const toastrServiceSpy = jasmine.createSpyObj('ToastrService', ['success', 'error']);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
+      declarations: [ContactBreederComponent],
       imports: [ 
-        ContactBreederComponent, 
         ReactiveFormsModule, 
         CommonModule,
         HttpClientTestingModule 
       ],
       providers: [
         { provide: MessageService, useValue: messageServiceSpy },
-        { provide: ToastrService, useValue: toastrServiceSpy }
+        { provide: ToastrService, useValue: toastrServiceSpy },
+        { provide: Router, useValue: routerSpy }
       ]
     })
     .compileComponents();
 
     messageService = TestBed.inject(MessageService) as jasmine.SpyObj<MessageService>;
     toastrService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
   beforeEach(() => {
@@ -146,7 +151,7 @@ describe('ContactBreederComponent', () => {
         breeder_id: 'breeder-123',
         sender_name: 'Jane Smith',
         sender_email: 'jane@example.com',
-        message: ''
+        message: undefined
       });
     });
 
@@ -165,7 +170,11 @@ describe('ContactBreederComponent', () => {
 
       expect(toastrService.error).toHaveBeenCalledWith(
         'Breeder not found',
-        'Error'
+        'Error',
+        jasmine.objectContaining({
+          timeOut: 5000,
+          progressBar: true
+        })
       );
       expect(component.isSubmitting).toBe(false);
     });
@@ -296,6 +305,121 @@ describe('ContactBreederComponent', () => {
     it('should accept breederName input', () => {
       component.breederName = 'New Breeder Name';
       expect(component.breederName).toBe('New Breeder Name');
+    });
+  });
+
+  /**
+   * Unit Tests for Task 17.4: Contact Flow with Account Prompt
+   * 
+   * Tests for Requirements 7.4, 7.5, 8.1, 8.3
+   */
+  describe('Account Creation Prompt', () => {
+    it('should show account prompt after successful guest message submission', () => {
+      const mockResponse = {
+        success: true,
+        message: 'Your message has been sent to the breeder'
+      };
+      messageService.sendMessage.and.returnValue(of(mockResponse));
+
+      component.contactForm.patchValue({
+        sender_name: 'John Doe',
+        sender_email: 'john@example.com',
+        message: 'I am interested'
+      });
+
+      component.onSubmit();
+
+      expect(component.showAccountPrompt).toBe(true);
+      expect(component.submittedEmail).toBe('john@example.com');
+    });
+
+    it('should NOT show account prompt if message submission fails', () => {
+      const mockError = { message: 'Network error' };
+      messageService.sendMessage.and.returnValue(throwError(() => mockError));
+
+      component.contactForm.patchValue({
+        sender_name: 'John Doe',
+        sender_email: 'john@example.com'
+      });
+
+      component.onSubmit();
+
+      expect(component.showAccountPrompt).toBe(false);
+      expect(component.submittedEmail).toBe('');
+    });
+
+    it('should store submitted email for account prompt', () => {
+      const mockResponse = {
+        success: true,
+        message: 'Your message has been sent to the breeder'
+      };
+      messageService.sendMessage.and.returnValue(of(mockResponse));
+
+      const testEmail = 'test@example.com';
+      component.contactForm.patchValue({
+        sender_name: 'Test User',
+        sender_email: testEmail,
+        message: 'Test message'
+      });
+
+      component.onSubmit();
+
+      expect(component.submittedEmail).toBe(testEmail);
+    });
+
+    it('should pre-fill email from message submission in account prompt', () => {
+      const mockResponse = {
+        success: true,
+        message: 'Your message has been sent to the breeder'
+      };
+      messageService.sendMessage.and.returnValue(of(mockResponse));
+
+      const testEmail = 'prefilled@example.com';
+      component.contactForm.patchValue({
+        sender_name: 'Test User',
+        sender_email: testEmail
+      });
+
+      component.onSubmit();
+
+      // Verify email is stored for pre-filling
+      expect(component.submittedEmail).toBe(testEmail);
+      expect(component.showAccountPrompt).toBe(true);
+    });
+  });
+
+  describe('Account Prompt Actions', () => {
+    beforeEach(() => {
+      // Set up component as if message was just sent
+      component.showAccountPrompt = true;
+      component.submittedEmail = 'test@example.com';
+      component.visible = true;
+    });
+
+    it('should close dialog and reset state when user skips account creation', () => {
+      component.onSkipAccountCreation();
+
+      expect(component.visible).toBe(false);
+      expect(component.showAccountPrompt).toBe(false);
+      expect(component.submittedEmail).toBe('');
+    });
+
+    it('should close dialog when user creates account', () => {
+      component.onCreateAccount();
+
+      expect(component.visible).toBe(false);
+      expect(component.showAccountPrompt).toBe(false);
+    });
+
+    it('should reset all state when closing dialog', () => {
+      component.showAccountPrompt = true;
+      component.submittedEmail = 'test@example.com';
+
+      component.closeDialog();
+
+      expect(component.showAccountPrompt).toBe(false);
+      expect(component.submittedEmail).toBe('');
+      expect(component.visible).toBe(false);
     });
   });
 });

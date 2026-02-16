@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, Message } from '../../../services/message.service';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -21,6 +22,7 @@ export class MessageDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
@@ -158,5 +160,19 @@ export class MessageDetailComponent implements OnInit {
    */
   hasResponse(): boolean {
     return !!this.message?.response_text;
+  }
+
+  /**
+   * Check if current user is a breeder
+   */
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+
+  /**
+   * Check if current user is a pet seeker
+   */
+  get isPetSeeker(): boolean {
+    return this.authService.isPetSeeker;
   }
 }

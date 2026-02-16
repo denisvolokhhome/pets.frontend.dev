@@ -28,9 +28,14 @@ describe('HomeComponent', () => {
   });
 
   describe('Navigation', () => {
-    it('should navigate to /register when navigateToRegister is called', () => {
-      component.navigateToRegister();
+    it('should navigate to /register when navigateToBreederRegister is called', () => {
+      component.navigateToBreederRegister();
       expect(router.navigate).toHaveBeenCalledWith(['/register']);
+    });
+
+    it('should navigate to /register/pet-seeker when navigateToPetSeekerRegister is called', () => {
+      component.navigateToPetSeekerRegister();
+      expect(router.navigate).toHaveBeenCalledWith(['/register/pet-seeker']);
     });
 
     it('should navigate to /pets when navigateToPets is called', () => {
@@ -62,6 +67,44 @@ describe('HomeComponent', () => {
     it('should return pet seeker steps when petSeeker flow is selected', () => {
       component.selectFlow('petSeeker');
       expect(component.currentSteps).toBe(component.petSeekerSteps);
+    });
+  });
+
+  describe('Account Type Selection - Requirements 2.1, 2.4, 2.5', () => {
+    it('should display breeder registration button in hero section', () => {
+      const compiled = fixture.nativeElement;
+      const breederButton = compiled.querySelector('.cta-breeder');
+      expect(breederButton).toBeTruthy();
+      expect(breederButton.textContent).toContain('Register as Breeder');
+    });
+
+    it('should display pet seeker registration button in hero section', () => {
+      const compiled = fixture.nativeElement;
+      const petSeekerButton = compiled.querySelector('.cta-pet-seeker');
+      expect(petSeekerButton).toBeTruthy();
+      expect(petSeekerButton.textContent).toContain('Register as Pet Seeker');
+    });
+
+    it('should navigate to breeder registration when breeder button is clicked', () => {
+      const compiled = fixture.nativeElement;
+      const breederButton = compiled.querySelector('.cta-breeder');
+      breederButton.click();
+      expect(router.navigate).toHaveBeenCalledWith(['/register']);
+    });
+
+    it('should navigate to pet seeker registration when pet seeker button is clicked', () => {
+      const compiled = fixture.nativeElement;
+      const petSeekerButton = compiled.querySelector('.cta-pet-seeker');
+      petSeekerButton.click();
+      expect(router.navigate).toHaveBeenCalledWith(['/register/pet-seeker']);
+    });
+
+    it('should display both registration options in CTA footer section', () => {
+      const compiled = fixture.nativeElement;
+      const footerButtons = compiled.querySelectorAll('.cta-footer-button');
+      expect(footerButtons.length).toBe(2);
+      expect(footerButtons[0].textContent).toContain('Register as Breeder');
+      expect(footerButtons[1].textContent).toContain('Register as Pet Seeker');
     });
   });
 });

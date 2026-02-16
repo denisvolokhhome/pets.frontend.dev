@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <!-- Sender Information Card -->
+    <!-- Sender Information Card (Breeder View) or Your Message Card (Pet Seeker View) -->
     <div class="sender-card">
       <div class="sender-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -35,9 +35,12 @@
       </div>
       <div class="sender-details">
         <h2 class="sender-name">{{ message.sender_name }}</h2>
-        <a [href]="'mailto:' + message.sender_email" class="sender-email">
+        <a *ngIf="isBreeder" [href]="'mailto:' + message.sender_email" class="sender-email">
           {{ message.sender_email }}
         </a>
+        <span *ngIf="isPetSeeker" class="sender-email-text">
+          {{ message.sender_email }}
+        </span>
         <p class="message-date">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
@@ -60,22 +63,22 @@
     <!-- Existing Response (if any) -->
     <div *ngIf="hasResponse()" class="response-card">
       <div class="response-header">
-        <h3 class="card-title">Your Response</h3>
+        <h3 class="card-title">{{ isBreeder ? 'Your Response' : 'Breeder Response' }}</h3>
         <span class="response-date">{{ formatDate(message.responded_at!) }}</span>
       </div>
       <div class="response-text">
         <p>{{ message.response_text }}</p>
       </div>
       <button 
-        *ngIf="!showResponseForm"
+        *ngIf="!showResponseForm && isBreeder"
         class="btn-secondary"
         (click)="toggleResponseForm()">
         Edit Response
       </button>
     </div>
 
-    <!-- Response Form -->
-    <div *ngIf="showResponseForm" class="response-form-card">
+    <!-- Response Form (Breeder Only) -->
+    <div *ngIf="showResponseForm && isBreeder" class="response-form-card">
       <h3 class="card-title">
         {{ hasResponse() ? 'Edit Response' : 'Send Response' }}
       </h3>
@@ -128,14 +131,24 @@
       </form>
     </div>
 
-    <!-- Show Response Button (if not responded yet and form is hidden) -->
-    <div *ngIf="!hasResponse() && !showResponseForm" class="action-section">
+    <!-- Show Response Button (if not responded yet and form is hidden) - Breeder Only -->
+    <div *ngIf="!hasResponse() && !showResponseForm && isBreeder" class="action-section">
       <button class="btn-primary btn-large" (click)="toggleResponseForm()">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
         Respond to Message
       </button>
+    </div>
+
+    <!-- Pet Seeker Info Message -->
+    <div *ngIf="isPetSeeker && !hasResponse()" class="info-message">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <p>The breeder has not responded to your message yet. You will see their response here when they reply.</p>
     </div>
   </div>
 </div>
