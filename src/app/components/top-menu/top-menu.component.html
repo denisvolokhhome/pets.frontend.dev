@@ -22,17 +22,8 @@
 
         <!-- Desktop menu -->
         <div class="hidden lg:flex lg:items-center lg:space-x-4 lg:flex-1 lg:ml-8">
-          <ul class="flex space-x-4 flex-1">
-            <li *ngIf="this.route != '' && this.route != '/' && this.route != '/login'">
-              <a
-                [ngClass]="this.route == '' || this.route == '/' ? 'text-white font-semibold' : 'text-white/90 hover:text-white'"
-                href="/"
-                class="px-3 py-2 transition-colors"
-                [attr.aria-current]="this.route == '' || this.route == '/' ? 'page' : null"
-                >Home</a
-              >
-            </li>
-          </ul>
+          <!-- Spacer to push auth links to the right -->
+          <div class="flex-1"></div>
           
           <!-- Auth links (not logged in) -->
           <div class="flex items-center" *ngIf="!checkToken">
@@ -90,18 +81,6 @@
         [class.max-h-96]="isMobileMenuOpen"
         id="navbarNav">
         <div class="py-4 space-y-2 border-t border-white/20">
-          <ul class="space-y-2">
-            <li *ngIf="this.route != '' && this.route != '/' && this.route != '/login'">
-              <a
-                [ngClass]="this.route == '' || this.route == '/' ? 'text-white font-semibold bg-white/10' : 'text-white/90 hover:text-white hover:bg-white/5'"
-                href="/"
-                class="block px-3 py-2 rounded-lg transition-colors"
-                [attr.aria-current]="this.route == '' || this.route == '/' ? 'page' : null"
-                >Home</a
-              >
-            </li>
-          </ul>
-          
           <!-- Auth links (not logged in) - Mobile -->
           <div *ngIf="!checkToken">
             <ul class="space-y-2">

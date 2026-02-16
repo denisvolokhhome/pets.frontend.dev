@@ -42,8 +42,25 @@ export class LoginComponent {
         this.loginForm.patchValue({
           email: params['email']
         });
-        // Show a helpful message
-        this.toastr.info('Please enter your password to sign in.', 'Welcome Back');
+        
+        // Use setTimeout to avoid Angular change detection errors
+        setTimeout(() => {
+          // Check if redirected due to existing account
+          if (params['accountExists'] === 'true') {
+            this.toastr.error(
+              'An account with this email already exists. Please sign in instead.',
+              'Account Already Exists',
+              {
+                timeOut: 8000,
+                progressBar: true,
+                closeButton: true
+              }
+            );
+          } else {
+            // Show a helpful message for other redirects
+            this.toastr.info('Please enter your password to sign in.', 'Welcome Back');
+          }
+        }, 100);
       }
     });
 

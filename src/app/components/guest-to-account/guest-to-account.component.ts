@@ -83,15 +83,28 @@ export class GuestToAccountComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           console.error('Registration error:', error);
 
-          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS') {
+          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
+              (error.status === 400 && error.error?.detail?.includes('already exists'))) {
             const email = this.registerForm.get('email')?.value;
-            this.toastr.info(
-              'If you already have an account, please sign in.',
-              'Account Check'
+            
+            // Show clear message that account exists
+            this.toastr.error(
+              'An account with this email already exists. Please sign in instead.',
+              'Account Already Exists',
+              {
+                timeOut: 8000,
+                progressBar: true,
+                closeButton: true,
+                tapToDismiss: true
+              }
             );
-            this.router.navigate(['login'], {
-              queryParams: { email: email },
-            });
+            
+            // Redirect to login with email pre-filled after a short delay
+            setTimeout(() => {
+              this.router.navigate(['login'], {
+                queryParams: { email: email },
+              });
+            }, 2000);
           } else if (error.status === 400) {
             this.toastr.error(
               'Please check your information and try again.',

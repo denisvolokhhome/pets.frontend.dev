@@ -66,17 +66,28 @@ export class RegisterComponent {
           console.error('Registration error:', error);
           
           // Handle specific error cases
-          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS') {
-            // Security: Don't reveal that email exists, redirect to login instead
+          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
+              (error.status === 400 && error.error?.detail?.includes('already exists'))) {
             const email = this.registerForm.value.email;
-            this.toastr.info(
-              'If you already have an account, please sign in.',
-              'Account Check'
+            
+            // Show clear message that account exists
+            this.toastr.error(
+              'An account with this email already exists. Please sign in instead.',
+              'Account Already Exists',
+              {
+                timeOut: 8000,
+                progressBar: true,
+                closeButton: true,
+                tapToDismiss: true
+              }
             );
-            // Navigate to login with email pre-filled
-            this.router.navigate(['login'], { 
-              queryParams: { email: email }
-            });
+            
+            // Navigate to login with email pre-filled after a short delay
+            setTimeout(() => {
+              this.router.navigate(['login'], { 
+                queryParams: { email: email }
+              });
+            }, 2000);
           } else if (error.error?.detail) {
             // Handle other specific error messages from the API
             this.toastr.error('Please check your information and try again.', 'Registration Failed');

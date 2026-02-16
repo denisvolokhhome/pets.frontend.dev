@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -16,7 +16,8 @@ export class PetSeekerRegistrationComponent {
     private builder: FormBuilder,
     private toastr: ToastrService,
     private service: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     // If logged in, navigate to dashboard
     this.service.IsLoggedIn().subscribe((res) => {
@@ -61,15 +62,19 @@ export class PetSeekerRegistrationComponent {
         },
         error: (error: HttpErrorResponse) => {
           console.error('Registration error:', error);
+          console.error('Error detail:', error.error?.detail);
+          console.error('Error status:', error.status);
 
-          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS') {
+          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
+              (error.status === 400 && error.error?.detail?.includes('already exists'))) {
             const email = this.registerForm.value.email;
-            this.toastr.info(
-              'If you already have an account, please sign in.',
-              'Account Check'
-            );
+            
+            // Navigate to login with a flag to show the message there
             this.router.navigate(['login'], {
-              queryParams: { email: email },
+              queryParams: { 
+                email: email,
+                accountExists: 'true'
+              },
             });
           } else if (error.status === 400) {
             this.toastr.error(
