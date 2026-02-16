@@ -41,10 +41,31 @@
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && this.route !== '/register'">/</span>
-              <!-- Show Get Started when NOT on register page -->
-              <li *ngIf="this.route !== '/register'">
-                <a href="/register" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Get Started</a>
+              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && this.route !== '/register' && this.route !== '/register/pet-seeker'">/</span>
+              <!-- Show Get Started dropdown when NOT on register pages -->
+              <li *ngIf="this.route !== '/register' && this.route !== '/register/pet-seeker'" class="relative get-started-dropdown">
+                <button 
+                  class="px-3 py-2 text-white/90 hover:text-white transition-colors flex items-center gap-1"
+                  (mouseenter)="showGetStartedDropdown = true"
+                  (mouseleave)="showGetStartedDropdown = false"
+                  type="button">
+                  Get Started
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div 
+                  class="dropdown-menu"
+                  [class.show]="showGetStartedDropdown"
+                  (mouseenter)="showGetStartedDropdown = true"
+                  (mouseleave)="showGetStartedDropdown = false">
+                  <a href="/register" class="dropdown-item">
+                    <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
+                  </a>
+                  <a href="/register/pet-seeker" class="dropdown-item">
+                    <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
+                  </a>
+                </div>
               </li>
             </ul>
           </div>
@@ -88,9 +109,15 @@
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
               </li>
-              <!-- Show Get Started when NOT on register page -->
-              <li *ngIf="this.route !== '/register'">
-                <a href="/register" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Get Started</a>
+              <!-- Show Get Started options when NOT on register pages -->
+              <li *ngIf="this.route !== '/register' && this.route !== '/register/pet-seeker'">
+                <div class="px-3 py-2 text-white/70 text-sm font-semibold">Get Started</div>
+                <a href="/register" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                  <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
+                </a>
+                <a href="/register/pet-seeker" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                  <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
+                </a>
               </li>
             </ul>
           </div>

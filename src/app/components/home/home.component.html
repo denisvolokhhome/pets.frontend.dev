@@ -36,15 +36,27 @@
         <div class="w-full lg:w-10/12 text-center">
           <h1 id="hero-heading" class="hero-title">Find Your Perfect Companion with Breedly</h1>
           <p class="hero-subtitle">Connecting responsible breeders with loving families</p>
-          <div class="hero-cta-buttons" role="group" aria-label="Get started options">
+          
+          <!-- Main Search Button -->
+          <div class="hero-main-cta" role="group" aria-label="Search for pets">
             <button 
-              class="px-6 py-3 text-lg bg-primary text-white rounded-lg hover:bg-red-500 transition-colors cta-breeder" 
+              class="cta-search-main" 
+              (click)="navigateToSearchPets()"
+              aria-label="Search for pets on map">
+              <i class="bi bi-geo-alt-fill mr-2" aria-hidden="true"></i>Find Your Pet
+            </button>
+          </div>
+
+          <!-- Secondary Registration Buttons -->
+          <div class="hero-cta-buttons" role="group" aria-label="Registration options">
+            <button 
+              class="cta-breeder" 
               (click)="navigateToBreederRegister()"
               aria-label="Register as a breeder">
               <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>Register as Breeder
             </button>
             <button 
-              class="px-6 py-3 text-lg bg-secondary text-white rounded-lg hover:bg-teal-500 transition-colors cta-pet-seeker" 
+              class="cta-pet-seeker" 
               (click)="navigateToPetSeekerRegister()"
               aria-label="Register as a pet seeker">
               <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>Register as Pet Seeker
@@ -153,6 +165,18 @@
       <div class="w-full lg:w-8/12 text-center">
         <h2 id="cta-footer-heading" class="cta-footer-title">Ready to Get Started?</h2>
         <p class="cta-footer-subtitle">Join Breedly today and connect with responsible breeders or find your perfect companion</p>
+        
+        <!-- Main Search Button -->
+        <div class="mb-4">
+          <button 
+            class="cta-footer-search-main" 
+            (click)="navigateToSearchPets()"
+            aria-label="Search for pets on map">
+            <i class="bi bi-geo-alt-fill mr-2" aria-hidden="true"></i>Find Your Pet
+          </button>
+        </div>
+
+        <!-- Secondary Registration Buttons -->
         <div class="flex flex-wrap justify-center gap-4">
           <button 
             class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button" 

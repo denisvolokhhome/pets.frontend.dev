@@ -15,6 +15,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   route: any;
   isLoggedIn: boolean = false;
   isMobileMenuOpen: boolean = false;
+  showGetStartedDropdown: boolean = false;
   private authSubscription?: Subscription;
   private routerSubscription?: Subscription;
 
