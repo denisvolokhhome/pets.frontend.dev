@@ -71,6 +71,12 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "allowedHosts": [
+              "breedly.com",
+              "localhost"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "pets.frontend.dev:build:production"

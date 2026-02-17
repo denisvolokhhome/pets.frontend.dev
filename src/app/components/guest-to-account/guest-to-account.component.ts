@@ -39,6 +39,33 @@ export class GuestToAccountComponent implements OnInit {
     name: this.builder.control(''), // Optional field
   });
 
+  passwordErrors: string[] = [];
+  emailExistsError: string | null = null;
+
+  validatePassword(): boolean {
+    this.passwordErrors = [];
+    const password = this.registerForm.value.password || '';
+    const email = this.registerForm.get('email')?.value || '';
+
+    if (password.length < 8) {
+      this.passwordErrors.push('Password must be at least 8 characters long');
+    }
+    if (password.length > 100) {
+      this.passwordErrors.push('Password must be at most 100 characters long');
+    }
+    if (!/[a-zA-Z]/.test(password)) {
+      this.passwordErrors.push('Password must contain at least one letter');
+    }
+    if (!/\d/.test(password)) {
+      this.passwordErrors.push('Password must contain at least one digit');
+    }
+    if (password.toLowerCase() === email.toLowerCase()) {
+      this.passwordErrors.push('Password cannot be the same as email');
+    }
+
+    return this.passwordErrors.length === 0;
+  }
+
   ngOnInit() {
     // Pre-fill email from query parameter
     this.route.queryParams.subscribe((params) => {
@@ -51,7 +78,14 @@ export class GuestToAccountComponent implements OnInit {
   }
 
   proceedRegistration() {
+    this.emailExistsError = null;
+    
     if (this.registerForm.valid) {
+      // Validate password before submitting
+      if (!this.validatePassword()) {
+        return;
+      }
+
       const formValue = {
         email: this.registerForm.get('email')?.value, // Get value from disabled field
         password: this.registerForm.value.password,
@@ -85,26 +119,7 @@ export class GuestToAccountComponent implements OnInit {
 
           if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
               (error.status === 400 && error.error?.detail?.includes('already exists'))) {
-            const email = this.registerForm.get('email')?.value;
-            
-            // Show clear message that account exists
-            this.toastr.error(
-              'An account with this email already exists. Please sign in instead.',
-              'Account Already Exists',
-              {
-                timeOut: 8000,
-                progressBar: true,
-                closeButton: true,
-                tapToDismiss: true
-              }
-            );
-            
-            // Redirect to login with email pre-filled after a short delay
-            setTimeout(() => {
-              this.router.navigate(['login'], {
-                queryParams: { email: email },
-              });
-            }, 2000);
+            this.emailExistsError = 'An account with this email already exists.';
           } else if (error.status === 400) {
             this.toastr.error(
               'Please check your information and try again.',

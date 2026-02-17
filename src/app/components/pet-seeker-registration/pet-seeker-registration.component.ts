@@ -37,8 +37,42 @@ export class PetSeekerRegistrationComponent {
     name: this.builder.control(''), // Optional field
   });
 
+  passwordErrors: string[] = [];
+  emailExistsError: string | null = null;
+
+  validatePassword(): boolean {
+    this.passwordErrors = [];
+    const password = this.registerForm.value.password || '';
+    const email = this.registerForm.value.email || '';
+
+    if (password.length < 8) {
+      this.passwordErrors.push('Password must be at least 8 characters long');
+    }
+    if (password.length > 100) {
+      this.passwordErrors.push('Password must be at most 100 characters long');
+    }
+    if (!/[a-zA-Z]/.test(password)) {
+      this.passwordErrors.push('Password must contain at least one letter');
+    }
+    if (!/\d/.test(password)) {
+      this.passwordErrors.push('Password must contain at least one digit');
+    }
+    if (password.toLowerCase() === email.toLowerCase()) {
+      this.passwordErrors.push('Password cannot be the same as email');
+    }
+
+    return this.passwordErrors.length === 0;
+  }
+
   proceedRegistration() {
+    this.emailExistsError = null;
+    
     if (this.registerForm.valid) {
+      // Validate password before submitting
+      if (!this.validatePassword()) {
+        return;
+      }
+
       const formValue = {
         email: this.registerForm.value.email,
         password: this.registerForm.value.password,
@@ -67,15 +101,8 @@ export class PetSeekerRegistrationComponent {
 
           if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
               (error.status === 400 && error.error?.detail?.includes('already exists'))) {
-            const email = this.registerForm.value.email;
-            
-            // Navigate to login with a flag to show the message there
-            this.router.navigate(['login'], {
-              queryParams: { 
-                email: email,
-                accountExists: 'true'
-              },
-            });
+            this.emailExistsError = 'An account with this email already exists.';
+            this.cdr.detectChanges();
           } else if (error.status === 400) {
             this.toastr.error(
               'Please check your information and try again.',

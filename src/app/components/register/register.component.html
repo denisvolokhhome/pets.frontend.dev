@@ -9,6 +9,15 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="proceedRegistration()" class="auth-form">
+      <!-- Email Already Exists Error -->
+      <div *ngIf="emailExistsError" class="alert alert-error">
+        <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+        <div>
+          <strong>Account Already Exists</strong>
+          <p>{{ emailExistsError }} <a routerLink="/login" class="alert-link">Sign in instead</a></p>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="input-field-group">
           <label for="firstName" class="input-label">First Name</label>
@@ -57,6 +66,11 @@
             placeholder="Create a strong password"
             aria-label="Password"
           />
+          <div *ngIf="passwordErrors.length > 0" class="validation-errors">
+            <small *ngFor="let error of passwordErrors" class="error-text">
+              <i class="bi bi-x-circle" aria-hidden="true"></i> {{ error }}
+            </small>
+          </div>
         </div>
         <div class="input-field-group">
           <label for="password_confirmation" class="input-label">Confirm Password</label>
