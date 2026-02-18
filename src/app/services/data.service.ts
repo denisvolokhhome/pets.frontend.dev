@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPet } from '../models/pet';
-import { Observable, delay, retry, tap, catchError, throwError } from 'rxjs';
+import { Observable, delay, retry, tap, catchError, throwError, Subject } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
 import { IUser, IProfileImageResponse } from '../models/user';
@@ -13,6 +13,10 @@ import { environment } from 'src/environments/environment';
 })
 
 export class DataService {
+  // Subject to notify components when profile is updated
+  private profileUpdated = new Subject<void>();
+  public profileUpdated$ = this.profileUpdated.asObservable();
+
   constructor(public http: HttpClient) {}
   // apiurl = 'http://localhost:8000/api'; //<todo> make dinamic from env</todo>
   apiurl= environment.API_URL;
@@ -187,6 +191,10 @@ export class DataService {
     );
     return this.http.post<IProfileImageResponse>(this.apiurl + '/users/me/profile-image', formData, { headers: header })
       .pipe(
+        tap(() => {
+          // Notify subscribers that profile was updated
+          this.profileUpdated.next();
+        }),
         catchError(this.handleError)
       );
   }

@@ -25,6 +25,11 @@ export class ProfileMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserProfile();
+    
+    // Subscribe to profile updates
+    this.dataService.profileUpdated$.subscribe(() => {
+      this.loadUserProfile();
+    });
   }
 
   loadUserProfile(): void {
