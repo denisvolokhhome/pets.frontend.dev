@@ -2,6 +2,8 @@ export interface IUser {
   id: string;
   email: string;
   name?: string;
+  phone_number?: string;
+  oauth_provider?: string;
   breedery_name?: string;
   profile_image_path?: string;
   breedery_description?: string;

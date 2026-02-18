@@ -19,10 +19,13 @@ import { MessagesListComponent } from './components/settings/messages-list/messa
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
 import { PetSeekerRegistrationComponent } from './components/pet-seeker-registration/pet-seeker-registration.component';
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'search-pets', component: SearchPageComponent },
+  { path: 'auth/callback', component: AuthCallbackComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -46,6 +49,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'general', pathMatch: 'full' },
       { path: 'general', component: GeneralSettingsComponent },
+      { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] }
     ]
   },

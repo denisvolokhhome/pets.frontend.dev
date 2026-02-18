@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   standalone: false,
@@ -9,9 +10,16 @@ import { Router } from '@angular/router';
 })
 export class SettingsComponent {
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public authService: AuthService
+  ) {}
   
-  navigateToSection(section: 'general' | 'locations' | 'messages'): void {
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+  
+  navigateToSection(section: 'general' | 'breedery' | 'locations' | 'messages'): void {
     this.router.navigate(['/settings', section]);
   }
   

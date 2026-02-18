@@ -1,7 +1,8 @@
 <div class="general-settings">
   <div class="settings-header">
     <h2>General Settings</h2>
-    <p class="settings-subtitle">Manage your breedery profile and public information</p>
+    <p class="settings-subtitle" *ngIf="isBreeder">Manage your account and breedery profile</p>
+    <p class="settings-subtitle" *ngIf="!isBreeder">Manage your account information</p>
   </div>
 
   <div *ngIf="isLoading" class="loading-spinner">
@@ -20,8 +21,8 @@
       {{ saveError }}
     </div>
 
-    <!-- Profile Image Section -->
-    <div class="form-section">
+    <!-- Profile Image Section (Breeders Only) - Moved to Top -->
+    <div class="form-section" *ngIf="isBreeder">
       <div class="section-header">
         <i class="bi bi-image"></i>
         <h3>Profile Image</h3>
@@ -60,77 +61,105 @@
       </div>
     </div>
 
-    <!-- Breedery Information Section -->
+    <!-- Account Information Section -->
     <div class="form-section">
       <div class="section-header">
-        <i class="bi bi-building"></i>
-        <h3>Breedery Information</h3>
+        <i class="bi bi-person-circle"></i>
+        <h3>Account Information</h3>
       </div>
 
       <div class="form-group">
-        <label for="breedery_name">
-          <i class="bi bi-tag"></i>
-          Breedery Name
+        <label for="email">
+          <i class="bi bi-envelope"></i>
+          Login Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          [value]="currentUser?.email"
+          disabled
+          class="input-disabled"
+        />
+        <small class="field-hint">This is your login email and cannot be changed</small>
+      </div>
+
+      <div class="form-group">
+        <label for="name">
+          <i class="bi bi-person"></i>
+          Full Name
         </label>
         <input
           type="text"
-          id="breedery_name"
-          formControlName="breedery_name"
-          placeholder="Enter your breedery name"
+          id="name"
+          formControlName="name"
+          placeholder="Enter your full name"
         />
       </div>
 
       <div class="form-group">
-        <label for="breedery_description">
-          <i class="bi bi-text-paragraph"></i>
-          Breedery Description
+        <label for="phone_number">
+          <i class="bi bi-telephone"></i>
+          Phone Number (Optional)
         </label>
-        <textarea
-          id="breedery_description"
-          formControlName="breedery_description"
-          rows="4"
-          placeholder="Tell visitors about your breedery, breeding philosophy, and experience..."
-        ></textarea>
+        <input
+          type="tel"
+          id="phone_number"
+          formControlName="phone_number"
+          placeholder="Enter your phone number"
+        />
       </div>
     </div>
 
-    <!-- Search Tags Section -->
+    <!-- Password Section -->
     <div class="form-section">
       <div class="section-header">
-        <i class="bi bi-tags"></i>
-        <h3>Search Tags</h3>
+        <i class="bi bi-shield-lock"></i>
+        <h3>Password</h3>
       </div>
-      
-      <p class="section-description">
-        Add tags to help people find your breedery (e.g., breed names, specialties, location)
-      </p>
 
-      <div class="tag-input-group">
+      <div *ngIf="isOAuthUser" class="info-box">
+        <i class="bi bi-info-circle"></i>
+        <p>You're signed in with {{ currentUser?.oauth_provider }}. You can optionally set a password to enable email/password login.</p>
+      </div>
+
+      <div class="form-group" *ngIf="hasPassword">
+        <label for="current_password">
+          <i class="bi bi-key"></i>
+          Current Password
+        </label>
         <input
-          type="text"
-          [(ngModel)]="tagInput"
-          [ngModelOptions]="{standalone: true}"
-          (keyup.enter)="addTag()"
-          placeholder="Type a tag and press Enter"
+          type="password"
+          id="current_password"
+          formControlName="current_password"
+          placeholder="Enter current password"
         />
-        <button type="button" (click)="addTag()" class="btn-add-tag">
-          <i class="bi bi-plus-lg"></i>
-          Add
-        </button>
       </div>
 
-      <div class="tags-display" *ngIf="tags.length > 0">
-        <span *ngFor="let tag of tags; let i = index" class="tag-badge">
-          {{ tag }}
-          <button type="button" (click)="removeTag(i)" class="tag-remove">
-            <i class="bi bi-x"></i>
-          </button>
-        </span>
+      <div class="form-group">
+        <label for="new_password">
+          <i class="bi bi-key-fill"></i>
+          {{ isOAuthUser ? 'Set Password' : 'New Password' }}
+        </label>
+        <input
+          type="password"
+          id="new_password"
+          formControlName="new_password"
+          placeholder="{{ isOAuthUser ? 'Set a password' : 'Enter new password' }}"
+        />
+        <small class="field-hint">Minimum 8 characters, must contain at least one letter and one digit</small>
       </div>
-      
-      <div *ngIf="tags.length === 0" class="empty-tags">
-        <i class="bi bi-tags"></i>
-        <p>No tags added yet. Add tags to improve discoverability.</p>
+
+      <div class="form-group">
+        <label for="confirm_password">
+          <i class="bi bi-key-fill"></i>
+          Confirm Password
+        </label>
+        <input
+          type="password"
+          id="confirm_password"
+          formControlName="confirm_password"
+          placeholder="Confirm your password"
+        />
       </div>
     </div>
 

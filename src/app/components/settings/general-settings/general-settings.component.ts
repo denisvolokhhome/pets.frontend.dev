@@ -16,8 +16,6 @@ export class GeneralSettingsComponent implements OnInit {
   profileForm: FormGroup;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
-  tags: string[] = [];
-  tagInput: string = '';
   isLoading: boolean = false;
   saveSuccess: boolean = false;
   saveError: string | null = null;
@@ -27,14 +25,29 @@ export class GeneralSettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
-    private authService: AuthService,
+    public authService: AuthService,
     private toastr: ToastrService,
     private cdr: ChangeDetectorRef
   ) {
     this.profileForm = this.fb.group({
-      breedery_name: [''],
-      breedery_description: ['']
+      name: [''],
+      phone_number: [''],
+      current_password: [''],
+      new_password: [''],
+      confirm_password: ['']
     });
+  }
+  
+  get isBreeder(): boolean {
+    return this.authService.isBreeder;
+  }
+  
+  get isOAuthUser(): boolean {
+    return !!this.currentUser?.oauth_provider;
+  }
+  
+  get hasPassword(): boolean {
+    return !this.isOAuthUser;
   }
 
   ngOnInit(): void {
@@ -71,10 +84,9 @@ export class GeneralSettingsComponent implements OnInit {
         clearTimeout(loadingTimeout);
         this.currentUser = user;
         this.profileForm.patchValue({
-          breedery_name: user.breedery_name || '',
-          breedery_description: user.breedery_description || ''
+          name: user.name || '',
+          phone_number: user.phone_number || ''
         });
-        this.tags = user.search_tags || [];
         if (user.profile_image_path) {
           this.imagePreview = this.getImageUrl(user.profile_image_path);
         }
@@ -153,18 +165,6 @@ export class GeneralSettingsComponent implements OnInit {
     }
   }
 
-  addTag(): void {
-    const tag = this.tagInput.trim();
-    if (tag && !this.tags.includes(tag)) {
-      this.tags.push(tag);
-      this.tagInput = '';
-    }
-  }
-
-  removeTag(index: number): void {
-    this.tags.splice(index, 1);
-  }
-
   async uploadImage(): Promise<void> {
     if (!this.selectedFile) {
       return;
@@ -205,11 +205,20 @@ export class GeneralSettingsComponent implements OnInit {
       // Note: Image is uploaded immediately when selected, so no need to upload here
 
       // Prepare profile data
-      const profileData = {
-        breedery_name: this.profileForm.value.breedery_name,
-        breedery_description: this.profileForm.value.breedery_description,
-        search_tags: this.tags
+      const profileData: any = {
+        name: this.profileForm.value.name,
+        phone_number: this.profileForm.value.phone_number
       };
+      
+      // Add password if provided
+      if (this.profileForm.value.new_password) {
+        if (this.profileForm.value.new_password !== this.profileForm.value.confirm_password) {
+          this.toastr.error('Passwords do not match', 'Validation Error');
+          this.isLoading = false;
+          return;
+        }
+        profileData.password = this.profileForm.value.new_password;
+      }
 
       this.dataService.updateUserProfile(profileData).subscribe({
         next: (response) => {

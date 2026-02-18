@@ -9,6 +9,14 @@
         General
       </button>
       <button 
+        *ngIf="isBreeder"
+        class="sidebar-nav-item" 
+        [class.active]="isActive('breedery')"
+        (click)="navigateToSection('breedery')">
+        Breedery Information
+      </button>
+      <button 
+        *ngIf="isBreeder"
         class="sidebar-nav-item" 
         [class.active]="isActive('locations')"
         (click)="navigateToSection('locations')">
