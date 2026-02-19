@@ -17,6 +17,7 @@ export class PetCardComponent {
   @Input() pet: IPet;
   @Output() deletingPet = new EventEmitter();
   @Output() editingPet = new EventEmitter();
+  @Output() quickBreeding = new EventEmitter();
 
 
   apiurl = environment.API_URL;
@@ -42,5 +43,10 @@ export class PetCardComponent {
 
     // )
     this.editingPet.emit(this.pet);
+  }
+
+  openQuickBreeding(event: any): void{
+    event.stopPropagation();
+    this.quickBreeding.emit(this.pet);
   }
 }

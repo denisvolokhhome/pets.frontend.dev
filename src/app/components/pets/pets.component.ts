@@ -5,6 +5,7 @@ import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   standalone: false,
@@ -18,7 +19,8 @@ export class PetsComponent implements OnInit {
     public DataService: DataService,
     public ModalService: ModalService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ){}
 
   pets: IPet [] = [];
@@ -29,6 +31,7 @@ export class PetsComponent implements OnInit {
   title: string = 'Pets';
   term: string = '';
   petId: string = '';
+  selectedPetForBreeding: IPet | null = null;
   
   // Filter states
   selectedLocation: string = '';
@@ -58,7 +61,13 @@ export class PetsComponent implements OnInit {
   }
 
   loadPets(): void {
-    this.DataService.getPetsByBreeder(localStorage.getItem('id')).subscribe((pets) => {
+    const userId = this.authService.currentUser?.id;
+    if (!userId) {
+      console.error('No user ID available');
+      return;
+    }
+    
+    this.DataService.getPetsByBreeder(userId).subscribe((pets) => {
       console.log('All pets loaded:', pets);
       console.log('Pets with is_puppy values:', pets.map(p => ({ name: p.name, is_puppy: p.is_puppy, type: typeof p.is_puppy })));
       this.pets = pets;
@@ -168,6 +177,12 @@ export class PetsComponent implements OnInit {
   editPet(emittedPet: any){
     this.pet = emittedPet;
     this.ModalService.open('editPetModal');
+  }
+
+  openQuickBreeding(emittedPet: IPet): void {
+    this.selectedPetForBreeding = emittedPet;
+    this.ModalService.open('quickBreedingModal');
+    console.log('Opening quick breeding for pet:', emittedPet.name);
   }
 
 }

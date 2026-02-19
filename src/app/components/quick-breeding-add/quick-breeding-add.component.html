@@ -1,0 +1,209 @@
+<div class="quick-breeding-modal">
+  <!-- Header -->
+  <div class="modal-header-modern">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="breeding-icon">
+          <i class="bi bi-heart-fill"></i>
+        </div>
+        <div class="header-text">
+          <h2 class="modal-title">Quick Breeding</h2>
+          <p class="modal-subtitle">Create a new breeding record</p>
+        </div>
+      </div>
+      <button type="button" class="close-button" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="stepper-item" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+      <div class="stepper-circle" (click)="goToStep(1)">
+        <span *ngIf="currentStep <= 1">1</span>
+        <i class="bi bi-check-lg" *ngIf="currentStep > 1"></i>
+      </div>
+      <div class="stepper-label">Select Partner</div>
+    </div>
+    <div class="stepper-line" [class.completed]="currentStep > 1"></div>
+    <div class="stepper-item" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+      <div class="stepper-circle" (click)="goToStep(2)">
+        <span *ngIf="currentStep <= 2">2</span>
+        <i class="bi bi-check-lg" *ngIf="currentStep > 2"></i>
+      </div>
+      <div class="stepper-label">Add Details</div>
+    </div>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="modal-body-modern">
+    <!-- Step 1: Select Partner Pet -->
+    <div class="step-content" *ngIf="currentStep === 1">
+      <!-- Selected Pet Info -->
+      <div class="selected-pet-card" *ngIf="selectedPet">
+        <div class="pet-info">
+          <div class="pet-avatar" *ngIf="selectedPet.image_path" [style.background-image]="'url(' + getImageUrl(selectedPet.image_path) + ')'"></div>
+          <div class="pet-avatar no-image" *ngIf="!selectedPet.image_path">
+            <i class="bi bi-card-image"></i>
+          </div>
+          <div class="pet-details">
+            <h3 class="pet-name">{{ selectedPet.name }}</h3>
+            <div class="pet-meta">
+              <span class="pet-gender">
+                <i class="bi" [ngClass]="selectedPet.gender === 'm' || selectedPet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+                {{ selectedPet.gender === 'm' || selectedPet.gender === 'Male' ? 'Male' : 'Female' }}
+              </span>
+              <span class="pet-age">
+                <i class="bi bi-calendar3"></i>
+                {{ calculateAge(selectedPet.date_of_birth || selectedPet.pet_dob) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Filter -->
+      <div class="search-section">
+        <label class="section-label">
+          <i class="bi bi-search mr-2"></i>
+          Select {{ getOppositeGender() }} Partner
+        </label>
+        <div class="search-input-wrapper">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search by name or breed..."
+            [(ngModel)]="searchTerm"
+            (keyup)="filterPets()"
+          />
+          <i class="bi bi-search search-icon"></i>
+        </div>
+      </div>
+
+      <!-- Available Pets List -->
+      <div class="pets-list" *ngIf="!isLoadingPets">
+        <div 
+          class="pet-list-item"
+          *ngFor="let pet of filteredPets"
+          [class.selected]="selectedPartnerPet?.id === pet.id"
+          (click)="selectPartnerPet(pet)"
+        >
+          <div class="pet-item-avatar" *ngIf="pet.image_path" [style.background-image]="'url(' + getImageUrl(pet.image_path) + ')'"></div>
+          <div class="pet-item-avatar no-image" *ngIf="!pet.image_path">
+            <i class="bi bi-card-image"></i>
+          </div>
+          <div class="pet-item-info">
+            <h4 class="pet-item-name">{{ pet.name }}</h4>
+            <p class="pet-item-breed">{{ pet.breed_name }}</p>
+            <div class="pet-item-meta">
+              <span>
+                <i class="bi bi-calendar3"></i>
+                {{ calculateAge(pet.date_of_birth || pet.pet_dob) }}
+              </span>
+              <span>
+                <i class="bi bi-geo-alt-fill"></i>
+                {{ pet.location_name }}
+              </span>
+            </div>
+          </div>
+          <div class="pet-item-check" *ngIf="selectedPartnerPet?.id === pet.id">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredPets.length === 0 && !isLoadingPets">
+          <i class="bi bi-search"></i>
+          <p>No {{ getOppositeGender().toLowerCase() }} pets found at the same location</p>
+        </div>
+      </div>
+
+      <div class="loading-state" *ngIf="isLoadingPets">
+        <div class="spinner"></div>
+        <p>Loading available pets...</p>
+      </div>
+    </div>
+
+    <!-- Step 2: Add Details -->
+    <div class="step-content" *ngIf="currentStep === 2">
+      <div class="breeding-summary">
+        <h3 class="summary-title">Breeding Partners</h3>
+        <div class="partners-display">
+          <div class="partner-card" *ngIf="selectedPet">
+            <div class="partner-avatar" *ngIf="selectedPet.image_path" [style.background-image]="'url(' + getImageUrl(selectedPet.image_path) + ')'"></div>
+            <div class="partner-avatar no-image" *ngIf="!selectedPet.image_path">
+              <i class="bi bi-card-image"></i>
+            </div>
+            <p class="partner-name">{{ selectedPet.name }}</p>
+          </div>
+          <div class="heart-icon">
+            <i class="bi bi-heart-fill"></i>
+          </div>
+          <div class="partner-card" *ngIf="selectedPartnerPet">
+            <div class="partner-avatar" *ngIf="selectedPartnerPet.image_path" [style.background-image]="'url(' + getImageUrl(selectedPartnerPet.image_path) + ')'"></div>
+            <div class="partner-avatar no-image" *ngIf="!selectedPartnerPet.image_path">
+              <i class="bi bi-card-image"></i>
+            </div>
+            <p class="partner-name">{{ selectedPartnerPet.name }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label for="description" class="form-label-modern">
+          <i class="bi bi-file-text mr-2"></i>
+          Breeding Description (Optional)
+        </label>
+        <textarea
+          id="description"
+          class="form-control-modern"
+          rows="4"
+          placeholder="Add any notes or details about this breeding..."
+          [(ngModel)]="description"
+          maxlength="500"
+        ></textarea>
+        <small class="char-count">{{ description.length }}/500</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer-modern">
+    <button 
+      type="button" 
+      class="btn-secondary-modern" 
+      (click)="currentStep === 1 ? close() : previousStep()"
+    >
+      <i class="bi" [ngClass]="currentStep === 1 ? 'bi-x-lg' : 'bi-arrow-left'"></i>
+      {{ currentStep === 1 ? 'Cancel' : 'Back' }}
+    </button>
+    
+    <button 
+      type="button" 
+      class="btn-primary-modern" 
+      *ngIf="currentStep === 1"
+      [disabled]="!selectedPartnerPet"
+      (click)="nextStep()"
+    >
+      Next
+      <i class="bi bi-arrow-right"></i>
+    </button>
+    
+    <button 
+      type="button" 
+      class="btn-primary-modern" 
+      *ngIf="currentStep === 2"
+      [disabled]="isSaving"
+      (click)="createBreeding()"
+    >
+      <span *ngIf="!isSaving">
+        <i class="bi bi-check-lg"></i>
+        Create Breeding
+      </span>
+      <span *ngIf="isSaving">
+        <span class="spinner-small"></span>
+        Creating...
+      </span>
+    </button>
+  </div>
+</div>

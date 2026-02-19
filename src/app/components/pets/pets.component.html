@@ -191,6 +191,7 @@
           app-pet-card
           (deletingPet)="deletePet($event)"
           (editingPet)="editPet($event)"
+          (quickBreeding)="openQuickBreeding($event)"
           *ngFor="let pet of filteredPets | searchPets : term; let i = index"
           [pet]="pet"
         ></div>
@@ -283,6 +284,7 @@
   title="Add a pet"
   modalSize="large"
   modalId="addPetModal"
+  [hideHeader]="true"
   aria-labelledby="PetAddModal"
 >
   <app-pet-add></app-pet-add>
@@ -301,7 +303,18 @@
   title="Edit"
   modalSize="large"
   modalId="editPetModal"
+  [hideHeader]="true"
   aria-labelledby="PetEditModal"
 >
   <app-pet-edit [pet]="pet"></app-pet-edit>
+</div>
+<div
+  app-modal
+  title="Quick Breeding"
+  modalSize="xlarge"
+  modalId="quickBreedingModal"
+  [hideHeader]="true"
+  aria-labelledby="QuickBreedingModal"
+>
+  <app-quick-breeding-add [selectedPet]="selectedPetForBreeding"></app-quick-breeding-add>
 </div>

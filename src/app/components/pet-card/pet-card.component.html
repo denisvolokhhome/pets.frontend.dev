@@ -10,6 +10,9 @@
 
     <button
       class="use-for-litter w-10 h-10 rounded-full border-0 bg-gradient-to-br from-teal-300 to-teal-400 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95 relative"
+      (click)="openQuickBreeding($event)"
+      [attr.data-pet-id]="pet.pet_id"
+      title="Quick Breeding"
     ></button>
     <button
       class="delete w-10 h-10 rounded-full border-0 bg-gradient-to-br from-red-400 to-red-500 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"

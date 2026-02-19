@@ -7,11 +7,20 @@
 >
   <div class="modal-body">
     <div class="pet-form-header">
-      <div class="pet-form-icon">
-        <i class="material-icons">pets</i>
+      <div class="header-content">
+        <div class="header-left">
+          <div class="pet-form-icon">
+            <i class="material-icons">pets</i>
+          </div>
+          <div class="header-text">
+            <h2 class="pet-form-title">Add a New Pet</h2>
+            <p class="pet-form-subtitle">Fill in the details about your pet</p>
+          </div>
+        </div>
+        <button type="button" class="close-button" (click)="modalClose()">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
-      <h2 class="pet-form-title">Add a New Pet</h2>
-      <p class="pet-form-subtitle">Fill in the details about your pet</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">

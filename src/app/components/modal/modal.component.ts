@@ -13,6 +13,7 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() modalSize: string;
   @Input() pet_id: string;
   @Input() modalId: string = 'default';
+  @Input() hideHeader: boolean = false;
 
   @HostBinding('class.visible') isVisible = false;
 
