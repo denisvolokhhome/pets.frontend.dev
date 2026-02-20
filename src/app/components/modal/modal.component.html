@@ -5,7 +5,8 @@
     [ngClass]="{
       'max-w-4xl': modalSize == 'large',
       'max-w-5xl': modalSize == 'xlarge',
-      'max-w-lg': modalSize != 'large' && modalSize != 'xlarge'
+      'max-w-7xl': modalSize == 'xxlarge',
+      'max-w-lg': modalSize != 'large' && modalSize != 'xlarge' && modalSize != 'xxlarge'
     }"
     (click)="$event.stopPropagation()"
     role="dialog"

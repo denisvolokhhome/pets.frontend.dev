@@ -694,6 +694,45 @@ button.fab-button.fab-success {
   z-index: 501;
 }
 
+/* Modern Modal Wrapper - Wider and Better Space Utilization */
+.cdk-overlay-pane {
+  max-width: 95vw !important;
+}
+
+/* Pet Add/Edit Modal - Extra Wide */
+app-pet-add .cdk-overlay-pane,
+app-pet-edit .cdk-overlay-pane {
+  max-width: 1200px !important;
+  width: 95vw !important;
+}
+
+/* Breeding Modal - Wide */
+app-quick-breeding-add .cdk-overlay-pane {
+  max-width: 900px !important;
+  width: 90vw !important;
+}
+
+/* Ensure modals don't have unnecessary scrollbars */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  overflow: visible !important;
+}
+
+@media (max-width: 1280px) {
+  app-pet-add .cdk-overlay-pane,
+  app-pet-edit .cdk-overlay-pane {
+    max-width: 95vw !important;
+  }
+}
+
+@media (max-width: 768px) {
+  app-pet-add .cdk-overlay-pane,
+  app-pet-edit .cdk-overlay-pane,
+  app-quick-breeding-add .cdk-overlay-pane {
+    max-width: 100vw !important;
+    width: 100vw !important;
+  }
+}
+
 .mdc-text-field--filled:not(.mdc-text-field--disabled){
   background-color: unset;
 }
