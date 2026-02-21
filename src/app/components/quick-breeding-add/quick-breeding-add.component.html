@@ -51,8 +51,8 @@
             <h3 class="pet-name">{{ selectedPet.name }}</h3>
             <div class="pet-meta">
               <span class="pet-gender">
-                <i class="bi" [ngClass]="selectedPet.gender === 'm' || selectedPet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
-                {{ selectedPet.gender === 'm' || selectedPet.gender === 'Male' ? 'Male' : 'Female' }}
+                <i class="bi" [ngClass]="selectedPet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+                {{ selectedPet.gender }}
               </span>
               <span class="pet-age">
                 <i class="bi bi-calendar3"></i>

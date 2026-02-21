@@ -67,7 +67,7 @@ describe('PetEditComponent - Location Field Tests', () => {
     name: 'Buddy',
     breed_name: 'Labrador Retriever',
     pet_dob: '2023-01-01',
-    gender: 'm',
+    gender: 'Male',
     weight: '25',
     location_name: 'Main Kennel',
     description: 'Friendly dog',

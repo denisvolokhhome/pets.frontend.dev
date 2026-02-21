@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, MessageListItem } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-messages-list',
@@ -31,7 +31,7 @@ export class MessagesListComponent implements OnInit {
     private messageService: MessageService,
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
 

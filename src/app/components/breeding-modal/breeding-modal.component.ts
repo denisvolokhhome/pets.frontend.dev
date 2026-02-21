@@ -4,7 +4,7 @@ import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -36,7 +36,7 @@ export class BreedingModalComponent implements OnInit, OnChanges {
     private dataService: DataService,
     private modalService: ModalService,
     private authService: AuthService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}

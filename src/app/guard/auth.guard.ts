@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../services/toast.service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class AuthGuard  {
   constructor(
     private service: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastService
   ) {}
 
   canActivate(

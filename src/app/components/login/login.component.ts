@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -15,7 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class LoginComponent {
   constructor(
     private builder: FormBuilder,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private service: AuthService,
     private router: Router,
     private route: ActivatedRoute,

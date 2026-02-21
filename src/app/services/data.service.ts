@@ -346,15 +346,14 @@ export class DataService {
       'Bearer ' + localStorage.getItem('id_token')
     );
     
-    // Convert gender from 'Male'/'Female' to 'm'/'f' for backend
-    const convertedPuppies = puppies.map(puppy => ({
-      name: puppy.name,
-      gender: puppy.gender === 'Male' ? 'm' : 'f',
-      birth_date: puppy.birth_date
-    }));
-    
+    // Backend expects gender as 'Male' or 'Female'
     const puppyData = {
-      puppies: convertedPuppies
+      puppies: puppies.map(puppy => ({
+        name: puppy.name,
+        gender: puppy.gender,
+        birth_date: puppy.birth_date,
+        microchip: puppy.microchip || null
+      }))
     };
     
     return this.http.post<any>(

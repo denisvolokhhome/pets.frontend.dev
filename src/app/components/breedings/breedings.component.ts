@@ -5,7 +5,7 @@ import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -19,7 +19,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   constructor(
     public dataService: DataService,
     public modalService: ModalService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}

@@ -3,7 +3,7 @@ import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 import { calculatePetAge } from 'src/app/utils/pet-utils';
 import { environment } from 'src/environments/environment';
@@ -41,7 +41,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
     private dataService: DataService,
     private modalService: ModalService,
     private authService: AuthService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -79,7 +79,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
 
   getOppositeGender(): string {
     if (!this.selectedPet) return '';
-    return this.selectedPet.gender === 'm' || this.selectedPet.gender === 'Male' ? 'Female' : 'Male';
+    return this.selectedPet.gender === 'Male' ? 'Female' : 'Male';
   }
 
   loadAvailablePets(): void {
@@ -109,15 +109,8 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
             const selectedGender = this.selectedPet?.gender;
             console.log('Selected pet gender:', selectedGender);
             
-            // Normalize gender to 'm' or 'f'
-            let oppositeGender: string;
-            if (selectedGender === 'm' || selectedGender === 'Male') {
-              oppositeGender = 'f';
-            } else if (selectedGender === 'f' || selectedGender === 'Female') {
-              oppositeGender = 'm';
-            } else {
-              oppositeGender = '';
-            }
+            // Determine opposite gender (Male/Female only)
+            const oppositeGender = selectedGender === 'Male' ? 'Female' : 'Male';
             
             console.log('Looking for opposite gender:', oppositeGender);
             
@@ -125,9 +118,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
               const isPuppy = pet.is_puppy === 1 || pet.is_puppy === true;
               const isSamePet = pet.id === this.selectedPet?.id;
               const petGender = pet.gender;
-              const isOppositeGender = petGender === oppositeGender || 
-                                      (oppositeGender === 'f' && petGender === 'Female') ||
-                                      (oppositeGender === 'm' && petGender === 'Male');
+              const isOppositeGender = petGender === oppositeGender;
               const isSameLocation = pet.location_name === this.selectedPet?.location_name;
               
               console.log(`Pet ${pet.name}: isPuppy=${isPuppy}, isSamePet=${isSamePet}, gender=${petGender}, isOppositeGender=${isOppositeGender}, location=${pet.location_name}, isSameLocation=${isSameLocation}`);

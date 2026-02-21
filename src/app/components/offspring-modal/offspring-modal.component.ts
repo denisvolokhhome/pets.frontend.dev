@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../services/data.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -25,7 +25,8 @@ export class OffspringModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
-    private toastr: ToastrService
+    private toastr: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +55,7 @@ export class OffspringModalComponent implements OnInit {
     this.dataService.getLocations().subscribe({
       next: (data) => {
         this.locations = data;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading locations:', error);
@@ -64,7 +66,7 @@ export class OffspringModalComponent implements OnInit {
 
   selectGender(gender: string): void {
     this.selectedGender = gender;
-    this.offspringForm.patchValue({ gender: gender === 'Male' ? 'm' : 'f' });
+    this.offspringForm.patchValue({ gender: gender });
   }
 
   onSubmit(): void {
@@ -77,24 +79,26 @@ export class OffspringModalComponent implements OnInit {
 
     const formValue = this.offspringForm.value;
     
-    // Prepare puppy data for the API
+    // Prepare puppy data for the API - backend expects "Male" or "Female"
     const puppyData = {
       puppies: [{
         name: formValue.name,
-        gender: formValue.gender,
-        birth_date: formValue.date_of_birth
+        gender: formValue.gender, // Already "Male" or "Female" from selectGender
+        birth_date: formValue.date_of_birth,
+        microchip: formValue.microchip || null
       }]
     };
 
     this.dataService.addPuppiesToBreeding(this.breedingId, puppyData.puppies).subscribe({
       next: () => {
-        this.toastr.success('Offspring added successfully', 'Success');
         this.isSubmitting = false;
         this.offspringAdded.emit();
+        this.toastr.success('Offspring added successfully', 'Success');
       },
       error: (error) => {
         console.error('Error adding offspring:', error);
-        this.toastr.error('Failed to add offspring', 'Error');
+        const errorMsg = error?.error?.detail || 'Failed to add offspring';
+        this.toastr.error(errorMsg, 'Error');
         this.isSubmitting = false;
       }
     });

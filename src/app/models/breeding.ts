@@ -31,4 +31,5 @@ export interface IPuppyInput {
   name: string;
   gender: 'Male' | 'Female';
   birth_date: string;
+  microchip?: string | null;
 }

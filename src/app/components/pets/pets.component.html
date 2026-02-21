@@ -95,15 +95,15 @@
         <div class="gender-buttons">
           <button 
             class="gender-btn"
-            [class.active]="selectedGender === 'm'"
-            (click)="onGenderFilterChange(selectedGender === 'm' ? '' : 'm')">
+            [class.active]="selectedGender === 'Male'"
+            (click)="onGenderFilterChange(selectedGender === 'Male' ? '' : 'Male')">
             <i class="bi bi-gender-male"></i>
             Male
           </button>
           <button 
             class="gender-btn"
-            [class.active]="selectedGender === 'f'"
-            (click)="onGenderFilterChange(selectedGender === 'f' ? '' : 'f')">
+            [class.active]="selectedGender === 'Female'"
+            (click)="onGenderFilterChange(selectedGender === 'Female' ? '' : 'Female')">
             <i class="bi bi-gender-female"></i>
             Female
           </button>

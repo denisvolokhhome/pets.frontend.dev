@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
 import { AuthService } from '../../../services/auth.service';
 import { IUser } from '../../../models/user';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../../services/toast.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -25,7 +25,7 @@ export class BreederySettingsComponent implements OnInit {
     private fb: FormBuilder,
     private dataService: DataService,
     public authService: AuthService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {
     this.profileForm = this.fb.group({

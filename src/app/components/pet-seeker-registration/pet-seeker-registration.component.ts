@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,7 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class PetSeekerRegistrationComponent {
   constructor(
     private builder: FormBuilder,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private service: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef

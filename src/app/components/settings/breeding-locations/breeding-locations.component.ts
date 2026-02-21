@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
 import { ILocation } from '../../../models/location';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -25,7 +25,7 @@ export class BreedingLocationsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {
     this.locationForm = this.fb.group({

@@ -1,69 +1,53 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-
-export interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-  duration?: number;
-}
+import { MessageService } from 'primeng/api';
 
 /**
- * Service for displaying toast notifications
- * Provides a centralized way to show user feedback messages
+ * Toast service wrapper for PrimeNG MessageService
+ * Provides a simpler API similar to ngx-toastr for easier migration
  */
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
-  private toastSubject = new Subject<Toast>();
-  public toasts$: Observable<Toast> = this.toastSubject.asObservable();
+  constructor(private messageService: MessageService) {}
 
-  /**
-   * Show a success toast notification
-   */
-  success(message: string, duration: number = 3000): void {
-    this.show(message, 'success', duration);
+  success(detail: string, summary: string = 'Success', options?: any): void {
+    this.messageService.add({
+      severity: 'success',
+      summary,
+      detail,
+      life: options?.timeOut || 5000
+    });
   }
 
-  /**
-   * Show an error toast notification
-   */
-  error(message: string, duration: number = 5000): void {
-    this.show(message, 'error', duration);
+  error(detail: string, summary: string = 'Error', options?: any): void {
+    this.messageService.add({
+      severity: 'error',
+      summary,
+      detail,
+      life: options?.timeOut || 5000
+    });
   }
 
-  /**
-   * Show a warning toast notification
-   */
-  warning(message: string, duration: number = 4000): void {
-    this.show(message, 'warning', duration);
+  warning(detail: string, summary: string = 'Warning', options?: any): void {
+    this.messageService.add({
+      severity: 'warn',
+      summary,
+      detail,
+      life: options?.timeOut || 5000
+    });
   }
 
-  /**
-   * Show an info toast notification
-   */
-  info(message: string, duration: number = 3000): void {
-    this.show(message, 'info', duration);
+  info(detail: string, summary: string = 'Info', options?: any): void {
+    this.messageService.add({
+      severity: 'info',
+      summary,
+      detail,
+      life: options?.timeOut || 5000
+    });
   }
 
-  /**
-   * Show a toast notification
-   */
-  private show(message: string, type: Toast['type'], duration: number): void {
-    const toast: Toast = {
-      id: this.generateId(),
-      message,
-      type,
-      duration
-    };
-    this.toastSubject.next(toast);
-  }
-
-  /**
-   * Generate a unique ID for the toast
-   */
-  private generateId(): string {
-    return `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  clear(): void {
+    this.messageService.clear();
   }
 }

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService, MessageCreate } from '../../services/message.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-contact-breeder',
@@ -25,7 +25,7 @@ export class ContactBreederComponent {
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private router: Router
   ) {
     this.contactForm = this.fb.group({

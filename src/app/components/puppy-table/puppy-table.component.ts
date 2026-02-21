@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { IBreeding, IPuppyInput } from '../../models/breeding';
 import { IPet } from '../../models/pet';
 import { DataService } from '../../services/data.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -20,7 +20,7 @@ export class PuppyTableComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private toastr: ToastrService
+    private toastr: ToastService
   ) {}
 
   ngOnInit(): void {

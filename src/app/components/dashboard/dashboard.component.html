@@ -12,7 +12,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-500 text-sm font-medium">Total Pets</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : totalPets }}</p>
           </div>
           <i class="bi bi-card-list text-4xl text-blue-500"></i>
         </div>
@@ -22,7 +22,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-500 text-sm font-medium">Active Breedings</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : activeBreedings }}</p>
           </div>
           <i class="bi bi-water text-4xl text-green-500"></i>
         </div>
@@ -32,7 +32,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-500 text-sm font-medium">Unread Messages</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : unreadMessages }}</p>
           </div>
           <i class="bi bi-envelope text-4xl text-purple-500"></i>
         </div>

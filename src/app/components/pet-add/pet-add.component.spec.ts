@@ -172,7 +172,7 @@ describe('PetAddComponent - Location Field Tests', () => {
         name: 'Buddy',
         breed_name: 'Labrador Retriever',
         pet_dob: '2023-01-01',
-        gender: 'm',
+        gender: 'Male',
         weight: '25',
         location_name: '' // Empty location
       });
@@ -188,7 +188,7 @@ describe('PetAddComponent - Location Field Tests', () => {
         name: 'Buddy',
         breed_name: 'Labrador Retriever',
         pet_dob: '2023-01-01',
-        gender: 'm',
+        gender: 'Male',
         weight: '25',
         location_name: 'Main Kennel' // Valid location
       });
@@ -204,7 +204,7 @@ describe('PetAddComponent - Location Field Tests', () => {
         name: 'Buddy',
         breed_name: 'Labrador Retriever',
         pet_dob: '2023-01-01',
-        gender: 'm',
+        gender: 'Male',
         weight: '25',
         location_name: '' // Missing location
       });
@@ -220,7 +220,7 @@ describe('PetAddComponent - Location Field Tests', () => {
         name: 'Buddy',
         breed_name: 'Labrador Retriever',
         pet_dob: '2023-01-01',
-        gender: 'm',
+        gender: 'Male',
         weight: '25',
         location_name: 'Main Kennel' // Valid location
       });

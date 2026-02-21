@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -19,7 +19,7 @@ export class BreedingDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -32,7 +32,6 @@ export class BreedingDetailComponent implements OnInit {
 
   loadBreedingDetails(): void {
     this.isLoading = true;
-    this.cdr.detectChanges();
     
     this.dataService.getBreeding(this.breedingId).subscribe({
       next: (data) => {
@@ -108,9 +107,8 @@ export class BreedingDetailComponent implements OnInit {
   }
 
   onOffspringAdded(): void {
-    this.closeOffspringModal();
+    this.showOffspringModal = false;
     this.loadBreedingDetails();
-    this.cdr.detectChanges();
   }
 
   goBack(): void {

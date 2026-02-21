@@ -45,8 +45,8 @@
     <h2 class="section-title">Parent Pets</h2>
     <div class="parent-pets-grid" *ngIf="breeding.parent_pets && breeding.parent_pets.length > 0">
       <div class="parent-pet-card" *ngFor="let pet of breeding.parent_pets">
-        <div class="pet-icon" [ngClass]="pet.gender === 'm' ? 'male-icon' : 'female-icon'">
-          <i class="bi" [ngClass]="pet.gender === 'm' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+        <div class="pet-icon" [ngClass]="pet.gender === 'Male' ? 'male-icon' : 'female-icon'">
+          <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
         </div>
         <div class="pet-info">
           <h3 class="pet-name">{{ pet.name }}</h3>
@@ -97,9 +97,9 @@
           <tr>
             <td>{{ offspring.name }}</td>
             <td>
-              <span class="gender-badge" [ngClass]="offspring.gender === 'm' ? 'male-badge' : 'female-badge'">
-                <i class="bi" [ngClass]="offspring.gender === 'm' ? 'bi-gender-male' : 'bi-gender-female'"></i>
-                {{ offspring.gender === 'm' ? 'Male' : 'Female' }}
+              <span class="gender-badge" [ngClass]="offspring.gender === 'Male' ? 'male-badge' : 'female-badge'">
+                <i class="bi" [ngClass]="offspring.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+                {{ offspring.gender === 'Male' ? 'Male' : 'Female' }}
               </span>
             </td>
             <td>{{ formatDate(offspring.birth_date) }}</td>

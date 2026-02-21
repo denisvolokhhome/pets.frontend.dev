@@ -126,21 +126,21 @@
           <div class="form-group-modern">
             <label class="form-label-modern">Gender *</label>
             <div class="gender-selector">
-              <label class="gender-option" [class.selected]="gender.value === 'm'">
+              <label class="gender-option" [class.selected]="gender.value === 'Male'">
                 <input
                   type="radio"
                   formControlName="gender"
-                  value="m"
+                  value="Male"
                   class="hidden"
                 />
                 <i class="bi bi-gender-male"></i>
                 <span>Male</span>
               </label>
-              <label class="gender-option" [class.selected]="gender.value === 'f'">
+              <label class="gender-option" [class.selected]="gender.value === 'Female'">
                 <input
                   type="radio"
                   formControlName="gender"
-                  value="f"
+                  value="Female"
                   class="hidden"
                 />
                 <i class="bi bi-gender-female"></i>

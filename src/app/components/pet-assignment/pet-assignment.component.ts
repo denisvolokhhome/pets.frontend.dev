@@ -3,7 +3,7 @@ import { IBreeding } from '../../models/breeding';
 import { IPet } from '../../models/pet';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   standalone: false,
@@ -25,7 +25,7 @@ export class PetAssignmentComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastService
   ) {}
 
   ngOnInit(): void {

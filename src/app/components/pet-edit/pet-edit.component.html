@@ -113,16 +113,16 @@
               <label class="form-label-modern">Gender</label>
               <div class="gender-display">
                 <div class="gender-badge" 
-                     [class.male]="pet?.gender === 'm' || pet?.gender === 'Male'" 
-                     [class.female]="pet?.gender === 'f' || pet?.gender === 'Female'"
+                     [class.male]="pet?.gender === 'Male'" 
+                     [class.female]="pet?.gender === 'Female'"
                      [class.not-specified]="!pet?.gender || (pet?.gender !== 'm' && pet?.gender !== 'f' && pet?.gender !== 'Male' && pet?.gender !== 'Female')">
                   <i class="bi" 
-                     [class.bi-gender-male]="pet?.gender === 'm' || pet?.gender === 'Male'" 
-                     [class.bi-gender-female]="pet?.gender === 'f' || pet?.gender === 'Female'"
+                     [class.bi-gender-male]="pet?.gender === 'Male'" 
+                     [class.bi-gender-female]="pet?.gender === 'Female'"
                      [class.bi-question-circle]="!pet?.gender || (pet?.gender !== 'm' && pet?.gender !== 'f' && pet?.gender !== 'Male' && pet?.gender !== 'Female')"></i>
                   <span>{{ 
-                    pet?.gender === 'm' || pet?.gender === 'Male' ? 'Male' : 
-                    pet?.gender === 'f' || pet?.gender === 'Female' ? 'Female' : 
+                    pet?.gender === 'Male' ? 'Male' : 
+                    pet?.gender === 'Female' ? 'Female' : 
                     'Not specified' 
                   }}</span>
                 </div>

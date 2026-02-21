@@ -42,28 +42,14 @@ export function calculatePetAge(dateOfBirth: string): string {
 
 /**
  * Get the opposite gender
- * @param gender - Current gender ('m', 'f', 'Male', 'Female')
+ * @param gender - Current gender ('Male' or 'Female')
  * @returns The opposite gender as a string
  */
 export function getOppositeGender(gender: string): string {
-  if (gender === 'm' || gender === 'Male') {
+  if (gender === 'Male') {
     return 'Female';
-  } else if (gender === 'f' || gender === 'Female') {
+  } else if (gender === 'Female') {
     return 'Male';
-  }
-  return '';
-}
-
-/**
- * Normalize gender to lowercase single character
- * @param gender - Gender in any format ('m', 'f', 'Male', 'Female')
- * @returns Normalized gender ('m' or 'f')
- */
-export function normalizeGender(gender: string): 'm' | 'f' | '' {
-  if (gender === 'm' || gender === 'Male') {
-    return 'm';
-  } else if (gender === 'f' || gender === 'Female') {
-    return 'f';
   }
   return '';
 }

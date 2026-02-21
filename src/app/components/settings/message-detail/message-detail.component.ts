@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, Message } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-message-detail',
@@ -24,7 +24,7 @@ export class MessageDetailComponent implements OnInit {
     private messageService: MessageService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastService
   ) {
     this.responseForm = this.fb.group({
       response_text: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(5000)]]

@@ -10,7 +10,6 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { UserComponent } from './components/user/user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule } from 'ngx-toastr';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutComponent } from './components/logout/logout.component';
@@ -48,7 +47,6 @@ import { SearchControlsComponent } from './components/search-controls/search-con
 import { BreederCardComponent } from './components/breeder-card/breeder-card.component';
 import { BreederCardListComponent } from './components/breeder-card-list/breeder-card-list.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
-import { ToastComponent } from './components/toast/toast.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
 import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
@@ -65,6 +63,8 @@ import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 // Leaflet imports
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
@@ -105,7 +105,6 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     BreederCardComponent,
     BreederCardListComponent,
     SearchPageComponent,
-    ToastComponent,
     BreedingDetailComponent,
     OffspringModalComponent,
     ContactBreederComponent,
@@ -125,16 +124,6 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({
-      timeOut: 5000,
-      positionClass: 'toast-top-right',
-      preventDuplicates: true,
-      closeButton: true,
-      progressBar: true,
-      enableHtml: true,
-      tapToDismiss: true,
-      newestOnTop: true
-    }),
     MatButtonModule,
     MatCheckboxModule,
     MatRadioModule,
@@ -148,11 +137,13 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     TableModule,
     ButtonModule,
     InputTextModule,
+    ToastModule,
     LeafletModule,
 
   ],
   providers: [
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
+    MessageService
   ],
   bootstrap: [AppComponent],
 })
