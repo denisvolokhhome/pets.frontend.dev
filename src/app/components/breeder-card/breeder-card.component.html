@@ -6,12 +6,15 @@
   
   <!-- Thumbnail Image -->
   <div class="breeder-card__image">
-    <img 
+    <img *ngIf="breeder.thumbnail_url"
       [src]="getImageUrl(breeder.thumbnail_url)" 
       [alt]="breeder.breeder_name"
       class="breeder-card__thumbnail"
       loading="lazy"
       decoding="async">
+      <div *ngIf="!breeder.thumbnail_url" class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
+        <i class="bi bi-card-image text-6xl"></i>
+      </div>
   </div>
 
   <!-- Breeder Information -->
