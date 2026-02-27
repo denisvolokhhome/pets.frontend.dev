@@ -6,231 +6,248 @@
   class="modern-pet-form"
 >
   <div class="modal-body">
+    <!-- Header -->
     <div class="pet-form-header">
       <div class="header-content">
-        <div class="header-left">
-          <div class="pet-form-icon">
-            <i class="material-icons">pets</i>
-          </div>
-          <div class="header-text">
-            <h2 class="pet-form-title">Add a New Pet</h2>
-            <p class="pet-form-subtitle">Fill in the details about your pet</p>
-          </div>
-        </div>
+        <h2 class="pet-form-title">Add New Pet</h2>
         <button type="button" class="close-button" (click)="modalClose()">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Image Upload Section -->
-      <div class="lg:col-span-1">
-        <div class="form-section">
-          <label class="section-label">
-            <i class="bi bi-image mr-2"></i>Pet Photo
-          </label>
-          <div class="image-upload-modern">
-            <div
-              class="image-preview-modern"
-              [class.has-image]="image_path"
-              [style.background-image]="image_path ? 'url(' + image_path + ')' : 'none'"
+    <!-- 3-Column Grid -->
+    <div class="pet-form-columns">
+
+      <!-- ── Column 1: Identity ── -->
+      <div class="form-column">
+        <div class="column-heading">
+          <i class="bi bi-tag"></i>
+          <span>Identity</span>
+        </div>
+
+        <!-- Pet Type -->
+        <div class="form-group-modern">
+          <label class="form-label-modern">Select Pet Type *</label>
+          <div class="pet-type-grid">
+            <label
+              *ngFor="let type of petTypes"
+              class="pet-type-tile"
+              [class.selected]="selectedPetType === type.value"
+              (click)="selectPetType(type.value)"
             >
-              <div class="upload-placeholder" *ngIf="!image_path">
-                <i class="bi bi-cloud-upload"></i>
-                <span class="upload-text">Click to upload</span>
-                <span class="upload-hint">JPG, PNG up to 5MB</span>
-              </div>
-              <div class="image-overlay-modern" (click)="selectImage.click()">
-                <i class="bi bi-camera"></i>
-                <span>{{ image_path ? 'Change' : 'Upload' }}</span>
-              </div>
-            </div>
-            <input
-              type="file"
-              id="image"
-              class="hidden"
-              (change)="readURL($event)"
-              formControlName="image"
-              #selectImage
-              accept="image/*"
-            />
+              <span class="pet-type-icon">{{ type.icon }}</span>
+              <span class="pet-type-label">{{ type.label }}</span>
+            </label>
           </div>
         </div>
-      </div>
 
-      <!-- Pet Details Section -->
-      <div class="lg:col-span-2">
-        <div class="form-section">
-          <label class="section-label">
-            <i class="bi bi-info-circle mr-2"></i>Basic Information
-          </label>
-          
-          <div class="form-group-modern">
-            <label for="petName" class="form-label-modern">Pet Name *</label>
+        <!-- Pet Name -->
+        <div class="form-group-modern">
+          <label for="petName" class="form-label-modern">Pet Name *</label>
+          <input
+            type="text"
+            id="petName"
+            class="form-control-modern"
+            placeholder="Enter your pet's name"
+            formControlName="name"
+            appFocus
+          />
+        </div>
+
+        <!-- Breed autocomplete -->
+        <div class="form-group-modern">
+          <label for="breed" class="form-label-modern">Breed *</label>
+          <div class="autocomplete-wrapper">
             <input
               type="text"
-              id="petName"
+              id="breed"
               class="form-control-modern"
-              placeholder="Enter your pet's name"
-              formControlName="name"
-              appFocus
+              placeholder="Start typing to search breeds..."
+              [formControl]="breed_name"
+              (input)="filterBreeds($event)"
+              (focus)="showBreedDropdown = true"
+              (blur)="onBreedBlur()"
+              autocomplete="off"
             />
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="form-group-modern">
-              <label for="breed" class="form-label-modern">Breed *</label>
-              <div class="autocomplete-wrapper">
-                <input
-                  type="text"
-                  id="breed"
-                  class="form-control-modern"
-                  placeholder="Start typing to search breeds..."
-                  [formControl]="breed_name"
-                  (input)="filterBreeds($event)"
-                  (focus)="showBreedDropdown = true"
-                  (blur)="onBreedBlur()"
-                  autocomplete="off"
-                />
-                <i class="bi bi-search autocomplete-icon"></i>
-                <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length > 0">
-                  <div
-                    *ngFor="let breed of filteredBreeds"
-                    class="autocomplete-item"
-                    (mousedown)="selectBreed(breed.name)"
-                  >
-                    {{ breed.name }}
-                  </div>
-                </div>
-                <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length === 0 && breed_name.value">
-                  <div class="autocomplete-item no-results">
-                    No breeds found
-                  </div>
-                </div>
+            <i class="bi bi-search autocomplete-icon"></i>
+            <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length > 0">
+              <div
+                *ngFor="let breed of filteredBreeds"
+                class="autocomplete-item"
+                (mousedown)="selectBreed(breed.name)"
+              >
+                {{ breed.name }}
               </div>
             </div>
-
-            <div class="form-group-modern">
-              <label for="dob" class="form-label-modern">Date of Birth *</label>
-              <input
-                type="date"
-                id="dob"
-                class="form-control-modern"
-                formControlName="pet_dob"
-                [max]="maxDate | date:'yyyy-MM-dd'"
-              />
-            </div>
-          </div>
-
-          <div class="form-group-modern">
-            <label class="form-label-modern">Gender *</label>
-            <div class="gender-selector">
-              <label class="gender-option" [class.selected]="gender.value === 'Male'">
-                <input
-                  type="radio"
-                  formControlName="gender"
-                  value="Male"
-                  class="hidden"
-                />
-                <i class="bi bi-gender-male"></i>
-                <span>Male</span>
-              </label>
-              <label class="gender-option" [class.selected]="gender.value === 'Female'">
-                <input
-                  type="radio"
-                  formControlName="gender"
-                  value="Female"
-                  class="hidden"
-                />
-                <i class="bi bi-gender-female"></i>
-                <span>Female</span>
-              </label>
+            <div class="autocomplete-dropdown" *ngIf="showBreedDropdown && filteredBreeds.length === 0 && breed_name.value">
+              <div class="autocomplete-item no-results">No breeds found</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Additional Details -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-2">
-      <div class="form-group-modern">
-        <label for="weight" class="form-label-modern">Weight (kg) *</label>
-        <input
-          type="text"
-          id="weight"
-          class="form-control-modern"
-          placeholder="e.g., 25.5"
-          formControlName="weight"
-        />
+      <!-- ── Column 2: Physical Stats & Location ── -->
+      <div class="form-column">
+        <div class="column-heading column-heading--orange">
+          <i class="bi bi-info-circle"></i>
+          <span>Physical Stats &amp; Location</span>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="form-group-modern">
+          <label for="dob" class="form-label-modern">Date of Birth *</label>
+          <input
+            type="date"
+            id="dob"
+            class="form-control-modern"
+            formControlName="pet_dob"
+            [max]="maxDate | date:'yyyy-MM-dd'"
+          />
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group-modern">
+          <label class="form-label-modern">Gender *</label>
+          <div class="gender-selector">
+            <label class="gender-option" [class.selected]="gender.value === 'Male'">
+              <input type="radio" formControlName="gender" value="Male" class="hidden" />
+              <i class="bi bi-gender-male"></i>
+              <span>Male</span>
+            </label>
+            <label class="gender-option" [class.selected]="gender.value === 'Female'">
+              <input type="radio" formControlName="gender" value="Female" class="hidden" />
+              <i class="bi bi-gender-female"></i>
+              <span>Female</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Weight -->
+        <div class="form-group-modern">
+          <label for="weight" class="form-label-modern">Weight (kg) *</label>
+          <input
+            type="text"
+            id="weight"
+            class="form-control-modern"
+            placeholder="e.g., 25.5"
+            formControlName="weight"
+          />
+        </div>
+
+        <!-- Location -->
+        <div class="form-group-modern">
+          <label for="location" class="form-label-modern">Location *</label>
+          <select
+            id="location"
+            class="form-control-modern form-select-modern"
+            [formControl]="location_name"
+          >
+            <option value="">Select a location</option>
+            <option *ngFor="let location of locations" [value]="location.name">
+              {{ location.name }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <div class="form-group-modern">
-        <label for="location" class="form-label-modern">Location *</label>
-        <select
-          id="location"
-          class="form-control-modern form-select-modern"
-          [formControl]="location_name"
-        >
-          <option value="">Select a location</option>
-          <option *ngFor="let location of locations" [value]="location.name">
-            {{ location.name }}
-          </option>
-        </select>
-      </div>
-    </div>
+      <!-- ── Column 3: Media & Records ── -->
+      <div class="form-column">
+        <div class="column-heading column-heading--red">
+          <i class="bi bi-heart-pulse"></i>
+          <span>Media &amp; Records</span>
+        </div>
 
-    <div class="grid grid-cols-1 gap-4 mt-2">
-      <div class="form-group-modern">
-        <label for="description" class="form-label-modern">Description</label>
-        <textarea
-          id="description"
-          class="form-control-modern"
-          rows="3"
-          placeholder="Tell us about your pet's personality, habits, or any special notes..."
-          formControlName="pet_desc"
-          maxlength="200"
-        ></textarea>
-        <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
-      </div>
-    </div>
+        <!-- Multi-photo upload -->
+        <div class="form-group-modern">
+          <label class="form-label-modern">Photos (Up to 5) *</label>
+          <div class="photo-grid">
+            <!-- Upload button -->
+            <div
+              class="photo-upload-tile"
+              (click)="selectImages.click()"
+              *ngIf="imagePreviews.length < 5"
+            >
+              <i class="bi bi-plus-lg"></i>
+              <span>Upload</span>
+            </div>
+            <!-- Preview tiles -->
+            <div
+              class="photo-preview-tile"
+              *ngFor="let preview of imagePreviews; let i = index"
+            >
+              <img [src]="preview" alt="Pet photo {{ i + 1 }}" />
+              <button type="button" class="photo-remove-btn" (click)="removeImage(i)">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+          <input
+            type="file"
+            class="hidden"
+            multiple
+            accept="image/*"
+            (change)="readURLMultiple($event)"
+            formControlName="image"
+            #selectImages
+          />
+        </div>
 
-    <!-- Health Records -->
-    <div class="form-section mt-4">
-      <label class="section-label">
-        <i class="bi bi-heart-pulse mr-2"></i>Health Records
-      </label>
-      <div class="health-checkboxes">
-        <label class="checkbox-modern">
-          <input type="checkbox" formControlName="has_vaccination" />
-          <span class="checkbox-custom"></span>
-          <span class="checkbox-label">Vaccinated</span>
-        </label>
-        <label class="checkbox-modern">
-          <input type="checkbox" formControlName="has_birthcertificate" />
-          <span class="checkbox-custom"></span>
-          <span class="checkbox-label">Birth Certificate</span>
-        </label>
-        <label class="checkbox-modern">
-          <input type="checkbox" formControlName="has_healthcertificate" />
-          <span class="checkbox-custom"></span>
-          <span class="checkbox-label">Health Certificate</span>
-        </label>
-        <label class="checkbox-modern">
-          <input type="checkbox" formControlName="has_dewormed" />
-          <span class="checkbox-custom"></span>
-          <span class="checkbox-label">Dewormed</span>
-        </label>
+        <!-- Description -->
+        <div class="form-group-modern">
+          <label for="description" class="form-label-modern">Description</label>
+          <textarea
+            id="description"
+            class="form-control-modern"
+            rows="3"
+            placeholder="Tell us about your pet's personality..."
+            formControlName="pet_desc"
+            maxlength="200"
+          ></textarea>
+          <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
+        </div>
+
+        <!-- Health Records -->
+        <div class="form-group-modern">
+          <div class="column-heading column-heading--red mb-2" style="margin-bottom: 0.5rem;">
+            <i class="bi bi-heart-pulse"></i>
+            <span>Health Records</span>
+          </div>
+          <div class="health-checkboxes">
+            <label class="checkbox-modern">
+              <input type="checkbox" formControlName="has_vaccination" />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-label">Vaccinated</span>
+            </label>
+            <label class="checkbox-modern">
+              <input type="checkbox" formControlName="has_birthcertificate" />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-label">Birth Certificate</span>
+            </label>
+            <label class="checkbox-modern">
+              <input type="checkbox" formControlName="has_healthcertificate" />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-label">Health Certificate</span>
+            </label>
+            <label class="checkbox-modern">
+              <input type="checkbox" formControlName="has_dewormed" />
+              <span class="checkbox-custom"></span>
+              <span class="checkbox-label">Dewormed</span>
+            </label>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
+  <!-- Footer -->
   <div class="modal-footer-modern">
     <button type="button" class="btn-secondary-modern" (click)="modalClose()">
-      <i class="bi bi-x-lg mr-2"></i>Cancel
+      Cancel
     </button>
     <button type="submit" class="btn-primary-modern" [disabled]="!form.valid">
-      <i class="bi bi-check-lg mr-2"></i>Save Pet
+      Save
     </button>
   </div>
 </form>

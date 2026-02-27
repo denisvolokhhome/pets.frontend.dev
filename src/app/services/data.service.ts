@@ -139,11 +139,11 @@ export class DataService {
       );
   }
 
-  getBreeds(): Observable<IBreed[]> {
-    return this.http.get<IBreed[]>(this.apiurl + '/breeds').
-    pipe(
-      tap((breeds: IBreed[]) => (this.breeds = breeds))
-    );
+  getBreeds(kind?: string): Observable<IBreed[]> {
+    const params: any = kind ? { kind } : {};
+    return this.http
+      .get<IBreed[]>(this.apiurl + '/breeds', { params })
+      .pipe(tap((breeds: IBreed[]) => (this.breeds = breeds)));
   }
 
   getLocations(id?: any): Observable<ILocation[]> {
