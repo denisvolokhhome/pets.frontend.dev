@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { IBreeding } from 'src/app/models/breeding';
 import { IPet } from 'src/app/models/pet';
+import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -31,6 +32,9 @@ export class BreedingModalComponent implements OnInit, OnChanges {
   locationError: string = '';
   isLoadingPets: boolean = false;
   isSaving: boolean = false;
+
+  // Breeds for validation
+  breeds: IBreed[] = [];
 
   constructor(
     private dataService: DataService,
@@ -133,6 +137,23 @@ export class BreedingModalComponent implements OnInit, OnChanges {
         return;
       }
 
+      // Validate same kind (dog, cat, etc.)
+      if (pet1 && pet2) {
+        const breed1 = this.breeds.find(b => b.id === pet1.breed_id);
+        const breed2 = this.breeds.find(b => b.id === pet2.breed_id);
+        
+        if (breed1 && breed2 && breed1.kind !== breed2.kind) {
+          const kind1 = breed1.kind.charAt(0).toUpperCase() + breed1.kind.slice(1);
+          const kind2 = breed2.kind.charAt(0).toUpperCase() + breed2.kind.slice(1);
+          this.locationError = `Cannot breed different animal kinds: ${kind1} and ${kind2}`;
+          this.toastr.error(
+            `Cannot breed different animal kinds: ${kind1} and ${kind2}`,
+            'Invalid Breeding'
+          );
+          return;
+        }
+      }
+
       this.isSaving = true;
       
       // Create new breeding
@@ -199,48 +220,62 @@ export class BreedingModalComponent implements OnInit, OnChanges {
   loadAvailablePets(): void {
     this.isLoadingPets = true;
     
-    // Get current user first, then load their pets
-    this.authService.IsLoggedIn().subscribe({
-      next: (user) => {
-        if (user && user.id) {
-          this.dataService.getPetsByBreeder(user.id).subscribe({
-            next: (pets) => {
-              // Filter out puppies - only adult pets can be parents
-              this.availablePets = pets.filter(pet => !pet.is_puppy);
-              
-              if (this.availablePets.length === 0 && pets.length > 0) {
-                this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents.';
-                this.toastr.warning('All your pets are marked as puppies. Edit a pet and uncheck "Is Puppy" to mark it as an adult.', 'No Adult Pets');
-              } else if (pets.length === 0) {
-                this.locationError = 'No pets found. Please add adult pets first.';
-                this.toastr.warning('No pets found. Please add adult pets first.', 'Warning');
-              } else if (this.availablePets.length < 2) {
-                this.locationError = 'You need at least 2 adult pets to create a breeding.';
-                this.toastr.warning('You need at least 2 adult pets to create a breeding.', 'Insufficient Pets');
-              }
-              
-              this.isLoadingPets = false;
-              this.cdr.detectChanges();
-            },
-            error: (error) => {
-              console.error('Error loading pets:', error);
-              this.locationError = 'Failed to load available pets';
-              this.toastr.error('Failed to load available pets', 'Error');
+    // Load breeds first for validation
+    this.dataService.getBreeds().subscribe({
+      next: (breeds) => {
+        this.breeds = breeds;
+        
+        // Get current user first, then load their pets
+        this.authService.IsLoggedIn().subscribe({
+          next: (user) => {
+            if (user && user.id) {
+              this.dataService.getPetsByBreeder(user.id).subscribe({
+                next: (pets) => {
+                  // Filter out puppies - only adult pets can be parents
+                  this.availablePets = pets.filter(pet => !pet.is_puppy);
+                  
+                  if (this.availablePets.length === 0 && pets.length > 0) {
+                    this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents.';
+                    this.toastr.warning('All your pets are marked as puppies. Edit a pet and uncheck "Is Puppy" to mark it as an adult.', 'No Adult Pets');
+                  } else if (pets.length === 0) {
+                    this.locationError = 'No pets found. Please add adult pets first.';
+                    this.toastr.warning('No pets found. Please add adult pets first.', 'Warning');
+                  } else if (this.availablePets.length < 2) {
+                    this.locationError = 'You need at least 2 adult pets to create a breeding.';
+                    this.toastr.warning('You need at least 2 adult pets to create a breeding.', 'Insufficient Pets');
+                  }
+                  
+                  this.isLoadingPets = false;
+                  this.cdr.detectChanges();
+                },
+                error: (error) => {
+                  console.error('Error loading pets:', error);
+                  this.locationError = 'Failed to load available pets';
+                  this.toastr.error('Failed to load available pets', 'Error');
+                  this.isLoadingPets = false;
+                  this.cdr.detectChanges();
+                }
+              });
+            } else {
+              this.locationError = 'User not authenticated';
+              this.toastr.error('User not authenticated', 'Error');
               this.isLoadingPets = false;
               this.cdr.detectChanges();
             }
-          });
-        } else {
-          this.locationError = 'User not authenticated';
-          this.toastr.error('User not authenticated', 'Error');
-          this.isLoadingPets = false;
-          this.cdr.detectChanges();
-        }
+          },
+          error: (error) => {
+            console.error('Error getting user:', error);
+            this.locationError = 'Failed to authenticate user';
+            this.toastr.error('Failed to authenticate user', 'Error');
+            this.isLoadingPets = false;
+            this.cdr.detectChanges();
+          }
+        });
       },
       error: (error) => {
-        console.error('Error getting user:', error);
-        this.locationError = 'Failed to authenticate user';
-        this.toastr.error('Failed to authenticate user', 'Error');
+        console.error('Error loading breeds:', error);
+        this.locationError = 'Failed to load breed information';
+        this.toastr.error('Failed to load breed information', 'Error');
         this.isLoadingPets = false;
         this.cdr.detectChanges();
       }
@@ -255,14 +290,24 @@ export class BreedingModalComponent implements OnInit, OnChanges {
       const firstPet = this.availablePets.find(p => p.id === this.selectedPet1);
       
       if (firstPet) {
-        // Filter second pet list to only show pets from the same location
-        this.filteredPets = this.availablePets.filter(
-          pet => pet.location_name === firstPet.location_name && pet.id !== this.selectedPet1
-        );
+        const firstPetBreed = this.breeds.find(b => b.id === firstPet.breed_id);
+        
+        // Filter second pet list to only show pets from the same location and same kind
+        this.filteredPets = this.availablePets.filter(pet => {
+          if (pet.id === this.selectedPet1) return false;
+          if (pet.location_name !== firstPet.location_name) return false;
+          
+          // Check if pet has the same kind
+          const petBreed = this.breeds.find(b => b.id === pet.breed_id);
+          return petBreed?.kind === firstPetBreed?.kind;
+        });
         
         if (this.filteredPets.length === 0) {
-          this.locationError = `No other adult pets found at location "${firstPet.location_name}". Both parent pets must be at the same location.`;
-          this.toastr.warning(`No other adult pets at "${firstPet.location_name}"`, 'Location Mismatch');
+          const kindLabel = firstPetBreed?.kind ? 
+            firstPetBreed.kind.charAt(0).toUpperCase() + firstPetBreed.kind.slice(1) : 
+            'same kind';
+          this.locationError = `No other adult ${kindLabel}s found at location "${firstPet.location_name}". Both parent pets must be at the same location and of the same animal kind.`;
+          this.toastr.warning(`No other adult ${kindLabel}s at "${firstPet.location_name}"`, 'No Compatible Pets');
         }
       }
     } else {

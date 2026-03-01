@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { IPet } from 'src/app/models/pet';
+import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -33,6 +34,9 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   // Loading states
   isLoadingPets: boolean = false;
   isSaving: boolean = false;
+
+  // Breeds for validation
+  breeds: IBreed[] = [];
 
   // API configuration
   apihost = environment.API_HOST;
@@ -91,64 +95,88 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
 
     this.isLoadingPets = true;
     
-    this.authService.IsLoggedIn().subscribe({
-      next: (user) => {
-        if (!user || !user.id) {
-          console.log('No authenticated user, skipping pet load');
-          this.isLoadingPets = false;
-          return;
-        }
-
-        console.log('Loading pets for user:', user.id);
-        this.dataService.getPetsByBreeder(user.id).subscribe({
-          next: (pets) => {
-            console.log('All pets loaded:', pets);
-            console.log('Selected pet:', this.selectedPet);
-            
-            // Filter: opposite gender, not puppy, not the selected pet
-            const selectedGender = this.selectedPet?.gender;
-            console.log('Selected pet gender:', selectedGender);
-            
-            // Determine opposite gender (Male/Female only)
-            const oppositeGender = selectedGender === 'Male' ? 'Female' : 'Male';
-            
-            console.log('Looking for opposite gender:', oppositeGender);
-            
-            this.availablePets = pets.filter(pet => {
-              const isPuppy = pet.is_puppy === 1 || pet.is_puppy === true;
-              const isSamePet = pet.id === this.selectedPet?.id;
-              const petGender = pet.gender;
-              const isOppositeGender = petGender === oppositeGender;
-              const isSameLocation = pet.location_name === this.selectedPet?.location_name;
-              
-              console.log(`Pet ${pet.name}: isPuppy=${isPuppy}, isSamePet=${isSamePet}, gender=${petGender}, isOppositeGender=${isOppositeGender}, location=${pet.location_name}, isSameLocation=${isSameLocation}`);
-              
-              // For now, let's not filter by location to see all available pets
-              return !isSamePet && !isPuppy && isOppositeGender;
-            });
-            
-            console.log('Available pets after filtering:', this.availablePets);
-            
-            this.filteredPets = [...this.availablePets];
-            
-            if (this.availablePets.length === 0) {
-              console.log('No pets found - showing warning');
-              this.toastr.warning(
-                `No ${this.getOppositeGender().toLowerCase()} adult pets found`,
-                'No Available Pets'
-              );
-            } else {
-              console.log(`Found ${this.availablePets.length} available pets`);
+    // Load breeds first for validation
+    this.dataService.getBreeds().subscribe({
+      next: (breeds) => {
+        this.breeds = breeds;
+        
+        this.authService.IsLoggedIn().subscribe({
+          next: (user) => {
+            if (!user || !user.id) {
+              console.log('No authenticated user, skipping pet load');
+              this.isLoadingPets = false;
+              return;
             }
-            
-            this.isLoadingPets = false;
-            this.cdr.detectChanges();
+
+            console.log('Loading pets for user:', user.id);
+            this.dataService.getPetsByBreeder(user.id).subscribe({
+              next: (pets) => {
+                console.log('All pets loaded:', pets);
+                console.log('Selected pet:', this.selectedPet);
+                
+                // Get the selected pet's breed kind
+                const selectedPetBreed = this.breeds.find(b => b.id === this.selectedPet?.breed_id);
+                const selectedPetKind = selectedPetBreed?.kind;
+                
+                // Filter: opposite gender, not puppy, not the selected pet, same kind
+                const selectedGender = this.selectedPet?.gender;
+                console.log('Selected pet gender:', selectedGender);
+                console.log('Selected pet kind:', selectedPetKind);
+                
+                // Determine opposite gender (Male/Female only)
+                const oppositeGender = selectedGender === 'Male' ? 'Female' : 'Male';
+                
+                console.log('Looking for opposite gender:', oppositeGender);
+                
+                this.availablePets = pets.filter(pet => {
+                  const isPuppy = pet.is_puppy === 1 || pet.is_puppy === true;
+                  const isSamePet = pet.id === this.selectedPet?.id;
+                  const petGender = pet.gender;
+                  const isOppositeGender = petGender === oppositeGender;
+                  
+                  // Check if pet has the same kind as selected pet
+                  const petBreed = this.breeds.find(b => b.id === pet.breed_id);
+                  const isSameKind = petBreed?.kind === selectedPetKind;
+                  
+                  console.log(`Pet ${pet.name}: isPuppy=${isPuppy}, isSamePet=${isSamePet}, gender=${petGender}, isOppositeGender=${isOppositeGender}, kind=${petBreed?.kind}, isSameKind=${isSameKind}`);
+                  
+                  return !isSamePet && !isPuppy && isOppositeGender && isSameKind;
+                });
+                
+                console.log('Available pets after filtering:', this.availablePets);
+                
+                this.filteredPets = [...this.availablePets];
+                
+                if (this.availablePets.length === 0) {
+                  console.log('No pets found - showing warning');
+                  const kindLabel = selectedPetKind ? selectedPetKind.charAt(0).toUpperCase() + selectedPetKind.slice(1) : 'same kind';
+                  this.toastr.warning(
+                    `No ${this.getOppositeGender().toLowerCase()} adult ${kindLabel}s found for breeding`,
+                    'No Available Pets'
+                  );
+                } else {
+                  console.log(`Found ${this.availablePets.length} available pets`);
+                }
+                
+                this.isLoadingPets = false;
+                this.cdr.detectChanges();
+              },
+              error: (error) => {
+                console.error('Error loading pets:', error);
+                // Don't show error toast if it's just an auth issue
+                if (error.status !== 401) {
+                  this.toastr.error('Failed to load available pets', 'Error');
+                }
+                this.isLoadingPets = false;
+                this.cdr.detectChanges();
+              }
+            });
           },
           error: (error) => {
-            console.error('Error loading pets:', error);
+            console.error('Error getting user:', error);
             // Don't show error toast if it's just an auth issue
             if (error.status !== 401) {
-              this.toastr.error('Failed to load available pets', 'Error');
+              this.toastr.error('Failed to authenticate user', 'Error');
             }
             this.isLoadingPets = false;
             this.cdr.detectChanges();
@@ -156,11 +184,8 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
         });
       },
       error: (error) => {
-        console.error('Error getting user:', error);
-        // Don't show error toast if it's just an auth issue
-        if (error.status !== 401) {
-          this.toastr.error('Failed to authenticate user', 'Error');
-        }
+        console.error('Error loading breeds:', error);
+        this.toastr.error('Failed to load breed information', 'Error');
         this.isLoadingPets = false;
         this.cdr.detectChanges();
       }
@@ -224,6 +249,20 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   createBreeding(): void {
     if (!this.selectedPet || !this.selectedPartnerPet) {
       this.toastr.error('Please select both parent pets', 'Validation Error');
+      return;
+    }
+
+    // Validate that both pets are of the same kind
+    const selectedPetBreed = this.breeds.find(b => b.id === this.selectedPet?.breed_id);
+    const partnerPetBreed = this.breeds.find(b => b.id === this.selectedPartnerPet?.breed_id);
+    
+    if (selectedPetBreed && partnerPetBreed && selectedPetBreed.kind !== partnerPetBreed.kind) {
+      const selectedKind = selectedPetBreed.kind.charAt(0).toUpperCase() + selectedPetBreed.kind.slice(1);
+      const partnerKind = partnerPetBreed.kind.charAt(0).toUpperCase() + partnerPetBreed.kind.slice(1);
+      this.toastr.error(
+        `Cannot breed different animal kinds: ${selectedKind} and ${partnerKind}`,
+        'Invalid Breeding'
+      );
       return;
     }
 
