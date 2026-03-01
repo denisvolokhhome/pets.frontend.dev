@@ -19,14 +19,13 @@
     <!-- 3-Column Grid -->
     <div class="pet-form-columns">
 
-      <!-- ── Column 1: Identity ── -->
+      <!-- Column 1: Identity -->
       <div class="form-column">
         <div class="column-heading">
           <i class="bi bi-tag"></i>
           <span>Identity</span>
         </div>
 
-        <!-- Pet Type -->
         <div class="form-group-modern">
           <label class="form-label-modern">Select Pet Type *</label>
           <div class="pet-type-grid">
@@ -42,7 +41,6 @@
           </div>
         </div>
 
-        <!-- Pet Name -->
         <div class="form-group-modern">
           <label for="petName" class="form-label-modern">Pet Name *</label>
           <input
@@ -55,7 +53,6 @@
           />
         </div>
 
-        <!-- Breed autocomplete -->
         <div class="form-group-modern">
           <label for="breed" class="form-label-modern">Breed *</label>
           <div class="autocomplete-wrapper">
@@ -85,16 +82,7 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- ── Column 2: Physical Stats & Location ── -->
-      <div class="form-column">
-        <div class="column-heading column-heading--orange">
-          <i class="bi bi-info-circle"></i>
-          <span>Physical Stats &amp; Location</span>
-        </div>
-
-        <!-- Date of Birth -->
         <div class="form-group-modern">
           <label for="dob" class="form-label-modern">Date of Birth *</label>
           <input
@@ -105,8 +93,17 @@
             [max]="maxDate | date:'yyyy-MM-dd'"
           />
         </div>
+      </div>
 
-        <!-- Gender -->
+      <div class="column-separator"></div>
+
+      <!-- Column 2: Physical Stats & Location -->
+      <div class="form-column">
+        <div class="column-heading column-heading--orange">
+          <i class="bi bi-info-circle"></i>
+          <span>Physical Stats &amp; Location</span>
+        </div>
+
         <div class="form-group-modern">
           <label class="form-label-modern">Gender *</label>
           <div class="gender-selector">
@@ -123,7 +120,6 @@
           </div>
         </div>
 
-        <!-- Weight -->
         <div class="form-group-modern">
           <label for="weight" class="form-label-modern">Weight (kg) *</label>
           <input
@@ -135,7 +131,6 @@
           />
         </div>
 
-        <!-- Location -->
         <div class="form-group-modern">
           <label for="location" class="form-label-modern">Location *</label>
           <select
@@ -151,18 +146,18 @@
         </div>
       </div>
 
-      <!-- ── Column 3: Media & Records ── -->
+      <div class="column-separator"></div>
+
+      <!-- Column 3: Media & Records -->
       <div class="form-column">
         <div class="column-heading column-heading--red">
           <i class="bi bi-heart-pulse"></i>
           <span>Media &amp; Records</span>
         </div>
 
-        <!-- Multi-photo upload -->
         <div class="form-group-modern">
           <label class="form-label-modern">Photos (Up to 5) *</label>
           <div class="photo-grid">
-            <!-- Upload button -->
             <div
               class="photo-upload-tile"
               (click)="selectImages.click()"
@@ -171,7 +166,6 @@
               <i class="bi bi-plus-lg"></i>
               <span>Upload</span>
             </div>
-            <!-- Preview tiles -->
             <div
               class="photo-preview-tile"
               *ngFor="let preview of imagePreviews; let i = index"
@@ -193,7 +187,6 @@
           />
         </div>
 
-        <!-- Description -->
         <div class="form-group-modern">
           <label for="description" class="form-label-modern">Description</label>
           <textarea
@@ -207,9 +200,8 @@
           <small class="char-count">{{ form.value.pet_desc?.length || 0 }}/200</small>
         </div>
 
-        <!-- Health Records -->
         <div class="form-group-modern">
-          <div class="column-heading column-heading--red mb-2" style="margin-bottom: 0.5rem;">
+          <div class="column-heading column-heading--red" style="margin-bottom: 0.5rem;">
             <i class="bi bi-heart-pulse"></i>
             <span>Health Records</span>
           </div>
@@ -241,13 +233,8 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="modal-footer-modern">
-    <button type="button" class="btn-secondary-modern" (click)="modalClose()">
-      Cancel
-    </button>
-    <button type="submit" class="btn-primary-modern" [disabled]="!form.valid">
-      Save
-    </button>
+    <button type="button" class="btn-secondary-modern" (click)="modalClose()">Cancel</button>
+    <button type="submit" class="btn-primary-modern" [disabled]="!form.valid">Save</button>
   </div>
 </form>

@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
+import { IBreed } from 'src/app/models/breed';
+import { IPetType, PET_TYPES } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -26,6 +28,7 @@ export class PetsComponent implements OnInit {
   pets: IPet [] = [];
   filteredPets: IPet[] = [];
   locations: ILocation[] = [];
+  breeds: IBreed[] = [];
   pet: IPet;
   view: string = 'cards';
   title: string = 'Pets';
@@ -33,9 +36,13 @@ export class PetsComponent implements OnInit {
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
   
+  // Pet types for filter
+  petTypes: IPetType[] = PET_TYPES;
+  
   // Filter states
   selectedLocation: string = '';
   selectedGender: string = '';
+  selectedPetType: string = '';
   selectedHealthFilters = {
     vaccination: false,
     microchip: false,
@@ -47,6 +54,7 @@ export class PetsComponent implements OnInit {
   ngOnInit(): void {
     this.loadPets();
     this.loadLocations();
+    this.loadBreeds();
     
     // Reload pets when navigating back to this component
     // This ensures newly added puppies from litter flow are displayed
@@ -82,12 +90,16 @@ export class PetsComponent implements OnInit {
     });
   }
 
+  loadBreeds(): void {
+    this.DataService.getBreeds().subscribe((breeds) => {
+      this.breeds = breeds;
+    });
+  }
+
   applyFilters(): void {
     this.filteredPets = this.pets.filter(pet => {
       // Always exclude puppies from the pets screen
-      // Check for truthy values: 1, true, or any truthy value
       if (pet.is_puppy) {
-        console.log('Filtering out puppy:', pet.name, 'is_puppy:', pet.is_puppy);
         return false;
       }
 
@@ -99,6 +111,14 @@ export class PetsComponent implements OnInit {
       // Gender filter
       if (this.selectedGender && pet.gender !== this.selectedGender) {
         return false;
+      }
+
+      // Pet type filter - match pet's breed_id with breeds array and check kind
+      if (this.selectedPetType) {
+        const breed = this.breeds.find(b => b.id === pet.breed_id);
+        if (!breed || breed.kind !== this.selectedPetType) {
+          return false;
+        }
       }
 
       // Health filters - pet must have ALL selected health records
@@ -120,7 +140,6 @@ export class PetsComponent implements OnInit {
 
       return true;
     });
-    console.log('Filtered pets count:', this.filteredPets.length);
   }
 
   onLocationFilterChange(location: string): void {
@@ -133,9 +152,15 @@ export class PetsComponent implements OnInit {
     this.applyFilters();
   }
 
+  onPetTypeFilterChange(petType: string): void {
+    this.selectedPetType = this.selectedPetType === petType ? '' : petType;
+    this.applyFilters();
+  }
+
   clearFilters(): void {
     this.selectedLocation = '';
     this.selectedGender = '';
+    this.selectedPetType = '';
     this.selectedHealthFilters = {
       vaccination: false,
       microchip: false,
@@ -150,6 +175,7 @@ export class PetsComponent implements OnInit {
     return !!(
       this.selectedLocation ||
       this.selectedGender ||
+      this.selectedPetType ||
       Object.values(this.selectedHealthFilters).some(v => v)
     );
   }

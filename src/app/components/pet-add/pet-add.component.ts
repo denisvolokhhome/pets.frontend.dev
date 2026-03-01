@@ -4,14 +4,9 @@ import { DataService } from './../../services/data.service';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
+import { IPetType, PET_TYPES } from 'src/app/models/pet-type';
 import { DatePipe } from '@angular/common';
 declare var window: any;
-
-interface PetType {
-  value: string;   // matches IBreed.kind — 'dog' | 'cat' | 'cow' | 'horse'
-  label: string;
-  icon: string;    // emoji icon displayed in the tile
-}
 
 @Component({
   standalone: false,
@@ -22,12 +17,7 @@ interface PetType {
 export class PetAddComponent implements OnInit {
 
   // ── Pet type tiles ──────────────────────────────────────────────────────────
-  petTypes: PetType[] = [
-    { value: 'dog',   label: 'Dog',   icon: '🐕' },
-    { value: 'cat',   label: 'Cat',   icon: '🐈' },
-    { value: 'cow',   label: 'Cow',   icon: '🐄' },
-    { value: 'horse', label: 'Horse', icon: '🐴' },
-  ];
+  petTypes: IPetType[] = PET_TYPES;
   selectedPetType: string = '';
 
   // ── Breeds ──────────────────────────────────────────────────────────────────

@@ -110,6 +110,25 @@
         </div>
       </div>
 
+      <!-- Pet Type Filter -->
+      <div class="filter-group">
+        <label class="filter-label">
+          <i class="bi bi-tag-fill"></i>
+          Pet Type
+        </label>
+        <div class="pet-type-filter-buttons">
+          <button 
+            *ngFor="let type of petTypes"
+            class="pet-type-filter-btn"
+            [class.active]="selectedPetType === type.value"
+            (click)="onPetTypeFilterChange(type.value)"
+            [title]="type.label">
+            <span class="pet-type-icon-small">{{ type.icon }}</span>
+            <span class="pet-type-label-small">{{ type.label }}</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Health Records Filter -->
       <div class="filter-group">
         <label class="filter-label">
