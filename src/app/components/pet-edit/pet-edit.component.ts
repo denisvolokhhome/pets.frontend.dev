@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
 import { IPet } from 'src/app/models/pet';
+import { getPetTypeLabel, getPetTypeIcon } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { DatePipe } from '@angular/common';
@@ -31,18 +32,55 @@ export class PetEditComponent implements OnInit, OnChanges {
   locations: ILocation[];
   pets: IPet[] = [];
   maxDate: Date;
-  image_path: any;
+  imagePreviews: string[] = [];
+  imageFiles: File[] = [];
 
-  readURL(event: any): void {
-    this.image_path = window.URL.createObjectURL(event.target.files[0]);
+  readURLMultiple(event: any): void {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      // Calculate how many more images we can add
+      const remainingSlots = 5 - this.imagePreviews.length;
+      const filesToAdd = Math.min(files.length, remainingSlots);
 
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-
-      this.form.patchValue({
-        imageSource: file
-      });
+      for (let i = 0; i < filesToAdd; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        reader.onload = (e: any) => {
+          this.imagePreviews.push(e.target.result);
+        };
+        
+        reader.readAsDataURL(file);
+        this.imageFiles.push(file);
+      }
     }
+  }
+
+  removeImage(index: number): void {
+    this.imagePreviews.splice(index, 1);
+    this.imageFiles.splice(index, 1);
+  }
+
+  getPetTypeLabel(): string {
+    if (!this.pet || !this.breeds) return 'Not specified';
+    
+    const breed = this.breeds.find(b => b.id === this.pet.breed_id);
+    if (breed && breed.kind) {
+      return getPetTypeLabel(breed.kind);
+    }
+    
+    return 'Not specified';
+  }
+
+  getPetTypeIcon(): string {
+    if (!this.pet || !this.breeds) return '🐾';
+    
+    const breed = this.breeds.find(b => b.id === this.pet.breed_id);
+    if (breed && breed.kind) {
+      return getPetTypeIcon(breed.kind);
+    }
+    
+    return '🐾';
   }
 
   ngOnInit(): void {
@@ -58,8 +96,9 @@ export class PetEditComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pet'] && this.pet) {
-      // Clear image path first to prevent showing previous pet's image
-      this.image_path = null;
+      // Clear image arrays first to prevent showing previous pet's images
+      this.imagePreviews = [];
+      this.imageFiles = [];
       this.populateForm();
     }
   }
@@ -67,12 +106,13 @@ export class PetEditComponent implements OnInit, OnChanges {
   populateForm(): void {
     if (!this.pet) return;
 
-    // Set image path if exists, otherwise clear it
+    // Load existing image if exists
     if (this.pet.image_path) {
-      this.image_path = this.getImageUrl(this.pet.image_path);
+      this.imagePreviews = [this.getImageUrl(this.pet.image_path)];
     } else {
-      this.image_path = null;
+      this.imagePreviews = [];
     }
+    this.imageFiles = [];
 
     // Populate form with pet data (only editable fields)
     this.form.patchValue({
@@ -215,10 +255,11 @@ export class PetEditComponent implements OnInit, OnChanges {
       // First update the pet data
       this.DataService.updatePet(this.pet.id, updateData).subscribe({
         next: () => {
-          // If there's an image to upload, upload it separately
-          const imageFile = this.form.get('imageSource')?.value as any;
-          if (imageFile && imageFile instanceof File) {
-            this.DataService.uploadPetImage(this.pet.id, imageFile as File).subscribe({
+          // If there are new images to upload, upload them
+          if (this.imageFiles.length > 0) {
+            // For now, upload only the first image (backend supports single image)
+            // TODO: Update backend to support multiple images
+            this.DataService.uploadPetImage(this.pet.id, this.imageFiles[0]).subscribe({
               next: () => {
                 this.modalService.close('editPetModal');
                 window.location.reload();
