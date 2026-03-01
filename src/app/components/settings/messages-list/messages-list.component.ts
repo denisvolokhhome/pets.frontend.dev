@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MessageService, MessageListItem } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
+import { FilterConfig, FilterValues } from '../../shared/filter-widget/filter-widget.component';
 
 @Component({
   selector: 'app-messages-list',
@@ -17,7 +18,21 @@ export class MessagesListComponent implements OnInit {
   isLoading: boolean = false;
   searchTerm: string = '';
   
-  // Filters
+  // Filter widget configuration
+  filterConfig: FilterConfig = {
+    showLocation: false,
+    showGender: false,
+    showPetType: false,
+    showStatus: true,
+    showBreed: false,
+    showHealthRecords: false,
+    showSortOrder: true
+  };
+  
+  // Current filter values
+  currentFilters: FilterValues = {};
+  
+  // Filters (for backward compatibility)
   statusFilter: 'all' | 'read' | 'unread' = 'all';
   
   // Pagination
@@ -36,6 +51,13 @@ export class MessagesListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Configure status options based on user type
+    this.filterConfig.statusOptions = [
+      { value: 'all', label: 'All Messages' },
+      { value: 'unread', label: this.isBreeder ? 'Unread' : 'Pending Response' },
+      { value: 'read', label: this.isBreeder ? 'Read' : 'Responded' }
+    ];
+    
     this.loadMessages();
   }
 
@@ -64,6 +86,38 @@ export class MessagesListComponent implements OnInit {
           this.cdr.detectChanges(); // Force change detection on error
         }
       });
+  }
+
+  /**
+   * Handle filter changes from filter widget
+   */
+  onWidgetFilterChange(filters: FilterValues): void {
+    this.currentFilters = filters;
+    
+    // Map filter values to component state
+    if (filters.status) {
+      this.statusFilter = filters.status as 'all' | 'read' | 'unread';
+    } else {
+      this.statusFilter = 'all';
+    }
+    
+    if (filters.sortOrder) {
+      this.sortOrder = filters.sortOrder as 'newest' | 'oldest';
+    }
+    
+    this.currentPage = 0;
+    this.loadMessages();
+  }
+
+  /**
+   * Handle clear filters from filter widget
+   */
+  onWidgetClearFilters(): void {
+    this.currentFilters = {};
+    this.statusFilter = 'all';
+    this.sortOrder = 'newest';
+    this.currentPage = 0;
+    this.loadMessages();
   }
 
   /**

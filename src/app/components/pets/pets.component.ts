@@ -8,6 +8,7 @@ import { IPetType, PET_TYPES } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 
 @Component({
   standalone: false,
@@ -36,20 +37,18 @@ export class PetsComponent implements OnInit {
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
   
-  // Pet types for filter
-  petTypes: IPetType[] = PET_TYPES;
-  
-  // Filter states
-  selectedLocation: string = '';
-  selectedGender: string = '';
-  selectedPetType: string = '';
-  selectedHealthFilters = {
-    vaccination: false,
-    microchip: false,
-    healthcertificate: false,
-    dewormed: false,
-    birthcertificate: false
+  // Filter widget configuration
+  filterConfig: FilterConfig = {
+    showLocation: true,
+    showGender: true,
+    showPetType: true,
+    showStatus: false,
+    showBreed: false,
+    showHealthRecords: true
   };
+  
+  // Current filter values
+  currentFilters: FilterValues = {};
 
   ngOnInit(): void {
     this.loadPets();
@@ -96,6 +95,16 @@ export class PetsComponent implements OnInit {
     });
   }
 
+  onFilterChange(filters: FilterValues): void {
+    this.currentFilters = filters;
+    this.applyFilters();
+  }
+
+  onClearFilters(): void {
+    this.currentFilters = {};
+    this.applyFilters();
+  }
+
   applyFilters(): void {
     this.filteredPets = this.pets.filter(pet => {
       // Always exclude puppies from the pets screen
@@ -104,80 +113,44 @@ export class PetsComponent implements OnInit {
       }
 
       // Location filter
-      if (this.selectedLocation && pet.location_name !== this.selectedLocation) {
+      if (this.currentFilters.location && pet.location_name !== this.currentFilters.location) {
         return false;
       }
 
       // Gender filter
-      if (this.selectedGender && pet.gender !== this.selectedGender) {
+      if (this.currentFilters.gender && pet.gender !== this.currentFilters.gender) {
         return false;
       }
 
       // Pet type filter - match pet's breed_id with breeds array and check kind
-      if (this.selectedPetType) {
+      if (this.currentFilters.petType) {
         const breed = this.breeds.find(b => b.id === pet.breed_id);
-        if (!breed || breed.kind !== this.selectedPetType) {
+        if (!breed || breed.kind !== this.currentFilters.petType) {
           return false;
         }
       }
 
       // Health filters - pet must have ALL selected health records
-      if (this.selectedHealthFilters.vaccination && !pet.has_vaccination) {
-        return false;
-      }
-      if (this.selectedHealthFilters.microchip && !pet.has_microchip) {
-        return false;
-      }
-      if (this.selectedHealthFilters.healthcertificate && !pet.has_healthcertificate) {
-        return false;
-      }
-      if (this.selectedHealthFilters.dewormed && !pet.has_dewormed) {
-        return false;
-      }
-      if (this.selectedHealthFilters.birthcertificate && !pet.has_birthcertificate) {
-        return false;
+      if (this.currentFilters.healthFilters) {
+        if (this.currentFilters.healthFilters.vaccination && !pet.has_vaccination) {
+          return false;
+        }
+        if (this.currentFilters.healthFilters.microchip && !pet.has_microchip) {
+          return false;
+        }
+        if (this.currentFilters.healthFilters.healthcertificate && !pet.has_healthcertificate) {
+          return false;
+        }
+        if (this.currentFilters.healthFilters.dewormed && !pet.has_dewormed) {
+          return false;
+        }
+        if (this.currentFilters.healthFilters.birthcertificate && !pet.has_birthcertificate) {
+          return false;
+        }
       }
 
       return true;
     });
-  }
-
-  onLocationFilterChange(location: string): void {
-    this.selectedLocation = location;
-    this.applyFilters();
-  }
-
-  onGenderFilterChange(gender: string): void {
-    this.selectedGender = gender;
-    this.applyFilters();
-  }
-
-  onPetTypeFilterChange(petType: string): void {
-    this.selectedPetType = this.selectedPetType === petType ? '' : petType;
-    this.applyFilters();
-  }
-
-  clearFilters(): void {
-    this.selectedLocation = '';
-    this.selectedGender = '';
-    this.selectedPetType = '';
-    this.selectedHealthFilters = {
-      vaccination: false,
-      microchip: false,
-      healthcertificate: false,
-      dewormed: false,
-      birthcertificate: false
-    };
-    this.applyFilters();
-  }
-
-  hasActiveFilters(): boolean {
-    return !!(
-      this.selectedLocation ||
-      this.selectedGender ||
-      this.selectedPetType ||
-      Object.values(this.selectedHealthFilters).some(v => v)
-    );
   }
 
   changeLayout(viewType: string) {

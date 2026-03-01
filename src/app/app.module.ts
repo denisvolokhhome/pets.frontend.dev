@@ -58,6 +58,7 @@ import { GuestToAccountComponent } from './components/guest-to-account/guest-to-
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
+import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -116,6 +117,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     AuthCallbackComponent,
     BreederySettingsComponent,
     QuickBreedingAddComponent,
+    FilterWidgetComponent,
   ],
   imports: [
     BrowserModule,

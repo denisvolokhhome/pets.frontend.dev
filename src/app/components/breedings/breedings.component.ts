@@ -6,6 +6,7 @@ import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { ToastService } from '../../services/toast.service';
+import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 
 @Component({
   standalone: false,
@@ -29,11 +30,21 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   locations: ILocation[] = [];
   breeds: IBreed[] = [];
   
-  // Filter properties
-  selectedLocationId: string = '';
-  selectedStatus: string = '';
-  selectedBreedId: string = '';
+  // Search term
   searchTerm: string = '';
+  
+  // Filter widget configuration
+  filterConfig: FilterConfig = {
+    showLocation: true,
+    showGender: false,
+    showPetType: true,  // This will show dog/cat filter
+    showStatus: true,
+    showBreed: true,
+    showHealthRecords: false
+  };
+  
+  // Current filter values
+  currentFilters: FilterValues = {};
   
   // Loading states
   isLoading: boolean = false;
@@ -113,6 +124,17 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onFilterChange(filters: FilterValues): void {
+    this.currentFilters = filters;
+    this.applyFilters();
+  }
+
+  onClearFilters(): void {
+    this.currentFilters = {};
+    this.searchTerm = '';
+    this.applyFilters();
+  }
+
   applyFilters(): void {
     this.filteredBreedings = this.breedings.filter(breeding => {
       // Search filter - search in description
@@ -124,25 +146,36 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
         }
       }
 
-      // Location filter - compare by location name since location_id isn't in IPet
-      if (this.selectedLocationId) {
-        const selectedLocation = this.locations.find(loc => loc.id?.toString() === this.selectedLocationId);
-        const breedingLocation = this.getLocationName(breeding);
-        if (selectedLocation && breedingLocation !== selectedLocation.name) {
+      // Location filter - compare by location ID
+      if (this.currentFilters.location) {
+        const breedingLocationName = this.getLocationName(breeding);
+        const selectedLocation = this.locations.find(loc => 
+          (loc.id?.toString() === this.currentFilters.location) || 
+          (loc.name === this.currentFilters.location)
+        );
+        if (selectedLocation && breedingLocationName !== selectedLocation.name) {
           return false;
         }
       }
 
       // Status filter
-      if (this.selectedStatus && breeding.status !== this.selectedStatus) {
+      if (this.currentFilters.status && breeding.status !== this.currentFilters.status) {
         return false;
       }
 
       // Breed filter - compare by breed ID
-      if (this.selectedBreedId) {
+      if (this.currentFilters.breed) {
         const breedingBreeds = this.getBreedIds(breeding);
-        const selectedBreedIdNum = parseInt(this.selectedBreedId);
+        const selectedBreedIdNum = parseInt(this.currentFilters.breed);
         if (!breedingBreeds.includes(selectedBreedIdNum)) {
+          return false;
+        }
+      }
+
+      // Pet Type/Kind filter - filter by dog/cat
+      if (this.currentFilters.petType) {
+        const breedingKinds = this.getBreedingKinds(breeding);
+        if (!breedingKinds.includes(this.currentFilters.petType)) {
           return false;
         }
       }
@@ -154,20 +187,25 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     this.checkTableScroll();
   }
 
+  getBreedingKinds(breeding: IBreeding): string[] {
+    if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
+      return [];
+    }
+    
+    // Get unique kinds from parent pets' breeds
+    const kinds: string[] = [];
+    breeding.parent_pets.forEach(pet => {
+      const breed = this.breeds.find(b => b.id === pet.breed_id);
+      if (breed && breed.kind && !kinds.includes(breed.kind)) {
+        kinds.push(breed.kind);
+      }
+    });
+    
+    return kinds;
+  }
+
   onSearchChange(): void {
     this.applyFilters();
-  }
-
-  clearFilters(): void {
-    this.selectedLocationId = '';
-    this.selectedStatus = '';
-    this.selectedBreedId = '';
-    this.searchTerm = '';
-    this.applyFilters();
-  }
-
-  hasActiveFilters(): boolean {
-    return !!(this.selectedLocationId || this.selectedStatus || this.selectedBreedId || this.searchTerm);
   }
 
   getLocationName(breeding: IBreeding): string {

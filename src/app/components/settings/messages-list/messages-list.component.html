@@ -34,62 +34,17 @@
 
   <!-- Content Section -->
   <div class="messages-layout">
-    <!-- Filters Sidebar -->
-    <aside class="filters-sidebar">
-      <div class="filters-header">
-        <h3 class="filters-title">
-          <i class="bi bi-funnel-fill"></i>
-          Filters
-        </h3>
-        <button 
-          *ngIf="statusFilter !== 'all'" 
-          class="btn-clear-filters"
-          (click)="onFilterChange('all')"
-          title="Clear filters">
-          <i class="bi bi-x-circle-fill"></i>
-        </button>
-      </div>
-
-      <div class="filters-content">
-        <!-- Status Filter -->
-        <div class="filter-group">
-          <label class="filter-label">
-            <i class="bi bi-flag-fill"></i>
-            Status
-          </label>
-          <select 
-            class="filter-select"
-            [(ngModel)]="statusFilter"
-            (change)="onFilterChange(statusFilter)">
-            <option value="all">All Messages</option>
-            <option value="unread">{{ isBreeder ? 'Unread' : 'Pending Response' }}</option>
-            <option value="read">{{ isBreeder ? 'Read' : 'Responded' }}</option>
-          </select>
-        </div>
-
-        <!-- Sort Order -->
-        <div class="filter-group">
-          <label class="filter-label">
-            <i class="bi bi-sort-down"></i>
-            Sort By
-          </label>
-          <select 
-            class="filter-select"
-            [(ngModel)]="sortOrder"
-            (change)="onSortChange(sortOrder)">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Results Count -->
-      <div class="results-count" *ngIf="!isLoading">
-        <i class="bi bi-check-circle-fill"></i>
-        <span>{{ totalMessages }} message{{ totalMessages !== 1 ? 's' : '' }}</span>
-        <span *ngIf="unreadCount > 0" class="unread-badge">{{ unreadCount }} unread</span>
-      </div>
-    </aside>
+    <!-- Filters Sidebar - Using Filter Widget -->
+    <app-filter-widget
+      [config]="filterConfig"
+      [locations]="[]"
+      [breeds]="[]"
+      [totalCount]="totalMessages"
+      [filteredCount]="totalMessages"
+      [isLoading]="isLoading"
+      (filterChange)="onWidgetFilterChange($event)"
+      (clearFilters)="onWidgetClearFilters()">
+    </app-filter-widget>
 
     <!-- Main Content -->
     <main class="messages-content">
@@ -173,7 +128,7 @@
         <i class="bi bi-inbox"></i>
         <h3>No messages yet</h3>
         <p>{{ getEmptyStateMessage() }}</p>
-        <button *ngIf="statusFilter !== 'all'" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onFilterChange('all')">
+        <button *ngIf="statusFilter !== 'all'" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onWidgetClearFilters()">
           Clear Filters
         </button>
       </div>
