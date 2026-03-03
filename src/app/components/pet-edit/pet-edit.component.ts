@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
@@ -19,12 +19,14 @@ export class PetEditComponent implements OnInit, OnChanges {
 
   constructor(
     private DataService: DataService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private cdr: ChangeDetectorRef
   ){
     this.maxDate = new Date();
   }
 
   @Input() pet: IPet
+  @Output() petUpdated = new EventEmitter<void>();
 
   breeds: IBreed[];
   filteredBreeds: IBreed[] = [];
@@ -34,31 +36,73 @@ export class PetEditComponent implements OnInit, OnChanges {
   maxDate: Date;
   imagePreviews: string[] = [];
   imageFiles: File[] = [];
+  existingImages: any[] = []; // Track existing images from backend
+  readonly MAX_PHOTOS = 5;
 
   readURLMultiple(event: any): void {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Calculate how many more images we can add
-      const remainingSlots = 5 - this.imagePreviews.length;
+      // Calculate total images (existing + new)
+      const totalExisting = this.existingImages.length + this.imagePreviews.length;
+      const remainingSlots = this.MAX_PHOTOS - totalExisting;
       const filesToAdd = Math.min(files.length, remainingSlots);
 
       for (let i = 0; i < filesToAdd; i++) {
         const file = files[i];
-        const reader = new FileReader();
-        
-        reader.onload = (e: any) => {
-          this.imagePreviews.push(e.target.result);
-        };
-        
-        reader.readAsDataURL(file);
         this.imageFiles.push(file);
+        
+        // Create blob URL for preview
+        const blobUrl = window.URL.createObjectURL(file);
+        this.imagePreviews.push(blobUrl);
       }
+      
+      // Trigger change detection to update UI immediately
+      this.cdr.detectChanges();
     }
+    
+    // Reset input so same file can be selected again
+    event.target.value = '';
   }
 
   removeImage(index: number): void {
+    // Revoke blob URL to free memory
+    if (this.imagePreviews[index]) {
+      window.URL.revokeObjectURL(this.imagePreviews[index]);
+    }
     this.imagePreviews.splice(index, 1);
     this.imageFiles.splice(index, 1);
+  }
+
+  removeExistingImage(imageId: number): void {
+    if (confirm('Are you sure you want to delete this image?')) {
+      this.DataService.deletePetImage(this.pet.id, imageId).subscribe({
+        next: () => {
+          // Remove from local array
+          this.existingImages = this.existingImages.filter(img => img.id !== imageId);
+          this.cdr.detectChanges();
+          // Reload pet data to get updated images
+          this.reloadPetData();
+        },
+        error: (error) => {
+          console.error('Error deleting image:', error);
+          alert('Failed to delete image. Please try again.');
+        }
+      });
+    }
+  }
+
+  reloadPetData(): void {
+    // Reload the pet to get updated images
+    this.DataService.getPet(this.pet.id).subscribe({
+      next: (updatedPet) => {
+        this.pet = updatedPet;
+        this.loadExistingImages();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error reloading pet data:', error);
+      }
+    });
   }
 
   getPetTypeLabel(): string {
@@ -92,26 +136,55 @@ export class PetEditComponent implements OnInit, OnChanges {
     this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
       this.locations = locations;
     })
+    
+    // Load existing images if pet is already set
+    if (this.pet) {
+      this.loadExistingImages();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['pet'] && this.pet) {
+      console.log('Pet changed:', this.pet);
+      console.log('Pet images:', this.pet.images);
+      
       // Clear image arrays first to prevent showing previous pet's images
       this.imagePreviews = [];
       this.imageFiles = [];
+      this.existingImages = [];
       this.populateForm();
+      this.loadExistingImages();
+    }
+  }
+
+  loadExistingImages(): void {
+    if (!this.pet) return;
+    
+    // Load images from the images array (new multi-image support)
+    if (this.pet.images && this.pet.images.length > 0) {
+      this.existingImages = this.pet.images.map(img => ({
+        id: img.id,
+        url: this.getImageUrl(img.image_path),
+        is_primary: img.is_primary
+      }));
+    } 
+    // Fallback to legacy single image field
+    else if (this.pet.image_path) {
+      this.existingImages = [{
+        id: null,
+        url: this.getImageUrl(this.pet.image_path),
+        is_primary: true
+      }];
+    } else {
+      this.existingImages = [];
     }
   }
 
   populateForm(): void {
     if (!this.pet) return;
 
-    // Load existing image if exists
-    if (this.pet.image_path) {
-      this.imagePreviews = [this.getImageUrl(this.pet.image_path)];
-    } else {
-      this.imagePreviews = [];
-    }
+    // Clear new image previews
+    this.imagePreviews = [];
     this.imageFiles = [];
 
     // Populate form with pet data (only editable fields)
@@ -255,30 +328,38 @@ export class PetEditComponent implements OnInit, OnChanges {
       // First update the pet data
       this.DataService.updatePet(this.pet.id, updateData).subscribe({
         next: () => {
-          // If there are new images to upload, upload them
+          // If there are new images to upload, upload them sequentially
           if (this.imageFiles.length > 0) {
-            // For now, upload only the first image (backend supports single image)
-            // TODO: Update backend to support multiple images
-            this.DataService.uploadPetImage(this.pet.id, this.imageFiles[0]).subscribe({
-              next: () => {
-                this.modalService.close('editPetModal');
-                window.location.reload();
-              },
-              error: (error) => {
-                console.error('Error uploading image:', error);
-                alert('Pet updated but image upload failed. Please try again.');
-                this.modalService.close('editPetModal');
-                window.location.reload();
-              }
-            });
+            this.uploadImagesSequentially(0);
           } else {
             this.modalService.close('editPetModal');
-            window.location.reload();
+            this.petUpdated.emit();
           }
         },
         error: (error) => {
           console.error('Error updating pet:', error);
           alert('Failed to update pet. Please try again.');
+        }
+      });
+    }
+
+    private uploadImagesSequentially(index: number): void {
+      if (index >= this.imageFiles.length) {
+        // All images uploaded - close modal and emit event
+        this.modalService.close('editPetModal');
+        this.petUpdated.emit();
+        return;
+      }
+
+      this.DataService.uploadPetImage(this.pet.id, this.imageFiles[index]).subscribe({
+        next: () => {
+          // Upload next image
+          this.uploadImagesSequentially(index + 1);
+        },
+        error: (error) => {
+          console.error(`Error uploading image ${index + 1}:`, error);
+          // Continue with next image even if one fails
+          this.uploadImagesSequentially(index + 1);
         }
       });
     }

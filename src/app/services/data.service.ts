@@ -34,14 +34,6 @@ export class DataService {
     );
   }
 
-  getPet(id: any): Observable<IPet[]> {
-    let header = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('id_token')
-    );
-    return this.http.get<IPet[]>(this.apiurl + '/pets/' + id, {headers: header})
-  }
-
   createPet(pet: IPet): Observable<IPet> {
     // Convert breed name to breed ID
     const breed = this.breeds.find(b => b.name === pet.breed_name);
@@ -114,6 +106,32 @@ export class DataService {
     
     return this.http
       .post<IPet>(this.apiurl + '/pets/' + petId + '/image', formData, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deletePetImage(petId: string, imageId: number): Observable<IPet> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    return this.http
+      .delete<IPet>(this.apiurl + '/pets/' + petId + '/image/' + imageId, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getPet(petId: string): Observable<IPet> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    return this.http
+      .get<IPet>(this.apiurl + '/pets/' + petId, { headers: header })
       .pipe(
         catchError(this.handleError)
       );

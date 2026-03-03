@@ -186,7 +186,7 @@
   [hideHeader]="true"
   aria-labelledby="PetEditModal"
 >
-  <app-pet-edit [pet]="pet"></app-pet-edit>
+  <app-pet-edit [pet]="pet" (petUpdated)="onPetUpdated()"></app-pet-edit>
 </div>
 <div
   app-modal

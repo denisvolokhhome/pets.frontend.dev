@@ -879,3 +879,34 @@ textarea.form-control-modern {
   color: #f59e0b;
 }
 
+
+
+/* Photo badges */
+.photo-badge {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.9);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.photo-badge--new {
+  background: rgba(16, 185, 129, 0.9);
+}
+
+.photo-preview-tile--new {
+  border: 2px solid #10b981;
+}
+
+.form-text-muted {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}

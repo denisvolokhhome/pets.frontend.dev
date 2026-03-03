@@ -184,4 +184,9 @@ export class PetsComponent implements OnInit {
     console.log('Opening quick breeding for pet:', emittedPet.name);
   }
 
+  onPetUpdated(): void {
+    // Reload pets list after update
+    this.loadPets();
+  }
+
 }

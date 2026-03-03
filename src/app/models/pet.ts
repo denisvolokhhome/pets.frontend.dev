@@ -1,3 +1,14 @@
+export interface IPetImage {
+  id: number;
+  pet_id: string;
+  image_path: string;
+  image_file_name: string;
+  display_order: number;
+  is_primary: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface IPet {
   pet_id?: string;
   name: string;
@@ -12,6 +23,7 @@ export interface IPet {
   image?: File;
   image_path?: string;
   image_name?: string;
+  images?: IPetImage[];
   is_puppy: boolean | number; // Backend returns boolean, but can also be number (0/1)
   litter_id?: number | null;
   has_microchip: number;
