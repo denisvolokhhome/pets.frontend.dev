@@ -1,100 +1,102 @@
 import { TestBed } from '@angular/core/testing';
-import { ToastService, Toast } from './toast.service';
+import { ToastService } from './toast.service';
+import { MessageService } from 'primeng/api';
 
 describe('ToastService', () => {
   let service: ToastService;
+  let messageService: jasmine.SpyObj<MessageService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const messageServiceSpy = jasmine.createSpyObj('MessageService', ['add', 'clear']);
+    
+    TestBed.configureTestingModule({
+      providers: [
+        ToastService,
+        { provide: MessageService, useValue: messageServiceSpy }
+      ]
+    });
+    
     service = TestBed.inject(ToastService);
+    messageService = TestBed.inject(MessageService) as jasmine.SpyObj<MessageService>;
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  xit('should emit success toast - SKIPPED: Not critical for map feature', (done) => {
-    const message = 'Success message';
+  it('should call MessageService.add for success toast', () => {
+    const detail = 'Success message';
+    const summary = 'Success';
     
-    service.toasts$.subscribe((toast: Toast) => {
-      expect(toast.message).toBe(message);
-      expect(toast.type).toBe('success');
-      expect(toast.duration).toBe(3000);
-      done();
-    });
-
-    service.success(message);
-  });
-
-  xit('should emit error toast - SKIPPED: Not critical for map feature', (done) => {
-    const message = 'Error message';
+    service.success(detail, summary);
     
-    service.toasts$.subscribe((toast: Toast) => {
-      expect(toast.message).toBe(message);
-      expect(toast.type).toBe('error');
-      expect(toast.duration).toBe(5000);
-      done();
+    expect(messageService.add).toHaveBeenCalledWith({
+      severity: 'success',
+      summary,
+      detail,
+      life: 5000
     });
-
-    service.error(message);
   });
 
-  xit('should emit warning toast - SKIPPED: Not critical for map feature', (done) => {
-    const message = 'Warning message';
+  it('should call MessageService.add for error toast', () => {
+    const detail = 'Error message';
+    const summary = 'Error';
     
-    service.toasts$.subscribe((toast: Toast) => {
-      expect(toast.message).toBe(message);
-      expect(toast.type).toBe('warning');
-      expect(toast.duration).toBe(4000);
-      done();
-    });
-
-    service.warning(message);
-  });
-
-  xit('should emit info toast - SKIPPED: Not critical for map feature', (done) => {
-    const message = 'Info message';
+    service.error(detail, summary);
     
-    service.toasts$.subscribe((toast: Toast) => {
-      expect(toast.message).toBe(message);
-      expect(toast.type).toBe('info');
-      expect(toast.duration).toBe(3000);
-      done();
+    expect(messageService.add).toHaveBeenCalledWith({
+      severity: 'error',
+      summary,
+      detail,
+      life: 5000
     });
-
-    service.info(message);
   });
 
-  xit('should generate unique IDs for toasts - SKIPPED: Not critical for map feature', (done) => {
-    const ids: string[] = [];
-    let count = 0;
-
-    service.toasts$.subscribe((toast: Toast) => {
-      ids.push(toast.id);
-      count++;
-
-      if (count === 3) {
-        expect(ids[0]).not.toBe(ids[1]);
-        expect(ids[1]).not.toBe(ids[2]);
-        expect(ids[0]).not.toBe(ids[2]);
-        done();
-      }
+  it('should call MessageService.add for warning toast', () => {
+    const detail = 'Warning message';
+    const summary = 'Warning';
+    
+    service.warning(detail, summary);
+    
+    expect(messageService.add).toHaveBeenCalledWith({
+      severity: 'warn',
+      summary,
+      detail,
+      life: 5000
     });
-
-    service.success('Message 1');
-    service.error('Message 2');
-    service.info('Message 3');
   });
 
-  xit('should allow custom duration - SKIPPED: Not critical for map feature', (done) => {
-    const message = 'Custom duration';
+  it('should call MessageService.add for info toast', () => {
+    const detail = 'Info message';
+    const summary = 'Info';
+    
+    service.info(detail, summary);
+    
+    expect(messageService.add).toHaveBeenCalledWith({
+      severity: 'info',
+      summary,
+      detail,
+      life: 5000
+    });
+  });
+
+  it('should use custom duration from options', () => {
+    const detail = 'Custom duration';
+    const summary = 'Success';
     const customDuration = 10000;
     
-    service.toasts$.subscribe((toast: Toast) => {
-      expect(toast.duration).toBe(customDuration);
-      done();
+    service.success(detail, summary, { timeOut: customDuration });
+    
+    expect(messageService.add).toHaveBeenCalledWith({
+      severity: 'success',
+      summary,
+      detail,
+      life: customDuration
     });
+  });
 
-    service.success(message, customDuration);
+  it('should call MessageService.clear', () => {
+    service.clear();
+    expect(messageService.clear).toHaveBeenCalled();
   });
 });

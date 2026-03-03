@@ -47,16 +47,14 @@ describe('PetEditComponent - Location Field Tests', () => {
     { 
       id: 1, 
       name: 'Labrador Retriever', 
-      code: 'LAB',
-      group: 'Sporting',
+      kind: 'dog',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     },
     { 
       id: 2, 
       name: 'German Shepherd', 
-      code: 'GSD',
-      group: 'Herding',
+      kind: 'dog',
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     }
