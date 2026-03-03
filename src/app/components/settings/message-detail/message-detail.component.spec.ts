@@ -261,7 +261,7 @@ describe('MessageDetailComponent', () => {
 
       component.goBack();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/settings/messages']);
+      expect(router.navigate).toHaveBeenCalledWith(['/messages']);
     });
 
     it('should navigate to messages list if message ID is missing', () => {
@@ -271,7 +271,7 @@ describe('MessageDetailComponent', () => {
 
       component.ngOnInit();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/settings/messages']);
+      expect(router.navigate).toHaveBeenCalledWith(['/messages']);
     });
 
     it('should navigate to messages list if message not found', () => {
@@ -282,7 +282,7 @@ describe('MessageDetailComponent', () => {
       fixture.detectChanges();
 
       expect(toastr.error).toHaveBeenCalledWith('Failed to load message', 'Error');
-      expect(router.navigate).toHaveBeenCalledWith(['/settings/messages']);
+      expect(router.navigate).toHaveBeenCalledWith(['/messages']);
     });
   });
 

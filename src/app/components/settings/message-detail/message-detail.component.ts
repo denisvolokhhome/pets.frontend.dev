@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService, Message } from '../../../services/message.service';
@@ -24,7 +24,8 @@ export class MessageDetailComponent implements OnInit {
     private messageService: MessageService,
     private authService: AuthService,
     private fb: FormBuilder,
-    private toastr: ToastService
+    private toastr: ToastService,
+    private cdr: ChangeDetectorRef
   ) {
     this.responseForm = this.fb.group({
       response_text: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(5000)]]
@@ -36,7 +37,7 @@ export class MessageDetailComponent implements OnInit {
     if (messageId) {
       this.loadMessage(messageId);
     } else {
-      this.router.navigate(['/settings/messages']);
+      this.router.navigate(['/messages']);
     }
   }
 
@@ -60,12 +61,15 @@ export class MessageDetailComponent implements OnInit {
         if (!message.response_text) {
           this.showResponseForm = true;
         }
+
+        // Manually trigger change detection
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading message:', error);
         this.toastr.error('Failed to load message', 'Error');
         this.isLoading = false;
-        this.router.navigate(['/settings/messages']);
+        this.router.navigate(['/messages']);
       }
     });
   }
@@ -78,6 +82,7 @@ export class MessageDetailComponent implements OnInit {
       next: (updatedMessage) => {
         if (this.message) {
           this.message.is_read = true;
+          this.cdr.detectChanges();
         }
       },
       error: (error) => {
@@ -108,11 +113,13 @@ export class MessageDetailComponent implements OnInit {
         this.showResponseForm = false;
         this.responseForm.reset();
         this.toastr.success('Response sent successfully!', 'Success');
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error sending response:', error);
         this.toastr.error(error.message || 'Failed to send response', 'Error');
         this.isSubmitting = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -131,7 +138,7 @@ export class MessageDetailComponent implements OnInit {
    * Navigate back to messages list
    */
   goBack(): void {
-    this.router.navigate(['/settings/messages']);
+    this.router.navigate(['/messages']);
   }
 
   /**

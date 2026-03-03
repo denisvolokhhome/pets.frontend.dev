@@ -185,7 +185,7 @@ export class MessagesListComponent implements OnInit {
    * View message details
    */
   viewMessage(messageId: string): void {
-    this.router.navigate(['/settings/messages', messageId]);
+    this.router.navigate(['/messages', messageId]);
   }
 
   /**

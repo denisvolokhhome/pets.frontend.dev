@@ -112,7 +112,7 @@ export class GuestToAccountComponent implements OnInit {
           });
 
           // Redirect to messages dashboard
-          this.router.navigate(['settings/messages']);
+          this.router.navigate(['messages']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Registration error:', error);

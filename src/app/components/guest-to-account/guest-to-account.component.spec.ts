@@ -198,7 +198,7 @@ describe('GuestToAccountComponent', () => {
 
       component.proceedRegistration();
 
-      expect(router.navigate).toHaveBeenCalledWith(['settings/messages']);
+      expect(router.navigate).toHaveBeenCalledWith(['messages']);
     });
 
     it('should send undefined for empty name field', () => {
