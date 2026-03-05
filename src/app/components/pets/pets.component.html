@@ -80,9 +80,9 @@
       <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
         <i class="bi bi-search"></i>
         <h3>No pets found</h3>
-        <p *ngIf="currentFilters && Object.keys(currentFilters).length > 0">Try adjusting your filters to see more results.</p>
-        <p *ngIf="!currentFilters || Object.keys(currentFilters).length === 0">Please add a pet to get started.</p>
-        <button *ngIf="currentFilters && Object.keys(currentFilters).length > 0" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+        <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+        <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
           Clear Filters
         </button>
       </div>

@@ -35,9 +35,12 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadNotifications();
-    this.loadUnreadCount();
-    this.startPolling();
+    // Only load notifications if user is authenticated
+    if (this.isAuthenticated()) {
+      this.loadNotifications();
+      this.loadUnreadCount();
+      this.startPolling();
+    }
   }
 
   ngOnDestroy(): void {
@@ -46,6 +49,11 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   toggleDropdown(): void {
+    // Don't open dropdown if not authenticated
+    if (!this.isAuthenticated()) {
+      return;
+    }
+    
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
       this.refreshNotifications();
@@ -57,23 +65,35 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   private loadNotifications(): void {
+    if (!this.isAuthenticated()) {
+      this.notifications = [];
+      this.isLoading = false;
+      return;
+    }
+    
     this.isLoading = true;
     
     this.notificationService.getNotifications(this.MAX_DISPLAY, 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.notifications = response.notifications;
+          this.notifications = response.notifications || [];
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Error loading notifications:', error);
+          this.notifications = [];
           this.isLoading = false;
         }
       });
   }
 
   private loadUnreadCount(): void {
+    if (!this.isAuthenticated()) {
+      this.unreadCount = 0;
+      return;
+    }
+    
     this.notificationService.getUnreadCount()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -82,17 +102,24 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error loading unread count:', error);
+          this.unreadCount = 0;
         }
       });
   }
 
   private startPolling(): void {
+    if (!this.isAuthenticated()) {
+      return;
+    }
+    
     // Poll for new notifications every 30 seconds
     interval(this.POLL_INTERVAL)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.loadNotifications();
-        this.loadUnreadCount();
+        if (this.isAuthenticated()) {
+          this.loadNotifications();
+          this.loadUnreadCount();
+        }
       });
   }
 
@@ -213,6 +240,13 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   refreshNotifications(): void {
     this.loadNotifications();
     this.loadUnreadCount();
+  }
+
+  /**
+   * Check if user is authenticated
+   */
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('id_token');
   }
 
   getDisplayCount(): string {

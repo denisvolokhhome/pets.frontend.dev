@@ -153,6 +153,10 @@ export class PetsComponent implements OnInit {
     });
   }
 
+  hasActiveFilters(): boolean {
+    return this.currentFilters && Object.keys(this.currentFilters).length > 0;
+  }
+
   changeLayout(viewType: string) {
     this.view = viewType;
     console.log('Layout changed to: ' + viewType);
