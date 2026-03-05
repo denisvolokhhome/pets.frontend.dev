@@ -1,0 +1,85 @@
+<div class="offspring-card" (click)="viewDetails()">
+  <!-- Image Container -->
+  <div class="card-image-container">
+    <img 
+      [src]="getPrimaryImageUrl()" 
+      [alt]="offspring.name || 'Offspring'"
+      class="card-image">
+    
+    <!-- Status Badge -->
+    <div class="status-badge" [ngClass]="getStatusClass()">
+      {{ getStatusLabel() }}
+    </div>
+
+    <!-- Favorite Button (Authenticated Users) -->
+    <button 
+      *ngIf="showFavorite && isAuthenticated()"
+      class="favorite-btn"
+      [class.favorited]="isFavorited()"
+      [disabled]="isTogglingFavorite"
+      (click)="toggleFavorite($event)"
+      type="button"
+      [attr.aria-label]="isFavorited() ? 'Remove from favorites' : 'Add to favorites'">
+      <i [class]="isFavorited() ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+    </button>
+
+    <!-- Favorite Button (Guest Users - Disabled with Tooltip) -->
+    <button 
+      *ngIf="showFavorite && !isAuthenticated()"
+      class="favorite-btn favorite-btn-disabled"
+      (click)="toggleFavorite($event)"
+      type="button"
+      title="Login to save favorites"
+      aria-label="Login to save favorites">
+      <i class="pi pi-heart"></i>
+    </button>
+  </div>
+
+  <!-- Card Content -->
+  <div class="card-content">
+    <!-- Name -->
+    <h3 class="offspring-name">
+      {{ offspring.name || 'Unnamed' }}
+    </h3>
+
+    <!-- Info Grid -->
+    <div class="info-grid">
+      <div class="info-item">
+        <i class="pi pi-calendar"></i>
+        <span>{{ offspring.age }}</span>
+      </div>
+      
+      <div class="info-item">
+        <i class="pi pi-venus-mars"></i>
+        <span>{{ offspring.gender }}</span>
+      </div>
+      
+      <div class="info-item">
+        <i class="pi pi-tag"></i>
+        <span>{{ getBreedName() }}</span>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="price-container" *ngIf="shouldShowPrice()">
+      <span class="price">{{ formatPrice() }}</span>
+    </div>
+
+    <!-- Contact Button -->
+    <button 
+      class="contact-btn"
+      (click)="contactBreeder($event)"
+      type="button">
+      <i class="pi pi-envelope mr-2"></i>
+      Contact Breeder
+    </button>
+  </div>
+</div>
+
+<!-- Guest Prompt Modal -->
+<app-guest-prompt-modal
+  [(visible)]="showGuestModal"
+  [offspringId]="offspring.id"
+  [offspringName]="offspring.name"
+  (authSuccess)="onAuthSuccess()">
+</app-guest-prompt-modal>

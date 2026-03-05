@@ -1,0 +1,121 @@
+<div class="offspring-grid-container">
+  <!-- Filter Controls -->
+  <div class="filter-section">
+    <div class="filter-header">
+      <h3 class="filter-title">
+        <i class="pi pi-filter mr-2"></i>
+        Filter Offsprings
+      </h3>
+      <button 
+        *ngIf="hasActiveFilters()"
+        class="clear-filters-btn"
+        (click)="clearFilters()"
+        type="button">
+        <i class="pi pi-times mr-2"></i>
+        Clear Filters
+      </button>
+    </div>
+
+    <div class="filter-controls">
+      <!-- Breed Filter -->
+      <div class="filter-item">
+        <label for="breed-filter" class="filter-label">Breed</label>
+        <select 
+          id="breed-filter"
+          class="filter-select"
+          [(ngModel)]="selectedBreedId"
+          (change)="onBreedFilterChange(selectedBreedId)">
+          <option [ngValue]="undefined">All Breeds</option>
+          <option 
+            *ngFor="let breed of breeds.slice(1)" 
+            [ngValue]="breed.value">
+            {{ breed.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Gender Filter -->
+      <div class="filter-item">
+        <label for="gender-filter" class="filter-label">Gender</label>
+        <select 
+          id="gender-filter"
+          class="filter-select"
+          [(ngModel)]="selectedGender"
+          (change)="onGenderFilterChange(selectedGender)">
+          <option [ngValue]="undefined">All</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-item">
+        <label for="status-filter" class="filter-label">Status</label>
+        <select 
+          id="status-filter"
+          class="filter-select"
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusFilterChange(selectedStatus)">
+          <option [ngValue]="undefined">All</option>
+          <option value="Available">Available</option>
+          <option value="Reserved">Reserved</option>
+          <option value="Sold">Sold</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+    <p class="loading-text">Loading offsprings...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && !hasOffsprings()">
+    <i class="pi pi-inbox empty-icon"></i>
+    <h3 class="empty-title">No Offsprings Found</h3>
+    <p class="empty-message">
+      <span *ngIf="hasActiveFilters()">
+        No offsprings match your current filters. Try adjusting your search criteria.
+      </span>
+      <span *ngIf="!hasActiveFilters()">
+        This breeder doesn't have any available offsprings at the moment.
+      </span>
+    </p>
+    <button 
+      *ngIf="hasActiveFilters()"
+      class="btn btn-primary"
+      (click)="clearFilters()"
+      type="button">
+      Clear Filters
+    </button>
+  </div>
+
+  <!-- Offspring Grid -->
+  <div class="offspring-grid" *ngIf="!isLoading && hasOffsprings()">
+    <app-offspring-card
+      *ngFor="let offspring of offsprings"
+      [offspring]="offspring"
+      [showFavorite]="true"
+      (favoriteToggled)="onFavoriteToggled($event)">
+    </app-offspring-card>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="!isLoading && hasOffsprings() && totalOffsprings > pageSize">
+    <p-paginator
+      [rows]="pageSize"
+      [totalRecords]="totalOffsprings"
+      [rowsPerPageOptions]="[12, 24, 48]"
+      (onPageChange)="onPageChange($event)">
+    </p-paginator>
+  </div>
+
+  <!-- Results Summary -->
+  <div class="results-summary" *ngIf="!isLoading && hasOffsprings()">
+    <p>
+      Showing {{ offsprings.length }} of {{ totalOffsprings }} offspring{{ totalOffsprings !== 1 ? 's' : '' }}
+    </p>
+  </div>
+</div>

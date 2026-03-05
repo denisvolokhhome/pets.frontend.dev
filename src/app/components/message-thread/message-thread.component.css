@@ -1,0 +1,55 @@
+.message-thread-container {
+  max-height: 600px;
+}
+
+.message-list {
+  max-height: 400px;
+  padding: 1rem;
+}
+
+.message-item {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.offspring-context-card :ng-deep .p-card {
+  box-shadow: none;
+  border: 1px solid #e5e7eb;
+}
+
+.offspring-context-card :ng-deep .p-card-body {
+  padding: 1rem;
+}
+
+.reply-section textarea {
+  resize: none;
+}
+
+/* Scrollbar styling */
+.message-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.message-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.message-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

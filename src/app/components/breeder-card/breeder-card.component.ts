@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { BreederSearchResult } from 'src/app/models/search';
 import { environment } from 'src/environments/environment';
 
@@ -17,6 +18,8 @@ export class BreederCardComponent {
 
   apihost = environment.API_HOST;
   showContactModal: boolean = false;
+
+  constructor(private router: Router) {}
 
   /**
    * Get the full image URL for the breeder thumbnail
@@ -71,6 +74,14 @@ export class BreederCardComponent {
     event.stopPropagation(); // Prevent card click event
     // TODO: Navigate to breeder profile page
     console.log('View profile for breeder:', this.breeder.user_id);
+  }
+
+  /**
+   * Handle view offsprings button click
+   */
+  onViewOffsprings(event: Event): void {
+    event.stopPropagation(); // Prevent card click event
+    this.router.navigate(['/breeder', this.breeder.user_id, 'offsprings']);
   }
 
   /**

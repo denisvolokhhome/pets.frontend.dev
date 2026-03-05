@@ -1,0 +1,107 @@
+<div class="notification-dropdown relative">
+  <!-- Bell Icon with Badge -->
+  <button
+    type="button"
+    class="notification-bell relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+    (click)="toggleDropdown()"
+    [attr.aria-label]="'Notifications' + (unreadCount > 0 ? ' (' + unreadCount + ' unread)' : '')">
+    <i class="pi pi-bell text-xl"></i>
+    @if (unreadCount > 0) {
+      <span 
+        class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+        {{ getDisplayCount() }}
+      </span>
+    }
+  </button>
+
+  <!-- Dropdown Menu -->
+  @if (isOpen) {
+    <div 
+      class="notification-dropdown-menu absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+      (click)="$event.stopPropagation()">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
+        @if (unreadCount > 0) {
+          <button
+            type="button"
+            class="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+            (click)="markAllAsRead()">
+            Mark all read
+          </button>
+        }
+      </div>
+
+      <!-- Loading State -->
+      @if (isLoading) {
+        <div class="flex items-center justify-center py-8">
+          <i class="pi pi-spin pi-spinner text-2xl text-gray-400"></i>
+        </div>
+      }
+
+      <!-- Notifications List -->
+      @if (!isLoading) {
+        <div class="max-h-96 overflow-y-auto">
+          <!-- Empty State -->
+          @if (notifications.length === 0) {
+            <div class="text-center py-8 text-gray-500">
+              <i class="pi pi-bell text-4xl mb-2"></i>
+              <p>No notifications yet</p>
+            </div>
+          }
+
+          <!-- Notification Items -->
+          @for (notification of notifications; track notification.id) {
+            <div
+              class="notification-item px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+              [class.unread]="!notification.is_read"
+              (click)="onNotificationClick(notification)">
+              <div class="flex gap-3">
+                <div class="flex-shrink-0">
+                  <i 
+                    [class]="'pi ' + getNotificationIcon(notification.type) + ' text-xl ' + getNotificationIconClass(notification.type)">
+                  </i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900" [class.font-bold]="!notification.is_read">
+                    {{ notification.title }}
+                  </p>
+                  @if (notification.message) {
+                    <p class="text-sm text-gray-600 mt-1 line-clamp-2">
+                      {{ notification.message }}
+                    </p>
+                  }
+                  <p class="text-xs text-gray-500 mt-1">
+                    {{ formatTimestamp(notification.created_at) }}
+                  </p>
+                </div>
+                @if (!notification.is_read) {
+                  <div class="flex-shrink-0">
+                    <span class="inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Footer -->
+      <div class="px-4 py-3 border-t border-gray-200 text-center">
+        <button
+          type="button"
+          class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+          (click)="viewAllNotifications()">
+          View all notifications
+        </button>
+      </div>
+    </div>
+
+    <!-- Backdrop to close dropdown -->
+    <div 
+      class="fixed inset-0 z-40"
+      (click)="closeDropdown()">
+    </div>
+  }
+</div>

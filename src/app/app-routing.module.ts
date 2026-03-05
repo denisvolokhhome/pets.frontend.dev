@@ -21,6 +21,13 @@ import { PetSeekerRegistrationComponent } from './components/pet-seeker-registra
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
+import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
+import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
+import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
+import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
+import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
+
+import { MessageNewComponent } from './components/message-new/message-new.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -40,7 +47,15 @@ const routes: Routes = [
   { path: 'pets', component: PetsComponent, canActivate: [BreederGuard] },
   { path: 'breedings', component: BreedingsComponent, canActivate: [BreederGuard] },
   { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [BreederGuard] },
+  { path: 'offsprings', component: OffspringListComponent, canActivate: [BreederGuard] },
+  { path: 'offsprings/new', component: OffspringFormComponent, canActivate: [BreederGuard] },
+  { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
+  { path: 'offsprings/:id/edit', component: OffspringFormComponent, canActivate: [BreederGuard] },
+  { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
+  { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
+  { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [AuthGuard] },
   { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
+  { path: 'messages/new', component: MessageNewComponent, canActivate: [AuthGuard] },
   { path: 'messages/:id', component: MessageDetailComponent, canActivate: [AuthGuard] },
   {
     path: 'settings',

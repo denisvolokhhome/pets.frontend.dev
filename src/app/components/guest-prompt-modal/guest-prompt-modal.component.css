@@ -1,0 +1,46 @@
+:host ::ng-deep .p-dialog {
+  max-width: 500px;
+}
+
+:host ::ng-deep .p-dialog-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+:host ::ng-deep .p-dialog-content {
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-tabview-nav {
+  background: transparent;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+:host ::ng-deep .p-tabview-nav-link {
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .p-tabview-panels {
+  padding: 1.5rem 0;
+}
+
+:host ::ng-deep .p-password input {
+  width: 100%;
+}
+
+:host ::ng-deep .p-checkbox {
+  flex-shrink: 0;
+}
+
+/* Form validation styles */
+:host ::ng-deep .ng-invalid.ng-touched input,
+:host ::ng-deep .ng-invalid.ng-touched .p-password input {
+  border-color: #ef4444;
+}
+
+:host ::ng-deep .ng-invalid.ng-touched input:focus,
+:host ::ng-deep .ng-invalid.ng-touched .p-password input:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 0.2rem rgba(239, 68, 68, 0.25);
+}

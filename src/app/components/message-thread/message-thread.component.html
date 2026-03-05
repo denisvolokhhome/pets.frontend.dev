@@ -1,0 +1,124 @@
+<div class="message-thread-container h-full flex flex-col">
+  <!-- Offspring Context Card (Pinned at top) -->
+  <div *ngIf="offspringContext" class="offspring-context-card mb-4 border-b pb-4">
+    <p-card>
+      <div class="flex gap-4">
+        <img 
+          *ngIf="offspringContext.primary_image_url"
+          [src]="offspringContext.primary_image_url" 
+          [alt]="offspringContext.name"
+          class="w-24 h-24 object-cover rounded-lg"
+        />
+        <div *ngIf="!offspringContext.primary_image_url" 
+             class="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+          <i class="pi pi-image text-gray-400 text-3xl"></i>
+        </div>
+        
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="text-lg font-semibold">{{ offspringContext.name }}</h3>
+            <span 
+              class="px-2 py-1 rounded-full text-xs font-medium"
+              [ngClass]="getStatusBadgeClass(offspringContext.status)">
+              {{ offspringContext.status }}
+            </span>
+          </div>
+          
+          <div class="text-sm text-gray-600 space-y-1">
+            <p><span class="font-medium">Breed:</span> {{ offspringContext.breed_name }}</p>
+            <p><span class="font-medium">Gender:</span> {{ offspringContext.gender }}</p>
+            <p><span class="font-medium">Age:</span> {{ offspringContext.age }}</p>
+            <p *ngIf="offspringContext.price">
+              <span class="font-medium">Price:</span> ${{ offspringContext.price | number:'1.2-2' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Message List -->
+  <div class="message-list flex-1 overflow-y-auto mb-4 space-y-3" *ngIf="!isLoading">
+    <div *ngIf="messages.length === 0" class="text-center text-gray-500 py-8">
+      <i class="pi pi-comments text-4xl mb-2"></i>
+      <p>No messages yet. Start the conversation!</p>
+    </div>
+
+    <div 
+      *ngFor="let message of messages"
+      class="message-item"
+      [ngClass]="{
+        'flex justify-end': isSentByCurrentUser(message),
+        'flex justify-start': !isSentByCurrentUser(message)
+      }">
+      <div 
+        class="max-w-[70%] rounded-lg p-3"
+        [ngClass]="{
+          'bg-blue-500 text-white': isSentByCurrentUser(message),
+          'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
+        }">
+        <div class="flex items-center gap-2 mb-1">
+          <p-avatar 
+            [label]="message.sender_name.charAt(0).toUpperCase()"
+            size="small"
+            shape="circle"
+            [style]="{
+              'background-color': isSentByCurrentUser(message) ? '#3b82f6' : '#6b7280',
+              'color': 'white'
+            }">
+          </p-avatar>
+          <span class="text-xs font-medium">{{ message.sender_name }}</span>
+        </div>
+        
+        <p class="whitespace-pre-wrap break-words">{{ message.message }}</p>
+        
+        <div class="flex items-center justify-between mt-2 text-xs opacity-75">
+          <span>{{ formatTimestamp(message.created_at) }}</span>
+          <i 
+            *ngIf="isSentByCurrentUser(message) && message.is_read"
+            class="pi pi-check-circle ml-2"
+            title="Read">
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex-1 flex items-center justify-center">
+    <i class="pi pi-spin pi-spinner text-3xl text-gray-400"></i>
+  </div>
+
+  <!-- Reply Input -->
+  <div class="reply-section border-t pt-4">
+    <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
+      <div class="flex gap-2">
+        <textarea
+          pInputTextarea
+          formControlName="message"
+          placeholder="Type your message..."
+          rows="3"
+          class="flex-1"
+          [class.ng-invalid]="replyForm.get('message')?.invalid && replyForm.get('message')?.touched">
+        </textarea>
+        
+        <button
+          pButton
+          type="submit"
+          icon="pi pi-send"
+          [disabled]="replyForm.invalid || isSubmitting"
+          [loading]="isSubmitting"
+          class="h-fit">
+        </button>
+      </div>
+      
+      <div *ngIf="replyForm.get('message')?.invalid && replyForm.get('message')?.touched" 
+           class="text-red-500 text-sm mt-1">
+        <span *ngIf="replyForm.get('message')?.errors?.['required']">Message is required</span>
+        <span *ngIf="replyForm.get('message')?.errors?.['maxlength']">
+          Message must be less than 2000 characters
+        </span>
+      </div>
+    </form>
+  </div>
+</div>

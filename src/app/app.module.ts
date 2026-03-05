@@ -59,6 +59,13 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
 import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
+import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
+import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
+import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
+import { OffspringCardComponent } from './components/offspring-card/offspring-card.component';
+import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
+import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
+import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -66,6 +73,10 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { CardModule } from 'primeng/card';
+import { DataViewModule } from 'primeng/dataview';
+import { PaginatorModule } from 'primeng/paginator';
+import { GalleriaModule } from 'primeng/galleria';
 
 // Leaflet imports
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
@@ -118,6 +129,10 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     BreederySettingsComponent,
     QuickBreedingAddComponent,
     FilterWidgetComponent,
+    OffspringListComponent,
+    OffspringFormComponent,
+    OffspringGridComponent,
+    FavoritesListComponent,
   ],
   imports: [
     BrowserModule,
@@ -140,7 +155,13 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     ButtonModule,
     InputTextModule,
     ToastModule,
+    CardModule,
+    DataViewModule,
+    PaginatorModule,
+    GalleriaModule,
     LeafletModule,
+    NotificationDropdownComponent,
+    OffspringCardComponent,
 
   ],
   providers: [

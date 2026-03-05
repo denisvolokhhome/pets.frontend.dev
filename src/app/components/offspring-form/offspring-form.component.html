@@ -1,0 +1,267 @@
+<div class="offspring-form-container p-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold">{{ getTitle() }}</h2>
+      <button 
+        class="btn btn-secondary"
+        (click)="cancel()"
+        type="button">
+        <i class="pi pi-times mr-2"></i>
+        Cancel
+      </button>
+    </div>
+
+    <div class="card" *ngIf="!isLoading">
+      <form [formGroup]="offspringForm" (ngSubmit)="save()">
+        <!-- Breeding Selection -->
+        <div class="form-group">
+          <label for="breeding_id" class="form-label required">Breeding</label>
+          <p-dropdown 
+            id="breeding_id"
+            formControlName="breeding_id"
+            [options]="breedings"
+            optionLabel="id"
+            optionValue="id"
+            placeholder="Select a breeding"
+            [disabled]="mode === 'edit' || isLoadingBreedings"
+            (onChange)="onBreedingChange($event)"
+            [style]="{'width': '100%'}"
+            [filter]="true"
+            filterBy="id">
+            <ng-template let-breeding pTemplate="item">
+              <div>{{ getBreedingDisplay(breeding) }}</div>
+            </ng-template>
+            <ng-template let-breeding pTemplate="selectedItem">
+              <div>{{ getBreedingDisplay(breeding) }}</div>
+            </ng-template>
+          </p-dropdown>
+          <small class="form-hint" *ngIf="mode === 'edit'">
+            Breeding cannot be changed after creation
+          </small>
+          <small class="form-hint" *ngIf="mode === 'create'">
+            Breed will be auto-populated from the selected breeding
+          </small>
+        </div>
+
+        <!-- Name -->
+        <div class="form-group">
+          <label for="name" class="form-label">Name</label>
+          <input 
+            id="name"
+            type="text"
+            formControlName="name"
+            class="form-input"
+            placeholder="Enter offspring name (optional)">
+          <small class="form-hint">
+            Leave empty to auto-generate a temporary ID
+          </small>
+        </div>
+
+        <!-- Gender and Date of Birth Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="gender" class="form-label required">Gender</label>
+            <p-dropdown 
+              id="gender"
+              formControlName="gender"
+              [options]="genderOptions"
+              optionLabel="label"
+              optionValue="value"
+              [disabled]="mode === 'edit'"
+              [style]="{'width': '100%'}">
+            </p-dropdown>
+            <small class="form-hint" *ngIf="mode === 'edit'">
+              Gender cannot be changed after creation
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="date_of_birth" class="form-label required">Date of Birth</label>
+            <p-calendar 
+              id="date_of_birth"
+              formControlName="date_of_birth"
+              [disabled]="mode === 'edit'"
+              [maxDate]="maxDate"
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [style]="{'width': '100%'}">
+            </p-calendar>
+            <small class="form-hint" *ngIf="mode === 'edit'">
+              Date of birth cannot be changed after creation
+            </small>
+          </div>
+        </div>
+
+        <!-- Status and Price Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="status" class="form-label required">Status</label>
+            <p-dropdown 
+              id="status"
+              formControlName="status"
+              [options]="statusOptions"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{'width': '100%'}">
+            </p-dropdown>
+          </div>
+
+          <div class="form-group">
+            <label for="price" class="form-label">Price ($)</label>
+            <p-inputNumber 
+              id="price"
+              formControlName="price"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+              [min]="0"
+              [style]="{'width': '100%'}">
+            </p-inputNumber>
+          </div>
+        </div>
+
+        <!-- Color Markings -->
+        <div class="form-group">
+          <label for="color_markings" class="form-label">Color Markings</label>
+          <input 
+            id="color_markings"
+            type="text"
+            formControlName="color_markings"
+            class="form-input"
+            placeholder="Describe color markings">
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description" class="form-label">Description</label>
+          <textarea 
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            rows="4"
+            placeholder="Enter detailed description"></textarea>
+        </div>
+
+        <!-- Image Upload Section (only in edit mode) -->
+        <div class="form-group" *ngIf="mode === 'edit'">
+          <label class="form-label">Images</label>
+          
+          <p-fileUpload 
+            name="images[]"
+            [multiple]="true"
+            accept="image/*"
+            [maxFileSize]="5000000"
+            [showUploadButton]="false"
+            [showCancelButton]="false"
+            [auto]="true"
+            (onSelect)="onFileSelect($event)"
+            [disabled]="isUploadingImage"
+            chooseLabel="Upload Images"
+            chooseIcon="pi pi-upload">
+            <ng-template pTemplate="content">
+              <div class="text-center py-4" *ngIf="uploadedImages.length === 0">
+                <i class="pi pi-cloud-upload text-4xl text-gray-400"></i>
+                <p class="text-gray-500 mt-2">Drag and drop images here or click to browse</p>
+              </div>
+            </ng-template>
+          </p-fileUpload>
+
+          <!-- Image Gallery -->
+          <div class="image-gallery mt-4" *ngIf="uploadedImages.length > 0">
+            <div class="grid grid-cols-4 gap-4">
+              <div 
+                *ngFor="let image of uploadedImages; let i = index"
+                class="image-item relative">
+                <img 
+                  [src]="image.image_url" 
+                  alt="Offspring image"
+                  class="w-full h-32 object-cover rounded">
+                
+                <!-- Primary Badge -->
+                <span 
+                  *ngIf="image.is_primary"
+                  class="absolute top-2 left-2 badge badge-primary">
+                  Primary
+                </span>
+
+                <!-- Action Buttons -->
+                <div class="absolute top-2 right-2 flex gap-1">
+                  <button 
+                    type="button"
+                    class="btn-icon btn-icon-sm bg-blue-500 hover:bg-blue-600"
+                    (click)="setPrimaryImage(image)"
+                    [disabled]="image.is_primary"
+                    title="Set as primary">
+                    <i class="pi pi-star"></i>
+                  </button>
+                  <button 
+                    type="button"
+                    class="btn-icon btn-icon-sm bg-red-500 hover:bg-red-600"
+                    (click)="deleteImage(image)"
+                    title="Delete">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+
+                <!-- Reorder Buttons -->
+                <div class="absolute bottom-2 right-2 flex gap-1">
+                  <button 
+                    type="button"
+                    class="btn-icon btn-icon-sm bg-gray-500 hover:bg-gray-600"
+                    (click)="moveImageUp(i)"
+                    [disabled]="i === 0"
+                    title="Move up">
+                    <i class="pi pi-arrow-up"></i>
+                  </button>
+                  <button 
+                    type="button"
+                    class="btn-icon btn-icon-sm bg-gray-500 hover:bg-gray-600"
+                    (click)="moveImageDown(i)"
+                    [disabled]="i === uploadedImages.length - 1"
+                    title="Move down">
+                    <i class="pi pi-arrow-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <small class="form-hint">
+            Upload multiple images. Set one as primary to display in listings.
+          </small>
+        </div>
+
+        <!-- Image Upload Notice (create mode) -->
+        <div class="form-group" *ngIf="mode === 'create'">
+          <div class="alert alert-info">
+            <i class="pi pi-info-circle mr-2"></i>
+            Save the offspring first to upload images
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button 
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancel()">
+            Cancel
+          </button>
+          <button 
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="offspringForm.invalid || isSaving">
+            <i class="pi pi-check mr-2"></i>
+            {{ mode === 'create' ? 'Create' : 'Update' }} Offspring
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading State -->
+    <div class="card text-center py-8" *ngIf="isLoading">
+      <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+      <p class="mt-4 text-gray-600">Loading offspring...</p>
+    </div>
+  </div>
+</div>

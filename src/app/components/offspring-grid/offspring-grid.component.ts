@@ -1,0 +1,233 @@
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
+import { ToastService } from 'src/app/services/toast.service';
+
+@Component({
+  standalone: false,
+  selector: 'app-offspring-grid',
+  templateUrl: './offspring-grid.component.html',
+  styleUrls: ['./offspring-grid.component.css']
+})
+export class OffspringGridComponent implements OnInit {
+  @Input() breederId!: string;
+
+  offsprings: OffspringRead[] = [];
+  isLoading: boolean = true;
+  
+  // Pagination
+  totalOffsprings: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 12;
+  
+  // Filters
+  selectedBreedId: number | undefined;
+  selectedGender: string | undefined;
+  selectedStatus: string | undefined;
+  
+  // Filter options
+  breeds: any[] = [];
+  genders = [
+    { label: 'All', value: undefined },
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' }
+  ];
+  statuses = [
+    { label: 'All', value: undefined },
+    { label: 'Available', value: 'Available' },
+    { label: 'Reserved', value: 'Reserved' },
+    { label: 'Sold', value: 'Sold' }
+  ];
+
+  constructor(
+    private route: ActivatedRoute,
+    private offspringService: OffspringService,
+    private toastr: ToastService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    // Get breederId from route if not provided as input
+    if (!this.breederId) {
+      this.route.params.subscribe(params => {
+        this.breederId = params['breederId'];
+        this.loadFiltersFromSession();
+        this.loadOffsprings();
+      });
+    } else {
+      this.loadFiltersFromSession();
+      this.loadOffsprings();
+    }
+  }
+
+  /**
+   * Load offsprings with current filters and pagination
+   */
+  loadOffsprings(): void {
+    if (!this.breederId) {
+      console.error('Breeder ID is required');
+      return;
+    }
+
+    this.isLoading = true;
+    const offset = this.currentPage * this.pageSize;
+
+    // Save filters to session storage
+    this.saveFiltersToSession();
+
+    this.offspringService.getPublicOffspringsByBreeder(
+      this.breederId,
+      this.selectedBreedId,
+      this.selectedGender,
+      this.selectedStatus,
+      this.pageSize,
+      offset
+    ).subscribe({
+      next: (response) => {
+        this.offsprings = response.offsprings;
+        this.totalOffsprings = response.total;
+        this.extractBreeds();
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading offsprings:', error);
+        this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Extract unique breeds from offsprings for filter dropdown
+   */
+  extractBreeds(): void {
+    const breedMap = new Map<number, string>();
+    
+    this.offsprings.forEach(offspring => {
+      if (offspring.breed_id && offspring.breed?.name) {
+        breedMap.set(offspring.breed_id, offspring.breed.name);
+      }
+    });
+
+    this.breeds = [
+      { label: 'All Breeds', value: undefined },
+      ...Array.from(breedMap.entries()).map(([id, name]) => ({
+        label: name,
+        value: id
+      }))
+    ];
+  }
+
+  /**
+   * Apply breed filter
+   */
+  onBreedFilterChange(breedId: number | undefined): void {
+    this.selectedBreedId = breedId;
+    this.currentPage = 0;
+    this.loadOffsprings();
+  }
+
+  /**
+   * Apply gender filter
+   */
+  onGenderFilterChange(gender: string | undefined): void {
+    this.selectedGender = gender;
+    this.currentPage = 0;
+    this.loadOffsprings();
+  }
+
+  /**
+   * Apply status filter
+   */
+  onStatusFilterChange(status: string | undefined): void {
+    this.selectedStatus = status;
+    this.currentPage = 0;
+    this.loadOffsprings();
+  }
+
+  /**
+   * Clear all filters
+   */
+  clearFilters(): void {
+    this.selectedBreedId = undefined;
+    this.selectedGender = undefined;
+    this.selectedStatus = undefined;
+    this.currentPage = 0;
+    sessionStorage.removeItem('offspring_filters');
+    this.loadOffsprings();
+  }
+
+  /**
+   * Check if any filters are active
+   */
+  hasActiveFilters(): boolean {
+    return !!(this.selectedBreedId || this.selectedGender || this.selectedStatus);
+  }
+
+  /**
+   * Handle page change
+   */
+  onPageChange(event: any): void {
+    this.currentPage = event.page;
+    this.pageSize = event.rows;
+    this.loadOffsprings();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /**
+   * Handle favorite toggle from card
+   */
+  onFavoriteToggled(offspringId: string): void {
+    // Refresh the offspring to get updated favorite status
+    const offspring = this.offsprings.find(o => o.id === offspringId);
+    if (offspring) {
+      // The card component already updated the is_favorited flag
+      this.cdr.detectChanges();
+    }
+  }
+
+  /**
+   * Get total pages
+   */
+  getTotalPages(): number {
+    return Math.ceil(this.totalOffsprings / this.pageSize);
+  }
+
+  /**
+   * Check if there are offsprings to display
+   */
+  hasOffsprings(): boolean {
+    return this.offsprings.length > 0;
+  }
+
+  /**
+   * Save filter selections to session storage
+   */
+  private saveFiltersToSession(): void {
+    const filters = {
+      breedId: this.selectedBreedId,
+      gender: this.selectedGender,
+      status: this.selectedStatus
+    };
+    sessionStorage.setItem('offspring_filters', JSON.stringify(filters));
+  }
+
+  /**
+   * Load filter selections from session storage
+   */
+  private loadFiltersFromSession(): void {
+    const savedFilters = sessionStorage.getItem('offspring_filters');
+    if (savedFilters) {
+      try {
+        const filters = JSON.parse(savedFilters);
+        this.selectedBreedId = filters.breedId;
+        this.selectedGender = filters.gender;
+        this.selectedStatus = filters.status;
+      } catch (error) {
+        console.error('Error loading filters from session storage:', error);
+      }
+    }
+  }
+}

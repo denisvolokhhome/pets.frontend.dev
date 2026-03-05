@@ -1,0 +1,328 @@
+<div class="offspring-detail-container p-4">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-4">
+        <button 
+          class="btn btn-secondary"
+          (click)="goBack()"
+          type="button">
+          <i class="pi pi-arrow-left mr-2"></i>
+          Back
+        </button>
+        <h2 class="text-2xl font-bold">{{ offspring?.name || 'Unnamed Offspring' }}</h2>
+      </div>
+      
+      <!-- Breeder Actions -->
+      <div class="flex gap-2" *ngIf="isBreederView()">
+        <button 
+          class="btn btn-primary"
+          (click)="editOffspring()"
+          type="button">
+          <i class="pi pi-pencil mr-2"></i>
+          Edit
+        </button>
+        <button 
+          class="btn btn-danger"
+          (click)="deleteOffspring()"
+          [disabled]="isDeleting"
+          type="button">
+          <i class="pi pi-trash mr-2"></i>
+          Delete
+        </button>
+      </div>
+      
+      <!-- Pet Seeker Actions -->
+      <div class="flex gap-2" *ngIf="isPublicView()">
+        <button 
+          class="btn btn-secondary"
+          [class.btn-favorited]="isFavorited()"
+          [class.btn-disabled]="!isAuthenticated()"
+          (click)="toggleFavorite()"
+          [disabled]="isTogglingFavorite"
+          [title]="!isAuthenticated() ? 'Login to save favorites' : ''"
+          type="button">
+          <i [class]="isFavorited() ? 'pi pi-heart-fill mr-2' : 'pi pi-heart mr-2'"></i>
+          {{ isFavorited() ? 'Favorited' : 'Add to Favorites' }}
+        </button>
+        <button 
+          class="btn btn-primary"
+          (click)="contactBreeder()"
+          type="button">
+          <i class="pi pi-envelope mr-2"></i>
+          Contact Breeder
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="card text-center py-8" *ngIf="isLoading">
+      <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+      <p class="mt-4 text-gray-600">Loading offspring details...</p>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading && offspring" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column - Images -->
+      <div class="lg:col-span-1">
+        <div class="card">
+          <h3 class="text-lg font-semibold mb-4">Photos</h3>
+          
+          <!-- Primary Image -->
+          <div class="primary-image-container mb-4" *ngIf="hasImages()">
+            <img 
+              [src]="getPrimaryImageUrl()" 
+              alt="Offspring photo"
+              class="w-full h-64 object-cover rounded cursor-pointer"
+              (click)="openGallery(0)">
+            <div class="mt-2 text-center">
+              <button 
+                class="btn btn-sm btn-secondary"
+                (click)="openGallery(0)"
+                type="button">
+                <i class="pi pi-images mr-2"></i>
+                View Gallery ({{ offspring.images.length }})
+              </button>
+            </div>
+          </div>
+
+          <!-- No Images -->
+          <div class="no-image-container" *ngIf="!hasImages()">
+            <img 
+              src="assets/images/no-image.png" 
+              alt="No image"
+              class="w-full h-64 object-cover rounded opacity-50">
+            <p class="text-center text-gray-500 mt-2">No images uploaded</p>
+          </div>
+
+          <!-- Thumbnail Grid -->
+          <div class="thumbnail-grid" *ngIf="offspring.images && offspring.images.length > 1">
+            <div class="grid grid-cols-3 gap-2">
+              <div 
+                *ngFor="let image of offspring.images.slice(0, 6); let i = index"
+                class="thumbnail-item">
+                <img 
+                  [src]="image.image_url" 
+                  alt="Thumbnail"
+                  class="w-full h-20 object-cover rounded cursor-pointer"
+                  (click)="openGallery(i)"
+                  [class.primary-border]="image.is_primary">
+                <span 
+                  *ngIf="image.is_primary"
+                  class="primary-badge">
+                  Primary
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Card (Breeder View) -->
+        <div class="card mt-4" *ngIf="isBreederView()">
+          <h3 class="text-lg font-semibold mb-4">Engagement</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <i class="pi pi-heart text-2xl text-red-500"></i>
+              <div class="ml-3">
+                <p class="text-2xl font-bold">{{ offspring.favorites_count }}</p>
+                <p class="text-sm text-gray-600">Favorites</p>
+              </div>
+            </div>
+            <div class="stat-item mt-4">
+              <i class="pi pi-envelope text-2xl text-blue-500"></i>
+              <div class="ml-3">
+                <p class="text-2xl font-bold">{{ offspring.messages_count }}</p>
+                <p class="text-sm text-gray-600">Messages</p>
+              </div>
+            </div>
+          </div>
+          <button 
+            class="btn btn-primary w-full mt-4"
+            (click)="viewMessages()"
+            type="button">
+            <i class="pi pi-envelope mr-2"></i>
+            View Messages
+          </button>
+        </div>
+
+        <!-- Breeder Info Card (Public View) -->
+        <div class="card mt-4" *ngIf="isPublicView()">
+          <h3 class="text-lg font-semibold mb-4">Breeder Information</h3>
+          <div class="breeder-info-content">
+            <div class="breeder-avatar">
+              <i class="pi pi-user text-3xl text-blue-500"></i>
+            </div>
+            <div class="breeder-details">
+              <p class="text-sm text-gray-600 mb-2">Listed by</p>
+              <p class="text-lg font-semibold text-gray-900 mb-3">Breeder</p>
+              <button 
+                class="btn btn-secondary w-full"
+                (click)="viewBreederProfile()"
+                type="button">
+                <i class="pi pi-user mr-2"></i>
+                View Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Details -->
+      <div class="lg:col-span-2">
+        <!-- Basic Information -->
+        <div class="card mb-4">
+          <h3 class="text-lg font-semibold mb-4">Basic Information</h3>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <label class="info-label">Status</label>
+              <span [class]="'badge ' + getStatusClass(offspring.status)">
+                {{ getStatusLabel(offspring.status) }}
+              </span>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">Gender</label>
+              <p class="info-value">{{ offspring.gender }}</p>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">Date of Birth</label>
+              <p class="info-value">{{ formatDate(offspring.date_of_birth) }}</p>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">Age</label>
+              <p class="info-value">{{ offspring.age }}</p>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">Breed</label>
+              <p class="info-value">{{ getBreedName() }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="offspring.price">
+              <label class="info-label">Price</label>
+              <p class="info-value">${{ offspring.price }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="offspring.color_markings">
+              <label class="info-label">Color Markings</label>
+              <p class="info-value">{{ offspring.color_markings }}</p>
+            </div>
+          </div>
+
+          <div class="mt-4" *ngIf="offspring.description">
+            <label class="info-label">Description</label>
+            <p class="info-value whitespace-pre-wrap">{{ offspring.description }}</p>
+          </div>
+        </div>
+
+        <!-- Lineage Information -->
+        <div class="card mb-4">
+          <h3 class="text-lg font-semibold mb-4">Lineage</h3>
+          
+          <div class="lineage-grid">
+            <div class="lineage-item">
+              <label class="info-label">Breeding</label>
+              <span 
+                class="link-text"
+                (click)="navigateToBreeding()">
+                <i class="pi pi-link mr-1"></i>
+                Breeding #{{ offspring.breeding_id }}
+              </span>
+            </div>
+
+            <div class="lineage-item">
+              <label class="info-label">Father</label>
+              <span 
+                *ngIf="getFatherId()"
+                class="link-text"
+                (click)="navigateToPet(getFatherId()!)">
+                <i class="pi pi-link mr-1"></i>
+                {{ getFatherName() }}
+              </span>
+              <span *ngIf="!getFatherId()" class="text-gray-500">Unknown</span>
+            </div>
+
+            <div class="lineage-item">
+              <label class="info-label">Mother</label>
+              <span 
+                *ngIf="getMotherId()"
+                class="link-text"
+                (click)="navigateToPet(getMotherId()!)">
+                <i class="pi pi-link mr-1"></i>
+                {{ getMotherName() }}
+              </span>
+              <span *ngIf="!getMotherId()" class="text-gray-500">Unknown</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="card">
+          <h3 class="text-lg font-semibold mb-4">Record Information</h3>
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <label class="info-label">Created</label>
+              <p class="info-value">{{ formatDate(offspring.created_at) }}</p>
+            </div>
+
+            <div class="info-item" *ngIf="offspring.updated_at">
+              <label class="info-label">Last Updated</label>
+              <p class="info-value">{{ formatDate(offspring.updated_at) }}</p>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">Offspring ID</label>
+              <p class="info-value font-mono text-sm">{{ offspring.id }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Offsprings (Public View) -->
+    <div class="related-section" *ngIf="isPublicView() && hasRelatedOffsprings()">
+      <h3 class="text-xl font-semibold mb-4">More from this Breeder</h3>
+      <div class="related-grid">
+        <app-offspring-card
+          *ngFor="let related of relatedOffsprings"
+          [offspring]="related"
+          [showFavorite]="true">
+        </app-offspring-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Gallery Modal -->
+<p-galleria 
+  [(value)]="galleryImages" 
+  [(visible)]="displayGallery"
+  [(activeIndex)]="activeIndex"
+  [responsiveOptions]="responsiveOptions"
+  [containerStyle]="{'max-width': '90%'}"
+  [numVisible]="5"
+  [circular]="true"
+  [fullScreen]="true"
+  [showItemNavigators]="true"
+  [showThumbnails]="true">
+  <ng-template pTemplate="item" let-item>
+    <img [src]="item.source" [alt]="item.alt" style="width: 100%; display: block;" />
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <div class="grid grid-nogutter justify-content-center">
+      <img [src]="item.thumbnail" [alt]="item.alt" style="width: 100px; display: block;" />
+    </div>
+  </ng-template>
+</p-galleria>
+
+<!-- Guest Prompt Modal -->
+<app-guest-prompt-modal
+  [(visible)]="showGuestModal"
+  [offspringId]="offspring?.id"
+  [offspringName]="offspring?.name"
+  (authSuccess)="onAuthSuccess()">
+</app-guest-prompt-modal>

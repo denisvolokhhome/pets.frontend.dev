@@ -1,0 +1,102 @@
+<div class="favorites-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="pi pi-heart-fill mr-3"></i>
+        My Favorite Offsprings
+      </h1>
+      <p class="page-subtitle">
+        Keep track of offsprings you're interested in
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+    <p class="loading-text">Loading your favorites...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && !hasFavorites()">
+    <i class="pi pi-heart empty-icon"></i>
+    <h2 class="empty-title">No Favorites Yet</h2>
+    <p class="empty-message">
+      Start exploring offsprings and save your favorites to easily find them later.
+    </p>
+    <button 
+      class="btn btn-primary btn-lg"
+      (click)="browseOffsprings()"
+      type="button">
+      <i class="pi pi-search mr-2"></i>
+      Browse Offsprings
+    </button>
+  </div>
+
+  <!-- Favorites Grid -->
+  <div class="favorites-content" *ngIf="!isLoading && hasFavorites()">
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <i class="pi pi-heart-fill stat-icon"></i>
+        <div class="stat-content">
+          <span class="stat-value">{{ totalFavorites }}</span>
+          <span class="stat-label">Favorite{{ totalFavorites !== 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <i class="pi pi-users stat-icon"></i>
+        <div class="stat-content">
+          <span class="stat-value">{{ getUniqueBreeders().size }}</span>
+          <span class="stat-label">Breeder{{ getUniqueBreeders().size !== 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offspring Grid -->
+    <div class="offspring-grid">
+      <app-offspring-card
+        *ngFor="let offspring of offsprings"
+        [offspring]="offspring"
+        [showFavorite]="true"
+        (favoriteToggled)="onFavoriteToggled($event)">
+      </app-offspring-card>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalFavorites > pageSize">
+      <p-paginator
+        [rows]="pageSize"
+        [totalRecords]="totalFavorites"
+        [rowsPerPageOptions]="[12, 24, 48]"
+        (onPageChange)="onPageChange($event)">
+      </p-paginator>
+    </div>
+
+    <!-- Breeder Links Section -->
+    <div class="breeders-section" *ngIf="getUniqueBreeders().size > 0">
+      <h3 class="section-title">
+        <i class="pi pi-users mr-2"></i>
+        Breeders You're Following
+      </h3>
+      <div class="breeders-grid">
+        <div 
+          *ngFor="let breeder of getUniqueBreeders() | keyvalue"
+          class="breeder-card"
+          (click)="viewBreederProfile(breeder.value.id)">
+          <div class="breeder-info">
+            <i class="pi pi-user breeder-icon"></i>
+            <div class="breeder-details">
+              <span class="breeder-name">{{ breeder.value.name }}</span>
+              <span class="breeder-count">
+                {{ breeder.value.count }} favorite{{ breeder.value.count !== 1 ? 's' : '' }}
+              </span>
+            </div>
+          </div>
+          <i class="pi pi-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

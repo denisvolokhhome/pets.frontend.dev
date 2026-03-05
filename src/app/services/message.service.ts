@@ -55,6 +55,25 @@ export interface MessageResponseCreate {
   response_text: string;
 }
 
+export interface ThreadMessageCreate {
+  receiver_id: string;
+  message: string;
+  offspring_id?: string;
+  thread_id?: string;
+}
+
+export interface ThreadMessage {
+  id: string;
+  sender_id: string;
+  sender_name: string;
+  receiver_id: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  offspring_id?: string;
+  thread_id?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -131,6 +150,26 @@ export class MessageService {
     const headers = this.getAuthHeaders();
     return this.http
       .post<Message>(`${this.apiUrl}/messages/${messageId}/respond`, responseData, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Send a message in a thread (offspring context)
+   */
+  sendThreadMessage(messageData: ThreadMessageCreate): Observable<ThreadMessage> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<ThreadMessage>(`${this.apiUrl}/messages/thread`, messageData, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Get all messages in a thread
+   */
+  getThreadMessages(threadId: string): Observable<ThreadMessage[]> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .get<ThreadMessage[]>(`${this.apiUrl}/messages/threads/${threadId}`, { headers })
       .pipe(catchError(this.handleError));
   }
 

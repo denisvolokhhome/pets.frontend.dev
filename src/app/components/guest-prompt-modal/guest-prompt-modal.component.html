@@ -1,0 +1,245 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="w-full max-w-md"
+  (onHide)="closeModal()">
+  
+  <ng-template pTemplate="header">
+    <div class="text-center w-full">
+      <h2 class="text-xl font-semibold mb-2">Contact Breeder</h2>
+      <p class="text-sm text-gray-600">
+        Please create an account or log in to contact breeders
+      </p>
+    </div>
+  </ng-template>
+
+  <!-- Login Form -->
+  <div *ngIf="!showRegisterForm">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-4">
+      <div>
+        <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">
+          Email
+        </label>
+        <input
+          pInputText
+          id="login-email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="w-full"
+          [class.ng-invalid]="loginEmail?.invalid && loginEmail?.touched"
+        />
+        <small 
+          *ngIf="loginEmail?.invalid && loginEmail?.touched"
+          class="text-red-500">
+          <span *ngIf="loginEmail?.errors?.['required']">Email is required</span>
+          <span *ngIf="loginEmail?.errors?.['email']">Invalid email format</span>
+        </small>
+      </div>
+
+      <div>
+        <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
+        <p-password
+          id="login-password"
+          formControlName="password"
+          placeholder="Enter your password"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          [class.ng-invalid]="loginPassword?.invalid && loginPassword?.touched">
+        </p-password>
+        <small 
+          *ngIf="loginPassword?.invalid && loginPassword?.touched"
+          class="text-red-500">
+          <span *ngIf="loginPassword?.errors?.['required']">Password is required</span>
+          <span *ngIf="loginPassword?.errors?.['minlength']">
+            Password must be at least 6 characters
+          </span>
+        </small>
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Login"
+        icon="pi pi-sign-in"
+        [loading]="isLoggingIn"
+        [disabled]="loginForm.invalid || isLoggingIn"
+        class="w-full">
+      </button>
+
+      <div class="text-center text-sm text-gray-600">
+        Don't have an account?
+        <a (click)="switchToRegister()" class="text-blue-600 hover:underline cursor-pointer">
+          Register here
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Register Form -->
+  <div *ngIf="showRegisterForm">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label for="register-firstName" class="block text-sm font-medium text-gray-700 mb-1">
+            First Name
+          </label>
+          <input
+            pInputText
+            id="register-firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="First name"
+            class="w-full"
+            [class.ng-invalid]="registerFirstName?.invalid && registerFirstName?.touched"
+          />
+          <small 
+            *ngIf="registerFirstName?.invalid && registerFirstName?.touched"
+            class="text-red-500">
+            <span *ngIf="registerFirstName?.errors?.['required']">Required</span>
+            <span *ngIf="registerFirstName?.errors?.['minlength']">Min 2 chars</span>
+          </small>
+        </div>
+
+        <div>
+          <label for="register-lastName" class="block text-sm font-medium text-gray-700 mb-1">
+            Last Name
+          </label>
+          <input
+            pInputText
+            id="register-lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Last name"
+            class="w-full"
+            [class.ng-invalid]="registerLastName?.invalid && registerLastName?.touched"
+          />
+          <small 
+            *ngIf="registerLastName?.invalid && registerLastName?.touched"
+            class="text-red-500">
+            <span *ngIf="registerLastName?.errors?.['required']">Required</span>
+            <span *ngIf="registerLastName?.errors?.['minlength']">Min 2 chars</span>
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <label for="register-email" class="block text-sm font-medium text-gray-700 mb-1">
+          Email
+        </label>
+        <input
+          pInputText
+          id="register-email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="w-full"
+          [class.ng-invalid]="registerEmail?.invalid && registerEmail?.touched"
+        />
+        <small 
+          *ngIf="registerEmail?.invalid && registerEmail?.touched"
+          class="text-red-500">
+          <span *ngIf="registerEmail?.errors?.['required']">Email is required</span>
+          <span *ngIf="registerEmail?.errors?.['email']">Invalid email format</span>
+        </small>
+      </div>
+
+      <div>
+        <label for="register-password" class="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
+        <p-password
+          id="register-password"
+          formControlName="password"
+          placeholder="Create a password"
+          [toggleMask]="true"
+          [feedback]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          [class.ng-invalid]="registerPassword?.invalid && registerPassword?.touched">
+        </p-password>
+        <small 
+          *ngIf="registerPassword?.invalid && registerPassword?.touched"
+          class="text-red-500">
+          <span *ngIf="registerPassword?.errors?.['required']">Password is required</span>
+          <span *ngIf="registerPassword?.errors?.['minlength']">
+            Password must be at least 6 characters
+          </span>
+        </small>
+      </div>
+
+      <div>
+        <label for="register-confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">
+          Confirm Password
+        </label>
+        <p-password
+          id="register-confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          [class.ng-invalid]="registerConfirmPassword?.invalid && registerConfirmPassword?.touched">
+        </p-password>
+        <small 
+          *ngIf="registerForm.errors?.['passwordMismatch'] && registerConfirmPassword?.touched"
+          class="text-red-500">
+          Passwords do not match
+        </small>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <p-checkbox
+          formControlName="isBreeder"
+          [binary]="true"
+          inputId="register-isBreeder">
+        </p-checkbox>
+        <label for="register-isBreeder" class="text-sm text-gray-700">
+          I am a breeder
+        </label>
+      </div>
+
+      <div class="flex items-start gap-2">
+        <p-checkbox
+          formControlName="acceptTerms"
+          [binary]="true"
+          inputId="register-acceptTerms">
+        </p-checkbox>
+        <label for="register-acceptTerms" class="text-sm text-gray-700">
+          I accept the <a href="/terms" class="text-blue-600 hover:underline" target="_blank">Terms of Service</a>
+          and <a href="/privacy" class="text-blue-600 hover:underline" target="_blank">Privacy Policy</a>
+        </label>
+      </div>
+      <small 
+        *ngIf="registerAcceptTerms?.invalid && registerAcceptTerms?.touched"
+        class="text-red-500 block -mt-2">
+        You must accept the terms to continue
+      </small>
+
+      <button
+        pButton
+        type="submit"
+        label="Create Account"
+        icon="pi pi-user-plus"
+        [loading]="isRegistering"
+        [disabled]="registerForm.invalid || isRegistering"
+        class="w-full">
+      </button>
+
+      <div class="text-center text-sm text-gray-600">
+        Already have an account?
+        <a (click)="switchToLogin()" class="text-blue-600 hover:underline cursor-pointer">
+          Login here
+        </a>
+      </div>
+    </form>
+  </div>
+</p-dialog>
