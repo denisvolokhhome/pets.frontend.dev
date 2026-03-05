@@ -81,45 +81,42 @@
             </div>
           </div>
 
-          <!-- Weight -->
+          <!-- Status -->
           <div class="form-group">
-            <label for="weight" class="form-label">Weight (kg)</label>
-            <input
-              type="number"
-              id="weight"
-              class="form-input"
-              formControlName="weight"
-              placeholder="e.g., 2.5"
-              step="0.1"
-            />
-          </div>
-
-          <!-- Location -->
-          <div class="form-group">
-            <label for="location_id" class="form-label">
-              Location <span class="required">*</span>
-            </label>
+            <label for="status" class="form-label">Status</label>
             <select
-              id="location_id"
+              id="status"
               class="form-select"
-              formControlName="location_id"
+              formControlName="status"
             >
-              <option value="">Select a location</option>
-              <option *ngFor="let location of locations" [value]="location.id">
-                {{ location.name }}
-              </option>
+              <option value="Available">Available</option>
+              <option value="Reserved">Reserved</option>
+              <option value="Sold">Sold</option>
             </select>
           </div>
 
-          <!-- Microchip -->
+          <!-- Price -->
+          <div class="form-group">
+            <label for="price" class="form-label">Price</label>
+            <input
+              type="number"
+              id="price"
+              class="form-input"
+              formControlName="price"
+              placeholder="e.g., 1500"
+              step="0.01"
+            />
+          </div>
+
+          <!-- Color/Markings -->
           <div class="form-group full-width">
-            <label for="microchip" class="form-label">Microchip Number</label>
+            <label for="color_markings" class="form-label">Color & Markings</label>
             <input
               type="text"
-              id="microchip"
+              id="color_markings"
               class="form-input"
-              formControlName="microchip"
-              placeholder="Enter microchip number"
+              formControlName="color_markings"
+              placeholder="e.g., Black with white chest"
             />
           </div>
 

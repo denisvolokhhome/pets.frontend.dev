@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataService } from '../../services/data.service';
+import { OffspringService, OffspringCreate } from '../../services/offspring.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -19,48 +19,28 @@ export class OffspringModalComponent implements OnInit {
 
   offspringForm!: FormGroup;
   isSubmitting: boolean = false;
-  locations: any[] = [];
   selectedGender: string = '';
 
   constructor(
     private fb: FormBuilder,
-    private dataService: DataService,
+    private offspringService: OffspringService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadLocations();
   }
 
   initializeForm(): void {
-    // Get location from parent pets
-    const locationId = this.parentPets && this.parentPets.length > 0 
-      ? this.parentPets[0].location_id 
-      : null;
-
     this.offspringForm = this.fb.group({
-      name: ['', Validators.required],
+      name: [''],
       gender: ['', Validators.required],
       date_of_birth: ['', Validators.required],
-      microchip: [''],
-      weight: [''],
-      location_id: [locationId, Validators.required],
+      status: ['Available'],
+      price: [''],
+      color_markings: [''],
       description: ['']
-    });
-  }
-
-  loadLocations(): void {
-    this.dataService.getLocations().subscribe({
-      next: (data) => {
-        this.locations = data;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading locations:', error);
-        this.toastr.error('Failed to load locations', 'Error');
-      }
     });
   }
 
@@ -79,27 +59,41 @@ export class OffspringModalComponent implements OnInit {
 
     const formValue = this.offspringForm.value;
     
-    // Prepare puppy data for the API - backend expects "Male" or "Female"
-    const puppyData = {
-      puppies: [{
-        name: formValue.name,
-        gender: formValue.gender, // Already "Male" or "Female" from selectGender
-        birth_date: formValue.date_of_birth,
-        microchip: formValue.microchip || null
-      }]
+    // Parse breeding_id to integer
+    const breedingIdInt = parseInt(this.breedingId, 10);
+    if (isNaN(breedingIdInt)) {
+      this.toastr.error('Invalid breeding ID', 'Error');
+      this.isSubmitting = false;
+      return;
+    }
+    
+    // Prepare offspring data for the API
+    const offspringData: OffspringCreate = {
+      breeding_id: breedingIdInt,
+      name: formValue.name || null,
+      gender: formValue.gender as 'Male' | 'Female',
+      date_of_birth: formValue.date_of_birth,
+      status: formValue.status || 'Available',
+      price: formValue.price ? parseFloat(formValue.price) : null,
+      color_markings: formValue.color_markings || null,
+      description: formValue.description || null
     };
 
-    this.dataService.addPuppiesToBreeding(this.breedingId, puppyData.puppies).subscribe({
-      next: () => {
+    console.log('Submitting offspring data:', offspringData);
+
+    this.offspringService.createOffspring(offspringData).subscribe({
+      next: (offspring) => {
+        console.log('Offspring created:', offspring);
         this.isSubmitting = false;
         this.offspringAdded.emit();
         this.toastr.success('Offspring added successfully', 'Success');
       },
       error: (error) => {
         console.error('Error adding offspring:', error);
-        const errorMsg = error?.error?.detail || 'Failed to add offspring';
+        const errorMsg = error?.message || error?.error?.detail || 'Failed to add offspring';
         this.toastr.error(errorMsg, 'Error');
         this.isSubmitting = false;
+        this.cdr.detectChanges();
       }
     });
   }

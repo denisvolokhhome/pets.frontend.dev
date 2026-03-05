@@ -50,9 +50,15 @@ export class OffspringGridComponent implements OnInit {
     // Get breederId from route if not provided as input
     if (!this.breederId) {
       this.route.params.subscribe(params => {
-        this.breederId = params['breederId'];
-        this.loadFiltersFromSession();
-        this.loadOffsprings();
+        // Route parameter is 'id', not 'breederId'
+        this.breederId = params['id'];
+        if (this.breederId) {
+          this.loadFiltersFromSession();
+          this.loadOffsprings();
+        } else {
+          console.error('Breeder ID not found in route parameters');
+          this.isLoading = false;
+        }
       });
     } else {
       this.loadFiltersFromSession();
@@ -84,8 +90,8 @@ export class OffspringGridComponent implements OnInit {
       offset
     ).subscribe({
       next: (response) => {
-        this.offsprings = response.offsprings;
-        this.totalOffsprings = response.total;
+        this.offsprings = response.offsprings || [];
+        this.totalOffsprings = response.total || 0;
         this.extractBreeds();
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -93,6 +99,8 @@ export class OffspringGridComponent implements OnInit {
       error: (error) => {
         console.error('Error loading offsprings:', error);
         this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.offsprings = [];
+        this.totalOffsprings = 0;
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -105,11 +113,14 @@ export class OffspringGridComponent implements OnInit {
   extractBreeds(): void {
     const breedMap = new Map<number, string>();
     
-    this.offsprings.forEach(offspring => {
-      if (offspring.breed_id && offspring.breed?.name) {
-        breedMap.set(offspring.breed_id, offspring.breed.name);
-      }
-    });
+    // Safely iterate over offsprings array
+    if (this.offsprings && Array.isArray(this.offsprings)) {
+      this.offsprings.forEach(offspring => {
+        if (offspring.breed_id && offspring.breed?.name) {
+          breedMap.set(offspring.breed_id, offspring.breed.name);
+        }
+      });
+    }
 
     this.breeds = [
       { label: 'All Breeds', value: undefined },
@@ -199,7 +210,7 @@ export class OffspringGridComponent implements OnInit {
    * Check if there are offsprings to display
    */
   hasOffsprings(): boolean {
-    return this.offsprings.length > 0;
+    return !!(this.offsprings && this.offsprings.length > 0);
   }
 
   /**
