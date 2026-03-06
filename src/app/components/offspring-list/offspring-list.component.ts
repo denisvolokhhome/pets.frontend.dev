@@ -40,9 +40,12 @@ export class OffspringListComponent implements OnInit {
   }
 
   loadOffsprings(): void {
+    console.log('Loading all offsprings');
     this.isLoading = true;
-    this.offspringService.getOffsprings(undefined, undefined, this.rows, this.first).subscribe({
+    // Load all offsprings at once (max limit is 100)
+    this.offspringService.getOffsprings(undefined, undefined, 100, 0).subscribe({
       next: (response) => {
+        console.log('Offsprings loaded:', response.offsprings.length);
         this.offsprings = response.offsprings;
         this.totalRecords = response.total;
         this.isLoading = false;
@@ -58,9 +61,10 @@ export class OffspringListComponent implements OnInit {
   }
 
   onPageChange(event: any): void {
+    // Client-side pagination only - no need to reload data
+    console.log('Page change event (client-side only):', event);
     this.first = event.first;
     this.rows = event.rows;
-    this.loadOffsprings();
   }
 
   addOffspring(): void {
@@ -140,12 +144,13 @@ export class OffspringListComponent implements OnInit {
 
   getThumbnailUrl(offspring: OffspringRead): string {
     if (offspring.primary_image) {
-      return offspring.primary_image.image_url;
+      return `http://breedly.com:8000${offspring.primary_image.image_url}`;
     }
     if (offspring.images && offspring.images.length > 0) {
-      return offspring.images[0].image_url;
+      return `http://breedly.com:8000${offspring.images[0].image_url}`;
     }
-    return 'assets/images/no-image.png';
+    // Return a data URL for a simple gray placeholder instead of trying to load a file
+    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
   }
 
   getBreedName(offspring: OffspringRead): string {

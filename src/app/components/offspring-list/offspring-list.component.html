@@ -1,159 +1,165 @@
-<div class="offspring-list-container p-4">
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-2xl font-bold">My Offsprings</h2>
-  </div>
+<div class="offspring-list-container">
+  <!-- Header Section -->
+  <header class="offspring-header">
+    <div class="header-left">
+      <h1 class="page-title">
+        <i class="bi bi-heart-fill"></i>
+        My Offsprings
+      </h1>
+    </div>
+  </header>
 
-  <div class="card">
-    <p-table 
-      [value]="offsprings" 
-      [loading]="isLoading"
-      [paginator]="true"
-      [rows]="rows"
-      [totalRecords]="totalRecords"
-      [lazy]="true"
-      (onLazyLoad)="onPageChange($event)"
-      [rowsPerPageOptions]="[10, 25, 50]"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offsprings"
-      styleClass="p-datatable-sm"
-      responsiveLayout="scroll">
-      
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 80px">Photo</th>
-          <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-          <th pSortableColumn="gender">Gender <p-sortIcon field="gender"></p-sortIcon></th>
-          <th pSortableColumn="date_of_birth">DOB <p-sortIcon field="date_of_birth"></p-sortIcon></th>
-          <th>Age</th>
-          <th>Breed</th>
-          <th>Color</th>
-          <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-          <th>Breeding</th>
-          <th>Father</th>
-          <th>Mother</th>
-          <th style="width: 80px">Favorites</th>
-          <th style="width: 80px">Messages</th>
-          <th style="width: 150px">Actions</th>
-        </tr>
-      </ng-template>
+  <!-- Content Section -->
+  <div class="offspring-content">
+    <!-- Table Container -->
+    <div class="table-container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner-container">
+          <svg class="spinner" viewBox="0 0 50 50">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+        </div>
+        <p>Loading offsprings...</p>
+      </div>
 
-      <ng-template pTemplate="body" let-offspring>
-        <tr (dblclick)="viewOffspring(offspring)">
-          <td>
-            <img 
-              [src]="getThumbnailUrl(offspring)" 
-              alt="Offspring photo"
-              class="w-16 h-16 object-cover rounded cursor-pointer"
-              (click)="viewOffspring(offspring)">
-          </td>
-          <td>
-            <span class="cursor-pointer text-blue-600 hover:underline" (click)="viewOffspring(offspring)">
-              {{ offspring.name || 'Unnamed' }}
-            </span>
-          </td>
-          <td>
-            <p-dropdown 
-              [options]="statusOptions" 
-              [(ngModel)]="offspring.status"
-              (onChange)="onStatusChange(offspring, $event.value)"
-              [disabled]="isUpdatingStatus[offspring.id]"
-              optionLabel="label"
-              optionValue="value"
-              [style]="{'width': '120px'}"
-              styleClass="status-dropdown">
-              <ng-template pTemplate="selectedItem">
-                <span [class]="'badge ' + getStatusBadgeClass(offspring.status)">
-                  {{ offspring.status }}
-                </span>
-              </ng-template>
-              <ng-template let-option pTemplate="item">
-                <span [class]="'badge ' + getStatusBadgeClass(option.value)">
-                  {{ option.label }}
-                </span>
-              </ng-template>
-            </p-dropdown>
-          </td>
-          <td>{{ offspring.gender }}</td>
-          <td>{{ formatDate(offspring.date_of_birth) }}</td>
-          <td>{{ offspring.age }}</td>
-          <td>{{ getBreedName(offspring) }}</td>
-          <td>{{ offspring.color_markings || '-' }}</td>
-          <td>{{ offspring.price ? ('$' + offspring.price) : '-' }}</td>
-          <td>
-            <span 
-              *ngIf="offspring.breeding_id"
-              class="cursor-pointer text-blue-600 hover:underline"
-              (click)="navigateToBreeding(offspring)">
-              #{{ offspring.breeding_id }}
-            </span>
-            <span *ngIf="!offspring.breeding_id">-</span>
-          </td>
-          <td>
-            <span 
-              *ngIf="offspring.father"
-              class="cursor-pointer text-blue-600 hover:underline"
-              (click)="navigateToPet(offspring.father.id)">
-              {{ getFatherName(offspring) }}
-            </span>
-            <span *ngIf="!offspring.father">-</span>
-          </td>
-          <td>
-            <span 
-              *ngIf="offspring.mother"
-              class="cursor-pointer text-blue-600 hover:underline"
-              (click)="navigateToPet(offspring.mother.id)">
-              {{ getMotherName(offspring) }}
-            </span>
-            <span *ngIf="!offspring.mother">-</span>
-          </td>
-          <td class="text-center">
-            <span class="badge badge-info">
-              <i class="pi pi-heart mr-1"></i>
-              {{ offspring.favorites_count }}
-            </span>
-          </td>
-          <td class="text-center">
-            <span 
-              class="badge badge-info cursor-pointer hover:bg-blue-600"
-              (click)="viewMessages(offspring)">
-              <i class="pi pi-envelope mr-1"></i>
-              {{ offspring.messages_count }}
-            </span>
-          </td>
-          <td>
-            <div class="flex gap-2">
+      <p-table 
+        [value]="offsprings" 
+        [paginator]="true"
+        [rows]="rows"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offsprings"
+        styleClass="p-datatable-sm p-datatable-striped"
+        responsiveLayout="scroll"
+        *ngIf="!isLoading && offsprings && offsprings.length > 0">
+        
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 80px">Photo</th>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="gender">Gender <p-sortIcon field="gender"></p-sortIcon></th>
+            <th pSortableColumn="date_of_birth">DOB <p-sortIcon field="date_of_birth"></p-sortIcon></th>
+            <th>Age</th>
+            <th>Breed</th>
+            <th>Color</th>
+            <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+            <th>Breeding</th>
+            <th>Father</th>
+            <th>Mother</th>
+            <th style="width: 80px">Favorites</th>
+            <th style="width: 80px">Messages</th>
+            <th style="width: 150px">Actions</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-offspring>
+          <tr (dblclick)="viewOffspring(offspring)" style="cursor: pointer;" title="Double-click to view details">
+            <td>
+              <img 
+                [src]="getThumbnailUrl(offspring)" 
+                alt="Offspring photo"
+                class="w-16 h-16 object-cover rounded cursor-pointer"
+                (click)="viewOffspring(offspring)">
+            </td>
+            <td>
+              <span class="cursor-pointer text-blue-600 hover:underline" (click)="viewOffspring(offspring)">
+                {{ offspring.name || 'Unnamed' }}
+              </span>
+            </td>
+            <td>
+              <span [class]="'status-badge ' + getStatusBadgeClass(offspring.status)">
+                {{ offspring.status }}
+              </span>
+            </td>
+            <td>{{ offspring.gender }}</td>
+            <td>{{ formatDate(offspring.date_of_birth) }}</td>
+            <td>{{ offspring.age }}</td>
+            <td>{{ getBreedName(offspring) }}</td>
+            <td>{{ offspring.color_markings || '-' }}</td>
+            <td>{{ offspring.price ? ('$' + offspring.price) : '-' }}</td>
+            <td>
+              <span 
+                *ngIf="offspring.breeding_id"
+                class="cursor-pointer text-blue-600 hover:underline"
+                (click)="navigateToBreeding(offspring)">
+                #{{ offspring.breeding_id }}
+              </span>
+              <span *ngIf="!offspring.breeding_id">-</span>
+            </td>
+            <td>
+              <span 
+                *ngIf="offspring.father"
+                class="cursor-pointer text-blue-600 hover:underline"
+                (click)="navigateToPet(offspring.father.id)">
+                {{ getFatherName(offspring) }}
+              </span>
+              <span *ngIf="!offspring.father">-</span>
+            </td>
+            <td>
+              <span 
+                *ngIf="offspring.mother"
+                class="cursor-pointer text-blue-600 hover:underline"
+                (click)="navigateToPet(offspring.mother.id)">
+                {{ getMotherName(offspring) }}
+              </span>
+              <span *ngIf="!offspring.mother">-</span>
+            </td>
+            <td class="text-center">
+              <span class="puppies-count">
+                <i class="pi pi-heart mr-1"></i>
+                {{ offspring.favorites_count }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span 
+                class="puppies-count cursor-pointer hover:bg-teal-600"
+                (click)="viewMessages(offspring)">
+                <i class="pi pi-envelope mr-1"></i>
+                {{ offspring.messages_count }}
+              </span>
+            </td>
+            <td class="actions-cell">
               <button 
-                class="btn btn-sm btn-secondary"
+                class="btn-action btn-view"
+                (click)="viewOffspring(offspring)"
+                type="button"
+                title="View">
+                <i class="bi bi-eye-fill"></i>
+              </button>
+              <button 
+                class="btn-action btn-edit"
                 (click)="editOffspring(offspring)"
                 type="button"
                 title="Edit">
-                <i class="pi pi-pencil"></i>
+                <i class="bi bi-pencil-fill"></i>
               </button>
               <button 
-                class="btn btn-sm btn-danger"
+                class="btn-action btn-void"
                 (click)="deleteOffspring(offspring)"
                 [disabled]="isDeleting[offspring.id]"
                 type="button"
                 title="Delete">
-                <i class="pi pi-trash"></i>
+                <i class="bi bi-trash-fill"></i>
               </button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
+            </td>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="15" class="text-center py-8">
-            <div class="text-gray-500">
-              <i class="pi pi-inbox text-4xl mb-2"></i>
-              <p class="text-lg">No offsprings found</p>
-              <p class="text-sm">Offsprings are created from the Breedings menu</p>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="15" class="text-center">No offsprings found</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && (!offsprings || offsprings.length === 0)" class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No offsprings found</h3>
+        <p>Offsprings are created from the Breedings menu</p>
+      </div>
+    </div>
   </div>
 </div>

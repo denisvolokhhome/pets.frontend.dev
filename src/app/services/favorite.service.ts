@@ -44,9 +44,9 @@ export class FavoriteService {
     const token = localStorage.getItem('id_token');
     if (!token) return;
 
-    this.getFavorites(0, 1000).subscribe({
-      next: (response) => {
-        const favoriteIds = new Set(response.favorites.map(f => f.offspring_id));
+    this.getFavorites(0, 100).subscribe({
+      next: (favorites) => {
+        const favoriteIds = new Set(favorites.map(f => f.offspring_id));
         this.favoritesCache.next(favoriteIds);
       },
       error: () => {
@@ -106,7 +106,7 @@ export class FavoriteService {
   /**
    * Get all favorites for the authenticated user
    */
-  getFavorites(offset: number = 0, limit: number = 50): Observable<FavoriteListResponse> {
+  getFavorites(offset: number = 0, limit: number = 50): Observable<OffspringFavorite[]> {
     const headers = this.getAuthHeaders();
     const params = {
       offset: offset.toString(),
@@ -114,11 +114,11 @@ export class FavoriteService {
     };
 
     return this.http
-      .get<FavoriteListResponse>(`${this.apiUrl}/favorites/offsprings`, { headers, params })
+      .get<OffspringFavorite[]>(`${this.apiUrl}/favorites/offsprings`, { headers, params })
       .pipe(
-        tap((response) => {
+        tap((favorites) => {
           // Update cache with server data
-          const favoriteIds = new Set(response.favorites.map(f => f.offspring_id));
+          const favoriteIds = new Set(favorites.map(f => f.offspring_id));
           this.favoritesCache.next(favoriteIds);
         }),
         catchError(this.handleError)

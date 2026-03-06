@@ -39,9 +39,9 @@ export class FavoritesListComponent implements OnInit {
     const offset = this.currentPage * this.pageSize;
 
     this.favoriteService.getFavorites(offset, this.pageSize).subscribe({
-      next: (response) => {
-        this.favorites = response.favorites;
-        this.totalFavorites = response.total;
+      next: (favorites) => {
+        this.favorites = favorites;
+        this.totalFavorites = favorites.length; // Note: This is just the current page count
         
         // Extract offspring data from favorites
         this.offsprings = this.favorites

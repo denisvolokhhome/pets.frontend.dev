@@ -1,137 +1,412 @@
+/* Container */
 .offspring-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: calc(100vh - 200px);
   max-width: 100%;
-  margin: 0 auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-  display: inline-flex;
+/* Header Section */
+.offspring-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
 }
 
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
+.header-left {
+  flex-shrink: 0;
 }
 
-.btn-primary:hover {
-  background-color: #2563eb;
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
 }
 
-.btn-secondary {
-  background-color: #6b7280;
-  color: white;
+.page-title i {
+  color: #ec4899;
+  font-size: 2rem;
 }
 
-.btn-secondary:hover {
-  background-color: #4b5563;
+/* Main Content */
+.offspring-content {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.btn-danger {
-  background-color: #ef4444;
-  color: white;
+/* Table Container */
+.table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
 }
 
-.btn-danger:hover {
-  background-color: #dc2626;
+/* Ensure PrimeNG table wrapper is scrollable */
+::ng-deep .table-container .p-datatable-wrapper {
+  overflow-x: auto !important;
+  max-width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
-.btn-danger:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
+/* Prevent PrimeNG table from expanding container */
+::ng-deep .table-container .p-datatable {
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
-.btn-sm {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
+::ng-deep .table-container .p-datatable table {
+  min-width: 100% !important;
+  width: max-content !important;
+  table-layout: auto !important;
 }
 
-.badge {
+/* Status Badges */
+.status-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .badge-available {
-  background-color: #10b981;
-  color: white;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .badge-reserved {
-  background-color: #f59e0b;
-  color: white;
+  background: #fef3c7;
+  color: #92400e;
 }
 
 .badge-sold {
-  background-color: #6b7280;
-  color: white;
+  background: #e5e7eb;
+  color: #374151;
 }
 
 .badge-archived {
-  background-color: #ef4444;
-  color: white;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
-.badge-info {
-  background-color: #3b82f6;
-  color: white;
-}
-
-/* PrimeNG table customization */
-::ng-deep .p-datatable .p-datatable-thead > tr > th {
-  background-color: #f3f4f6;
-  color: #374151;
+/* Puppies Count */
+.puppies-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.25rem 0.5rem;
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(78, 205, 196, 0.08));
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 6px;
   font-weight: 600;
-  padding: 0.75rem;
-  border-bottom: 2px solid #e5e7eb;
+  color: #0d9488;
+  font-size: 0.875rem;
 }
 
-::ng-deep .p-datatable .p-datatable-tbody > tr {
-  transition: background-color 0.2s;
-}
-
-::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #f9fafb;
-  cursor: pointer;
-}
-
-::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-::ng-deep .p-paginator {
-  padding: 1rem;
-  background-color: #f9fafb;
-  border-top: 1px solid #e5e7eb;
-}
-
-/* Status dropdown styling */
-::ng-deep .status-dropdown .p-dropdown {
-  border: none;
-  background: transparent;
-}
-
-::ng-deep .status-dropdown .p-dropdown-trigger {
-  display: none;
-}
-
-::ng-deep .status-dropdown:hover .p-dropdown-trigger {
+/* Action Buttons */
+.actions-cell {
   display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-action {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-view {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.btn-view:hover:not(:disabled) {
+  background: #bfdbfe;
+  transform: translateY(-1px);
+}
+
+.btn-edit {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #fde68a;
+  transform: translateY(-1px);
+}
+
+.btn-void {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-void:hover:not(:disabled) {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Loading State */
+.loading-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  width: 50px;
+  height: 50px;
+}
+
+.spinner .path {
+  stroke: #6366f1;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+/* ============================================
+   PRIMENG TABLE OVERRIDES - CLEAN TAILWIND STYLE
+   ============================================ */
+
+::ng-deep .p-datatable {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .p-datatable .p-datatable-wrapper {
+  overflow-x: auto !important;
+}
+
+::ng-deep .p-datatable table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+/* Table header - clean gray background */
+::ng-deep .p-datatable thead tr th {
+  background: #f9fafb !important;
+  padding: 0.75rem 1.5rem !important;
+  text-align: left !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Table body rows */
+::ng-deep .p-datatable tbody tr {
+  background: white !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+::ng-deep .p-datatable tbody tr:hover {
+  background: #f9fafb !important;
+}
+
+::ng-deep .p-datatable tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+/* Table cells */
+::ng-deep .p-datatable tbody tr td {
+  padding: 1rem 1.5rem !important;
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+  border: none !important;
+}
+
+/* Sortable columns */
+::ng-deep .p-datatable .p-sortable-column:hover {
+  background: #f3f4f6 !important;
+}
+
+::ng-deep .p-datatable .p-sortable-column.p-highlight {
+  color: #111827 !important;
+}
+
+::ng-deep .p-datatable .p-sortable-column-icon {
+  color: #9ca3af !important;
+  font-size: 0.875rem !important;
+  margin-left: 0.5rem !important;
+}
+
+/* Pagination */
+::ng-deep .p-paginator {
+  background: white !important;
+  border-top: 1px solid #e5e7eb !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  color: #374151 !important;
+  border-radius: 0.375rem !important;
+  margin: 0 0.125rem !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #111827 !important;
+  color: white !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page:hover:not(.p-highlight) {
+  background: #f3f4f6 !important;
+}
+
+::ng-deep .p-paginator .p-paginator-first,
+::ng-deep .p-paginator .p-paginator-prev,
+::ng-deep .p-paginator .p-paginator-next,
+::ng-deep .p-paginator .p-paginator-last {
+  color: #374151 !important;
+  min-width: 2.5rem !important;
+  height: 2.5rem !important;
+  border-radius: 0.375rem !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-paginator .p-paginator-first:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-prev:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-next:hover:not(.p-disabled),
+::ng-deep .p-paginator .p-paginator-last:hover:not(.p-disabled) {
+  background: #f3f4f6 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .offspring-list-container {
+    gap: 1rem;
+  }
+
+  .offspring-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+    justify-content: center;
+  }
+
+  .page-title i {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .table-container {
+    border-radius: 8px;
+  }
+
+  .actions-cell {
+    gap: 0.375rem;
+  }
+
+  .btn-action {
+    padding: 0.375rem;
+    font-size: 0.875rem;
+  }
 }
