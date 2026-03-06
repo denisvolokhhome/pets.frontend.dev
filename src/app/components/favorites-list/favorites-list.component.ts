@@ -83,7 +83,7 @@ export class FavoritesListComponent implements OnInit {
    */
   viewBreederProfile(breederId: string): void {
     if (breederId) {
-      this.router.navigate(['/breeder', breederId]);
+      this.router.navigate(['/breeder', breederId, 'offsprings']);
     }
   }
 
