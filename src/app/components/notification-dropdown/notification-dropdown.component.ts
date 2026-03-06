@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +16,8 @@ import { Subject, takeUntil, interval } from 'rxjs';
     BadgeModule
   ],
   templateUrl: './notification-dropdown.component.html',
-  styleUrls: ['./notification-dropdown.component.css']
+  styleUrls: ['./notification-dropdown.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
@@ -31,15 +32,19 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     // Only load notifications if user is authenticated
     if (this.isAuthenticated()) {
-      this.loadNotifications();
-      this.loadUnreadCount();
-      this.startPolling();
+      // Use setTimeout to defer initial load to avoid ExpressionChangedAfterItHasBeenCheckedError
+      setTimeout(() => {
+        this.loadNotifications();
+        this.loadUnreadCount();
+        this.startPolling();
+      });
     }
   }
 
@@ -68,22 +73,27 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated()) {
       this.notifications = [];
       this.isLoading = false;
+      this.cdr.markForCheck();
       return;
     }
     
     this.isLoading = true;
+    this.cdr.markForCheck();
     
     this.notificationService.getNotifications(this.MAX_DISPLAY, 0)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.notifications = response.notifications || [];
+          // Backend returns array directly, not wrapped in object
+          this.notifications = Array.isArray(response) ? response : [];
           this.isLoading = false;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error loading notifications:', error);
           this.notifications = [];
           this.isLoading = false;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -91,6 +101,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   private loadUnreadCount(): void {
     if (!this.isAuthenticated()) {
       this.unreadCount = 0;
+      this.cdr.markForCheck();
       return;
     }
     
@@ -99,10 +110,12 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.unreadCount = response.count;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error loading unread count:', error);
           this.unreadCount = 0;
+          this.cdr.markForCheck();
         }
       });
   }
@@ -143,6 +156,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         next: () => {
           notification.is_read = true;
           this.unreadCount = Math.max(0, this.unreadCount - 1);
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Error marking notification as read:', error);

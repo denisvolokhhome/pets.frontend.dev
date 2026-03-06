@@ -16,12 +16,8 @@ export interface Notification {
   created_at: string;
 }
 
-export interface NotificationListResponse {
-  notifications: Notification[];
-  total: number;
-  limit: number;
-  offset: number;
-}
+// Backend returns array directly, not wrapped in object
+export type NotificationListResponse = Notification[];
 
 export interface UnreadCountResponse {
   count: number;
@@ -101,7 +97,7 @@ export class NotificationService {
     offset: number = 0,
     isRead?: boolean,
     type?: string
-  ): Observable<NotificationListResponse> {
+  ): Observable<Notification[]> {
     const headers = this.getAuthHeaders();
     const params: any = {
       offset: offset.toString(),
@@ -112,7 +108,7 @@ export class NotificationService {
     if (type) params.type = type;
 
     return this.http
-      .get<NotificationListResponse>(`${this.apiUrl}/notifications/`, { headers, params })
+      .get<Notification[]>(`${this.apiUrl}/notifications/`, { headers, params })
       .pipe(catchError(this.handleError));
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageThreadComponent, OffspringContext } from '../message-thread/message-thread.component';
@@ -23,7 +23,8 @@ export class MessageNewComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private offspringService: OffspringService,
-    private toastr: ToastService
+    private toastr: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +41,9 @@ export class MessageNewComponent implements OnInit {
       if (this.offspringId) {
         this.loadOffspringContext();
       } else {
+        // No offspring context to load, ready to show form
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -65,11 +68,13 @@ export class MessageNewComponent implements OnInit {
           price: offspring.price ?? undefined
         };
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading offspring context:', error);
         this.toastr.error('Failed to load offspring details', 'Error');
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

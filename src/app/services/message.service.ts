@@ -158,8 +158,20 @@ export class MessageService {
    */
   sendThreadMessage(messageData: ThreadMessageCreate): Observable<ThreadMessage> {
     const headers = this.getAuthHeaders();
+    
+    // If there's an offspring_id, use the offspring message endpoint
+    if (messageData.offspring_id) {
+      return this.http
+        .post<ThreadMessage>(`${this.apiUrl}/messages/offspring/${messageData.offspring_id}`, {
+          message: messageData.message,
+          receiver_id: messageData.receiver_id
+        }, { headers })
+        .pipe(catchError(this.handleError));
+    }
+    
+    // Otherwise use the general send endpoint
     return this.http
-      .post<ThreadMessage>(`${this.apiUrl}/messages/thread`, messageData, { headers })
+      .post<ThreadMessage>(`${this.apiUrl}/messages/send`, messageData, { headers })
       .pipe(catchError(this.handleError));
   }
 

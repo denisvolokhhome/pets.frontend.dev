@@ -13,12 +13,12 @@
     </button>
   </div>
 
-  <!-- Loading State -->
+  <!-- Loading State (only show while loading offspring context) -->
   <div *ngIf="isLoading" class="flex items-center justify-center py-12">
     <i class="pi pi-spin pi-spinner text-4xl text-gray-400"></i>
   </div>
 
-  <!-- Message Thread -->
+  <!-- Message Thread (show when not loading) -->
   <div *ngIf="!isLoading" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
     <app-message-thread
       [breederId]="breederId"

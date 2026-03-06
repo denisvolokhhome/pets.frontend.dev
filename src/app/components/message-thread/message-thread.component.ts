@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -67,7 +67,8 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private messageService: MessageService,
     private notificationService: NotificationService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
   ) {
     this.replyForm = this.fb.group({
       message: ['', [Validators.required, Validators.maxLength(2000)]]
@@ -80,7 +81,12 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       this.loadThreadMessages();
       this.markMessagesAsRead();
       this.startPolling();
+    } else {
+      // No thread ID means new conversation - not loading
+      this.isLoading = false;
     }
+    // Trigger change detection to ensure view updates
+    this.cdr.detectChanges();
   }
 
   ngOnDestroy(): void {
