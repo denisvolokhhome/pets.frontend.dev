@@ -259,17 +259,17 @@
 
 /* Favorite Button Styles */
 .btn-favorited {
-  background-color: #fef2f2 !important;
-  color: #ef4444 !important;
-  border: 1px solid #fecaca !important;
+  background-color: #ef4444 !important;
+  color: white !important;
+  border: none !important;
 }
 
 .btn-favorited:hover {
-  background-color: #fee2e2 !important;
+  background-color: #dc2626 !important;
 }
 
 .btn-favorited i {
-  color: #ef4444;
+  color: white !important;
 }
 
 .btn-disabled {

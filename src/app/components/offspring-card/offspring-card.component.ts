@@ -57,24 +57,40 @@ export class OffspringCardComponent {
     this.isTogglingFavorite = true;
     const offspringId = this.offspring.id;
 
-    this.favoriteService.toggleFavorite(offspringId).subscribe({
-      next: () => {
-        this.offspring.is_favorited = !this.offspring.is_favorited;
-        this.favoriteToggled.emit(offspringId);
-        
-        const message = this.offspring.is_favorited 
-          ? 'Added to favorites' 
-          : 'Removed from favorites';
-        this.toastr.success(message, 'Success');
-        
-        this.isTogglingFavorite = false;
-      },
-      error: (error) => {
-        console.error('Error toggling favorite:', error);
-        this.toastr.error(error.message || 'Failed to update favorite', 'Error');
-        this.isTogglingFavorite = false;
-      }
-    });
+    // Use the offspring's is_favorited field instead of cache
+    const isCurrentlyFavorited = this.offspring.is_favorited || false;
+
+    if (isCurrentlyFavorited) {
+      // Remove from favorites
+      this.favoriteService.removeFavorite(offspringId).subscribe({
+        next: () => {
+          this.offspring.is_favorited = false;
+          this.favoriteToggled.emit(offspringId);
+          this.toastr.success('Removed from favorites', 'Success');
+          this.isTogglingFavorite = false;
+        },
+        error: (error: any) => {
+          console.error('Error removing favorite:', error);
+          this.toastr.error(error.message || 'Failed to remove favorite', 'Error');
+          this.isTogglingFavorite = false;
+        }
+      });
+    } else {
+      // Add to favorites
+      this.favoriteService.addFavorite(offspringId).subscribe({
+        next: () => {
+          this.offspring.is_favorited = true;
+          this.favoriteToggled.emit(offspringId);
+          this.toastr.success('Added to favorites', 'Success');
+          this.isTogglingFavorite = false;
+        },
+        error: (error: any) => {
+          console.error('Error adding favorite:', error);
+          this.toastr.error(error.message || 'Failed to add favorite', 'Error');
+          this.isTogglingFavorite = false;
+        }
+      });
+    }
   }
 
   /**

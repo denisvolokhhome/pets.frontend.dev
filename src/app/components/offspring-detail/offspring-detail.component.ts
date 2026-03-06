@@ -298,26 +298,48 @@ export class OffspringDetailComponent implements OnInit {
     if (this.isTogglingFavorite || !this.offspring) return;
 
     this.isTogglingFavorite = true;
+    const offspringId = this.offspring.id;
 
-    this.favoriteService.toggleFavorite(this.offspring.id).subscribe({
-      next: () => {
-        if (this.offspring) {
-          this.offspring.is_favorited = !this.offspring.is_favorited;
-          const message = this.offspring.is_favorited 
-            ? 'Added to favorites' 
-            : 'Removed from favorites';
-          this.toastr.success(message, 'Success');
+    // Use the offspring's is_favorited field instead of cache
+    const isCurrentlyFavorited = this.offspring.is_favorited || false;
+
+    if (isCurrentlyFavorited) {
+      // Remove from favorites
+      this.favoriteService.removeFavorite(offspringId).subscribe({
+        next: () => {
+          if (this.offspring) {
+            this.offspring.is_favorited = false;
+            this.toastr.success('Removed from favorites', 'Success');
+          }
+          this.isTogglingFavorite = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error removing favorite:', error);
+          this.toastr.error(error.message || 'Failed to remove favorite', 'Error');
+          this.isTogglingFavorite = false;
+          this.cdr.detectChanges();
         }
-        this.isTogglingFavorite = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error toggling favorite:', error);
-        this.toastr.error(error.message || 'Failed to update favorite', 'Error');
-        this.isTogglingFavorite = false;
-        this.cdr.detectChanges();
-      }
-    });
+      });
+    } else {
+      // Add to favorites
+      this.favoriteService.addFavorite(offspringId).subscribe({
+        next: () => {
+          if (this.offspring) {
+            this.offspring.is_favorited = true;
+            this.toastr.success('Added to favorites', 'Success');
+          }
+          this.isTogglingFavorite = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error adding favorite:', error);
+          this.toastr.error(error.message || 'Failed to add favorite', 'Error');
+          this.isTogglingFavorite = false;
+          this.cdr.detectChanges();
+        }
+      });
+    }
   }
 
   /**

@@ -34,7 +34,7 @@ export class FavoriteService {
   public favoritesCache$ = this.favoritesCache.asObservable();
 
   constructor(private http: HttpClient) {
-    this.loadFavoritesCache();
+    // Don't load cache on init - rely on is_favorited field from offspring responses
   }
 
   /**
@@ -70,10 +70,12 @@ export class FavoriteService {
       .post<OffspringFavorite>(`${this.apiUrl}/favorites/offsprings/${offspringId}`, {}, { headers })
       .pipe(
         catchError((error) => {
-          // Rollback optimistic update on error
-          const rollbackCache = this.favoritesCache.value;
-          rollbackCache.delete(offspringId);
-          this.favoritesCache.next(rollbackCache);
+          // Rollback optimistic update on error (unless it's already favorited)
+          if (error.status !== 400 || !error.error?.detail?.includes('already')) {
+            const rollbackCache = this.favoritesCache.value;
+            rollbackCache.delete(offspringId);
+            this.favoritesCache.next(rollbackCache);
+          }
           return this.handleError(error);
         })
       );
@@ -188,6 +190,9 @@ export class FavoriteService {
         errorMessage = 'Access forbidden.';
       } else if (error.status === 404) {
         errorMessage = 'Favorite not found.';
+      } else if (error.status === 400) {
+        // Handle duplicate favorite error
+        errorMessage = error.error?.detail || 'Already in favorites.';
       } else if (error.status === 409) {
         errorMessage = error.error?.detail?.message || error.error?.detail || 'Already favorited.';
       } else if (error.status === 422) {
