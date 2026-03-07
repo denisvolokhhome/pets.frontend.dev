@@ -59,37 +59,40 @@
       </div>
 
       <!-- Messages List -->
-      <div *ngIf="!isLoading && messages.length > 0" class="messages-list">
+      <div *ngIf="!isLoading && threads.length > 0" class="messages-list">
         <div
-          *ngFor="let message of messages"
+          *ngFor="let thread of threads"
           class="message-item"
-          [class.unread]="!message.is_read && isBreeder"
-          [class.pending-response]="isPetSeeker && !message.responded_at"
-          (click)="viewMessage(message.id)">
+          [class.unread]="thread.unread_count > 0 && isBreeder"
+          [class.pending-response]="isPetSeeker && !thread.latest_message.responded_at"
+          (click)="viewThread(thread)">
           
           <!-- Message Status Indicator -->
-          <div class="message-indicator" [class]="getStatusClass(message)"></div>
+          <div class="message-indicator" [class]="getThreadStatusClass(thread)"></div>
 
           <!-- Message Content -->
           <div class="message-content">
             <!-- Sender Info -->
             <div class="message-header">
               <div class="sender-info">
-                <span class="sender-name">{{ message.sender_name }}</span>
-                <span class="sender-email">{{ message.sender_email }}</span>
+                <span class="sender-name">{{ thread.participant_name }}</span>
+                <span class="sender-email">{{ thread.participant_email }}</span>
+                <span *ngIf="thread.message_count > 1" class="message-count">
+                  ({{ thread.message_count }} messages)
+                </span>
               </div>
               <div class="message-meta">
-                <span class="message-time">{{ formatDate(message.created_at) }}</span>
-                <span class="message-status-badge" [class]="getStatusClass(message)">
-                  {{ getStatusText(message) }}
+                <span class="message-time">{{ formatDate(thread.last_activity) }}</span>
+                <span class="message-status-badge" [class]="getThreadStatusClass(thread)">
+                  {{ getThreadStatusText(thread) }}
                 </span>
               </div>
             </div>
 
             <!-- Message Preview -->
             <div class="message-preview">
-              <p *ngIf="message.message_preview">{{ message.message_preview }}</p>
-              <p *ngIf="!message.message_preview" class="no-message">No message content</p>
+              <p *ngIf="thread.latest_message.message_preview">{{ thread.latest_message.message_preview }}</p>
+              <p *ngIf="!thread.latest_message.message_preview" class="no-message">No message content</p>
             </div>
           </div>
 
@@ -102,7 +105,7 @@
         <!-- Pagination -->
         <div class="pagination">
           <div class="pagination-info">
-            {{ getPageRangeText() }}
+            {{ threads.length }} conversation{{ threads.length !== 1 ? 's' : '' }}
           </div>
           <div class="pagination-controls">
             <button
@@ -124,9 +127,9 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="!isLoading && messages.length === 0" class="empty-state">
+      <div *ngIf="!isLoading && threads.length === 0" class="empty-state">
         <i class="bi bi-inbox"></i>
-        <h3>No messages yet</h3>
+        <h3>No conversations yet</h3>
         <p>{{ getEmptyStateMessage() }}</p>
         <button *ngIf="statusFilter !== 'all'" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onWidgetClearFilters()">
           Clear Filters

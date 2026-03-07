@@ -16,6 +16,7 @@ export class MessageNewComponent implements OnInit {
   breederId: string = '';
   breederName: string = 'Breeder';
   offspringId?: string;
+  threadId?: string;
   offspringContext?: OffspringContext;
   isLoading: boolean = true;
 
@@ -31,10 +32,11 @@ export class MessageNewComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.breederId = params['breederId'];
       this.offspringId = params['offspringId'];
+      this.threadId = params['threadId'];
 
       if (!this.breederId) {
         this.toastr.error('Breeder information is missing', 'Error');
-        this.router.navigate(['/search']);
+        this.router.navigate(['/messages']);
         return;
       }
 
@@ -52,7 +54,11 @@ export class MessageNewComponent implements OnInit {
    * Load offspring context for the message thread
    */
   loadOffspringContext(): void {
-    if (!this.offspringId) return;
+    if (!this.offspringId) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
 
     this.isLoading = true;
     this.offspringService.getPublicOffspring(this.offspringId).subscribe({
@@ -72,7 +78,8 @@ export class MessageNewComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading offspring context:', error);
-        this.toastr.error('Failed to load offspring details', 'Error');
+        // Don't show error toast, just continue without offspring context
+        this.offspringContext = undefined;
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -86,7 +93,8 @@ export class MessageNewComponent implements OnInit {
     if (this.offspringId) {
       this.router.navigate(['/offspring', this.offspringId]);
     } else {
-      this.router.navigate(['/search']);
+      // Go back to messages list instead of search
+      this.router.navigate(['/messages']);
     }
   }
 }

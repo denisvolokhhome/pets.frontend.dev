@@ -19,7 +19,7 @@ export class SettingsComponent {
     return this.authService.isBreeder;
   }
   
-  navigateToSection(section: 'general' | 'breedery' | 'locations' | 'messages'): void {
+  navigateToSection(section: 'general' | 'breedery' | 'locations' | 'messages' | 'notifications'): void {
     this.router.navigate(['/settings', section]);
   }
   

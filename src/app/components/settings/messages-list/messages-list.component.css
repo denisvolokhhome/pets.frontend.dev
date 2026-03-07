@@ -476,6 +476,13 @@
   white-space: nowrap;
 }
 
+.message-count {
+  font-size: 0.75rem;
+  color: #6366f1;
+  font-weight: 500;
+  margin-top: 0.125rem;
+}
+
 .message-meta {
   display: flex;
   flex-direction: column;

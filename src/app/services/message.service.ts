@@ -14,6 +14,9 @@ export interface MessageCreate {
 export interface Message {
   id: string;
   breeder_id: string;
+  pet_seeker_id?: string;
+  offspring_id?: string;
+  thread_id?: string;
   sender_name: string;
   sender_email: string;
   message: string | null;
@@ -22,10 +25,15 @@ export interface Message {
   responded_at: string | null;
   created_at: string;
   updated_at: string | null;
+  is_linked_to_account?: boolean;
 }
 
 export interface MessageListItem {
   id: string;
+  breeder_id: string;
+  pet_seeker_id?: string;
+  offspring_id?: string;
+  thread_id?: string;
   sender_name: string;
   sender_email: string;
   message_preview: string | null;
@@ -66,12 +74,27 @@ export interface ThreadMessage {
   id: string;
   sender_id: string;
   sender_name: string;
-  receiver_id: string;
+  sender_is_breeder: boolean;
   message: string;
   is_read: boolean;
   created_at: string;
-  offspring_id?: string;
-  thread_id?: string;
+}
+
+export interface ThreadResponse {
+  thread_id: string;
+  offspring_id: string;
+  breeder_id: string;
+  pet_seeker_id: string;
+  messages: ThreadMessage[];
+  offspring?: {
+    id: string;
+    name: string;
+    gender: string;
+    age: string;
+    status: string;
+    price?: number;
+    primary_image_url?: string;
+  };
 }
 
 @Injectable({
@@ -178,10 +201,10 @@ export class MessageService {
   /**
    * Get all messages in a thread
    */
-  getThreadMessages(threadId: string): Observable<ThreadMessage[]> {
+  getThreadMessages(threadId: string): Observable<ThreadResponse> {
     const headers = this.getAuthHeaders();
     return this.http
-      .get<ThreadMessage[]>(`${this.apiUrl}/messages/threads/${threadId}`, { headers })
+      .get<ThreadResponse>(`${this.apiUrl}/messages/threads/${threadId}`, { headers })
       .pipe(catchError(this.handleError));
   }
 

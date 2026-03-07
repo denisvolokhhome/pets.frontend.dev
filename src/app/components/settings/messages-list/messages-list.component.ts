@@ -5,6 +5,17 @@ import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { FilterConfig, FilterValues } from '../../shared/filter-widget/filter-widget.component';
 
+interface MessageThread {
+  thread_id: string | null;
+  latest_message: MessageListItem;
+  participant_name: string;
+  participant_email: string;
+  offspring_id?: string;
+  message_count: number;
+  unread_count: number;
+  last_activity: string;
+}
+
 @Component({
   selector: 'app-messages-list',
   standalone: false,
@@ -13,6 +24,7 @@ import { FilterConfig, FilterValues } from '../../shared/filter-widget/filter-wi
 })
 export class MessagesListComponent implements OnInit {
   messages: MessageListItem[] = [];
+  threads: MessageThread[] = [];
   totalMessages: number = 0;
   unreadCount: number = 0;
   isLoading: boolean = false;
@@ -76,6 +88,10 @@ export class MessagesListComponent implements OnInit {
           this.messages = response.messages;
           this.totalMessages = response.total;
           this.unreadCount = response.unread_count;
+          
+          // Group messages into threads
+          this.groupMessagesIntoThreads();
+          
           this.isLoading = false;
           this.cdr.detectChanges(); // Force change detection after data loads
         },
@@ -86,6 +102,51 @@ export class MessagesListComponent implements OnInit {
           this.cdr.detectChanges(); // Force change detection on error
         }
       });
+  }
+
+  /**
+   * Group messages into conversation threads
+   */
+  private groupMessagesIntoThreads(): void {
+    const threadMap = new Map<string, MessageThread>();
+
+    for (const message of this.messages) {
+      // Use thread_id if available, otherwise create unique key per conversation
+      const threadKey = message.thread_id || `${message.breeder_id}-${message.pet_seeker_id || message.sender_email}`;
+
+      if (!threadMap.has(threadKey)) {
+        // Create new thread
+        threadMap.set(threadKey, {
+          thread_id: message.thread_id || null,
+          latest_message: message,
+          participant_name: message.sender_name,
+          participant_email: message.sender_email,
+          offspring_id: message.offspring_id,
+          message_count: 1,
+          unread_count: !message.is_read ? 1 : 0,
+          last_activity: message.created_at
+        });
+      } else {
+        // Update existing thread
+        const thread = threadMap.get(threadKey)!;
+        thread.message_count++;
+        
+        if (!message.is_read) {
+          thread.unread_count++;
+        }
+
+        // Update latest message if this one is newer
+        if (new Date(message.created_at) > new Date(thread.last_activity)) {
+          thread.latest_message = message;
+          thread.last_activity = message.created_at;
+        }
+      }
+    }
+
+    // Convert map to array and sort by last activity
+    this.threads = Array.from(threadMap.values()).sort((a, b) => {
+      return new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime();
+    });
   }
 
   /**
@@ -182,10 +243,24 @@ export class MessagesListComponent implements OnInit {
   }
 
   /**
-   * View message details
+   * View message details - navigate directly to conversation
    */
-  viewMessage(messageId: string): void {
-    this.router.navigate(['/messages', messageId]);
+  viewThread(thread: MessageThread): void {
+    // Navigate directly to the conversation with thread context
+    const message = thread.latest_message;
+    const queryParams: any = {
+      breederId: message.breeder_id
+    };
+
+    if (thread.thread_id) {
+      queryParams.threadId = thread.thread_id;
+    }
+
+    if (thread.offspring_id) {
+      queryParams.offspringId = thread.offspring_id;
+    }
+
+    this.router.navigate(['/messages/new'], { queryParams });
   }
 
   /**
@@ -213,9 +288,11 @@ export class MessagesListComponent implements OnInit {
   }
 
   /**
-   * Get status badge class
+   * Get status badge class for thread
    */
-  getStatusClass(message: MessageListItem): string {
+  getThreadStatusClass(thread: MessageThread): string {
+    const message = thread.latest_message;
+    
     if (this.isPetSeeker) {
       // Pet seeker view: highlight pending responses
       if (message.responded_at) {
@@ -225,20 +302,22 @@ export class MessagesListComponent implements OnInit {
       }
     } else {
       // Breeder view: show read status
-      if (message.responded_at) {
-        return 'status-responded';
-      } else if (message.is_read) {
-        return 'status-read';
-      } else {
+      if (thread.unread_count > 0) {
         return 'status-unread';
+      } else if (message.responded_at) {
+        return 'status-responded';
+      } else {
+        return 'status-read';
       }
     }
   }
 
   /**
-   * Get status text
+   * Get status text for thread
    */
-  getStatusText(message: MessageListItem): string {
+  getThreadStatusText(thread: MessageThread): string {
+    const message = thread.latest_message;
+    
     if (this.isPetSeeker) {
       // Pet seeker view: show if breeder has responded
       if (message.responded_at) {
@@ -247,13 +326,13 @@ export class MessagesListComponent implements OnInit {
         return 'Pending';
       }
     } else {
-      // Breeder view: show read status
-      if (message.responded_at) {
+      // Breeder view: show unread count or status
+      if (thread.unread_count > 0) {
+        return `${thread.unread_count} New`;
+      } else if (message.responded_at) {
         return 'Responded';
-      } else if (message.is_read) {
-        return 'Read';
       } else {
-        return 'New';
+        return 'Read';
       }
     }
   }

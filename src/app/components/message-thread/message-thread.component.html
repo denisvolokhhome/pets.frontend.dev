@@ -54,17 +54,18 @@
       <div 
         class="max-w-[70%] rounded-lg p-3"
         [ngClass]="{
-          'bg-blue-500 text-white': isSentByCurrentUser(message),
+          'text-white': isSentByCurrentUser(message),
           'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
-        }">
+        }"
+        [style.background-color]="isSentByCurrentUser(message) ? 'var(--primary-color)' : ''">
         <div class="flex items-center gap-2 mb-1">
           <p-avatar 
             [label]="message.sender_name.charAt(0).toUpperCase()"
             size="small"
             shape="circle"
             [style]="{
-              'background-color': isSentByCurrentUser(message) ? '#3b82f6' : '#6b7280',
-              'color': 'white'
+              'background-color': isSentByCurrentUser(message) ? '#ffffff' : '#6b7280',
+              'color': isSentByCurrentUser(message) ? 'var(--primary-color)' : 'white'
             }">
           </p-avatar>
           <span class="text-xs font-medium">{{ message.sender_name }}</span>

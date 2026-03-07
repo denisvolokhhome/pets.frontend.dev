@@ -15,12 +15,10 @@ export interface ThreadMessage {
   id: string;
   sender_id: string;
   sender_name: string;
-  receiver_id: string;
+  sender_is_breeder: boolean;
   message: string;
   is_read: boolean;
   created_at: string;
-  offspring_id?: string;
-  thread_id?: string;
 }
 
 export interface OffspringContext {
@@ -109,8 +107,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     this.messageService.getThreadMessages(this.threadId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (messages) => {
-          this.messages = messages;
+        next: (response) => {
+          // Extract messages array from ThreadResponse
+          this.messages = response.messages;
           this.isLoading = false;
           this.scrollToBottom();
         },
@@ -123,25 +122,8 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   private markMessagesAsRead(): void {
-    if (!this.threadId || !this.currentUserId) return;
-
-    // Mark unread messages as read
-    const unreadMessages = this.messages.filter(
-      m => !m.is_read && m.receiver_id === this.currentUserId
-    );
-
-    unreadMessages.forEach(message => {
-      this.messageService.markAsRead(message.id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            message.is_read = true;
-          },
-          error: (error) => {
-            console.error('Error marking message as read:', error);
-          }
-        });
-    });
+    // Backend automatically marks messages as read when breeder accesses thread
+    // No need to manually mark each message
   }
 
   private startPolling(): void {

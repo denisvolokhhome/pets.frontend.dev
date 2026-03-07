@@ -21,6 +21,7 @@ import { PetSeekerRegistrationComponent } from './components/pet-seeker-registra
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
+// import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
 import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
@@ -66,6 +67,7 @@ const routes: Routes = [
       { path: 'general', component: GeneralSettingsComponent },
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] }
+      // { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] }
     ]
   },
 ];

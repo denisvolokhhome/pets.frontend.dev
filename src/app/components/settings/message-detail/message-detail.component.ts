@@ -182,4 +182,29 @@ export class MessageDetailComponent implements OnInit {
   get isPetSeeker(): boolean {
     return this.authService.isPetSeeker;
   }
+
+  /**
+   * Continue conversation (for pet seekers)
+   * Navigates to new message page with thread context to show existing messages
+   */
+  continueConversation(): void {
+    if (!this.message) {
+      return;
+    }
+
+    // Navigate to new message with thread_id to load existing conversation
+    const queryParams: any = {
+      breederId: this.message.breeder_id
+    };
+
+    if (this.message.thread_id) {
+      queryParams.threadId = this.message.thread_id;
+    }
+
+    if (this.message.offspring_id) {
+      queryParams.offspringId = this.message.offspring_id;
+    }
+
+    this.router.navigate(['/messages/new'], { queryParams });
+  }
 }
