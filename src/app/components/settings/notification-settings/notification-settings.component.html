@@ -1,77 +1,78 @@
 <div class="notification-settings-container">
   <div class="settings-header">
-    <h2 class="text-2xl font-semibold text-gray-900 mb-2">Notification Settings</h2>
-    <p class="text-gray-600 mb-6">Manage which notifications you want to receive</p>
+    <h2>Notification Settings</h2>
+    <p class="subtitle">Manage your notification preferences</p>
   </div>
 
-  <div *ngIf="isLoading" class="loading-spinner">
-    <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
-    <p class="text-gray-600 mt-2">Loading preferences...</p>
+  <div class="settings-content">
+    <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
+      <div class="form-section">
+        <h3>Email Notifications</h3>
+        <p class="section-description">Choose which notifications you want to receive via email</p>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <label class="preference-label">
+              <i class="bi bi-envelope"></i>
+              New Messages
+            </label>
+            <p class="preference-description">
+              Receive email notifications when someone sends you a message
+            </p>
+          </div>
+          <div class="preference-toggle">
+            <label class="switch">
+              <input 
+                type="checkbox" 
+                formControlName="message_received"
+                [disabled]="isLoading">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <label class="preference-label">
+              <i class="bi bi-heart"></i>
+              Favorites
+            </label>
+            <p class="preference-description">
+              Receive email notifications when someone adds your offspring to their favorites
+            </p>
+          </div>
+          <div class="preference-toggle">
+            <label class="switch">
+              <input 
+                type="checkbox" 
+                formControlName="favorite_added"
+                [disabled]="isLoading">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn-save"
+          [disabled]="isLoading || preferencesForm.invalid">
+          <i class="bi bi-check-circle" *ngIf="!isLoading"></i>
+          <i class="bi bi-arrow-repeat spin" *ngIf="isLoading"></i>
+          {{ isLoading ? 'Saving...' : 'Save Preferences' }}
+        </button>
+
+        <div class="save-feedback" *ngIf="saveSuccess">
+          <i class="bi bi-check-circle-fill"></i>
+          Preferences saved successfully!
+        </div>
+
+        <div class="save-error" *ngIf="saveError">
+          <i class="bi bi-exclamation-circle-fill"></i>
+          {{ saveError }}
+        </div>
+      </div>
+    </form>
   </div>
-
-  <form *ngIf="!isLoading" [formGroup]="preferencesForm" (ngSubmit)="savePreferences()" class="preferences-form">
-    
-    <!-- Message Notifications -->
-    <div class="preference-item">
-      <div class="preference-header">
-        <div class="flex items-center gap-3">
-          <i class="pi pi-envelope text-2xl text-blue-600"></i>
-          <div>
-            <h3 class="text-lg font-medium text-gray-900">Message Notifications</h3>
-            <p class="text-sm text-gray-600">Get notified when someone sends you a message about your offspring</p>
-          </div>
-        </div>
-        <label class="toggle-switch">
-          <input 
-            type="checkbox" 
-            formControlName="message_received"
-            class="toggle-input">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Favorite Notifications -->
-    <div class="preference-item">
-      <div class="preference-header">
-        <div class="flex items-center gap-3">
-          <i class="pi pi-heart-fill text-2xl text-red-500"></i>
-          <div>
-            <h3 class="text-lg font-medium text-gray-900">Favorite Notifications</h3>
-            <p class="text-sm text-gray-600">Get notified when someone adds your offspring to their favorites</p>
-          </div>
-        </div>
-        <label class="toggle-switch">
-          <input 
-            type="checkbox" 
-            formControlName="favorite_added"
-            class="toggle-input">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Error Message -->
-    <div *ngIf="saveError" class="error-message">
-      <i class="pi pi-exclamation-circle"></i>
-      <span>{{ saveError }}</span>
-    </div>
-
-    <!-- Success Message -->
-    <div *ngIf="saveSuccess" class="success-message">
-      <i class="pi pi-check-circle"></i>
-      <span>Preferences saved successfully!</span>
-    </div>
-
-    <!-- Save Button -->
-    <div class="form-actions">
-      <button 
-        type="submit" 
-        class="save-button"
-        [disabled]="isLoading || preferencesForm.invalid">
-        <i class="pi pi-save mr-2"></i>
-        Save Preferences
-      </button>
-    </div>
-  </form>
 </div>

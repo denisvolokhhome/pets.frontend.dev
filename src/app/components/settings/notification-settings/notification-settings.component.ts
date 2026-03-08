@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotificationPreferenceService } from '../../../services/notification-preference.service';
 import { ToastService } from '../../../services/toast.service';
@@ -18,8 +18,7 @@ export class NotificationSettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private notificationPreferenceService: NotificationPreferenceService,
-    private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private toastService: ToastService
   ) {
     this.preferencesForm = this.fb.group({
       message_received: [true],
@@ -42,13 +41,11 @@ export class NotificationSettingsComponent implements OnInit {
           favorite_added: preferences.favorite_added
         });
         this.isLoading = false;
-        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading notification preferences:', error);
-        this.toastr.error('Failed to load notification preferences', 'Error');
+        this.toastService.error('Failed to load notification preferences', 'Error');
         this.isLoading = false;
-        this.cdr.detectChanges();
       }
     });
   }
@@ -68,23 +65,20 @@ export class NotificationSettingsComponent implements OnInit {
     };
 
     this.notificationPreferenceService.updatePreferences(preferences).subscribe({
-      next: (response) => {
+      next: () => {
         this.saveSuccess = true;
         this.isLoading = false;
-        this.toastr.success('Notification preferences updated successfully', 'Success');
-        this.cdr.detectChanges();
+        this.toastService.success('Notification preferences updated successfully', 'Success');
         setTimeout(() => {
           this.saveSuccess = false;
-          this.cdr.detectChanges();
         }, 3000);
       },
       error: (error) => {
         console.error('Error saving notification preferences:', error);
         this.saveError = error.error?.detail || 'Failed to save notification preferences';
         const errorMessage = this.saveError || 'Failed to save notification preferences';
-        this.toastr.error(errorMessage, 'Error');
+        this.toastService.error(errorMessage, 'Error');
         this.isLoading = false;
-        this.cdr.detectChanges();
       }
     });
   }
