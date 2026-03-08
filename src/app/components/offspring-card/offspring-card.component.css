@@ -198,6 +198,19 @@
   font-size: 14px;
 }
 
+/* Conversation Button Variant (for existing threads) */
+.contact-btn-conversation {
+  background-color: #38bdf8;
+}
+
+.contact-btn-conversation:hover {
+  background-color: #0ea5e9;
+}
+
+.contact-btn-conversation:active {
+  background-color: #0284c7;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .card-image-container {

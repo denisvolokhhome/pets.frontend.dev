@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OffspringRead } from 'src/app/services/offspring.service';
 import { FavoriteService } from 'src/app/services/favorite.service';
+import { MessageService } from 'src/app/services/message.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
@@ -14,20 +15,54 @@ import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-mo
   styleUrls: ['./offspring-card.component.css'],
   imports: [CommonModule, GuestPromptModalComponent]
 })
-export class OffspringCardComponent {
+export class OffspringCardComponent implements OnInit {
   @Input() offspring!: OffspringRead;
   @Input() showFavorite: boolean = true;
   @Output() favoriteToggled = new EventEmitter<string>();
 
   isTogglingFavorite: boolean = false;
   showGuestModal: boolean = false;
+  hasExistingThread: boolean = false;
+  existingThreadId: string | null = null;
+  isCheckingThread: boolean = false;
 
   constructor(
     private router: Router,
     private favoriteService: FavoriteService,
+    private messageService: MessageService,
     private toastr: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    // Check for existing thread if user is authenticated
+    if (this.isAuthenticated() && this.offspring?.id) {
+      this.checkForExistingThread();
+    }
+  }
+
+  /**
+   * Check if there's an existing thread for this offspring
+   */
+  private checkForExistingThread(): void {
+    this.isCheckingThread = true;
+    this.messageService.checkOffspringThread(this.offspring.id).subscribe({
+      next: (response) => {
+        this.hasExistingThread = response.has_thread;
+        this.existingThreadId = response.thread_id;
+        this.isCheckingThread = false;
+        // Force change detection to update the button
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error checking for existing thread:', error);
+        this.isCheckingThread = false;
+        // Silently fail - button will show default state
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   /**
    * Navigate to offspring detail view
@@ -106,13 +141,33 @@ export class OffspringCardComponent {
       return;
     }
 
+    // Build query params
+    const queryParams: any = {
+      breederId: this.offspring.user_id,
+      offspringId: this.offspring.id
+    };
+
+    // If there's an existing thread, include it
+    if (this.hasExistingThread && this.existingThreadId) {
+      queryParams.threadId = this.existingThreadId;
+    }
+
     // Navigate to message thread with offspring context
-    this.router.navigate(['/messages/new'], {
-      queryParams: {
-        breederId: this.offspring.user_id,
-        offspringId: this.offspring.id
-      }
-    });
+    this.router.navigate(['/messages/new'], { queryParams });
+  }
+
+  /**
+   * Get button text based on whether thread exists
+   */
+  getContactButtonText(): string {
+    return this.hasExistingThread ? 'View Conversation' : 'Contact Breeder';
+  }
+
+  /**
+   * Get button icon based on whether thread exists
+   */
+  getContactButtonIcon(): string {
+    return this.hasExistingThread ? 'pi-comments' : 'pi-envelope';
   }
 
   /**

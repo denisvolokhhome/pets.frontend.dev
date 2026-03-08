@@ -115,9 +115,10 @@
             <td class="text-center">
               <span 
                 class="puppies-count cursor-pointer hover:bg-teal-600"
-                (click)="viewMessages(offspring)">
+                (click)="viewMessages(offspring)"
+                title="View conversation threads">
                 <i class="pi pi-envelope mr-1"></i>
-                {{ offspring.messages_count }}
+                {{ offspring.thread_count || 0 }}
               </span>
             </td>
             <td class="actions-cell">

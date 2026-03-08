@@ -1,3 +1,47 @@
 .message-new-container {
   min-height: calc(100vh - 200px);
 }
+
+.threads-sidebar {
+  flex-shrink: 0;
+}
+
+.thread-item {
+  transition: all 0.2s ease;
+}
+
+.thread-item:hover {
+  background-color: #f9fafb;
+}
+
+.thread-item.active {
+  background-color: #eff6ff;
+  border-left: 3px solid var(--primary-color);
+}
+
+.primary-100 {
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.primary-600 {
+  color: var(--primary-color);
+}
+
+/* Scrollbar styling for threads list */
+.threads-sidebar > div:last-child::-webkit-scrollbar {
+  width: 6px;
+}
+
+.threads-sidebar > div:last-child::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.threads-sidebar > div:last-child::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.threads-sidebar > div:last-child::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

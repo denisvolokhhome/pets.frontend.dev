@@ -8,14 +8,17 @@ import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { MessageService } from '../../services/message.service';
 import { NotificationService } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { Subject, takeUntil, interval } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface ThreadMessage {
   id: string;
   sender_id: string;
   sender_name: string;
   sender_is_breeder: boolean;
+  sender_profile_image_url?: string;
   message: string;
   is_read: boolean;
   created_at: string;
@@ -65,6 +68,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private messageService: MessageService,
     private notificationService: NotificationService,
+    private authService: AuthService,
     private toastService: ToastService,
     private cdr: ChangeDetectorRef
   ) {
@@ -93,29 +97,66 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   private loadCurrentUser(): void {
+    // Try to get from AuthService first
+    const user = this.authService.currentUser;
+    if (user) {
+      this.currentUserId = user.id;
+      console.log('Current user ID loaded from AuthService:', this.currentUserId);
+      return;
+    }
+    
+    // Fallback to localStorage
     const userStr = localStorage.getItem('user');
     if (userStr) {
-      const user = JSON.parse(userStr);
-      this.currentUserId = user.id;
+      const userData = JSON.parse(userStr);
+      this.currentUserId = userData.id;
+      console.log('Current user ID loaded from localStorage:', this.currentUserId);
+    } else {
+      console.warn('Could not load current user ID');
     }
   }
 
-  private loadThreadMessages(): void {
-    if (!this.threadId) return;
+  private loadThreadMessages(silent: boolean = false): void {
+    if (!this.threadId) {
+      console.log('No thread ID available, skipping message load');
+      return;
+    }
 
-    this.isLoading = true;
+    // Only show loading spinner on initial load, not during polling
+    if (!silent) {
+      this.isLoading = true;
+    }
+    
     this.messageService.getThreadMessages(this.threadId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           // Extract messages array from ThreadResponse
-          this.messages = response.messages;
+          const newMessages = response.messages;
+          
+          // Check if there are new messages
+          const hasNewMessages = newMessages.length > this.messages.length;
+          
+          // Only update if messages have changed (prevents unnecessary re-renders)
+          if (JSON.stringify(newMessages) !== JSON.stringify(this.messages)) {
+            this.messages = newMessages;
+            
+            // Scroll to bottom if:
+            // 1. Initial load (!silent)
+            // 2. New messages detected during polling (hasNewMessages)
+            if (!silent || hasNewMessages) {
+              this.scrollToBottom();
+            }
+          }
+          
           this.isLoading = false;
-          this.scrollToBottom();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading thread messages:', error);
-          this.toastService.error('Failed to load messages', 'Error');
+          if (!silent) {
+            this.toastService.error('Failed to load messages', 'Error');
+          }
           this.isLoading = false;
         }
       });
@@ -127,11 +168,12 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   private startPolling(): void {
-    // Poll for new messages every 10 seconds
+    // Poll for new messages every 10 seconds in silent mode (no loading spinner)
     interval(10000)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.loadThreadMessages();
+        // Silent refresh - updates messages without showing loading state
+        this.loadThreadMessages(true);
       });
   }
 
@@ -153,13 +195,33 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     this.messageService.sendThreadMessage(messageData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response) => {
+        next: (response: any) => {
           this.toastService.success('Message sent successfully', 'Success');
           this.replyForm.reset();
           this.isSubmitting = false;
           
-          // Reload messages to show the new one
-          this.loadThreadMessages();
+          // If this was the first message, extract and set the thread_id
+          if (!this.threadId && response.thread_id) {
+            this.threadId = response.thread_id;
+            console.log('Thread ID set from response:', this.threadId);
+            // Start polling now that we have a thread
+            this.startPolling();
+          }
+          
+          // Add the new message directly to the array (optimistic update)
+          const newMessage: ThreadMessage = {
+            id: response.id,
+            sender_id: this.currentUserId!,
+            sender_name: this.authService.currentUser?.name || 'You',
+            sender_is_breeder: this.authService.currentUser?.is_breeder || false,
+            message: messageData.message,
+            is_read: false,
+            created_at: new Date().toISOString()
+          };
+          
+          this.messages.push(newMessage);
+          this.cdr.detectChanges();
+          this.scrollToBottom();
         },
         error: (error) => {
           console.error('Error sending message:', error);
@@ -173,7 +235,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   isSentByCurrentUser(message: ThreadMessage): boolean {
-    return message.sender_id === this.currentUserId;
+    const isSent = message.sender_id === this.currentUserId;
+    console.log(`Message from ${message.sender_id}, current user: ${this.currentUserId}, isSent: ${isSent}`);
+    return isSent;
   }
 
   formatTimestamp(timestamp: string): string {
@@ -216,5 +280,20 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  }
+
+  getProfileImageUrl(imagePath: string): string {
+    // If the path already includes the full URL, return it
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    // Otherwise, prepend the API URL from environment
+    const apiUrl = environment.API_URL || 'http://localhost:8000';
+    return `${apiUrl}${imagePath}`;
+  }
+
+  onImageError(event: any): void {
+    // Hide the broken image and show the icon placeholder instead
+    event.target.style.display = 'none';
   }
 }

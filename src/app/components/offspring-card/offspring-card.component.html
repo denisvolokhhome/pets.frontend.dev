@@ -68,10 +68,11 @@
     <!-- Contact Button -->
     <button 
       class="contact-btn"
+      [class.contact-btn-conversation]="hasExistingThread"
       (click)="contactBreeder($event)"
       type="button">
-      <i class="pi pi-envelope mr-2"></i>
-      Contact Breeder
+      <i [class]="'pi ' + getContactButtonIcon() + ' mr-2'"></i>
+      {{ getContactButtonText() }}
     </button>
   </div>
 </div>

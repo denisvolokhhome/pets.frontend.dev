@@ -1,9 +1,9 @@
-<div class="message-new-container max-w-4xl mx-auto p-4">
+<div class="message-new-container p-4">
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Contact Breeder</h1>
-      <p class="text-gray-600 mt-1">Send a message about this offspring</p>
+      <h1 class="text-2xl font-bold text-gray-900">Messages</h1>
+      <p class="text-gray-600 mt-1">Your conversations</p>
     </div>
     <button
       (click)="goBack()"
@@ -13,18 +13,75 @@
     </button>
   </div>
 
-  <!-- Loading State (only show while loading offspring context) -->
-  <div *ngIf="isLoading" class="flex items-center justify-center py-12">
-    <i class="pi pi-spin pi-spinner text-4xl text-gray-400"></i>
-  </div>
+  <!-- Two Column Layout -->
+  <div class="flex gap-4 h-[calc(100vh-200px)]">
+    <!-- Left Sidebar: Threads List -->
+    <div class="threads-sidebar w-80 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+      <!-- Threads Header -->
+      <div class="p-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">Conversations</h2>
+      </div>
 
-  <!-- Message Thread (show when not loading) -->
-  <div *ngIf="!isLoading" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-    <app-message-thread
-      [breederId]="breederId"
-      [breederName]="breederName"
-      [threadId]="threadId"
-      [offspringContext]="offspringContext">
-    </app-message-thread>
+      <!-- Loading State for Threads -->
+      <div *ngIf="isLoadingThreads" class="flex-1 flex items-center justify-center">
+        <i class="pi pi-spin pi-spinner text-3xl text-gray-400"></i>
+      </div>
+
+      <!-- Threads List -->
+      <div *ngIf="!isLoadingThreads" class="flex-1 overflow-y-auto">
+        <div *ngIf="threads.length === 0" class="p-4 text-center text-gray-500">
+          <i class="pi pi-inbox text-4xl mb-2"></i>
+          <p class="text-sm">No conversations yet</p>
+        </div>
+
+        <div
+          *ngFor="let thread of threads"
+          class="thread-item p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+          [class.active]="thread.thread_id === threadId"
+          (click)="selectThread(thread)">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-semibold">
+                {{ thread.participant_name.charAt(0).toUpperCase() }}
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-sm font-semibold text-gray-900 truncate">{{ thread.participant_name }}</h3>
+                <span class="text-xs text-gray-500">{{ formatDate(thread.last_activity) }}</span>
+              </div>
+              <p class="text-xs text-gray-600 truncate">{{ thread.latest_message.content_preview }}</p>
+              <span *ngIf="thread.unread_count > 0" class="inline-block mt-1 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                {{ thread.unread_count }} new
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Message Thread -->
+    <div class="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <!-- Loading State (only show while loading offspring context) -->
+      <div *ngIf="isLoading" class="flex items-center justify-center h-full">
+        <i class="pi pi-spin pi-spinner text-4xl text-gray-400"></i>
+      </div>
+
+      <!-- Empty State (no thread selected) -->
+      <div *ngIf="!isLoading && !threadId && !breederId" class="flex flex-col items-center justify-center h-full text-gray-500">
+        <i class="pi pi-comments text-6xl mb-4"></i>
+        <p class="text-lg">Select a conversation to view messages</p>
+      </div>
+
+      <!-- Message Thread (show when not loading and has thread/breeder) -->
+      <div *ngIf="!isLoading && (threadId || breederId)" class="h-full p-6">
+        <app-message-thread
+          [breederId]="breederId"
+          [breederName]="breederName"
+          [threadId]="threadId"
+          [offspringContext]="offspringContext">
+        </app-message-thread>
+      </div>
+    </div>
   </div>
 </div>

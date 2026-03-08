@@ -223,7 +223,8 @@
           <h3 class="text-lg font-semibold mb-4">Lineage</h3>
           
           <div class="lineage-grid">
-            <div class="lineage-item">
+            <!-- Breeding - Only show for breeder view -->
+            <div class="lineage-item" *ngIf="isBreederView()">
               <label class="info-label">Breeding</label>
               <span 
                 class="link-text"
@@ -235,26 +236,36 @@
 
             <div class="lineage-item">
               <label class="info-label">Father</label>
+              <!-- Breeder view: clickable link -->
               <span 
-                *ngIf="getFatherId()"
+                *ngIf="isBreederView() && getFatherId()"
                 class="link-text"
                 (click)="navigateToPet(getFatherId()!)">
                 <i class="pi pi-link mr-1"></i>
                 {{ getFatherName() }}
               </span>
-              <span *ngIf="!getFatherId()" class="text-gray-500">Unknown</span>
+              <!-- Public view: plain text -->
+              <span *ngIf="isPublicView() && getFatherName() !== 'Unknown'" class="info-value">
+                {{ getFatherName() }}
+              </span>
+              <span *ngIf="!getFatherId() || getFatherName() === 'Unknown'" class="text-gray-500">Unknown</span>
             </div>
 
             <div class="lineage-item">
               <label class="info-label">Mother</label>
+              <!-- Breeder view: clickable link -->
               <span 
-                *ngIf="getMotherId()"
+                *ngIf="isBreederView() && getMotherId()"
                 class="link-text"
                 (click)="navigateToPet(getMotherId()!)">
                 <i class="pi pi-link mr-1"></i>
                 {{ getMotherName() }}
               </span>
-              <span *ngIf="!getMotherId()" class="text-gray-500">Unknown</span>
+              <!-- Public view: plain text -->
+              <span *ngIf="isPublicView() && getMotherName() !== 'Unknown'" class="info-value">
+                {{ getMotherName() }}
+              </span>
+              <span *ngIf="!getMotherId() || getMotherName() === 'Unknown'" class="text-gray-500">Unknown</span>
             </div>
           </div>
         </div>

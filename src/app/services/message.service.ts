@@ -30,16 +30,24 @@ export interface Message {
 
 export interface MessageListItem {
   id: string;
-  breeder_id: string;
+  sender_id: string;
+  receiver_id: string;
+  thread_id?: string;
+  content_preview: string | null;
+  context_type?: string;
+  context_id?: string;
+  sender_name: string;
+  receiver_name?: string;
+  is_read: boolean;
+  created_at: string;
+  
+  // Deprecated fields for backward compatibility
+  breeder_id?: string;
   pet_seeker_id?: string;
   offspring_id?: string;
-  thread_id?: string;
-  sender_name: string;
-  sender_email: string;
-  message_preview: string | null;
-  is_read: boolean;
-  responded_at: string | null;
-  created_at: string;
+  sender_email?: string;
+  message_preview?: string | null;
+  responded_at?: string | null;
 }
 
 export interface MessageListResponse {
@@ -184,11 +192,18 @@ export class MessageService {
     
     // If there's an offspring_id, use the offspring message endpoint
     if (messageData.offspring_id) {
+      const payload: any = {
+        message: messageData.message,
+        receiver_id: messageData.receiver_id
+      };
+      
+      // Include thread_id if provided
+      if (messageData.thread_id) {
+        payload.thread_id = messageData.thread_id;
+      }
+      
       return this.http
-        .post<ThreadMessage>(`${this.apiUrl}/messages/offspring/${messageData.offspring_id}`, {
-          message: messageData.message,
-          receiver_id: messageData.receiver_id
-        }, { headers })
+        .post<ThreadMessage>(`${this.apiUrl}/messages/offspring/${messageData.offspring_id}`, payload, { headers })
         .pipe(catchError(this.handleError));
     }
     
@@ -205,6 +220,19 @@ export class MessageService {
     const headers = this.getAuthHeaders();
     return this.http
       .get<ThreadResponse>(`${this.apiUrl}/messages/threads/${threadId}`, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Check if there's an existing thread for an offspring
+   */
+  checkOffspringThread(offspringId: string): Observable<{ has_thread: boolean; thread_id: string | null }> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .get<{ has_thread: boolean; thread_id: string | null }>(
+        `${this.apiUrl}/messages/threads/offspring/${offspringId}/check`,
+        { headers }
+      )
       .pipe(catchError(this.handleError));
   }
 

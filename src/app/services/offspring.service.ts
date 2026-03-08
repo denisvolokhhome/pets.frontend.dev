@@ -45,7 +45,7 @@ export interface OffspringRead extends OffspringBase {
   updated_at: string | null;
   age: string;
   favorites_count: number;
-  messages_count: number;
+  thread_count: number;  // Number of unique conversation threads
   breeding?: any;
   breed?: any;
   images: OffspringImage[];

@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Location, CommonModule } from '@angular/common';
 import { GalleriaModule } from 'primeng/galleria';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { FavoriteService } from 'src/app/services/favorite.service';
+import { MessageService } from 'src/app/services/message.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
@@ -53,8 +54,10 @@ export class OffspringDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private offspringService: OffspringService,
     private favoriteService: FavoriteService,
+    private messageService: MessageService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef,
     private authService: AuthService
@@ -170,7 +173,8 @@ export class OffspringDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/offsprings']);
+    // Use browser history to go back to previous page
+    this.location.back();
   }
 
   navigateToBreeding(): void {
@@ -355,11 +359,31 @@ export class OffspringDetailComponent implements OnInit {
 
     if (!this.offspring) return;
 
-    // Navigate to message thread with offspring context
-    this.router.navigate(['/messages/new'], {
-      queryParams: {
-        breederId: this.offspring.user_id,
-        offspringId: this.offspring.id
+    // Check if there's an existing thread for this offspring
+    this.messageService.checkOffspringThread(this.offspring.id).subscribe({
+      next: (response) => {
+        const queryParams: any = {
+          breederId: this.offspring!.user_id,
+          offspringId: this.offspring!.id
+        };
+
+        // If there's an existing thread, include it in the query params
+        if (response.has_thread && response.thread_id) {
+          queryParams.threadId = response.thread_id;
+        }
+
+        // Navigate to message thread with offspring context
+        this.router.navigate(['/messages/new'], { queryParams });
+      },
+      error: (error) => {
+        console.error('Error checking for existing thread:', error);
+        // Even if check fails, still navigate to message page
+        this.router.navigate(['/messages/new'], {
+          queryParams: {
+            breederId: this.offspring!.user_id,
+            offspringId: this.offspring!.id
+          }
+        });
       }
     });
   }

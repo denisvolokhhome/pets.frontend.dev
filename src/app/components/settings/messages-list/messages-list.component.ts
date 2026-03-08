@@ -112,7 +112,7 @@ export class MessagesListComponent implements OnInit {
 
     for (const message of this.messages) {
       // Use thread_id if available, otherwise create unique key per conversation
-      const threadKey = message.thread_id || `${message.breeder_id}-${message.pet_seeker_id || message.sender_email}`;
+      const threadKey = message.thread_id || `${message.sender_id}-${message.receiver_id}`;
 
       if (!threadMap.has(threadKey)) {
         // Create new thread
@@ -120,8 +120,8 @@ export class MessagesListComponent implements OnInit {
           thread_id: message.thread_id || null,
           latest_message: message,
           participant_name: message.sender_name,
-          participant_email: message.sender_email,
-          offspring_id: message.offspring_id,
+          participant_email: message.sender_email || '',
+          offspring_id: message.context_type === 'offspring' ? message.context_id : undefined,
           message_count: 1,
           unread_count: !message.is_read ? 1 : 0,
           last_activity: message.created_at
@@ -248,8 +248,28 @@ export class MessagesListComponent implements OnInit {
   viewThread(thread: MessageThread): void {
     // Navigate directly to the conversation with thread context
     const message = thread.latest_message;
+    const currentUser = this.authService.currentUser;
+    
+    if (!currentUser) {
+      this.toastr.error('User information not available', 'Error');
+      return;
+    }
+    
+    // Determine who the breeder is
+    // If current user is the sender, the receiver is the breeder
+    // If current user is the receiver, the sender is the breeder
+    let breederId: string;
+    
+    if (message.sender_id === currentUser.id) {
+      // Current user sent the message, so receiver is the other party
+      breederId = message.receiver_id;
+    } else {
+      // Current user received the message, so sender is the other party
+      breederId = message.sender_id;
+    }
+    
     const queryParams: any = {
-      breederId: message.breeder_id
+      breederId: breederId
     };
 
     if (thread.thread_id) {
@@ -291,24 +311,11 @@ export class MessagesListComponent implements OnInit {
    * Get status badge class for thread
    */
   getThreadStatusClass(thread: MessageThread): string {
-    const message = thread.latest_message;
-    
-    if (this.isPetSeeker) {
-      // Pet seeker view: highlight pending responses
-      if (message.responded_at) {
-        return 'status-responded';
-      } else {
-        return 'status-pending';
-      }
+    // For now, just use read/unread status since we don't have responded_at
+    if (thread.unread_count > 0) {
+      return 'status-unread';
     } else {
-      // Breeder view: show read status
-      if (thread.unread_count > 0) {
-        return 'status-unread';
-      } else if (message.responded_at) {
-        return 'status-responded';
-      } else {
-        return 'status-read';
-      }
+      return 'status-read';
     }
   }
 
@@ -316,24 +323,11 @@ export class MessagesListComponent implements OnInit {
    * Get status text for thread
    */
   getThreadStatusText(thread: MessageThread): string {
-    const message = thread.latest_message;
-    
-    if (this.isPetSeeker) {
-      // Pet seeker view: show if breeder has responded
-      if (message.responded_at) {
-        return 'Responded';
-      } else {
-        return 'Pending';
-      }
+    // Show unread count or read status
+    if (thread.unread_count > 0) {
+      return `${thread.unread_count} New`;
     } else {
-      // Breeder view: show unread count or status
-      if (thread.unread_count > 0) {
-        return `${thread.unread_count} New`;
-      } else if (message.responded_at) {
-        return 'Responded';
-      } else {
-        return 'Read';
-      }
+      return 'Read';
     }
   }
 

@@ -63,8 +63,7 @@
         <div
           *ngFor="let thread of threads"
           class="message-item"
-          [class.unread]="thread.unread_count > 0 && isBreeder"
-          [class.pending-response]="isPetSeeker && !thread.latest_message.responded_at"
+          [class.unread]="thread.unread_count > 0"
           (click)="viewThread(thread)">
           
           <!-- Message Status Indicator -->
@@ -91,8 +90,10 @@
 
             <!-- Message Preview -->
             <div class="message-preview">
-              <p *ngIf="thread.latest_message.message_preview">{{ thread.latest_message.message_preview }}</p>
-              <p *ngIf="!thread.latest_message.message_preview" class="no-message">No message content</p>
+              <p *ngIf="thread.latest_message.content_preview || thread.latest_message.message_preview">
+                {{ thread.latest_message.content_preview || thread.latest_message.message_preview }}
+              </p>
+              <p *ngIf="!thread.latest_message.content_preview && !thread.latest_message.message_preview" class="no-message">No message content</p>
             </div>
           </div>
 
