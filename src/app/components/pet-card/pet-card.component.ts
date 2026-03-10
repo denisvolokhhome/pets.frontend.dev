@@ -49,4 +49,14 @@ export class PetCardComponent {
     event.stopPropagation();
     this.quickBreeding.emit(this.pet);
   }
+
+  hasHealthRecords(): boolean {
+    return !!(
+      this.pet.has_vaccination ||
+      this.pet.has_microchip ||
+      this.pet.has_healthcertificate ||
+      this.pet.has_dewormed ||
+      this.pet.has_birthcertificate
+    );
+  }
 }
