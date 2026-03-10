@@ -234,6 +234,14 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       });
   }
 
+  onEnterPress(event: KeyboardEvent): void {
+    // Submit on Enter, but allow Shift+Enter for new line
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onSubmit();
+    }
+  }
+
   isSentByCurrentUser(message: ThreadMessage): boolean {
     const isSent = message.sender_id === this.currentUserId;
     console.log(`Message from ${message.sender_id}, current user: ${this.currentUserId}, isSent: ${isSent}`);
@@ -261,10 +269,11 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   private scrollToBottom(): void {
+    // With flex-col-reverse, scrollTop: 0 is the bottom
     setTimeout(() => {
-      const messageContainer = document.querySelector('.message-list');
+      const messageContainer = document.querySelector('.overflow-y-auto');
       if (messageContainer) {
-        messageContainer.scrollTop = messageContainer.scrollHeight;
+        messageContainer.scrollTop = 0;
       }
     }, 100);
   }

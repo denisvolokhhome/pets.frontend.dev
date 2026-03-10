@@ -12,7 +12,7 @@ import { OAuthService } from './oauth.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasValidToken());
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
   
   private currentUserSubject = new BehaviorSubject<IUser | null>(null);

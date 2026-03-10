@@ -24,15 +24,38 @@ export class ProfileMenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserProfile();
+    // Only subscribe to auth state if there's a token
+    // This prevents unnecessary API calls on public pages
+    if (!this.authService.hasValidToken()) {
+      return;
+    }
     
-    // Subscribe to profile updates
+    // Subscribe to auth state changes - only load profile when authenticated
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.loadUserProfile();
+      } else {
+        this.user = null;
+        this.cdr.detectChanges();
+      }
+    });
+    
+    // Subscribe to profile updates (only when authenticated)
     this.dataService.profileUpdated$.subscribe(() => {
-      this.loadUserProfile();
+      if (this.authService.hasValidToken()) {
+        this.loadUserProfile();
+      }
     });
   }
 
   loadUserProfile(): void {
+    // Double-check authentication before making API call
+    if (!this.authService.hasValidToken()) {
+      this.user = null;
+      this.cdr.detectChanges();
+      return;
+    }
+    
     // Load user profile from data service to get profile image
     this.dataService.getCurrentUserProfile().subscribe({
       next: (user) => {
@@ -42,6 +65,8 @@ export class ProfileMenuComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load user profile', err);
+        this.user = null;
+        this.cdr.detectChanges();
       }
     });
   }

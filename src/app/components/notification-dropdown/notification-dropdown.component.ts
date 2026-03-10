@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { NotificationService, Notification } from '../../services/notification.service';
+import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { Subject, takeUntil, interval } from 'rxjs';
 
@@ -24,6 +25,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   isLoading = false;
   isOpen = false;
+  private pollingStarted = false;
   
   private destroy$ = new Subject<void>();
   private readonly POLL_INTERVAL = 30000; // 30 seconds
@@ -31,21 +33,38 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
 
   constructor(
     private notificationService: NotificationService,
+    private authService: AuthService,
     private toastService: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Only load notifications if user is authenticated
-    if (this.isAuthenticated()) {
-      // Use setTimeout to defer initial load to avoid ExpressionChangedAfterItHasBeenCheckedError
-      setTimeout(() => {
-        this.loadNotifications();
-        this.loadUnreadCount();
-        this.startPolling();
-      });
+    // Only subscribe to auth state if there's a token
+    // This prevents unnecessary API calls on public pages
+    if (!this.authService.hasValidToken()) {
+      return;
     }
+    
+    // Subscribe to auth state changes
+    this.authService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isLoggedIn => {
+        if (isLoggedIn) {
+          // User is authenticated, load notifications
+          this.loadNotifications();
+          this.loadUnreadCount();
+          if (!this.pollingStarted) {
+            this.startPolling();
+            this.pollingStarted = true;
+          }
+        } else {
+          // User is not authenticated, clear data
+          this.notifications = [];
+          this.unreadCount = 0;
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -260,7 +279,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('id_token');
+    return this.authService.hasValidToken();
   }
 
   getDisplayCount(): string {

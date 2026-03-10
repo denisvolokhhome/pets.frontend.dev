@@ -32,23 +32,19 @@ export class TopMenuComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.route = this.loc.path();
-      this.updateAuthState();
       // Close mobile menu on route change
       this.isMobileMenuOpen = false;
     });
 
-    // Subscribe to auth state changes
+    // Subscribe to auth state changes - this is the source of truth
     this.authSubscription = this.service.isLoggedIn$.subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn;
       this.cdr.detectChanges();
     });
-
-    // Initial auth state check
-    this.updateAuthState();
   }
 
   updateAuthState(): void {
-    this.isLoggedIn = this.service.hasValidToken();
+    // This method is no longer needed - we rely on isLoggedIn$ observable
     this.cdr.detectChanges();
   }
 

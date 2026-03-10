@@ -67,6 +67,10 @@ import { OffspringCardComponent } from './components/offspring-card/offspring-ca
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
+import { AuthService } from './services/auth.service';
+import { provideAppInitializer } from '@angular/core';
+import { inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 // PrimeNG imports
 import { TableModule } from 'primeng/table';
@@ -168,7 +172,21 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
-    MessageService
+    MessageService,
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      
+      // Only verify if there's a token
+      if (authService.hasValidToken()) {
+        // Use firstValueFrom to convert observable to promise
+        return firstValueFrom(authService.IsLoggedIn()).catch((): null => {
+          // If verification fails, auth service already set isLoggedIn to false
+          // Just return to allow app to continue loading
+          return null;
+        });
+      }
+      return Promise.resolve();
+    })
   ],
   bootstrap: [AppComponent],
 })
