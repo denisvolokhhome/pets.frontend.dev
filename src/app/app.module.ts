@@ -67,6 +67,7 @@ import { OffspringCardComponent } from './components/offspring-card/offspring-ca
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { AuthService } from './services/auth.service';
 import { provideAppInitializer } from '@angular/core';
 import { inject } from '@angular/core';
@@ -168,6 +169,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     LeafletModule,
     NotificationDropdownComponent,
     OffspringCardComponent,
+    PageHeaderComponent,
 
   ],
   providers: [

@@ -1,36 +1,11 @@
 <div class="breedings-container">
-  <!-- Header Section -->
-  <header class="breedings-header">
-    <div class="header-left">
-      <h1 class="page-title">
-        <i class="bi bi-heart-fill"></i>
-        Breedings Management
-      </h1>
-    </div>
-    
-    <div class="header-center">
-      <!-- Search -->
-      <div class="search-container">
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Search breedings..."
-          [(ngModel)]="searchTerm"
-          (input)="onSearchChange()"
-        />
-        <i class="bi bi-search search-icon"></i>
-      </div>
-    </div>
-    
-    <div class="header-right">
-      <button 
-        class="fab-button fab-success"
-        (click)="addBreeding()"
-        title="Add Breeding">
-        <i class="bi bi-plus-circle"></i>
-      </button>
-    </div>
-  </header>
+  <!-- Page Header Component -->
+  <app-page-header
+    [config]="headerConfig"
+    [searchTerm]="searchTerm"
+    (searchChange)="onSearchTermChange($event)"
+    (actionButtonClick)="onAddBreedingClick()">
+  </app-page-header>
 
   <!-- Content Section -->
   <div class="breedings-layout">

@@ -1,15 +1,16 @@
 <div class="favorites-container">
-  <!-- Header -->
-  <div class="page-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="pi pi-heart-fill mr-3"></i>
-        My Favorite Offsprings
-      </h1>
-      <p class="page-subtitle">
-        Keep track of offsprings you're interested in
-      </p>
-    </div>
+  <!-- Page Header Component -->
+  <app-page-header
+    [config]="headerConfig"
+    [searchTerm]="searchTerm"
+    (searchChange)="onSearchTermChange($event)">
+  </app-page-header>
+  
+  <!-- Subtitle -->
+  <div class="page-subtitle-container">
+    <p class="page-subtitle">
+      Keep track of offsprings you're interested in
+    </p>
   </div>
 
   <!-- Loading State -->

@@ -10,80 +10,6 @@
   box-sizing: border-box;
 }
 
-/* Header Section */
-.breedings-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  gap: 2rem;
-}
-
-.header-left {
-  flex-shrink: 0;
-}
-
-.page-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0;
-}
-
-.page-title i {
-  color: #ec4899;
-  font-size: 2rem;
-}
-
-.header-center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-container {
-  position: relative;
-  flex: 1;
-  max-width: 500px;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 25px;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
-}
-
-.search-icon {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #9ca3af;
-  font-size: 1.125rem;
-  pointer-events: none;
-}
-
-.header-right {
-  flex-shrink: 0;
-}
-
 /* Layout Container */
 .breedings-layout {
   display: flex;
@@ -641,41 +567,6 @@
     gap: 1rem;
   }
 
-  .breedings-header {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.25rem;
-    gap: 1rem;
-  }
-
-  .header-left,
-  .header-center,
-  .header-right {
-    width: 100%;
-  }
-
-  .header-center {
-    justify-content: stretch;
-  }
-
-  .search-container {
-    max-width: 100%;
-  }
-
-  .header-right {
-    display: flex;
-    justify-content: center;
-  }
-
-  .page-title {
-    font-size: 1.75rem;
-    justify-content: center;
-  }
-
-  .page-title i {
-    font-size: 1.75rem;
-  }
-
   .breedings-layout {
     flex-direction: column;
   }
@@ -689,16 +580,6 @@
   .breedings-layout {
     padding: 1rem;
     gap: 1rem;
-  }
-
-  .breedings-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-
-  .page-title {
-    font-size: 1.5rem;
   }
 
   .filters-sidebar {
@@ -846,14 +727,6 @@
 
 /* Mobile Optimizations */
 @media (max-width: 640px) {
-  .breedings-header {
-    gap: 0.75rem;
-  }
-
-  .page-title {
-    font-size: 1.25rem;
-  }
-
   .btn-primary {
     width: 100%;
     justify-content: center;

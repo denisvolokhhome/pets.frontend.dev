@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FavoriteService, OffspringFavorite } from 'src/app/services/favorite.service';
 import { OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { PageHeaderConfig } from '../page-header/page-header.component';
 
 @Component({
   standalone: false,
@@ -11,6 +12,18 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./favorites-list.component.css']
 })
 export class FavoritesListComponent implements OnInit {
+  
+  headerConfig: PageHeaderConfig = {
+    title: 'My Favorites',
+    icon: 'bi bi-heart-fill',
+    iconColor: '#ec4899',
+    showLayoutSwitcher: false,
+    showSearch: true,
+    searchPlaceholder: 'Search favorites...',
+    showActionButton: false
+  };
+  
+  searchTerm: string = '';
   favorites: OffspringFavorite[] = [];
   offsprings: OffspringRead[] = [];
   isLoading: boolean = true;
@@ -134,5 +147,11 @@ export class FavoritesListComponent implements OnInit {
     });
     
     return breederMap;
+  }
+  
+  onSearchTermChange(term: string): void {
+    this.searchTerm = term;
+    // Note: Search functionality would need to be implemented in the backend
+    // For now, this just updates the search term
   }
 }

@@ -9,6 +9,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
+import { PageHeaderConfig } from '../page-header/page-header.component';
 
 @Component({
   standalone: false,
@@ -17,6 +18,19 @@ import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widge
   styleUrls: ['./pets.component.css']
 })
 export class PetsComponent implements OnInit {
+  
+  headerConfig: PageHeaderConfig = {
+    title: 'Pets Management',
+    icon: 'bi bi-heart-fill',
+    iconColor: '#ec4899',
+    showLayoutSwitcher: true,
+    showSearch: true,
+    searchPlaceholder: 'Search pets...',
+    showActionButton: true,
+    actionButtonIcon: 'bi bi-plus-circle',
+    actionButtonColor: 'var(--success-color)',
+    actionButtonTitle: 'Add Pet'
+  };
 
   constructor(
     public DataService: DataService,
@@ -160,6 +174,18 @@ export class PetsComponent implements OnInit {
   changeLayout(viewType: string) {
     this.view = viewType;
     console.log('Layout changed to: ' + viewType);
+  }
+  
+  onLayoutChange(layout: 'table' | 'cards') {
+    this.view = layout;
+  }
+  
+  onSearchTermChange(term: string) {
+    this.term = term;
+  }
+  
+  onAddPetClick() {
+    this.openAddPetModal();
   }
 
   searchPets(event: any){

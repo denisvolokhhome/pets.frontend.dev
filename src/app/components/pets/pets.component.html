@@ -1,54 +1,13 @@
 <div class="pets-container">
-  <!-- Header Section -->
-  <header class="pets-header">
-    <div class="header-left">
-      <h1 class="page-title">
-        <i class="bi bi-heart-fill"></i>
-        Pets Management
-      </h1>
-    </div>
-    
-    <div class="header-center">
-      <!-- Layout Switcher -->
-      <div class="layout-switcher">
-        <button 
-          class="layout-btn"
-          [class.active]="view === 'table'"
-          (click)="changeLayout('table')"
-          title="Table View">
-          <i class="bi bi-table"></i>
-        </button>
-        <button 
-          class="layout-btn"
-          [class.active]="view === 'cards'"
-          (click)="changeLayout('cards')"
-          title="Card View">
-          <i class="bi bi-postcard-heart"></i>
-        </button>
-      </div>
-      
-      <!-- Search -->
-      <div class="search-container">
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Search pets..."
-          (input)="searchPets($event)"
-          [(ngModel)]="term"
-        />
-        <i class="bi bi-search search-icon"></i>
-      </div>
-    </div>
-    
-    <div class="header-right">
-      <button 
-        class="fab-button fab-success"
-        (click)="openAddPetModal()"
-        title="Add Pet">
-        <i class="bi bi-plus-circle"></i>
-      </button>
-    </div>
-  </header>
+  <!-- Page Header Component -->
+  <app-page-header
+    [config]="headerConfig"
+    [currentLayout]="view"
+    [searchTerm]="term"
+    (layoutChange)="onLayoutChange($event)"
+    (searchChange)="onSearchTermChange($event)"
+    (actionButtonClick)="onAddPetClick()">
+  </app-page-header>
 
   <!-- Content Section -->
   <div class="pets-layout">

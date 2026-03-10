@@ -133,6 +133,7 @@
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  align-items: flex-start;
 }
 
 /* Filters Sidebar */

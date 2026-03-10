@@ -7,6 +7,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { ToastService } from '../../services/toast.service';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
+import { PageHeaderConfig } from '../page-header/page-header.component';
 
 @Component({
   standalone: false,
@@ -16,6 +17,19 @@ import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widge
 })
 export class BreedingsComponent implements OnInit, AfterViewInit {
   @ViewChild('tableContainer') tableContainer?: ElementRef;
+  
+  headerConfig: PageHeaderConfig = {
+    title: 'Breedings Management',
+    icon: 'bi bi-heart-fill',
+    iconColor: '#ec4899',
+    showLayoutSwitcher: false,
+    showSearch: true,
+    searchPlaceholder: 'Search breedings...',
+    showActionButton: true,
+    actionButtonIcon: 'bi bi-plus-circle',
+    actionButtonColor: 'var(--success-color)',
+    actionButtonTitle: 'Add Breeding'
+  };
 
   constructor(
     public dataService: DataService,
@@ -206,6 +220,15 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
 
   onSearchChange(): void {
     this.applyFilters();
+  }
+  
+  onSearchTermChange(term: string): void {
+    this.searchTerm = term;
+    this.applyFilters();
+  }
+  
+  onAddBreedingClick(): void {
+    this.modalService.open('addBreedingModal');
   }
 
   getLocationName(breeding: IBreeding): string {

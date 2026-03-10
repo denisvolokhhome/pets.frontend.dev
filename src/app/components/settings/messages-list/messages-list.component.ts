@@ -4,6 +4,7 @@ import { MessageService, MessageListItem } from '../../../services/message.servi
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
 import { FilterConfig, FilterValues } from '../../shared/filter-widget/filter-widget.component';
+import { PageHeaderConfig } from '../../page-header/page-header.component';
 
 interface MessageThread {
   thread_id: string | null;
@@ -23,6 +24,19 @@ interface MessageThread {
   styleUrls: ['./messages-list.component.css']
 })
 export class MessagesListComponent implements OnInit {
+  
+  headerConfig: PageHeaderConfig = {
+    title: 'Messages',
+    icon: 'bi bi-envelope-fill',
+    iconColor: '#6366f1',
+    showLayoutSwitcher: false,
+    showSearch: true,
+    searchPlaceholder: 'Search messages...',
+    showActionButton: true,
+    actionButtonIcon: 'bi bi-arrow-clockwise',
+    actionButtonColor: '#6366f1',
+    actionButtonTitle: 'Refresh'
+  };
   messages: MessageListItem[] = [];
   threads: MessageThread[] = [];
   totalMessages: number = 0;
@@ -336,6 +350,16 @@ export class MessagesListComponent implements OnInit {
    */
   refresh(): void {
     this.loadMessages();
+  }
+  
+  onSearchTermChange(term: string): void {
+    this.searchTerm = term;
+    this.currentPage = 0;
+    this.loadMessages();
+  }
+  
+  onRefreshClick(): void {
+    this.refresh();
   }
 
   /**

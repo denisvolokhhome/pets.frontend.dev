@@ -2,6 +2,9 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { PageHeaderConfig } from '../page-header/page-header.component';
+import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
+import { IBreed } from 'src/app/models/breed';
 
 @Component({
   standalone: false,
@@ -10,7 +13,39 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./offspring-list.component.css']
 })
 export class OffspringListComponent implements OnInit {
+  headerConfig: PageHeaderConfig = {
+    title: 'My Offsprings',
+    icon: 'bi bi-heart-fill',
+    iconColor: '#ec4899',
+    showLayoutSwitcher: false,
+    showSearch: true,
+    searchPlaceholder: 'Search offsprings...',
+    showActionButton: false
+  };
+  
+  // Filter widget configuration
+  filterConfig: FilterConfig = {
+    showLocation: false,
+    showGender: true,
+    showPetType: false,
+    showStatus: true,
+    showBreed: true,
+    showHealthRecords: false,
+    statusOptions: [
+      { value: 'Available', label: 'Available' },
+      { value: 'Reserved', label: 'Reserved' },
+      { value: 'Sold', label: 'Sold' },
+      { value: 'Archived', label: 'Archived' }
+    ]
+  };
+  
+  // Current filter values
+  currentFilters: FilterValues = {};
+  
+  breeds: IBreed[] = [];
   offsprings: OffspringRead[] = [];
+  filteredOffsprings: OffspringRead[] = [];
+  searchTerm: string = '';
   isLoading: boolean = false;
   isDeleting: { [key: string]: boolean } = {};
   isUpdatingStatus: { [key: string]: boolean } = {};
@@ -38,6 +73,24 @@ export class OffspringListComponent implements OnInit {
   ngOnInit(): void {
     this.loadOffsprings();
   }
+  
+  loadBreeds(): void {
+    // Extract unique breeds from offsprings
+    const uniqueBreeds = new Map<number, IBreed>();
+    
+    this.offsprings.forEach(offspring => {
+      if (offspring.breed && offspring.breed.id) {
+        uniqueBreeds.set(offspring.breed.id, offspring.breed);
+      }
+    });
+    
+    // Convert map to array and sort by name
+    this.breeds = Array.from(uniqueBreeds.values()).sort((a, b) => 
+      a.name.localeCompare(b.name)
+    );
+    
+    this.cdr.detectChanges();
+  }
 
   loadOffsprings(): void {
     console.log('Loading all offsprings');
@@ -47,8 +100,14 @@ export class OffspringListComponent implements OnInit {
       next: (response) => {
         console.log('Offsprings loaded:', response.offsprings.length);
         this.offsprings = response.offsprings;
+        this.filteredOffsprings = response.offsprings;
         this.totalRecords = response.total;
         this.isLoading = false;
+        
+        // Load breeds after offsprings are loaded
+        this.loadBreeds();
+        
+        this.applySearch();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -58,6 +117,70 @@ export class OffspringListComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  onSearchChange(): void {
+    this.applySearch();
+  }
+
+  onSearchTermChange(term: string): void {
+    this.searchTerm = term;
+    this.applySearch();
+  }
+
+  applySearch(): void {
+    let filtered = this.offsprings;
+    
+    // Apply search filter
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const searchLower = this.searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(offspring => {
+        const name = (offspring.name || '').toLowerCase();
+        const fatherName = (offspring.father?.name || '').toLowerCase();
+        const motherName = (offspring.mother?.name || '').toLowerCase();
+        
+        return name.includes(searchLower) || 
+               fatherName.includes(searchLower) || 
+               motherName.includes(searchLower);
+      });
+    }
+    
+    // Apply status filter
+    if (this.currentFilters.status) {
+      filtered = filtered.filter(offspring => offspring.status === this.currentFilters.status);
+    }
+    
+    // Apply gender filter
+    if (this.currentFilters.gender) {
+      filtered = filtered.filter(offspring => offspring.gender === this.currentFilters.gender);
+    }
+    
+    // Apply breed filter
+    if (this.currentFilters.breed) {
+      filtered = filtered.filter(offspring => {
+        const breedName = offspring.breed?.name || '';
+        return breedName === this.currentFilters.breed;
+      });
+    }
+    
+    this.filteredOffsprings = filtered;
+    this.totalRecords = filtered.length;
+    this.first = 0; // Reset to first page when filtering
+    this.cdr.detectChanges();
+  }
+  
+  onFilterChange(filters: FilterValues): void {
+    this.currentFilters = filters;
+    this.applySearch();
+  }
+  
+  onClearFilters(): void {
+    this.currentFilters = {};
+    this.applySearch();
+  }
+  
+  hasActiveFilters(): boolean {
+    return Object.keys(this.currentFilters).length > 0;
   }
 
   onPageChange(event: any): void {

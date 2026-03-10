@@ -1,16 +1,26 @@
 <div class="offspring-list-container">
-  <!-- Header Section -->
-  <header class="offspring-header">
-    <div class="header-left">
-      <h1 class="page-title">
-        <i class="bi bi-heart-fill"></i>
-        My Offsprings
-      </h1>
-    </div>
-  </header>
+  <!-- Page Header Component -->
+  <app-page-header
+    [config]="headerConfig"
+    [searchTerm]="searchTerm"
+    (searchChange)="onSearchTermChange($event)">
+  </app-page-header>
 
   <!-- Content Section -->
-  <div class="offspring-content">
+  <div class="offspring-layout">
+    <!-- Filters Sidebar - Using Filter Widget -->
+    <app-filter-widget
+      [config]="filterConfig"
+      [locations]="[]"
+      [breeds]="breeds"
+      [totalCount]="offsprings.length"
+      [filteredCount]="filteredOffsprings?.length || 0"
+      (filterChange)="onFilterChange($event)"
+      (clearFilters)="onClearFilters()">
+    </app-filter-widget>
+
+    <!-- Main Content -->
+    <main class="offspring-content">
     <!-- Table Container -->
     <div class="table-container">
       <!-- Loading State -->
@@ -24,7 +34,7 @@
       </div>
 
       <p-table 
-        [value]="offsprings" 
+        [value]="filteredOffsprings" 
         [paginator]="true"
         [rows]="rows"
         [rowsPerPageOptions]="[10, 25, 50]"
@@ -32,7 +42,7 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offsprings"
         styleClass="p-datatable-sm p-datatable-striped"
         responsiveLayout="scroll"
-        *ngIf="!isLoading && offsprings && offsprings.length > 0">
+        *ngIf="!isLoading && filteredOffsprings && filteredOffsprings.length > 0">
         
         <ng-template pTemplate="header">
           <tr>
@@ -156,11 +166,16 @@
       </p-table>
 
       <!-- Empty State -->
-      <div *ngIf="!isLoading && (!offsprings || offsprings.length === 0)" class="empty-state">
+      <div *ngIf="!isLoading && (!filteredOffsprings || filteredOffsprings.length === 0)" class="empty-state">
         <i class="bi bi-inbox"></i>
-        <h3>No offsprings found</h3>
-        <p>Offsprings are created from the Breedings menu</p>
+        <h3>{{ searchTerm || hasActiveFilters() ? 'No matching offsprings found' : 'No offsprings found' }}</h3>
+        <p *ngIf="!searchTerm && !hasActiveFilters()">Offsprings are created from the Breedings menu</p>
+        <p *ngIf="searchTerm || hasActiveFilters()">Try adjusting your search terms or filters</p>
+        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+          Clear Filters
+        </button>
       </div>
     </div>
+    </main>
   </div>
 </div>
