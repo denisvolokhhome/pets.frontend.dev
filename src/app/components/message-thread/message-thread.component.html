@@ -1,8 +1,8 @@
 <!-- Full height flex container -->
-<div class="h-full flex flex-col overflow-hidden">
+<div class="h-full flex overflow-hidden">
   
-  <!-- Offspring Context Card (Compact) -->
-  <div *ngIf="offspringContext" class="flex-shrink-0 p-3 bg-blue-50 border-b border-blue-100">
+  <!-- Offspring Context Card (Mobile - shows at top on small screens) -->
+  <div *ngIf="offspringContext" class="lg:hidden flex-shrink-0 p-3 bg-blue-50 border-b border-blue-100">
     <div class="flex items-center gap-3">
       <img 
         *ngIf="offspringContext.primary_image_url"
@@ -33,110 +33,169 @@
     </div>
   </div>
 
-  <!-- Message List - Reversed flex direction to anchor messages at bottom -->
-  <div class="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col-reverse" #messageList>
-    <div *ngIf="!isLoading" class="flex flex-col gap-2">
-      <!-- Messages in reverse order so newest appears at bottom -->
-      <div 
-        *ngFor="let message of messages; let i = index"
-        class="flex"
-        [ngClass]="{
-          'justify-end': isSentByCurrentUser(message),
-          'justify-start': !isSentByCurrentUser(message)
-        }">
-        
-        <div class="flex items-end gap-2 max-w-[70%]"
-             [class.flex-row-reverse]="isSentByCurrentUser(message)">
+  <!-- Main chat area -->
+  <div class="flex-1 flex flex-col min-w-0">
+    <!-- Message List - Reversed flex direction to anchor messages at bottom -->
+    <div class="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col-reverse" #messageList>
+      <div *ngIf="!isLoading" class="flex flex-col gap-2">
+        <!-- Messages in reverse order so newest appears at bottom -->
+        <div 
+          *ngFor="let message of messages; let i = index"
+          class="flex"
+          [ngClass]="{
+            'justify-end': isSentByCurrentUser(message),
+            'justify-start': !isSentByCurrentUser(message)
+          }">
           
-          <!-- User Avatar -->
-          <div class="flex-shrink-0 w-7 h-7 rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
-            <img 
-              *ngIf="message.sender_profile_image_url"
-              [src]="getProfileImageUrl(message.sender_profile_image_url)"
-              [alt]="message.sender_name"
-              class="w-full h-full object-cover"
-              (error)="onImageError($event)"
-            />
-            <i 
-              *ngIf="!message.sender_profile_image_url"
-              class="pi pi-user text-xs text-gray-500">
-            </i>
-          </div>
-          
-          <!-- Message Bubble -->
-          <div class="flex flex-col"
-               [class.items-end]="isSentByCurrentUser(message)"
-               [class.items-start]="!isSentByCurrentUser(message)">
+          <div class="flex items-end gap-2 max-w-[70%]"
+               [class.flex-row-reverse]="isSentByCurrentUser(message)">
             
-            <div 
-              class="px-3 py-2 rounded-2xl shadow-sm"
-              [ngClass]="{
-                'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
-              }"
-              [style.background-color]="isSentByCurrentUser(message) ? 'var(--primary-color)' : ''"
-              [style.color]="isSentByCurrentUser(message) ? 'white' : ''">
-              <p class="whitespace-pre-wrap break-words text-sm">{{ message.message }}</p>
+            <!-- User Avatar -->
+            <div class="flex-shrink-0 w-7 h-7 rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+              <img 
+                *ngIf="message.sender_profile_image_url"
+                [src]="getProfileImageUrl(message.sender_profile_image_url)"
+                [alt]="message.sender_name"
+                class="w-full h-full object-cover"
+                (error)="onImageError($event)"
+              />
+              <i 
+                *ngIf="!message.sender_profile_image_url"
+                class="pi pi-user text-xs text-gray-500">
+              </i>
             </div>
             
-            <div class="flex items-center gap-1 mt-1 px-1">
-              <span class="text-xs text-gray-500">{{ formatTimestamp(message.created_at) }}</span>
-              <i 
-                *ngIf="isSentByCurrentUser(message) && message.is_read"
-                class="pi pi-check text-xs text-gray-500"
-                title="Read">
-              </i>
+            <!-- Message Bubble -->
+            <div class="flex flex-col"
+                 [class.items-end]="isSentByCurrentUser(message)"
+                 [class.items-start]="!isSentByCurrentUser(message)">
+              
+              <div 
+                class="px-3 py-2 rounded-2xl shadow-sm"
+                [ngClass]="{
+                  'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
+                }"
+                [style.background-color]="isSentByCurrentUser(message) ? 'var(--primary-color)' : ''"
+                [style.color]="isSentByCurrentUser(message) ? 'white' : ''">
+                <p class="whitespace-pre-wrap break-words text-sm">{{ message.message }}</p>
+              </div>
+              
+              <div class="flex items-center gap-1 mt-1 px-1">
+                <span class="text-xs text-gray-500">{{ formatTimestamp(message.created_at) }}</span>
+                <i 
+                  *ngIf="isSentByCurrentUser(message) && message.is_read"
+                  class="pi pi-check text-xs text-gray-500"
+                  title="Read">
+                </i>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- Empty state at the "top" (which appears at bottom due to flex-col-reverse) -->
+      <div *ngIf="!isLoading && messages.length === 0" class="flex flex-col items-center justify-center py-8 text-gray-400">
+        <i class="pi pi-comments text-5xl mb-3"></i>
+        <p class="text-sm">No messages yet. Start the conversation!</p>
+      </div>
     </div>
-    
-    <!-- Empty state at the "top" (which appears at bottom due to flex-col-reverse) -->
-    <div *ngIf="!isLoading && messages.length === 0" class="flex flex-col items-center justify-center py-8 text-gray-400">
-      <i class="pi pi-comments text-5xl mb-3"></i>
-      <p class="text-sm">No messages yet. Start the conversation!</p>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex-1 flex items-center justify-center bg-gray-50">
+      <i class="pi pi-spin pi-spinner text-3xl text-gray-400"></i>
     </div>
-  </div>
 
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="flex-1 flex items-center justify-center bg-gray-50">
-    <i class="pi pi-spin pi-spinner text-3xl text-gray-400"></i>
-  </div>
-
-  <!-- Reply Input (Fixed at bottom) -->
-  <div class="flex-shrink-0 p-4 bg-white border-t border-gray-200">
-    <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
-      <div class="flex items-center border border-gray-300 rounded-full bg-white hover:border-gray-400 focus-within:border-gray-500 transition-colors overflow-hidden">
-        <input
-          type="text"
-          formControlName="message"
-          placeholder="Type a message"
-          class="flex-1 text-sm border-0 focus:outline-none focus:ring-0 px-4 py-3"
-          style="box-shadow: none !important;"
-          [class.ng-invalid]="replyForm.get('message')?.invalid && replyForm.get('message')?.touched"
-          (keydown.enter)="onEnterPress($event)"
-        />
+    <!-- Reply Input (Fixed at bottom) -->
+    <div class="flex-shrink-0 p-4 bg-white border-t border-gray-200">
+      <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
+        <div class="flex items-center border border-gray-300 rounded-full bg-white hover:border-gray-400 focus-within:border-gray-500 transition-colors overflow-hidden">
+          <input
+            type="text"
+            formControlName="message"
+            placeholder="Type a message"
+            class="flex-1 text-sm border-0 focus:outline-none focus:ring-0 px-4 py-3"
+            style="box-shadow: none !important;"
+            [class.ng-invalid]="replyForm.get('message')?.invalid && replyForm.get('message')?.touched"
+            (keydown.enter)="onEnterPress($event)"
+          />
+          
+          <button
+            type="submit"
+            [disabled]="replyForm.invalid || isSubmitting"
+            class="flex-shrink-0 px-4 py-3 flex items-center gap-2 transition-colors border-l border-gray-200"
+            [ngClass]="{
+              'bg-gray-50 text-gray-400 cursor-not-allowed': replyForm.invalid || isSubmitting,
+              'bg-white text-[var(--primary-color)] hover:bg-gray-50': !replyForm.invalid && !isSubmitting
+            }">
+            <span class="text-sm font-medium">Send</span>
+            <i class="pi text-base" [ngClass]="isSubmitting ? 'pi-spin pi-spinner' : 'pi-send'"></i>
+          </button>
+        </div>
         
-        <button
-          type="submit"
-          [disabled]="replyForm.invalid || isSubmitting"
-          class="flex-shrink-0 px-4 py-3 flex items-center gap-2 transition-colors border-l border-gray-200"
-          [ngClass]="{
-            'bg-gray-50 text-gray-400 cursor-not-allowed': replyForm.invalid || isSubmitting,
-            'bg-white text-[var(--primary-color)] hover:bg-gray-50': !replyForm.invalid && !isSubmitting
-          }">
-          <span class="text-sm font-medium">Send</span>
-          <i class="pi text-base" [ngClass]="isSubmitting ? 'pi-spin pi-spinner' : 'pi-send'"></i>
-        </button>
+        <div *ngIf="replyForm.get('message')?.invalid && replyForm.get('message')?.touched" 
+             class="text-red-500 text-xs mt-2 px-4">
+          <span *ngIf="replyForm.get('message')?.errors?.['required']">Message is required</span>
+          <span *ngIf="replyForm.get('message')?.errors?.['maxlength']">
+            Message must be less than 2000 characters
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right Sidebar - Offspring Details (Desktop only) -->
+  <div *ngIf="offspringContext" class="hidden lg:flex flex-col w-80 bg-white border-l border-gray-200 flex-shrink-0">
+    <div class="p-6 overflow-y-auto">
+      <h3 class="text-lg font-semibold mb-4">Details</h3>
+      
+      <!-- Offspring Image -->
+      <div class="mb-4">
+        <img 
+          *ngIf="offspringContext.primary_image_url"
+          [src]="offspringContext.primary_image_url" 
+          [alt]="offspringContext.name"
+          class="w-full h-48 object-cover rounded-lg"
+        />
+        <div *ngIf="!offspringContext.primary_image_url" 
+             class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+          <i class="pi pi-image text-gray-400 text-5xl"></i>
+        </div>
       </div>
       
-      <div *ngIf="replyForm.get('message')?.invalid && replyForm.get('message')?.touched" 
-           class="text-red-500 text-xs mt-2 px-4">
-        <span *ngIf="replyForm.get('message')?.errors?.['required']">Message is required</span>
-        <span *ngIf="replyForm.get('message')?.errors?.['maxlength']">
-          Message must be less than 2000 characters
-        </span>
+      <!-- Offspring Info -->
+      <div class="space-y-3">
+        <div>
+          <h4 class="text-xl font-semibold text-gray-900">{{ offspringContext.name }}</h4>
+          <span 
+            class="inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium"
+            [ngClass]="getStatusBadgeClass(offspringContext.status)">
+            {{ offspringContext.status }}
+          </span>
+        </div>
+        
+        <div class="pt-3 border-t border-gray-200 space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Breed</span>
+            <span class="font-medium text-gray-900">{{ offspringContext.breed_name }}</span>
+          </div>
+          
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Gender</span>
+            <span class="font-medium text-gray-900">{{ offspringContext.gender }}</span>
+          </div>
+          
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Age</span>
+            <span class="font-medium text-gray-900">{{ offspringContext.age }}</span>
+          </div>
+          
+          <div *ngIf="offspringContext.price" class="flex justify-between text-sm pt-2 border-t border-gray-200">
+            <span class="text-gray-600">Price</span>
+            <span class="font-semibold text-gray-900">${{ offspringContext.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
   </div>
+
 </div>
