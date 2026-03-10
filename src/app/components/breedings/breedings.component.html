@@ -43,6 +43,8 @@
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} breedings"
           [globalFilterFields]="['description', 'status']"
+          [scrollable]="true"
+          scrollHeight="600px"
           styleClass="p-datatable-sm p-datatable-striped"
           responsiveLayout="scroll"
           *ngIf="!isLoading && filteredBreedings && filteredBreedings.length > 0">
@@ -64,7 +66,7 @@
               <th pSortableColumn="status">
                 Status <p-sortIcon field="status"></p-sortIcon>
               </th>
-              <th>Actions</th>
+              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 150px">Actions</th>
             </tr>
           </ng-template>
           
@@ -90,7 +92,7 @@
                   {{ breeding.status }}
                 </span>
               </td>
-              <td class="actions-cell">
+              <td class="actions-cell" pFrozenColumn [frozen]="true" alignFrozen="right">
                 <button 
                   class="btn-action btn-view" 
                   (click)="viewBreeding(breeding)"

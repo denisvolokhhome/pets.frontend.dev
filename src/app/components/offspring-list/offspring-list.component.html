@@ -40,6 +40,8 @@
         [rowsPerPageOptions]="[10, 25, 50]"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offsprings"
+        [scrollable]="true"
+        scrollHeight="600px"
         styleClass="p-datatable-sm p-datatable-striped"
         responsiveLayout="scroll"
         *ngIf="!isLoading && filteredOffsprings && filteredOffsprings.length > 0">
@@ -60,7 +62,7 @@
             <th>Mother</th>
             <th style="width: 80px">Favorites</th>
             <th style="width: 80px">Messages</th>
-            <th style="width: 150px">Actions</th>
+            <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 150px">Actions</th>
           </tr>
         </ng-template>
 
@@ -131,7 +133,7 @@
                 {{ offspring.thread_count || 0 }}
               </span>
             </td>
-            <td class="actions-cell">
+            <td class="actions-cell" pFrozenColumn [frozen]="true" alignFrozen="right">
               <button 
                 class="btn-action btn-view"
                 (click)="viewOffspring(offspring)"
