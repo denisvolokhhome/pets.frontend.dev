@@ -74,11 +74,8 @@ export class ProfileMenuComponent implements OnInit {
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) return '';
     
-    // Remove 'app/' prefix if present (backend returns 'app/filename.png')
-    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
-    
-    // Use /storage endpoint instead of /api
-    return `${this.apihost}/storage/${cleanPath}`;
+    // Backend returns 'app/filename.png', just prepend storage URL
+    return `${this.apihost}/storage/${imagePath}`;
   }
 
   getProfileImageStyle(): string | null {

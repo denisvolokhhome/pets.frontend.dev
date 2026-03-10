@@ -25,11 +25,11 @@
     </button>
   </div>
   <div
-    *ngIf="pet.image_path"
+    *ngIf="pet.image_path || pet.image_url"
     class="w-full h-[200px] bg-cover bg-center bg-no-repeat relative"
-    [style.background-image]="'url(' + getImageUrl(pet.image_path) + ')'"
+    [style.background-image]="'url(' + getPetImageUrl() + ')'"
   ></div>
-  <div *ngIf="!pet.image_path" class="w-full h-[200px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
+  <div *ngIf="!pet.image_path && !pet.image_url" class="w-full h-[200px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
     <i class="bi bi-card-image text-6xl"></i>
   </div>
 

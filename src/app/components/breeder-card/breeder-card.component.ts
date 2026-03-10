@@ -29,11 +29,8 @@ export class BreederCardComponent {
       return 'assets/icons/default-breeder.png'; // Fallback image
     }
     
-    // Remove 'app/' prefix if present
-    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
-    
-    // Use /storage endpoint
-    return `${this.apihost}/storage/${cleanPath}`;
+    // Backend returns 'app/filename.png', just prepend storage URL
+    return `${this.apihost}/storage/${imagePath}`;
   }
 
   /**

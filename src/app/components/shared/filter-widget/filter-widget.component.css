@@ -169,6 +169,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: 0 !important;
 }
 
 .pet-type-filter-btn:hover:not(:disabled) {

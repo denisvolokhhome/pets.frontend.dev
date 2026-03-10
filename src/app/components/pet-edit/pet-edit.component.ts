@@ -164,7 +164,7 @@ export class PetEditComponent implements OnInit, OnChanges {
     if (this.pet.images && this.pet.images.length > 0) {
       this.existingImages = this.pet.images.map(img => ({
         id: img.id,
-        url: this.getImageUrl(img.image_path),
+        url: img.image_url ? `${this.DataService.apiurl.replace('/api', '')}${img.image_url}` : this.getImageUrl(img.image_path),
         is_primary: img.is_primary
       }));
     } 
@@ -172,7 +172,7 @@ export class PetEditComponent implements OnInit, OnChanges {
     else if (this.pet.image_path) {
       this.existingImages = [{
         id: null,
-        url: this.getImageUrl(this.pet.image_path),
+        url: this.pet.image_url ? `${this.DataService.apiurl.replace('/api', '')}${this.pet.image_url}` : this.getImageUrl(this.pet.image_path),
         is_primary: true
       }];
     } else {
@@ -248,12 +248,9 @@ export class PetEditComponent implements OnInit, OnChanges {
   getImageUrl(imagePath: string | undefined): string {
     if (!imagePath) return '';
     
-    // Remove 'app/' prefix if present (backend returns 'app/filename.png')
-    const cleanPath = imagePath.startsWith('app/') ? imagePath.substring(4) : imagePath;
-    
-    // Use /storage endpoint instead of /api
+    // Backend returns 'app/filename.png', just prepend storage URL
     const apiHost = this.DataService.apiurl.replace('/api', '');
-    return `${apiHost}/storage/${cleanPath}`;
+    return `${apiHost}/storage/${imagePath}`;
   }
 
 
