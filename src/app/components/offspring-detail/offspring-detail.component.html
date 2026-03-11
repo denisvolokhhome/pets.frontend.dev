@@ -78,7 +78,7 @@
             <div class="mt-2 text-center">
               <button 
                 class="btn btn-sm btn-secondary"
-                (click)="openGallery(0)"
+                (click)="imageClick(0)"
                 type="button">
                 <i class="pi pi-images mr-2"></i>
                 View Gallery ({{ offspring.images.length }})
@@ -102,10 +102,10 @@
                 *ngFor="let image of offspring.images.slice(0, 6); let i = index"
                 class="thumbnail-item">
                 <img 
-                  [src]="image.image_url" 
+                  [src]="'http://breedly.com:8000' + image.image_url" 
                   alt="Thumbnail"
                   class="w-full h-20 object-cover rounded cursor-pointer"
-                  (click)="openGallery(i)"
+                  (click)="imageClick(i)"
                   [class.primary-border]="image.is_primary">
                 <span 
                   *ngIf="image.is_primary"
@@ -310,22 +310,22 @@
 
 <!-- Image Gallery Modal -->
 <p-galleria 
-  [(value)]="galleryImages" 
-  [(visible)]="displayGallery"
+  [(value)]="images" 
+  [(visible)]="displayCustom" 
   [(activeIndex)]="activeIndex"
-  [responsiveOptions]="responsiveOptions"
-  [containerStyle]="{'max-width': '90%'}"
-  [numVisible]="5"
-  [circular]="true"
-  [fullScreen]="true"
+  [responsiveOptions]="[{breakpoint: '1024px', numVisible: 5}, {breakpoint: '768px', numVisible: 3}, {breakpoint: '560px', numVisible: 1}]"
+  [containerStyle]="{'max-width': '90%'}" 
+  [numVisible]="7"
+  [circular]="true" 
+  [fullScreen]="true" 
   [showItemNavigators]="true"
-  [showThumbnails]="true">
+  [showThumbnails]="false">
   <ng-template pTemplate="item" let-item>
-    <img [src]="item.source" [alt]="item.alt" style="width: 100%; display: block;" />
+    <img [src]="item.itemImageSrc" style="width: 100%; display: block;" />
   </ng-template>
   <ng-template pTemplate="thumbnail" let-item>
     <div class="grid grid-nogutter justify-content-center">
-      <img [src]="item.thumbnail" [alt]="item.alt" style="width: 100px; display: block;" />
+      <img [src]="item.thumbnailImageSrc" style="display: block;" />
     </div>
   </ng-template>
 </p-galleria>

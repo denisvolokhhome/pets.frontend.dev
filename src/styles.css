@@ -1448,7 +1448,7 @@ select {
 /* PrimeNG Toast Styling */
 .p-toast {
   opacity: 1;
-  z-index: 9999;
+  z-index: 99999 !important;
 }
 
 .p-toast .p-toast-message {

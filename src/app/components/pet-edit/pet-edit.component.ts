@@ -91,6 +91,64 @@ export class PetEditComponent implements OnInit, OnChanges {
     }
   }
 
+  setPrimaryImage(image: any): void {
+    if (!this.pet || !image.id) return;
+
+    this.DataService.setPrimaryPetImage(this.pet.id, image.id).subscribe({
+      next: () => {
+        // Update local state
+        this.existingImages = this.existingImages.map(img => ({
+          ...img,
+          is_primary: img.id === image.id
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error('Error setting primary image:', error);
+        alert('Failed to set primary image. Please try again.');
+      }
+    });
+  }
+
+  moveImageUp(index: number): void {
+    if (index > 0 && this.pet) {
+      const temp = this.existingImages[index];
+      this.existingImages[index] = this.existingImages[index - 1];
+      this.existingImages[index - 1] = temp;
+      this.reorderImages();
+    }
+  }
+
+  moveImageDown(index: number): void {
+    if (index < this.existingImages.length - 1 && this.pet) {
+      const temp = this.existingImages[index];
+      this.existingImages[index] = this.existingImages[index + 1];
+      this.existingImages[index + 1] = temp;
+      this.reorderImages();
+    }
+  }
+
+  reorderImages(): void {
+    if (!this.pet) return;
+
+    const imageIds = this.existingImages.map(img => img.id).filter(id => id !== null);
+    this.DataService.reorderPetImages(this.pet.id, imageIds).subscribe({
+      next: (updatedImages: any[]) => {
+        // Update existing images with new order
+        this.existingImages = updatedImages.map((img: any) => ({
+          id: img.id,
+          url: img.image_url ? `${this.DataService.apiurl.replace('/api', '')}${img.image_url}` : this.getImageUrl(img.image_path),
+          is_primary: img.is_primary
+        }));
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error('Error reordering images:', error);
+        alert('Failed to reorder images. Please try again.');
+      }
+    });
+  }
+
   reloadPetData(): void {
     // Reload the pet to get updated images
     this.DataService.getPet(this.pet.id).subscribe({

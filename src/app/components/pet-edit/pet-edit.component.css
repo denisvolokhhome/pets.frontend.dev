@@ -185,8 +185,8 @@
 }
 
 .photo-upload-tile {
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   border-radius: 8px;
   flex-shrink: 0;
   display: flex;
@@ -218,8 +218,8 @@
 
 .photo-preview-tile {
   position: relative;
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
@@ -233,33 +233,98 @@
 }
 
 .photo-remove-btn {
+  display: none; /* Replaced by overlay controls */
+}
+
+/* Photo overlay - covers entire image on hover */
+.photo-overlay {
   position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  border: none;
-  background: rgba(0, 0, 0, 0.55);
-  color: white;
-  font-size: 0.7rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.photo-preview-tile:hover .photo-overlay {
+  opacity: 1;
+}
+
+.photo-overlay-controls {
+  display: flex;
+  gap: 4px;
   justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  transition: background 0.15s;
-  border-radius: 4px !important;
 }
 
-.photo-remove-btn:hover {
-  background: rgba(220, 38, 38, 0.9);
+.photo-overlay-btn {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: all 0.2s !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  flex-shrink: 0 !important;
 }
 
-.photo-remove-btn i {
-  font-size: 0.7rem;
-  line-height: 1;
+.photo-overlay-btn:hover:not(:disabled) {
+  transform: scale(1.1) !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+.photo-overlay-btn:active:not(:disabled) {
+  transform: scale(1.05) !important;
+}
+
+.photo-overlay-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.photo-overlay-btn i {
+  font-size: 0.875rem !important;
+}
+
+.photo-overlay-btn-primary {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  color: white !important;
+}
+
+.photo-overlay-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.photo-overlay-btn-primary:disabled {
+  background: #9ca3af !important;
+  opacity: 0.5 !important;
+}
+
+.photo-overlay-btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+}
+
+.photo-overlay-btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
 }
 
 /* Section Labels */

@@ -36,19 +36,43 @@
         ></div>
       </div>
 
-      <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
-        <i class="bi bi-search"></i>
-        <h3>No pets found</h3>
-        <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
-        <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
-          Clear Filters
-        </button>
+      <!-- Loading/Empty state container -->
+      <div class="state-container" *ngIf="isLoading || !filteredPets || filteredPets.length === 0">
+        <!-- Loading state -->
+        <div *ngIf="isLoading" class="loading-state">
+          <div class="spinner-container">
+            <svg class="spinner" viewBox="0 0 50 50">
+              <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+          </div>
+          <p>Loading pets...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!isLoading && (!filteredPets || filteredPets.length === 0)" class="empty-state">
+          <i class="bi bi-search"></i>
+          <h3>No pets found</h3>
+          <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+            Clear Filters
+          </button>
+        </div>
       </div>
     </div>
     
     <div *ngIf="view == 'table'">
       <div class="table-container">
+        <!-- Loading state for table -->
+        <div *ngIf="isLoading" class="loading-state">
+          <div class="spinner-container">
+            <svg class="spinner" viewBox="0 0 50 50">
+              <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+          </div>
+          <p>Loading pets...</p>
+        </div>
+
         <p-table 
           [value]="filteredPets | searchPets : term" 
           [paginator]="true" 
@@ -59,7 +83,7 @@
           [globalFilterFields]="['name', 'breed_name', 'description', 'gender']"
           styleClass="p-datatable-sm p-datatable-striped"
           responsiveLayout="scroll"
-          *ngIf="filteredPets && filteredPets.length > 0">
+          *ngIf="!isLoading && filteredPets && filteredPets.length > 0">
           
           <ng-template pTemplate="header">
             <tr>
@@ -102,7 +126,8 @@
           </ng-template>
         </p-table>
 
-        <div *ngIf="!filteredPets || filteredPets.length === 0" class="empty-state">
+        <!-- Empty state for table -->
+        <div *ngIf="!isLoading && (!filteredPets || filteredPets.length === 0)" class="empty-state">
           <i class="bi bi-search"></i>
           <h3>No pets found</h3>
           <p *ngIf="currentFilters && Object.keys(currentFilters).length > 0">Try adjusting your filters to see more results.</p>

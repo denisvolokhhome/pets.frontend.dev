@@ -178,10 +178,9 @@ export class OffspringService {
    */
   reorderImages(offspringId: string, imageIds: string[]): Observable<OffspringImage[]> {
     const headers = this.getAuthHeaders();
-    const data: ImageReorderRequest = { image_ids: imageIds };
     
     return this.http
-      .put<OffspringImage[]>(`${this.apiUrl}/offsprings/${offspringId}/images/reorder`, data, { headers })
+      .put<OffspringImage[]>(`${this.apiUrl}/offsprings/${offspringId}/images/reorder`, imageIds, { headers })
       .pipe(catchError(this.handleError));
   }
 

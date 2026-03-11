@@ -124,6 +124,32 @@ export class DataService {
       );
   }
 
+  setPrimaryPetImage(petId: string, imageId: number): Observable<any> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    return this.http
+      .put<any>(this.apiurl + '/pets/' + petId + '/image/' + imageId + '/primary', {}, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  reorderPetImages(petId: string, imageIds: number[]): Observable<any[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    
+    return this.http
+      .put<any[]>(this.apiurl + '/pets/' + petId + '/images/reorder', { image_ids: imageIds }, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getPet(petId: string): Observable<IPet> {
     let header = new HttpHeaders().set(
       'Authorization',

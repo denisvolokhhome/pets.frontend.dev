@@ -34,24 +34,9 @@ export class OffspringDetailComponent implements OnInit {
   isLoadingRelated: boolean = false;
 
   // Gallery images for PrimeNG Galleria
-  galleryImages: any[] = [];
-  displayGallery: boolean = false;
+  images: any[] = [];
+  displayCustom: boolean = false;
   activeIndex: number = 0;
-
-  responsiveOptions: any[] = [
-    {
-      breakpoint: '1024px',
-      numVisible: 5
-    },
-    {
-      breakpoint: '768px',
-      numVisible: 3
-    },
-    {
-      breakpoint: '560px',
-      numVisible: 1
-    }
-  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -125,24 +110,24 @@ export class OffspringDetailComponent implements OnInit {
 
   prepareGalleryImages(): void {
     if (!this.offspring || !this.offspring.images) {
-      this.galleryImages = [];
+      this.images = [];
       return;
     }
 
-    // Sort images by display_order and prepare for gallery
+    // Sort images by display_order
     const sortedImages = [...this.offspring.images].sort((a, b) => a.display_order - b.display_order);
     
-    this.galleryImages = sortedImages.map(image => ({
-      source: image.image_url,
-      thumbnail: image.image_url,
-      alt: this.offspring?.name || 'Offspring image',
+    this.images = sortedImages.map(image => ({
+      itemImageSrc: `http://breedly.com:8000${image.image_url}`,
+      thumbnailImageSrc: `http://breedly.com:8000${image.image_url}`,
+      alt: this.offspring?.name || 'Offspring',
       title: image.is_primary ? 'Primary Image' : ''
     }));
   }
 
-  openGallery(index: number = 0): void {
+  imageClick(index: number): void {
     this.activeIndex = index;
-    this.displayGallery = true;
+    this.displayCustom = true;
   }
 
   editOffspring(): void {

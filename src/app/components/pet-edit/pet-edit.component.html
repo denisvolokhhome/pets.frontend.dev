@@ -125,15 +125,51 @@
               *ngFor="let existingImg of existingImages; let i = index"
             >
               <img [src]="existingImg.url" alt="Pet photo {{ i + 1 }}" />
-              <button 
-                type="button" 
-                class="photo-remove-btn" 
-                (click)="removeExistingImage(existingImg.id)"
-                *ngIf="existingImg.id"
-                title="Delete this image">
-                <i class="bi bi-x"></i>
-              </button>
+              
+              <!-- Primary badge -->
               <span class="photo-badge" *ngIf="existingImg.is_primary">Primary</span>
+              
+              <!-- Hover overlay with controls -->
+              <div class="photo-overlay" *ngIf="existingImg.id">
+                <!-- Top controls: Primary and Delete -->
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-primary" 
+                    (click)="setPrimaryImage(existingImg)"
+                    [disabled]="existingImg.is_primary"
+                    title="Set as primary">
+                    <i class="bi bi-star-fill"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-delete" 
+                    (click)="removeExistingImage(existingImg.id)"
+                    title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                
+                <!-- Bottom controls: Move left and right -->
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
+                    (click)="moveImageUp(i)"
+                    [disabled]="i === 0"
+                    title="Move left">
+                    <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
+                    (click)="moveImageDown(i)"
+                    [disabled]="i === existingImages.length - 1"
+                    title="Move right">
+                    <i class="bi bi-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
             </div>
             
             <!-- New image previews -->
@@ -142,10 +178,20 @@
               *ngFor="let preview of imagePreviews; let i = index"
             >
               <img [src]="preview" alt="New photo {{ i + 1 }}" />
-              <button type="button" class="photo-remove-btn" (click)="removeImage(i)">
-                <i class="bi bi-x"></i>
-              </button>
               <span class="photo-badge photo-badge--new">New</span>
+              
+              <!-- Hover overlay with delete button only -->
+              <div class="photo-overlay">
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-delete" 
+                    (click)="removeImage(i)"
+                    title="Remove">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
             </div>
             
             <!-- Upload button -->

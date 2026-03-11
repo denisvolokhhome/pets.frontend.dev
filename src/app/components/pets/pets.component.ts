@@ -50,6 +50,7 @@ export class PetsComponent implements OnInit {
   term: string = '';
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
+  isLoading: boolean = true;
   
   // Filter widget configuration
   filterConfig: FilterConfig = {
@@ -85,15 +86,25 @@ export class PetsComponent implements OnInit {
     const userId = this.authService.currentUser?.id;
     if (!userId) {
       console.error('No user ID available');
+      this.isLoading = false;
       return;
     }
     
-    this.DataService.getPetsByBreeder(userId).subscribe((pets) => {
-      console.log('All pets loaded:', pets);
-      console.log('Pets with is_puppy values:', pets.map(p => ({ name: p.name, is_puppy: p.is_puppy, type: typeof p.is_puppy })));
-      this.pets = pets;
-      this.applyFilters();
-      this.cdr.detectChanges();
+    this.isLoading = true;
+    this.DataService.getPetsByBreeder(userId).subscribe({
+      next: (pets) => {
+        console.log('All pets loaded:', pets);
+        console.log('Pets with is_puppy values:', pets.map(p => ({ name: p.name, is_puppy: p.is_puppy, type: typeof p.is_puppy })));
+        this.pets = pets;
+        this.applyFilters();
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading pets:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
     });
   }
 
