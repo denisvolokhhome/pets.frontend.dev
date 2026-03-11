@@ -327,6 +327,10 @@ export class OffspringFormComponent implements OnInit {
   }
 
   getBreedingDisplay(breeding: IBreeding): string {
+    if (!breeding) {
+      return 'Unknown Breeding';
+    }
+    
     if (!breeding.parent_pets || breeding.parent_pets.length === 0) {
       return `Breeding #${breeding.id}`;
     }
@@ -342,6 +346,10 @@ export class OffspringFormComponent implements OnInit {
     } else {
       return `Breeding #${breeding.id} - ${breedNames.join(' + ')}`;
     }
+  }
+
+  getBreedingById(breedingId: number): IBreeding | undefined {
+    return this.breedings.find(b => String(b.id) === String(breedingId));
   }
 
   getTitle(): string {

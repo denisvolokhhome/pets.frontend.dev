@@ -65,6 +65,7 @@ import { OffspringFormComponent } from './components/offspring-form/offspring-fo
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringCardComponent } from './components/offspring-card/offspring-card.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
+import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
@@ -169,6 +170,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     LeafletModule,
     NotificationDropdownComponent,
     OffspringCardComponent,
+    OffspringEditComponent,
     PageHeaderComponent,
 
   ],

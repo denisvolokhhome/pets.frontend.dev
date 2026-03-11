@@ -12,9 +12,46 @@
     </div>
 
     <div class="card" *ngIf="!isLoading">
+      <!-- Non-Editable Info Header (Edit Mode Only) -->
+      <div class="offspring-info-header" *ngIf="mode === 'edit' && offspring">
+        <div class="info-item">
+          <span class="info-label">Breeding</span>
+          <span class="info-value">
+            <i class="bi bi-hearts"></i>
+            {{ getBreedingDisplay(getBreedingById(offspring.breeding_id)) || '#' + offspring.breeding_id }}
+          </span>
+        </div>
+        <div class="info-separator"></div>
+        <div class="info-item">
+          <span class="info-label">Gender</span>
+          <span class="info-value">
+            <i class="bi" 
+               [class.bi-gender-male]="offspring.gender === 'Male'" 
+               [class.bi-gender-female]="offspring.gender === 'Female'"></i>
+            {{ offspring.gender }}
+          </span>
+        </div>
+        <div class="info-separator"></div>
+        <div class="info-item">
+          <span class="info-label">Date of Birth</span>
+          <span class="info-value">
+            <i class="bi bi-calendar"></i>
+            {{ offspring.date_of_birth | date:'MMM d, yyyy' }}
+          </span>
+        </div>
+        <div class="info-separator"></div>
+        <div class="info-item">
+          <span class="info-label">Age</span>
+          <span class="info-value">
+            <i class="bi bi-clock"></i>
+            {{ offspring.age }}
+          </span>
+        </div>
+      </div>
+
       <form [formGroup]="offspringForm" (ngSubmit)="save()">
-        <!-- Breeding Selection -->
-        <div class="form-group">
+        <!-- Breeding Selection (Create Mode Only) -->
+        <div class="form-group" *ngIf="mode === 'create'">
           <label for="breeding_id" class="form-label required">Breeding</label>
           <p-dropdown 
             id="breeding_id"
@@ -23,7 +60,7 @@
             optionLabel="id"
             optionValue="id"
             placeholder="Select a breeding"
-            [disabled]="mode === 'edit' || isLoadingBreedings"
+            [disabled]="isLoadingBreedings"
             (onChange)="onBreedingChange($event)"
             [style]="{'width': '100%'}"
             [filter]="true"
@@ -35,12 +72,36 @@
               <div>{{ getBreedingDisplay(breeding) }}</div>
             </ng-template>
           </p-dropdown>
-          <small class="form-hint" *ngIf="mode === 'edit'">
-            Breeding cannot be changed after creation
-          </small>
-          <small class="form-hint" *ngIf="mode === 'create'">
+          <small class="form-hint">
             Breed will be auto-populated from the selected breeding
           </small>
+        </div>
+
+        <!-- Gender and Date of Birth Row (Create Mode Only) -->
+        <div class="grid grid-cols-2 gap-4" *ngIf="mode === 'create'">
+          <div class="form-group">
+            <label for="gender" class="form-label required">Gender</label>
+            <p-dropdown 
+              id="gender"
+              formControlName="gender"
+              [options]="genderOptions"
+              optionLabel="label"
+              optionValue="value"
+              [style]="{'width': '100%'}">
+            </p-dropdown>
+          </div>
+
+          <div class="form-group">
+            <label for="date_of_birth" class="form-label required">Date of Birth</label>
+            <p-calendar 
+              id="date_of_birth"
+              formControlName="date_of_birth"
+              [maxDate]="maxDate"
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [style]="{'width': '100%'}">
+            </p-calendar>
+          </div>
         </div>
 
         <!-- Name -->
@@ -55,41 +116,6 @@
           <small class="form-hint">
             Leave empty to auto-generate a temporary ID
           </small>
-        </div>
-
-        <!-- Gender and Date of Birth Row -->
-        <div class="grid grid-cols-2 gap-4">
-          <div class="form-group">
-            <label for="gender" class="form-label required">Gender</label>
-            <p-dropdown 
-              id="gender"
-              formControlName="gender"
-              [options]="genderOptions"
-              optionLabel="label"
-              optionValue="value"
-              [disabled]="mode === 'edit'"
-              [style]="{'width': '100%'}">
-            </p-dropdown>
-            <small class="form-hint" *ngIf="mode === 'edit'">
-              Gender cannot be changed after creation
-            </small>
-          </div>
-
-          <div class="form-group">
-            <label for="date_of_birth" class="form-label required">Date of Birth</label>
-            <p-calendar 
-              id="date_of_birth"
-              formControlName="date_of_birth"
-              [disabled]="mode === 'edit'"
-              [maxDate]="maxDate"
-              dateFormat="yy-mm-dd"
-              [showIcon]="true"
-              [style]="{'width': '100%'}">
-            </p-calendar>
-            <small class="form-hint" *ngIf="mode === 'edit'">
-              Date of birth cannot be changed after creation
-            </small>
-          </div>
         </div>
 
         <!-- Status and Price Row -->

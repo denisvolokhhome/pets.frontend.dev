@@ -337,3 +337,15 @@
   [offspringName]="offspring?.name"
   (authSuccess)="onAuthSuccess()">
 </app-guest-prompt-modal>
+
+<!-- Offspring Edit Modal -->
+<div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <app-offspring-edit
+      [offspring]="offspring"
+      [mode]="'edit'"
+      (offspringSaved)="onOffspringSaved()"
+      (modalClosed)="onModalClosed()">
+    </app-offspring-edit>
+  </div>
+</div>

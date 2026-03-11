@@ -20,7 +20,9 @@ export class OffspringListComponent implements OnInit {
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search offsprings...',
-    showActionButton: false
+    showActionButton: true,
+    actionButtonTitle: 'Add Offspring',
+    actionButtonIcon: 'bi bi-plus-lg'
   };
   
   // Filter widget configuration
@@ -54,6 +56,11 @@ export class OffspringListComponent implements OnInit {
   totalRecords: number = 0;
   rows: number = 50;
   first: number = 0;
+
+  // Modal state
+  showEditModal: boolean = false;
+  selectedOffspring: OffspringRead | null = null;
+  modalMode: 'create' | 'edit' = 'create';
 
   // Status options
   statusOptions = [
@@ -191,7 +198,9 @@ export class OffspringListComponent implements OnInit {
   }
 
   addOffspring(): void {
-    this.router.navigate(['/offsprings/new']);
+    this.selectedOffspring = null;
+    this.modalMode = 'create';
+    this.showEditModal = true;
   }
 
   viewOffspring(offspring: OffspringRead): void {
@@ -199,7 +208,24 @@ export class OffspringListComponent implements OnInit {
   }
 
   editOffspring(offspring: OffspringRead): void {
-    this.router.navigate(['/offsprings', offspring.id, 'edit']);
+    this.selectedOffspring = offspring;
+    this.modalMode = 'edit';
+    this.showEditModal = true;
+  }
+
+  onOffspringSaved(): void {
+    this.showEditModal = false;
+    this.selectedOffspring = null;
+    this.loadOffsprings();
+  }
+
+  onModalClosed(): void {
+    this.showEditModal = false;
+    this.selectedOffspring = null;
+  }
+
+  onActionButtonClick(): void {
+    this.addOffspring();
   }
 
   deleteOffspring(offspring: OffspringRead): void {

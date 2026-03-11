@@ -1,0 +1,570 @@
+/* Modern Offspring Form Styling - Based on Pet Edit Modal */
+.modern-offspring-form {
+  font-family: var(--font-secondary);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  width: 100%;
+}
+
+.modern-offspring-form .modal-body {
+  overflow-y: auto;
+  max-height: calc(90vh - 72px);
+  padding: 0 1.25rem 1.25rem;
+  flex: 1;
+}
+
+/* Form Header */
+.offspring-form-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: white;
+  padding: 1rem 0 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+/* Offspring Info Header (Non-editable fields) */
+.offspring-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(139, 92, 246, 0.05));
+  border: 1.5px solid rgba(236, 72, 153, 0.15);
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.info-label {
+  font-family: var(--font-secondary);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-value i {
+  font-size: 1rem;
+  color: #ec4899;
+  flex-shrink: 0;
+}
+
+.info-separator {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, transparent, rgba(236, 72, 153, 0.3), transparent);
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.offspring-form-title {
+  font-family: var(--font-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin: 0;
+}
+
+.close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  background: white;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.close-button:hover {
+  border-color: #ec4899;
+  background: #fdf2f8;
+  color: #ec4899;
+}
+
+.close-button i {
+  font-size: 0.875rem;
+}
+
+/* 2-Column Grid Layout */
+.offspring-form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  align-items: start;
+}
+
+.form-column {
+  min-width: 0;
+  padding: 0 1.5rem;
+}
+
+.form-column:first-child {
+  padding-left: 0;
+}
+
+.form-column:last-child {
+  padding-right: 0;
+}
+
+.column-separator {
+  width: 1px;
+  background-color: #E5E7EB;
+  align-self: stretch;
+  min-height: 100%;
+}
+
+.column-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--dark-color);
+  margin-bottom: 1rem;
+}
+
+.column-heading i {
+  font-size: 1rem;
+  color: var(--dark-color);
+}
+
+.column-heading--red i {
+  color: #ec4899;
+}
+
+/* Photo Grid */
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.photo-upload-tile {
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  border: 1.5px dashed #D1D5DB;
+  background: #F9FAFB;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-secondary);
+}
+
+.photo-upload-tile i {
+  font-size: 1.125rem;
+}
+
+.photo-upload-tile span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.photo-upload-tile:hover {
+  border-color: #ec4899;
+  color: #ec4899;
+  background: #fdf2f8;
+}
+
+/* Photo item wrapper */
+.photo-item-wrapper {
+  display: none; /* No longer used */
+}
+
+.photo-preview-tile {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Photo overlay - covers entire image on hover */
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.photo-preview-tile:hover .photo-overlay {
+  opacity: 1;
+}
+
+.photo-overlay-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.photo-overlay-btn {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: all 0.2s !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  flex-shrink: 0 !important;
+}
+
+.photo-overlay-btn:hover:not(:disabled) {
+  transform: scale(1.1) !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+.photo-overlay-btn:active:not(:disabled) {
+  transform: scale(1.05) !important;
+}
+
+.photo-overlay-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.photo-overlay-btn i {
+  font-size: 0.875rem !important;
+}
+
+.photo-overlay-btn-primary {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  color: white !important;
+}
+
+.photo-overlay-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+}
+
+.photo-overlay-btn-primary:disabled {
+  background: #9ca3af !important;
+  opacity: 0.5 !important;
+}
+
+.photo-overlay-btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+}
+
+.photo-overlay-btn-delete:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+}
+
+/* Photo controls button group */
+.photo-controls {
+  display: none; /* No longer used */
+}
+
+.photo-control-btn {
+  display: none; /* No longer used */
+}
+
+.photo-preview-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-remove-btn {
+  display: none; /* No longer used - replaced by button group */
+}
+
+/* Photo reorder buttons */
+.photo-reorder-btns {
+  display: none; /* No longer used - replaced by button group */
+}
+
+.photo-reorder-btn {
+  display: none; /* No longer used - replaced by button group */
+}
+
+/* Photo badges */
+.photo-badge {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background: rgba(99, 102, 241, 0.9);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.photo-badge--new {
+  background: rgba(16, 185, 129, 0.9);
+}
+
+.photo-preview-tile--new {
+  border: 2px solid #10b981;
+}
+
+/* Modern Form Controls */
+.form-group-modern {
+  margin-bottom: 1rem;
+}
+
+.form-label-modern {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: var(--dark-color);
+  margin-bottom: 0.375rem;
+  display: block;
+}
+
+.form-control-modern {
+  font-family: var(--font-secondary);
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: var(--transition);
+  background-color: #F9FAFB;
+  color: var(--dark-color);
+  box-sizing: border-box;
+}
+
+.form-control-modern:focus {
+  outline: none;
+  border-color: #ec4899;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.form-control-modern::placeholder {
+  color: #9CA3AF;
+}
+
+.form-select-modern {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  background-size: 14px;
+  padding-right: 2.25rem;
+}
+
+textarea.form-control-modern {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.form-text-muted {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Modal Footer */
+.modal-footer-modern {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #E5E7EB;
+  background-color: white;
+  flex-shrink: 0;
+}
+
+.btn-secondary-modern,
+.btn-primary-modern {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary-modern {
+  background-color: #E5E7EB;
+  color: var(--dark-color);
+}
+
+.btn-secondary-modern:hover {
+  background-color: #D1D5DB;
+}
+
+.btn-primary-modern {
+  background-color: #ec4899;
+  color: white;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25);
+}
+
+.btn-primary-modern:hover:not(:disabled) {
+  background-color: #db2777;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+.btn-primary-modern:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .offspring-form-columns {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .column-separator {
+    display: none;
+  }
+
+  .form-column {
+    padding: 0;
+  }
+
+  .offspring-info-header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .info-item {
+    flex: 1 1 calc(50% - 0.375rem);
+    min-width: 140px;
+  }
+
+  .info-separator {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .modern-offspring-form .modal-body {
+    padding: 0 1rem 1rem;
+  }
+
+  .offspring-form-header {
+    padding: 0.875rem 0 0.625rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .offspring-info-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  .info-item {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .info-separator {
+    display: none;
+  }
+
+  .modal-footer-modern {
+    padding: 0.875rem 1rem;
+    flex-direction: column;
+  }
+
+  .offspring-form-title {
+    font-size: 1.125rem;
+  }
+
+  .close-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .btn-secondary-modern,
+  .btn-primary-modern {
+    width: 100%;
+  }
+}

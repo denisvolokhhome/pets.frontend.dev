@@ -3,7 +3,8 @@
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
-    (searchChange)="onSearchTermChange($event)">
+    (searchChange)="onSearchTermChange($event)"
+    (actionButtonClick)="onActionButtonClick()">
   </app-page-header>
 
   <!-- Content Section -->
@@ -179,5 +180,17 @@
       </div>
     </div>
     </main>
+  </div>
+</div>
+
+<!-- Offspring Edit Modal -->
+<div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <app-offspring-edit
+      [offspring]="selectedOffspring"
+      [mode]="modalMode"
+      (offspringSaved)="onOffspringSaved()"
+      (modalClosed)="onModalClosed()">
+    </app-offspring-edit>
   </div>
 </div>

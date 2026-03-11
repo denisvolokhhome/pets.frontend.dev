@@ -23,7 +23,6 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
-import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
@@ -49,9 +48,7 @@ const routes: Routes = [
   { path: 'breedings', component: BreedingsComponent, canActivate: [BreederGuard] },
   { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [BreederGuard] },
   { path: 'offsprings', component: OffspringListComponent, canActivate: [BreederGuard] },
-  { path: 'offsprings/new', component: OffspringFormComponent, canActivate: [BreederGuard] },
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
-  { path: 'offsprings/:id/edit', component: OffspringFormComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [AuthGuard] },

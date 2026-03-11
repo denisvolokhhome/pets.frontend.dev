@@ -1,0 +1,299 @@
+<form
+  #editOffspring="ngForm"
+  enctype="multipart/form-data"
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="modern-offspring-form"
+>
+  <div class="modal-body">
+    <!-- Header -->
+    <div class="offspring-form-header">
+      <div class="header-content">
+        <h2 class="offspring-form-title">{{ getTitle() }}</h2>
+        <button type="button" class="close-button" (click)="modalClose()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Non-Editable Info Header (Edit Mode Only) -->
+    <div class="offspring-info-header" *ngIf="mode === 'edit' && offspring">
+      <div class="info-item">
+        <span class="info-label">Breeding</span>
+        <span class="info-value">
+          <i class="bi bi-hearts"></i>
+          {{ getBreedingDisplay(getBreedingById(offspring.breeding_id)) || '#' + offspring.breeding_id }}
+        </span>
+      </div>
+      <div class="info-separator"></div>
+      <div class="info-item">
+        <span class="info-label">Gender</span>
+        <span class="info-value">
+          <i class="bi" 
+             [class.bi-gender-male]="offspring.gender === 'Male'" 
+             [class.bi-gender-female]="offspring.gender === 'Female'"></i>
+          {{ offspring.gender }}
+        </span>
+      </div>
+      <div class="info-separator"></div>
+      <div class="info-item">
+        <span class="info-label">Date of Birth</span>
+        <span class="info-value">
+          <i class="bi bi-calendar"></i>
+          {{ offspring.date_of_birth | date:'MMM d, yyyy' }}
+        </span>
+      </div>
+      <div class="info-separator"></div>
+      <div class="info-item">
+        <span class="info-label">Age</span>
+        <span class="info-value">
+          <i class="bi bi-clock"></i>
+          {{ offspring.age }}
+        </span>
+      </div>
+    </div>
+
+    <!-- 2-Column Grid -->
+    <div class="offspring-form-columns">
+
+      <!-- Column 1: Basic Info -->
+      <div class="form-column">
+        <div class="column-heading">
+          <i class="bi bi-tag"></i>
+          <span>Basic Information</span>
+        </div>
+
+        <!-- Breeding Selection (Create Mode Only) -->
+        <div class="form-group-modern" *ngIf="mode === 'create'">
+          <label for="breeding_id" class="form-label-modern">Breeding *</label>
+          <select
+            id="breeding_id"
+            class="form-control-modern form-select-modern"
+            [formControl]="breeding_id"
+            [disabled]="isLoadingBreedings"
+          >
+            <option value="">Select a breeding</option>
+            <option *ngFor="let breeding of breedings" [value]="breeding.id">
+              {{ getBreedingDisplay(breeding) }}
+            </option>
+          </select>
+          <small class="form-hint">Breed will be auto-populated from the selected breeding</small>
+        </div>
+
+        <!-- Gender (Create Mode Only) -->
+        <div class="form-group-modern" *ngIf="mode === 'create'">
+          <label for="gender" class="form-label-modern">Gender *</label>
+          <select
+            id="gender"
+            class="form-control-modern form-select-modern"
+            [formControl]="gender"
+          >
+            <option *ngFor="let option of genderOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Date of Birth (Create Mode Only) -->
+        <div class="form-group-modern" *ngIf="mode === 'create'">
+          <label for="date_of_birth" class="form-label-modern">Date of Birth *</label>
+          <input
+            type="date"
+            id="date_of_birth"
+            class="form-control-modern"
+            [formControl]="date_of_birth"
+            [max]="maxDate | date:'yyyy-MM-dd'"
+          />
+        </div>
+
+        <!-- Name -->
+        <div class="form-group-modern">
+          <label for="name" class="form-label-modern">Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control-modern"
+            placeholder="Enter offspring name (optional)"
+            formControlName="name"
+            appFocus
+          />
+          <small class="form-hint">Leave empty to auto-generate a temporary ID</small>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group-modern">
+          <label for="status" class="form-label-modern">Status *</label>
+          <select
+            id="status"
+            class="form-control-modern form-select-modern"
+            [formControl]="status"
+          >
+            <option *ngFor="let option of statusOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group-modern">
+          <label for="price" class="form-label-modern">Price ($)</label>
+          <input
+            type="number"
+            id="price"
+            class="form-control-modern"
+            placeholder="0.00"
+            formControlName="price"
+            min="0"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      <div class="column-separator"></div>
+
+      <!-- Column 2: Media & Details -->
+      <div class="form-column">
+        <div class="column-heading column-heading--red">
+          <i class="bi bi-images"></i>
+          <span>Media &amp; Details</span>
+        </div>
+
+        <!-- Photos -->
+        <div class="form-group-modern">
+          <label class="form-label-modern">Photos (Up to 5)</label>
+          <div class="photo-grid">
+            <!-- Existing images from backend -->
+            <div
+              class="photo-preview-tile"
+              *ngFor="let existingImg of existingImages; let i = index"
+            >
+              <img [src]="getImageUrl(existingImg.image_url)" alt="Offspring photo {{ i + 1 }}" />
+              
+              <!-- Primary badge -->
+              <span class="photo-badge" *ngIf="existingImg.is_primary">Primary</span>
+              
+              <!-- Hover overlay with controls -->
+              <div class="photo-overlay">
+                <!-- Top controls: Primary and Delete -->
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-primary" 
+                    (click)="setPrimaryImage(existingImg)"
+                    [disabled]="existingImg.is_primary"
+                    title="Set as primary">
+                    <i class="bi bi-star-fill"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-delete" 
+                    (click)="removeExistingImage(existingImg.id)"
+                    title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                
+                <!-- Bottom controls: Move left and right -->
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
+                    (click)="moveImageUp(i)"
+                    [disabled]="i === 0"
+                    title="Move left">
+                    <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
+                    (click)="moveImageDown(i)"
+                    [disabled]="i === existingImages.length - 1"
+                    title="Move right">
+                    <i class="bi bi-arrow-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- New image previews -->
+            <div
+              class="photo-preview-tile photo-preview-tile--new"
+              *ngFor="let preview of imagePreviews; let i = index"
+            >
+              <img [src]="preview" alt="New photo {{ i + 1 }}" />
+              <span class="photo-badge photo-badge--new">New</span>
+              
+              <!-- Hover overlay with delete button -->
+              <div class="photo-overlay">
+                <div class="photo-overlay-controls">
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn photo-overlay-btn-delete" 
+                    (click)="removeImage(i)"
+                    title="Remove">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Upload button -->
+            <div
+              class="photo-upload-tile"
+              (click)="selectImages.click()"
+              *ngIf="(existingImages.length + imagePreviews.length) < MAX_PHOTOS"
+            >
+              <i class="bi bi-plus-lg"></i>
+              <span>Upload</span>
+            </div>
+          </div>
+          <input
+            type="file"
+            class="hidden"
+            multiple
+            accept="image/*"
+            (change)="readURLMultiple($event)"
+            #selectImages
+          />
+          <small class="form-text-muted">
+            {{ existingImages.length + imagePreviews.length }} / {{ MAX_PHOTOS }} photos
+          </small>
+        </div>
+
+        <!-- Color Markings -->
+        <div class="form-group-modern">
+          <label for="color_markings" class="form-label-modern">Color Markings</label>
+          <input
+            type="text"
+            id="color_markings"
+            class="form-control-modern"
+            placeholder="Describe color markings"
+            formControlName="color_markings"
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group-modern">
+          <label for="description" class="form-label-modern">Description</label>
+          <textarea
+            id="description"
+            class="form-control-modern"
+            rows="4"
+            placeholder="Enter detailed description..."
+            formControlName="description"
+            maxlength="500"
+          ></textarea>
+          <small class="char-count">{{ form.value.description?.length || 0 }}/500</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-footer-modern">
+    <button type="button" class="btn-secondary-modern" (click)="modalClose()">Cancel</button>
+    <button type="submit" class="btn-primary-modern" [disabled]="!form.valid || isSaving">
+      {{ isSaving ? 'Saving...' : 'Save' }}
+    </button>
+  </div>
+</form>

@@ -8,13 +8,14 @@ import { MessageService } from 'src/app/services/message.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
+import { OffspringEditComponent } from '../offspring-edit/offspring-edit.component';
 
 @Component({
   standalone: true,
   selector: 'app-offspring-detail',
   templateUrl: './offspring-detail.component.html',
   styleUrls: ['./offspring-detail.component.css'],
-  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent]
+  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent]
 })
 export class OffspringDetailComponent implements OnInit {
   offspringId: string = '';
@@ -23,6 +24,7 @@ export class OffspringDetailComponent implements OnInit {
   isDeleting: boolean = false;
   isTogglingFavorite: boolean = false;
   showGuestModal: boolean = false;
+  showEditModal: boolean = false;
   
   // View mode: 'breeder' or 'public'
   viewMode: 'breeder' | 'public' = 'breeder';
@@ -144,7 +146,17 @@ export class OffspringDetailComponent implements OnInit {
   }
 
   editOffspring(): void {
-    this.router.navigate(['/offsprings', this.offspringId, 'edit']);
+    this.showEditModal = true;
+  }
+
+  onOffspringSaved(): void {
+    this.showEditModal = false;
+    // Reload offspring details to show updated data
+    this.loadOffspringDetails();
+  }
+
+  onModalClosed(): void {
+    this.showEditModal = false;
   }
 
   deleteOffspring(): void {
