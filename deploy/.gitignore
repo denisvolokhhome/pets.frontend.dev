@@ -1,0 +1,8 @@
+# Environment files with secrets
+.env
+registry.env
+
+# Docker volumes data
+postgres_data/
+backend_storage/
+nginx_logs/
