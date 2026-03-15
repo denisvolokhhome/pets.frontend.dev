@@ -36,6 +36,7 @@ export class RegisterComponent {
     ),
     password: this.builder.control('', Validators.required),
     password_confirmation: this.builder.control('', Validators.required),
+    acceptTerms: this.builder.control(false, Validators.requiredTrue),
 
     //<TODO>Add this fields to DB and api</TODO>
     // role:this.builder.control(''),

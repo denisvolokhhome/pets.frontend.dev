@@ -1678,3 +1678,81 @@
     transform: translateY(0);
   }
 }
+
+/* ===== Site Footer ===== */
+
+.site-footer {
+  background-color: var(--dark-color, #2C3E50);
+  padding: 2rem 1rem;
+  color: #ffffff;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-logo-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color, #FF6B6B);
+}
+
+.footer-brand-name {
+  font-family: var(--font-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-secondary);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--primary-color, #FF6B6B);
+  text-decoration: underline;
+}
+
+.footer-divider {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-copyright {
+  font-family: var(--font-secondary);
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .site-footer {
+    padding: 1.5rem 1rem;
+  }
+
+  .footer-links {
+    gap: 0.75rem;
+  }
+
+  .footer-link {
+    font-size: 0.875rem;
+  }
+}

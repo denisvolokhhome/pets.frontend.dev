@@ -85,6 +85,24 @@
         </div>
       </div>
 
+      <div class="terms-checkbox-group">
+        <label class="terms-label">
+          <input
+            type="checkbox"
+            formControlName="acceptTerms"
+            class="terms-checkbox"
+            aria-label="Accept Privacy Policy and Terms of Use"
+          />
+          <span class="terms-text">
+            I agree to the <a href="/privacy-policy" target="_blank" class="terms-link">Privacy Policy</a>
+            and <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a>
+          </span>
+        </label>
+        <small *ngIf="registerForm.get('acceptTerms')?.touched && registerForm.get('acceptTerms')?.invalid" class="error-text">
+          <i class="bi bi-x-circle" aria-hidden="true"></i> You must accept the Privacy Policy and Terms of Use
+        </small>
+      </div>
+
       <button type="submit" class="w-full auth-submit-btn">
         <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>Create Account
       </button>
