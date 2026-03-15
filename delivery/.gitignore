@@ -1,0 +1,13 @@
+# Environment variables with secrets
+.env
+
+# Backup files
+*.backup
+
+# SSH keys
+*.pem
+*.key
+id_rsa*
+
+# Logs
+*.log
