@@ -374,10 +374,8 @@
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
   border-radius: 12px;
   border: 2px dashed #e5e7eb;
-  margin: 2rem 0;
 }
 
 .empty-state i {
@@ -690,4 +688,40 @@
     stroke-dasharray: 90, 150;
     stroke-dashoffset: -124;
   }
+}
+
+/* No Locations Banner */
+.no-locations-banner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #92400e;
+  grid-column: 1 / -1;
+}
+
+.no-locations-banner i {
+  font-size: 1.25rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.no-locations-banner p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+}
+
+.no-locations-banner a {
+  color: #92400e;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.no-locations-banner a:hover {
+  color: #78350f;
 }

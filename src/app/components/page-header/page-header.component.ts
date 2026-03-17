@@ -13,6 +13,8 @@ export interface PageHeaderConfig {
   actionButtonIcon?: string;
   actionButtonColor?: string;
   actionButtonTitle?: string;
+  actionButtonDisabled?: boolean;
+  actionButtonTooltip?: string;
 }
 
 @Component({

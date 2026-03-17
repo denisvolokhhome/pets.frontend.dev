@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { DataService } from 'src/app/services/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -15,12 +16,14 @@ export class DashboardComponent implements OnInit {
   activeBreedings: number = 0;
   unreadMessages: number = 0;
   isLoading: boolean = true;
+  showWelcomeModal: boolean = false;
   
   constructor(
     public authService: AuthService,
     private modalService: ModalService,
     private dataService: DataService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -29,11 +32,36 @@ export class DashboardComponent implements OnInit {
       this.authService.IsLoggedIn().subscribe({
         next: () => {
           this.loadDashboardData();
+          this.checkWelcomeModal();
         }
       });
     } else {
       this.loadDashboardData();
+      this.checkWelcomeModal();
     }
+  }
+
+  checkWelcomeModal(): void {
+    if (this.authService.isBreeder && localStorage.getItem('breeder_just_registered') === 'true') {
+      localStorage.removeItem('breeder_just_registered');
+      this.showWelcomeModal = true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  closeWelcomeModal(): void {
+    this.showWelcomeModal = false;
+    this.cdr.detectChanges();
+  }
+
+  goToBreederProfile(): void {
+    this.showWelcomeModal = false;
+    this.router.navigate(['/settings/breedery']);
+  }
+
+  goToLocations(): void {
+    this.showWelcomeModal = false;
+    this.router.navigate(['/settings/locations']);
   }
 
   loadDashboardData(): void {

@@ -20,6 +20,9 @@ export class BreederySettingsComponent implements OnInit {
   saveSuccess: boolean = false;
   saveError: string | null = null;
   currentUser: IUser | null = null;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
+  apihost = environment.API_HOST;
 
   constructor(
     private fb: FormBuilder,
@@ -60,6 +63,9 @@ export class BreederySettingsComponent implements OnInit {
           breedery_description: user.breedery_description || ''
         });
         this.tags = user.search_tags || [];
+        if (user.profile_image_path) {
+          this.imagePreview = this.getImageUrl(user.profile_image_path);
+        }
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -67,6 +73,69 @@ export class BreederySettingsComponent implements OnInit {
         clearTimeout(loadingTimeout);
         console.error('Error loading profile:', error);
         this.toastr.error('Failed to load profile information', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  getImageUrl(imagePath: string | undefined): string {
+    if (!imagePath) return '';
+    return `${this.apihost}/storage/${imagePath}`;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.saveError = 'Invalid file type. Allowed: JPEG, PNG, GIF, WebP';
+        this.toastr.error('Invalid file type. Allowed: JPEG, PNG, GIF, WebP', 'Error');
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        this.saveError = 'File size exceeds 5MB limit';
+        this.toastr.error('File size exceeds 5MB limit', 'Error');
+        return;
+      }
+
+      this.selectedFile = file;
+      this.saveError = null;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+
+      this.uploadImage();
+    }
+  }
+
+  uploadImage(): void {
+    if (!this.selectedFile) return;
+
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
+    this.dataService.uploadProfileImage(this.selectedFile).subscribe({
+      next: (response) => {
+        this.imagePreview = this.getImageUrl(response.profile_image_path);
+        this.selectedFile = null;
+        this.isLoading = false;
+        this.toastr.success('Profile image uploaded successfully', 'Success');
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error uploading image:', error);
+        this.saveError = 'Failed to upload image';
+        const errorMessage = error.error?.detail || 'Failed to upload image';
+        this.toastr.error(errorMessage, 'Error');
         this.isLoading = false;
         this.cdr.detectChanges();
       }

@@ -1,0 +1,238 @@
+/* Welcome Modal */
+.welcome-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+  padding: 1rem;
+}
+
+.welcome-modal {
+  background: white;
+  border-radius: 16px;
+  max-width: 720px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease-out;
+  overflow-y: auto;
+  max-height: calc(100vh - 2rem);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Welcome Modal Header */
+.welcome-modal-header {
+  text-align: center;
+  padding: 2rem 2.5rem 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(78, 205, 196, 0.08) 100%);
+}
+
+.welcome-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, var(--primary-color, #FF6B6B), var(--secondary-color, #4ECDC4));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+}
+
+.welcome-icon {
+  font-size: 30px;
+  color: white;
+}
+
+.welcome-title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem;
+}
+
+.welcome-subtitle {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Welcome Modal Body */
+.welcome-modal-body {
+  padding: 1.25rem 2.5rem;
+}
+
+.welcome-intro {
+  font-size: 0.9375rem;
+  color: #374151;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+.welcome-steps {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.welcome-step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  flex: 1;
+}
+
+.welcome-step-number {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  background: linear-gradient(135deg, var(--primary-color, #FF6B6B), var(--secondary-color, #4ECDC4));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: white;
+  margin-top: 2px;
+}
+
+.welcome-step-content {
+  flex: 1;
+}
+
+.welcome-step-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.375rem;
+}
+
+.welcome-step-desc {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.welcome-note {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  padding: 0.875rem 1rem;
+  background: #eff6ff;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+  font-size: 0.8125rem;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+.welcome-note i {
+  font-size: 1rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+/* Welcome Modal Footer */
+.welcome-modal-footer {
+  padding: 1rem 2.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  align-items: center;
+}
+
+.welcome-btn-primary {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-color, #FF6B6B), var(--secondary-color, #4ECDC4));
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+}
+
+.welcome-btn-secondary {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease;
+}
+
+.welcome-btn-secondary:hover {
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .welcome-steps {
+    flex-direction: column;
+  }
+
+  .welcome-step {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 576px) {
+  .welcome-modal {
+    max-width: 100%;
+  }
+
+  .welcome-modal-header {
+    padding: 1.5rem 1.25rem 1rem;
+  }
+
+  .welcome-modal-body {
+    padding: 1rem 1.25rem;
+  }
+
+  .welcome-modal-footer {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+
+  .welcome-title {
+    font-size: 1.375rem;
+  }
+}

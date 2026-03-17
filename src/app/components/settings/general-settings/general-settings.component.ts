@@ -4,7 +4,6 @@ import { DataService } from '../../../services/data.service';
 import { AuthService } from '../../../services/auth.service';
 import { IUser } from '../../../models/user';
 import { ToastService } from '../../../services/toast.service';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   standalone: false,
@@ -14,13 +13,10 @@ import { environment } from '../../../../environments/environment';
 })
 export class GeneralSettingsComponent implements OnInit {
   profileForm: FormGroup;
-  selectedFile: File | null = null;
-  imagePreview: string | null = null;
   isLoading: boolean = false;
   saveSuccess: boolean = false;
   saveError: string | null = null;
   currentUser: IUser | null = null;
-  apihost = environment.API_HOST;
 
   constructor(
     private fb: FormBuilder,
@@ -54,13 +50,6 @@ export class GeneralSettingsComponent implements OnInit {
     this.loadProfile();
   }
 
-  getImageUrl(imagePath: string | undefined): string {
-    if (!imagePath) return '';
-    
-    // Backend returns 'app/filename.png', just prepend storage URL
-    return `${this.apihost}/storage/${imagePath}`;
-  }
-
   loadProfile(): void {
     this.isLoading = true;
     this.saveError = null;
@@ -84,9 +73,6 @@ export class GeneralSettingsComponent implements OnInit {
           name: user.name || '',
           phone_number: user.phone_number || ''
         });
-        if (user.profile_image_path) {
-          this.imagePreview = this.getImageUrl(user.profile_image_path);
-        }
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -106,88 +92,6 @@ export class GeneralSettingsComponent implements OnInit {
     });
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      
-      // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-      if (!allowedTypes.includes(file.type)) {
-        this.saveError = 'Invalid file type. Allowed: JPEG, PNG, GIF, WebP';
-        this.toastr.error('Invalid file type. Allowed: JPEG, PNG, GIF, WebP', 'Error');
-        return;
-      }
-      
-      // Validate file size (5MB max)
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        this.saveError = 'File size exceeds 5MB limit';
-        this.toastr.error('File size exceeds 5MB limit', 'Error');
-        return;
-      }
-      
-      this.selectedFile = file;
-      this.saveError = null;
-      
-      // Generate preview
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagePreview = e.target.result;
-        // Trigger change detection to update the view immediately
-        this.cdr.detectChanges();
-      };
-      reader.readAsDataURL(file);
-      
-      // Automatically upload the image
-      this.uploadImageImmediately();
-    }
-  }
-
-  async uploadImageImmediately(): Promise<void> {
-    if (!this.selectedFile) {
-      return;
-    }
-
-    this.isLoading = true;
-    this.cdr.detectChanges();
-
-    try {
-      await this.uploadImage();
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    } catch (error) {
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    }
-  }
-
-  async uploadImage(): Promise<void> {
-    if (!this.selectedFile) {
-      return;
-    }
-
-    return new Promise((resolve, reject) => {
-      this.dataService.uploadProfileImage(this.selectedFile!).subscribe({
-        next: (response) => {
-          this.imagePreview = this.getImageUrl(response.profile_image_path);
-          this.selectedFile = null;
-          this.toastr.success('Profile image uploaded successfully', 'Success');
-          this.cdr.detectChanges();
-          resolve();
-        },
-        error: (error) => {
-          console.error('Error uploading image:', error);
-          this.saveError = 'Failed to upload image';
-          const errorMessage = error.error?.detail || 'Failed to upload image';
-          this.toastr.error(errorMessage, 'Error');
-          this.cdr.detectChanges();
-          reject(error);
-        }
-      });
-    });
-  }
-
   async saveProfile(): Promise<void> {
     if (this.profileForm.invalid) {
       this.toastr.warning('Please fill in all required fields', 'Validation Error');
@@ -199,8 +103,6 @@ export class GeneralSettingsComponent implements OnInit {
     this.saveError = null;
 
     try {
-      // Note: Image is uploaded immediately when selected, so no need to upload here
-
       // Prepare profile data
       const profileData: any = {
         name: this.profileForm.value.name,

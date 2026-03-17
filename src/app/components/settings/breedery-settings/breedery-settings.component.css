@@ -430,6 +430,105 @@
   border-radius: 0.5rem;
 }
 
+/* Image Upload Section */
+.image-upload-section {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.image-preview-wrapper {
+  flex-shrink: 0;
+}
+
+.image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.image-preview.has-image {
+  border-color: var(--primary-color);
+}
+
+.image-preview.has-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(255, 107, 107, 0.2);
+}
+
+.image-preview.no-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #f9fafb;
+  border-style: dashed;
+}
+
+.image-preview.no-image i {
+  font-size: 2rem;
+  color: #9ca3af;
+}
+
+.image-preview.no-image span {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.upload-controls {
+  flex: 1;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+}
+
+.upload-label:hover {
+  background: #ff5252;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.upload-label i {
+  font-size: 1rem;
+}
+
+.upload-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.upload-hint i {
+  font-size: 0.875rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .settings-header h2 {
@@ -442,6 +541,21 @@
 
   .form-section {
     padding: 1.25rem;
+  }
+
+  .image-upload-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .upload-controls {
+    width: 100%;
+  }
+
+  .upload-label {
+    width: 100%;
+    justify-content: center;
   }
 
   .tag-input-group {
@@ -474,6 +588,11 @@
 
   .section-header h3 {
     font-size: 1rem;
+  }
+
+  .image-preview {
+    width: 100px;
+    height: 100px;
   }
 
   .form-group label {

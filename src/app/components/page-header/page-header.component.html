@@ -55,9 +55,11 @@
     <button 
       *ngIf="config.showActionButton"
       class="fab-button"
-      [style.background-color]="config.actionButtonColor || 'var(--success-color)'"
+      [class.fab-button-disabled]="config.actionButtonDisabled"
+      [style.background-color]="config.actionButtonDisabled ? '#d1d5db' : (config.actionButtonColor || 'var(--success-color)')"
       (click)="onActionClick()"
-      [title]="config.actionButtonTitle || 'Action'"
+      [disabled]="config.actionButtonDisabled"
+      [title]="config.actionButtonDisabled ? (config.actionButtonTooltip || 'Action unavailable') : (config.actionButtonTitle || 'Action')"
       type="button">
       <i [class]="config.actionButtonIcon || 'bi bi-plus-circle'"></i>
     </button>

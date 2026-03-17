@@ -21,46 +21,6 @@
       {{ saveError }}
     </div>
 
-    <!-- Profile Image Section - For All Users -->
-    <div class="form-section">
-      <div class="section-header">
-        <i class="bi bi-image"></i>
-        <h3>Profile Image</h3>
-      </div>
-      
-      <div class="image-upload-section">
-        <div class="image-preview-wrapper">
-          <div 
-            *ngIf="imagePreview" 
-            class="image-preview has-image"
-            [style.background-image]="'url(' + imagePreview + ')'"
-          ></div>
-          <div *ngIf="!imagePreview" class="image-preview no-image">
-            <i class="bi bi-image"></i>
-            <span>No image</span>
-          </div>
-        </div>
-        
-        <div class="upload-controls">
-          <label for="profile_image" class="upload-label">
-            <i class="bi bi-upload"></i>
-            Choose Image
-          </label>
-          <input
-            type="file"
-            id="profile_image"
-            (change)="onFileSelected($event)"
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            class="file-input"
-          />
-          <p class="upload-hint">
-            <i class="bi bi-info-circle"></i>
-            JPEG, PNG, GIF, WebP • Max 5MB
-          </p>
-        </div>
-      </div>
-    </div>
-
     <!-- Account Information Section -->
     <div class="form-section">
       <div class="section-header">

@@ -169,6 +169,16 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
+.fab-button-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.fab-button-disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .search-container {

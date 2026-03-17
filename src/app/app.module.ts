@@ -68,6 +68,7 @@ import { OffspringGridComponent } from './components/offspring-grid/offspring-gr
 import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
+import { BreederHelpWidgetComponent } from './components/breeder-help-widget/breeder-help-widget.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { AuthService } from './services/auth.service';
 import { provideAppInitializer } from '@angular/core';
@@ -169,6 +170,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     GalleriaModule,
     LeafletModule,
     NotificationDropdownComponent,
+    BreederHelpWidgetComponent,
     OffspringCardComponent,
     OffspringEditComponent,
     PageHeaderComponent,

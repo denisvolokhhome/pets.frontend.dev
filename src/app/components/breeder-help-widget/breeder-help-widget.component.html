@@ -1,0 +1,52 @@
+<div class="help-widget relative" *ngIf="isAuthenticated && isBreeder">
+  <!-- Help Button -->
+  <button
+    type="button"
+    class="help-bell relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+    (click)="toggleDropdown()"
+    aria-label="Breeder setup help">
+    <i class="bi bi-question-circle text-xl"></i>
+    <span *ngIf="showBadge" class="help-badge">
+      <span class="help-badge-dot"></span>
+    </span>
+  </button>
+
+  <!-- Dropdown Panel -->
+  <div *ngIf="isOpen && helpMessage" class="help-dropdown" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="help-dropdown-header">
+      <div class="help-header-icon" [style.background-color]="helpMessage.iconColor">
+        <i [class]="'bi ' + helpMessage.icon"></i>
+      </div>
+      <h3 class="help-header-title">{{ helpMessage.title }}</h3>
+      <button type="button" class="help-close-btn" (click)="closeDropdown()" aria-label="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="help-dropdown-body">
+      <p class="help-body-text">{{ helpMessage.body }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="help-dropdown-actions" *ngIf="helpMessage.actionLabel">
+      <button
+        class="help-action-primary"
+        (click)="navigate(helpMessage.actionRoute, helpMessage.actionFragment)">
+        {{ helpMessage.actionLabel }}
+        <i class="bi bi-arrow-right"></i>
+      </button>
+      <button
+        *ngIf="helpMessage.secondaryLabel"
+        class="help-action-secondary"
+        (click)="navigate(helpMessage.secondaryRoute, helpMessage.secondaryFragment)">
+        {{ helpMessage.secondaryLabel }}
+        <i class="bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Backdrop -->
+  <div *ngIf="isOpen" class="fixed inset-0 z-40" (click)="closeDropdown()"></div>
+</div>

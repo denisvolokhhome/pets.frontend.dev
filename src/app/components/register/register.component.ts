@@ -91,9 +91,10 @@ export class RegisterComponent {
       
       this.service.RegisterUser(formValue).subscribe({
         next: () => {
+          localStorage.setItem('breeder_just_registered', 'true');
           this.toastr.success(
-            'Please contact admin to enable it',
-            'User successfully registered'
+            'Please sign in to get started',
+            'Account created successfully'
           );
           this.router.navigate(['login']);
         },

@@ -51,6 +51,7 @@ export class PetsComponent implements OnInit {
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
   isLoading: boolean = true;
+  locationsLoaded: boolean = false;
   
   // Filter widget configuration
   filterConfig: FilterConfig = {
@@ -111,7 +112,20 @@ export class PetsComponent implements OnInit {
   loadLocations(): void {
     this.DataService.getLocations().subscribe((locations) => {
       this.locations = locations;
+      this.locationsLoaded = true;
+      this.updateAddPetButton();
     });
+  }
+
+  updateAddPetButton(): void {
+    const hasLocations = this.locationsLoaded && this.locations && this.locations.length > 0;
+    this.headerConfig = {
+      ...this.headerConfig,
+      actionButtonDisabled: this.locationsLoaded && !hasLocations,
+      actionButtonTooltip: hasLocations
+        ? 'Add Pet'
+        : 'You need to create at least one location in Settings before adding pets'
+    };
   }
 
   loadBreeds(): void {

@@ -136,3 +136,52 @@
 >
   <app-pet-add></app-pet-add>
 </div>
+
+<!-- Welcome Modal for New Breeders -->
+<div class="welcome-modal-backdrop" *ngIf="showWelcomeModal" (click)="closeWelcomeModal()">
+  <div class="welcome-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title">
+    <div class="welcome-modal-header">
+      <div class="welcome-icon-wrapper">
+        <i class="material-icons welcome-icon">celebration</i>
+      </div>
+      <h2 id="welcome-modal-title" class="welcome-title">Welcome to Breedly! 🎉</h2>
+      <p class="welcome-subtitle">We're so glad you're here. Let's get your breeder profile set up so you can start showcasing your amazing pets.</p>
+    </div>
+
+    <div class="welcome-modal-body">
+      <p class="welcome-intro">Before you can add pets and create breedings, there are just two quick things to take care of:</p>
+
+      <div class="welcome-steps">
+        <div class="welcome-step">
+          <div class="welcome-step-number">1</div>
+          <div class="welcome-step-content">
+            <h3 class="welcome-step-title">Complete Your Breeder Profile</h3>
+            <p class="welcome-step-desc">Head over to <strong>Settings</strong> and fill in your breeder details — your breedery name, description, and contact info. This helps pet seekers learn about you and builds trust.</p>
+          </div>
+        </div>
+
+        <div class="welcome-step">
+          <div class="welcome-step-number">2</div>
+          <div class="welcome-step-content">
+            <h3 class="welcome-step-title">Add at Least One Location</h3>
+            <p class="welcome-step-desc">In <strong>Settings → Locations</strong>, create your first breeding location. It doesn't need to be published right away — you just need one on file so we know where your pets are based.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <span>Once you've added a location, the <strong>Add Pet</strong> button on the Pets page will unlock and you'll be ready to go.</span>
+      </div>
+    </div>
+
+    <div class="welcome-modal-footer">
+      <button class="welcome-btn-primary" (click)="goToBreederProfile()">
+        <i class="bi bi-gear mr-2" aria-hidden="true"></i>Go to Settings
+      </button>
+      <button class="welcome-btn-secondary" (click)="closeWelcomeModal()">
+        I'll do this later
+      </button>
+    </div>
+  </div>
+</div>
