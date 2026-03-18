@@ -95,8 +95,10 @@ export class AuthCallbackComponent implements OnInit {
         // Store token
         localStorage.setItem('id_token', token);
         
-        // Redirect to dashboard
-        this.router.navigate(['/dashboard']);
+        // Update auth state and fetch user data, then redirect
+        this.authService.IsLoggedIn().subscribe(() => {
+          this.router.navigate(['/dashboard']);
+        });
       } else {
         // No token, redirect to login
         this.router.navigate(['/login']);
