@@ -293,6 +293,8 @@ textarea:focus,
   box-shadow: var(--box-shadow);
   transition: var(--transition);
   border-radius: var(--border-radius);
+  position: relative;
+  z-index: 1000;
 }
 
 .logo-text {

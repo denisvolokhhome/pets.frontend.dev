@@ -113,6 +113,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
     this.isInitialized = true;
 
+    // Force Leaflet to recalculate size after the layout has settled
+    // Fixes gray tiles when the container size isn't final at init time
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 200);
+
     // Update markers if they were set before initialization
     if (this.markers.length > 0) {
       this.updateMarkers();
