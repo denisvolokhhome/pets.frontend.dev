@@ -243,9 +243,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   isSentByCurrentUser(message: ThreadMessage): boolean {
-    const isSent = message.sender_id === this.currentUserId;
-    console.log(`Message from ${message.sender_id}, current user: ${this.currentUserId}, isSent: ${isSent}`);
-    return isSent;
+    return message.sender_id === this.currentUserId;
   }
 
   formatTimestamp(timestamp: string): string {
@@ -299,6 +297,13 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     // Otherwise, prepend the API URL from environment
     const apiUrl = environment.API_URL || 'http://localhost:8000';
     return `${apiUrl}${imagePath}`;
+  }
+  getOffspringImageUrl(imagePath: string): string {
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+    return `${environment.API_HOST}/${cleanPath}`;
   }
 
   onImageError(event: any): void {

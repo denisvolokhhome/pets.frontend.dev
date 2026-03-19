@@ -6,7 +6,7 @@
     <div class="flex items-center gap-3">
       <img 
         *ngIf="offspringContext.primary_image_url"
-        [src]="offspringContext.primary_image_url" 
+        [src]="getOffspringImageUrl(offspringContext.primary_image_url)" 
         [alt]="offspringContext.name"
         class="w-12 h-12 object-cover rounded-lg flex-shrink-0"
       />
@@ -152,7 +152,7 @@
       <div class="mb-4">
         <img 
           *ngIf="offspringContext.primary_image_url"
-          [src]="offspringContext.primary_image_url" 
+          [src]="getOffspringImageUrl(offspringContext.primary_image_url)" 
           [alt]="offspringContext.name"
           class="w-full h-48 object-cover rounded-lg"
         />
