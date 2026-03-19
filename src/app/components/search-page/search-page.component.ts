@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { ToastService } from '../../services/toast.service';
 import { MapComponent } from '../map/map.component';
+import { IPetType, PET_TYPES } from '../../models/pet-type';
 import { 
   Coordinates, 
   Breed, 
@@ -13,7 +14,7 @@ import {
 
 /**
  * Main container component for the Pet Search with Map feature
- * Orchestrates search functionality and coordinates child components
+ * Airbnb-style split layout: map on left, breeder list on right
  */
 @Component({
   standalone: false,
@@ -22,14 +23,14 @@ import {
   styleUrls: ['./search-page.component.css']
 })
 export class SearchPageComponent implements OnInit {
-  // Reference to map component for programmatic control
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   // Search state
   zipCode: string = '';
   selectedBreed: Breed | null = null;
-  radius: number = 40; // Default 40 miles
-  mapCenter: Coordinates = { latitude: 39.8283, longitude: -98.5795 }; // Center of US
+  selectedAnimalKind: string = '';
+  radius: number = 40;
+  mapCenter: Coordinates = { latitude: 39.8283, longitude: -98.5795 };
   searchResults: BreederSearchResult[] = [];
   breederMarkers: BreederMarker[] = [];
   highlightedBreederId: string | null = null;
@@ -39,6 +40,10 @@ export class SearchPageComponent implements OnInit {
   error: string | null = null;
   geolocationError: string | null = null;
   hasSearched: boolean = false;
+  isMapFullscreen: boolean = false;
+
+  // Pet types for filter
+  petTypes: IPetType[] = PET_TYPES;
 
   constructor(
     private searchService: SearchService,
@@ -208,7 +213,8 @@ export class SearchPageComponent implements OnInit {
       coordinates.latitude,
       coordinates.longitude,
       this.radius,
-      this.selectedBreed?.id
+      this.selectedBreed?.id,
+      this.selectedAnimalKind || undefined
     ).subscribe({
       next: (results) => {
         this.searchResults = results;
@@ -308,5 +314,29 @@ export class SearchPageComponent implements OnInit {
    */
   dismissGeolocationError(): void {
     this.geolocationError = null;
+  }
+
+  /**
+   * Toggle fullscreen map mode
+   */
+  toggleFullscreenMap(): void {
+    this.isMapFullscreen = !this.isMapFullscreen;
+    // Trigger map resize after layout change
+    setTimeout(() => {
+      if (this.mapComponent && (this.mapComponent as any).map) {
+        (this.mapComponent as any).map.invalidateSize();
+      }
+    }, 300);
+  }
+
+  /**
+   * Handle animal kind filter change
+   */
+  onAnimalKindChange(kind: string): void {
+    this.selectedAnimalKind = this.selectedAnimalKind === kind ? '' : kind;
+    // Re-search if we already have results
+    if (this.hasSearched && this.zipCode) {
+      this.onSearch();
+    }
   }
 }

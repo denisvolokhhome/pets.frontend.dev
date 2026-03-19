@@ -4,7 +4,7 @@
   (click)="onCardClick()"
   (mouseenter)="onCardHover()">
   
-  <!-- Thumbnail Image -->
+  <!-- Thumbnail -->
   <div class="breeder-card__image">
     <img *ngIf="breeder.thumbnail_url"
       [src]="getImageUrl(breeder.thumbnail_url)" 
@@ -12,52 +12,37 @@
       class="breeder-card__thumbnail"
       loading="lazy"
       decoding="async">
-      <div *ngIf="!breeder.thumbnail_url" class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
-        <i class="bi bi-card-image text-6xl"></i>
-      </div>
-  </div>
-
-  <!-- Breeder Information -->
-  <div class="breeder-card__info">
-    <!-- Breeder Name -->
-    <h3 class="breeder-card__name">{{ breeder.breeder_name }}</h3>
-    
-    <!-- Distance -->
-    <p class="breeder-card__distance">
-      <i class="pi pi-map-marker"></i>
-      {{ formatDistance(breeder.distance) }} away
-    </p>
-    
-    <!-- Available Breeds -->
-    <p class="breeder-card__breeds">
-      <i class="pi pi-heart"></i>
-      {{ getBreedNames() }}
-    </p>
-    
-    <!-- Rating (if available) -->
-    <div class="breeder-card__rating" *ngIf="breeder.rating">
-      <i class="pi pi-star-fill"></i>
-      <span>{{ breeder.rating.toFixed(1) }}</span>
+    <div *ngIf="!breeder.thumbnail_url" class="breeder-card__placeholder">
+      <i class="bi bi-person-circle"></i>
     </div>
   </div>
 
-  <!-- Action Buttons Footer -->
-  <div class="breeder-card__footer">
-    <button 
-      class="breeder-card__button breeder-card__button--primary"
-      (click)="onViewProfile($event)">
-      View Profile
-    </button>
-    <button 
-      class="breeder-card__button breeder-card__button--secondary"
-      (click)="onViewOffsprings($event)">
-      View Offsprings
-    </button>
-    <button 
-      class="breeder-card__button breeder-card__button--secondary"
-      (click)="onContactBreeder($event)">
-      Contact
-    </button>
+  <!-- Content -->
+  <div class="breeder-card__content">
+    <div class="breeder-card__top">
+      <h3 class="breeder-card__name">{{ breeder.breeder_name }}</h3>
+      <span class="breeder-card__distance-badge">~{{ breeder.distance.toFixed(1) }} mi</span>
+    </div>
+
+    <p class="breeder-card__breeds">{{ getBreedNames() }}</p>
+
+    <div class="breeder-card__meta">
+      <span class="breeder-card__approx">
+        <i class="bi bi-geo-alt"></i> Approximate location
+      </span>
+      <div class="breeder-card__rating" *ngIf="breeder.rating">
+        <i class="bi bi-star-fill"></i> {{ breeder.rating.toFixed(1) }}
+      </div>
+    </div>
+
+    <!-- Inline action links -->
+    <div class="breeder-card__actions">
+      <button class="breeder-card__link breeder-card__link--primary" (click)="onViewProfile($event)">Profile</button>
+      <span class="breeder-card__divider">·</span>
+      <button class="breeder-card__link" (click)="onViewOffsprings($event)">Offsprings</button>
+      <span class="breeder-card__divider">·</span>
+      <button class="breeder-card__link" (click)="onContactBreeder($event)">Contact</button>
+    </div>
   </div>
 </div>
 

@@ -70,3 +70,29 @@ app-profile-menu {
 .get-started-dropdown:hover button svg {
   transform: rotate(180deg);
 }
+
+
+/* Map Navigation Button */
+.map-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  opacity: 0.9;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-size: 1.125rem;
+}
+
+.map-nav-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.map-nav-btn:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}

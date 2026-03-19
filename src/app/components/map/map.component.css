@@ -9,6 +9,32 @@
   user-select: none;
 }
 
+/* Animal kind marker label */
+:host ::ng-deep .animal-kind-marker {
+  background: transparent;
+  border: none;
+}
+
+:host ::ng-deep .marker-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 20px;
+  padding: 4px 8px;
+  font-size: 18px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  border: 2px solid white;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+:host ::ng-deep .marker-label:hover {
+  transform: scale(1.15);
+}
+
 /* Marker bounce animation */
 :host ::ng-deep .marker-bounce {
   animation: bounce 0.6s ease-in-out;
@@ -45,6 +71,12 @@
   margin: 4px 0;
   font-size: 14px;
   color: #666;
+}
+
+:host ::ng-deep .breeder-popup .approx-notice {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
 }
 
 /* Fix Leaflet marker icon paths */

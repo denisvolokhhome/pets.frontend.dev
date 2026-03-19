@@ -35,6 +35,7 @@ export interface Breed {
 export interface BreedInfo {
   breed_id: number;
   breed_name: string;
+  breed_kind: string;
   pet_count: number;
 }
 

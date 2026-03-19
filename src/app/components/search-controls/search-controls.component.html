@@ -1,15 +1,15 @@
 <div class="search-controls">
   <div class="search-controls-container">
     <!-- ZIP Code Input -->
-    <div class="form-group">
-      <label for="zipCode">ZIP Code</label>
+    <div class="form-group zip-group">
+      <label for="zipCode" class="sr-only">ZIP Code</label>
       <input
         type="text"
         id="zipCode"
         class="form-control"
         [value]="zipCode"
         (input)="onZipCodeInput($any($event.target).value)"
-        placeholder="Enter ZIP code"
+        placeholder="ZIP code"
         maxlength="5"
         [class.error]="zipError"
       />
@@ -18,7 +18,7 @@
 
     <!-- Breed Autocomplete Input -->
     <div class="form-group breed-autocomplete">
-      <label for="breedSearch">Breed (Optional)</label>
+      <label for="breedSearch" class="sr-only">Breed</label>
       <input
         type="text"
         id="breedSearch"
@@ -26,84 +26,49 @@
         [value]="breedSearchTerm"
         (input)="onBreedSearchInput($any($event.target).value)"
         (focus)="onBreedSearchInput(breedSearchTerm)"
-        placeholder="Search for a breed"
+        placeholder="Breed (optional)"
         autocomplete="off"
         [class.error]="breedSearchError"
       />
-      
-      <!-- Breed Dropdown -->
       <div class="breed-dropdown" *ngIf="showBreedDropdown">
-        <!-- Error message -->
         <div class="breed-option error-option" *ngIf="breedSearchError">
           <span class="error-icon">⚠️</span>
           {{ breedSearchError }}
         </div>
-        
-        <!-- Breed suggestions -->
         <div
           class="breed-option"
           *ngFor="let breed of breedSuggestions$ | async"
-          (click)="selectBreed(breed)"
-        >
+          (click)="selectBreed(breed)">
           {{ breed.name }}
         </div>
-        
-        <!-- No results message -->
         <div class="breed-option no-results" *ngIf="!breedSearchError && (breedSuggestions$ | async)?.length === 0 && breedSearchTerm.length >= 2">
-          <span class="no-results-icon">🔍</span>
-          No breeds found matching "{{ breedSearchTerm }}"
+          🔍 No breeds found
         </div>
       </div>
     </div>
 
-    <!-- Search Radius -->
-    <div class="form-group">
-      <label>Search Radius</label>
-      
-      <!-- Quick Select Buttons -->
+    <!-- Radius Quick Select -->
+    <div class="form-group radius-group">
       <div class="radius-quick-select">
         <button
           *ngFor="let miles of quickSelectRadii"
           type="button"
           class="radius-btn"
           [class.active]="isQuickRadiusSelected(miles)"
-          (click)="selectQuickRadius(miles)"
-        >
+          (click)="selectQuickRadius(miles)">
           {{ miles }} mi
         </button>
-      </div>
-
-      <!-- Custom Radius Input -->
-      <div class="custom-radius">
-        <label for="customRadius">Custom Radius (miles)</label>
-        <input
-          type="number"
-          id="customRadius"
-          class="form-control"
-          [value]="customRadiusInput"
-          (input)="onCustomRadiusInput($any($event.target).value)"
-          placeholder="Enter custom radius"
-          min="1"
-          max="100"
-          [class.error]="radiusError"
-        />
-        <div class="error-message" *ngIf="radiusError">{{ radiusError }}</div>
-      </div>
-
-      <!-- Current Radius Display -->
-      <div class="current-radius">
-        Current radius: <strong>{{ radius }} miles</strong>
       </div>
     </div>
 
     <!-- Search Button -->
-    <div class="form-group">
+    <div class="form-group search-btn-group">
       <button
         type="button"
         class="btn btn-primary search-btn"
         (click)="onSearch()"
-        [disabled]="!!zipError || !!radiusError"
-      >
+        [disabled]="!!zipError || !!radiusError">
+        <i class="bi bi-search"></i>
         Search
       </button>
     </div>

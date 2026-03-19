@@ -20,6 +20,7 @@ export interface Address {
 export interface BreedInfo {
   breed_id: number;
   breed_name: string;
+  breed_kind: string;
   pet_count: number;
 }
 
@@ -64,7 +65,8 @@ export class SearchService {
     latitude: number,
     longitude: number,
     radius: number,
-    breedId?: number
+    breedId?: number,
+    animalKind?: string
   ): Observable<BreederSearchResult[]> {
     let params = new HttpParams()
       .set('latitude', latitude.toString())
@@ -73,6 +75,10 @@ export class SearchService {
 
     if (breedId !== undefined && breedId !== null) {
       params = params.set('breed_id', breedId.toString());
+    }
+
+    if (animalKind) {
+      params = params.set('animal_kind', animalKind);
     }
 
     return this.http.get<BreederSearchResult[]>(

@@ -22,6 +22,9 @@ export class SearchControlsComponent implements OnInit {
 
   @Output() search = new EventEmitter<void>();
 
+  @Input() selectedAnimalKind: string = '';
+  @Output() animalKindChange = new EventEmitter<string>();
+
   breedSearch$ = new Subject<string>();
   breedSuggestions$: Observable<Breed[]> = of([]);
   showBreedDropdown = false;

@@ -1,20 +1,19 @@
-<div class="search-page">
-  <!-- Page Header -->
-  <div class="search-header">
-    <div class="search-header-content">
-      <h1 class="search-title">Find Your Perfect Pet</h1>
-      <p class="search-subtitle">Search for responsible breeders near you</p>
+<div class="search-page" [class.fullscreen-map]="isMapFullscreen">
+  <!-- Compact Search Header Bar -->
+  <div class="search-header-bar">
+    <div class="search-header-left">
+      <h1 class="search-logo">🐾 Find Breeders</h1>
     </div>
-  </div>
-
-  <!-- Search Filters Bar (Top) -->
-  <div class="search-filters-bar">
-    <app-search-controls
-      [(zipCode)]="zipCode"
-      [(selectedBreed)]="selectedBreed"
-      [(radius)]="radius"
-      (search)="onSearch()">
-    </app-search-controls>
+    <div class="search-header-controls">
+      <app-search-controls
+        [(zipCode)]="zipCode"
+        [(selectedBreed)]="selectedBreed"
+        [(radius)]="radius"
+        [selectedAnimalKind]="selectedAnimalKind"
+        (animalKindChange)="onAnimalKindChange($event)"
+        (search)="onSearch()">
+      </app-search-controls>
+    </div>
   </div>
 
   <!-- Geolocation Error Banner -->
@@ -22,7 +21,7 @@
     <div class="error-content">
       <span class="error-icon">ℹ️</span>
       <span class="error-message">{{ geolocationError }}</span>
-      <button class="dismiss-button" (click)="dismissGeolocationError()">✕</button>
+      <button class="dismiss-button" (click)="dismissGeolocationError()" aria-label="Dismiss">✕</button>
     </div>
   </div>
 
@@ -35,10 +34,10 @@
     </div>
   </div>
 
-  <!-- Main Content: Map Background with Floating Results -->
+  <!-- Main Split Layout: Map Left, List Right -->
   <div class="search-content">
-    <!-- Full Background Map -->
-    <div class="map-background">
+    <!-- Map Panel (Left) -->
+    <div class="map-panel" [class.map-fullscreen]="isMapFullscreen">
       <app-map
         [center]="mapCenter"
         [markers]="breederMarkers"
@@ -47,7 +46,15 @@
         (markerHover)="onMarkerHover($event)">
       </app-map>
 
-      <!-- Loading Overlay for Map -->
+      <!-- Fullscreen Toggle Button -->
+      <button
+        class="fullscreen-toggle"
+        (click)="toggleFullscreenMap()"
+        [attr.aria-label]="isMapFullscreen ? 'Exit fullscreen map' : 'Fullscreen map'">
+        <i class="bi" [class.bi-arrows-fullscreen]="!isMapFullscreen" [class.bi-fullscreen-exit]="isMapFullscreen"></i>
+      </button>
+
+      <!-- Loading Overlay -->
       <div class="map-loading-overlay" *ngIf="isLoading">
         <div class="spinner"></div>
         <p>Searching for breeders...</p>
@@ -58,25 +65,33 @@
         <div class="no-results-content">
           <span class="no-results-icon">🔍</span>
           <h3>No breeders found</h3>
-          <p>Try adjusting your search criteria:</p>
-          <ul>
-            <li>Increase the search radius</li>
-            <li>Remove breed filter to see all breeders</li>
-            <li>Try a different location</li>
-          </ul>
+          <p>Try increasing the radius, removing filters, or searching a different area.</p>
         </div>
       </div>
     </div>
 
-    <!-- Floating Results Panel (Right Side) -->
-    <div class="floating-results-panel" *ngIf="searchResults.length > 0">
+    <!-- Results Panel (Right) -->
+    <div class="results-panel" *ngIf="!isMapFullscreen">
       <div class="results-header">
         <h3 class="results-title">
           <i class="bi bi-geo-alt-fill"></i>
           Breeders Near You
         </h3>
-        <span class="results-badge">{{ searchResults.length }}</span>
+        <span class="results-badge" *ngIf="searchResults.length > 0">{{ searchResults.length }}</span>
       </div>
+
+      <!-- Animal Kind Filter Pills -->
+      <div class="animal-kind-pills">
+        <button
+          *ngFor="let pt of petTypes"
+          class="kind-pill"
+          [class.active]="selectedAnimalKind === pt.value"
+          (click)="onAnimalKindChange(pt.value)">
+          <span class="kind-icon">{{ pt.icon }}</span>
+          <span class="kind-label">{{ pt.label }}</span>
+        </button>
+      </div>
+
       <div class="results-list">
         <app-breeder-card-list
           [breeders]="searchResults"

@@ -63,6 +63,9 @@
           
           <!-- Auth links (logged in) -->
           <div class="flex items-center gap-3" *ngIf="checkToken">
+            <a href="/search-pets" class="map-nav-btn" title="Search Breeders Map" aria-label="Open breeder search map">
+              <i class="bi bi-map"></i>
+            </a>
             <app-breeder-help-widget></app-breeder-help-widget>
             <app-notification-dropdown></app-notification-dropdown>
             <ul class="flex">
@@ -105,6 +108,11 @@
           <!-- Auth links (logged in) - Mobile -->
           <div *ngIf="checkToken">
             <ul class="space-y-2">
+              <li>
+                <a href="/search-pets" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                  <i class="bi bi-map mr-2"></i>Search Map
+                </a>
+              </li>
               <li>
                 <a href="/dashboard" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Dashboard</a>
               </li>
