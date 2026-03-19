@@ -29,7 +29,8 @@ export class PetsComponent implements OnInit {
     showActionButton: true,
     actionButtonIcon: 'bi bi-plus-circle',
     actionButtonColor: 'var(--success-color)',
-    actionButtonTitle: 'Add Pet'
+    actionButtonTitle: 'Add Pet',
+    actionButtonDisabled: true
   };
 
   constructor(
@@ -126,6 +127,7 @@ export class PetsComponent implements OnInit {
         ? 'Add Pet'
         : 'You need to create at least one location in Settings before adding pets'
     };
+    this.cdr.detectChanges();
   }
 
   loadBreeds(): void {
