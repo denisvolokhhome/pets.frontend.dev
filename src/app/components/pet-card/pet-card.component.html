@@ -24,14 +24,16 @@
     >
       <i class="bi bi-file-earmark-text text-xl text-white"></i>
     </button>
-    <button
-      class="delete w-10 h-10 rounded-full border-0 bg-gradient-to-br from-red-400 to-red-500 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"
-      (click)="deletePet($event)"
-      [attr.data-pet-id]="pet.pet_id"
-    >
-      <i class="bi bi-trash3 text-xl text-white"></i>
-    </button>
   </div>
+  <!-- Remove button - top right, slides in from right -->
+  <button
+    class="remove-btn absolute top-3 right-3 z-10 w-9 h-9 rounded-full border-0 bg-white/80 backdrop-blur-sm cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-md opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hover:bg-red-50 hover:scale-110 active:scale-95"
+    (click)="deletePet($event)"
+    [attr.data-pet-id]="pet.pet_id"
+    title="Remove Pet"
+  >
+    <i class="bi bi-x-circle text-lg text-gray-400 transition-colors duration-200 hover:text-red-400"></i>
+  </button>
   <div
     *ngIf="pet.image_path || pet.image_url"
     class="w-full h-[200px] bg-cover bg-center bg-no-repeat relative"
