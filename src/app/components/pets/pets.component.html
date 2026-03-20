@@ -32,6 +32,7 @@
           (deletingPet)="deletePet($event)"
           (editingPet)="editPet($event)"
           (quickBreeding)="openQuickBreeding($event)"
+          (openDocuments)="openPetDocuments($event)"
           *ngFor="let pet of filteredPets | searchPets : term; let i = index"
           [pet]="pet"
         ></div>
@@ -182,4 +183,17 @@
   aria-labelledby="QuickBreedingModal"
 >
   <app-quick-breeding-add [selectedPet]="selectedPetForBreeding"></app-quick-breeding-add>
+</div>
+<div
+  app-modal
+  title="Documents"
+  modalSize="medium"
+  modalId="petDocumentsModal"
+  aria-labelledby="PetDocumentsModal"
+>
+  <app-pet-documents
+    *ngIf="selectedPetForDocuments"
+    [petId]="selectedPetForDocuments.id"
+    [petName]="selectedPetForDocuments.name">
+  </app-pet-documents>
 </div>

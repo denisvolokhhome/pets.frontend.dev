@@ -466,5 +466,34 @@ export class DataService {
       message: errorMessage
     }));
   }
+  // Pet document methods
+  getPetDocuments(petId: string): Observable<any[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<any[]>(this.apiurl + '/pets/' + petId + '/documents', { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  uploadPetDocument(petId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post<any>(this.apiurl + '/pets/' + petId + '/documents', formData, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  deletePetDocument(petId: string, documentId: number): Observable<void> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.delete<void>(this.apiurl + '/pets/' + petId + '/documents/' + documentId, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
 
 }

@@ -51,6 +51,7 @@ export class PetsComponent implements OnInit {
   term: string = '';
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
+  selectedPetForDocuments: IPet | null = null;
   isLoading: boolean = true;
   locationsLoaded: boolean = false;
   
@@ -239,6 +240,10 @@ export class PetsComponent implements OnInit {
     this.selectedPetForBreeding = emittedPet;
     this.ModalService.open('quickBreedingModal');
     console.log('Opening quick breeding for pet:', emittedPet.name);
+  }
+  openPetDocuments(emittedPet: IPet): void {
+    this.selectedPetForDocuments = emittedPet;
+    this.ModalService.open('petDocumentsModal');
   }
 
   onPetUpdated(): void {
