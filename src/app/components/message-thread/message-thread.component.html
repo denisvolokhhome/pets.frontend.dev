@@ -137,9 +137,30 @@
     <div class="flex-shrink-0 p-4 bg-white border-t border-gray-200">
       <!-- Share Location Button (breeder only, when thread exists) -->
       <div *ngIf="isBreeder && threadId" class="mb-2">
+        <!-- Confirmation prompt -->
+        <div *ngIf="showShareLocationConfirm" 
+             class="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm">
+          <i class="pi pi-info-circle text-amber-600"></i>
+          <span class="text-gray-700 flex-1">Share your address with this person?</span>
+          <button
+            type="button"
+            (click)="shareLocation()"
+            class="px-3 py-1 text-xs font-medium rounded-full bg-[var(--primary-color)] text-white hover:opacity-90 transition-opacity">
+            Confirm
+          </button>
+          <button
+            type="button"
+            (click)="cancelShareLocation()"
+            class="px-3 py-1 text-xs font-medium rounded-full border border-gray-300 text-gray-600 bg-white hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Share button -->
         <button
+          *ngIf="!showShareLocationConfirm"
           type="button"
-          (click)="shareLocation()"
+          (click)="confirmShareLocation()"
           [disabled]="isSharingLocation"
           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
           <i class="pi text-sm" [ngClass]="isSharingLocation ? 'pi-spin pi-spinner' : 'pi-map-marker'"></i>

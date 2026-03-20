@@ -74,6 +74,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   isLoading = false;
   isSharingLocation = false;
+  showShareLocationConfirm = false;
   currentUserId?: string;
   isBreeder = false;
   
@@ -317,9 +318,18 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     return `${environment.API_HOST}/${cleanPath}`;
   }
 
+  confirmShareLocation(): void {
+    this.showShareLocationConfirm = true;
+  }
+
+  cancelShareLocation(): void {
+    this.showShareLocationConfirm = false;
+  }
+
   shareLocation(): void {
     if (!this.threadId || this.isSharingLocation) return;
     
+    this.showShareLocationConfirm = false;
     this.isSharingLocation = true;
     this.messageService.shareLocation(this.threadId)
       .pipe(takeUntil(this.destroy$))
@@ -376,9 +386,6 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   getGoogleMapsUrl(loc: LocationData): string {
-    if (loc.latitude && loc.longitude) {
-      return `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
-    }
     const address = this.getLocationAddress(loc);
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
