@@ -70,15 +70,43 @@
                  [class.items-end]="isSentByCurrentUser(message)"
                  [class.items-start]="!isSentByCurrentUser(message)">
               
-              <div 
-                class="px-3 py-2 rounded-2xl shadow-sm"
-                [ngClass]="{
-                  'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
-                }"
-                [style.background-color]="isSentByCurrentUser(message) ? 'var(--primary-color)' : ''"
-                [style.color]="isSentByCurrentUser(message) ? 'white' : ''">
-                <p class="whitespace-pre-wrap break-words text-sm">{{ message.message }}</p>
-              </div>
+              <!-- Location Card -->
+              <ng-container *ngIf="isLocationMessage(message); else regularMessage">
+                <ng-container *ngIf="parseLocationData(message) as loc">
+                  <a [href]="getGoogleMapsUrl(loc)" target="_blank" rel="noopener noreferrer"
+                     class="block w-64 rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow no-underline">
+                    <!-- Map preview header -->
+                    <div class="bg-blue-50 px-3 py-2 flex items-center gap-2 border-b border-gray-200">
+                      <i class="pi pi-map-marker text-red-500 text-lg"></i>
+                      <span class="text-sm font-semibold text-gray-900">{{ loc.name }}</span>
+                    </div>
+                    <!-- Address body -->
+                    <div class="bg-white px-3 py-2.5">
+                      <p class="text-sm text-gray-700 leading-snug">{{ loc.address1 }}</p>
+                      <p *ngIf="loc.address2" class="text-sm text-gray-700 leading-snug">{{ loc.address2 }}</p>
+                      <p class="text-sm text-gray-500 mt-0.5">{{ loc.city }}, {{ loc.state }} {{ loc.zipcode }}</p>
+                    </div>
+                    <!-- Open in maps footer -->
+                    <div class="bg-gray-50 px-3 py-2 border-t border-gray-100 flex items-center gap-1.5">
+                      <i class="pi pi-external-link text-xs text-blue-600"></i>
+                      <span class="text-xs text-blue-600 font-medium">Open in Google Maps</span>
+                    </div>
+                  </a>
+                </ng-container>
+              </ng-container>
+
+              <!-- Regular Message -->
+              <ng-template #regularMessage>
+                <div 
+                  class="px-3 py-2 rounded-2xl shadow-sm"
+                  [ngClass]="{
+                    'bg-gray-100 text-gray-900': !isSentByCurrentUser(message)
+                  }"
+                  [style.background-color]="isSentByCurrentUser(message) ? 'var(--primary-color)' : ''"
+                  [style.color]="isSentByCurrentUser(message) ? 'white' : ''">
+                  <p class="whitespace-pre-wrap break-words text-sm">{{ message.message }}</p>
+                </div>
+              </ng-template>
               
               <div class="flex items-center gap-1 mt-1 px-1">
                 <span class="text-xs text-gray-500">{{ formatTimestamp(message.created_at) }}</span>
@@ -107,6 +135,18 @@
 
     <!-- Reply Input (Fixed at bottom) -->
     <div class="flex-shrink-0 p-4 bg-white border-t border-gray-200">
+      <!-- Share Location Button (breeder only, when thread exists) -->
+      <div *ngIf="isBreeder && threadId" class="mb-2">
+        <button
+          type="button"
+          (click)="shareLocation()"
+          [disabled]="isSharingLocation"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="pi text-sm" [ngClass]="isSharingLocation ? 'pi-spin pi-spinner' : 'pi-map-marker'"></i>
+          <span>Share Location</span>
+        </button>
+      </div>
+
       <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
         <div class="flex items-center border border-gray-300 rounded-full bg-white hover:border-gray-400 focus-within:border-gray-500 transition-colors overflow-hidden">
           <input

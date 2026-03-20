@@ -235,6 +235,15 @@ export class MessageService {
       )
       .pipe(catchError(this.handleError));
   }
+  /**
+   * Share breeder location in a thread
+   */
+  shareLocation(threadId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<any>(`${this.apiUrl}/messages/threads/${threadId}/share-location`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
 
   /**
    * Get authorization headers with JWT token

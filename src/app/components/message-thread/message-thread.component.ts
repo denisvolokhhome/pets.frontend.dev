@@ -24,6 +24,19 @@ export interface ThreadMessage {
   created_at: string;
 }
 
+export interface LocationData {
+  __type: 'location';
+  name: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+  latitude?: number;
+  longitude?: number;
+}
+
 export interface OffspringContext {
   id: string;
   name: string;
@@ -60,7 +73,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   replyForm: FormGroup;
   isSubmitting = false;
   isLoading = false;
+  isSharingLocation = false;
   currentUserId?: string;
+  isBreeder = false;
   
   private destroy$ = new Subject<void>();
 
@@ -97,22 +112,18 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   }
 
   private loadCurrentUser(): void {
-    // Try to get from AuthService first
     const user = this.authService.currentUser;
     if (user) {
       this.currentUserId = user.id;
-      console.log('Current user ID loaded from AuthService:', this.currentUserId);
+      this.isBreeder = user.is_breeder;
       return;
     }
     
-    // Fallback to localStorage
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const userData = JSON.parse(userStr);
       this.currentUserId = userData.id;
-      console.log('Current user ID loaded from localStorage:', this.currentUserId);
-    } else {
-      console.warn('Could not load current user ID');
+      this.isBreeder = userData.is_breeder || false;
     }
   }
 
@@ -304,6 +315,72 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     }
     const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
     return `${environment.API_HOST}/${cleanPath}`;
+  }
+
+  shareLocation(): void {
+    if (!this.threadId || this.isSharingLocation) return;
+    
+    this.isSharingLocation = true;
+    this.messageService.shareLocation(this.threadId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response: any) => {
+          this.toastService.success('Location shared', 'Success');
+          this.isSharingLocation = false;
+          
+          const newMessage: ThreadMessage = {
+            id: response.id,
+            sender_id: this.currentUserId!,
+            sender_name: this.authService.currentUser?.name || 'You',
+            sender_is_breeder: true,
+            message: response.content,
+            is_read: false,
+            created_at: new Date().toISOString()
+          };
+          
+          this.messages.push(newMessage);
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+        },
+        error: (error) => {
+          this.toastService.error(error.message || 'Failed to share location', 'Error');
+          this.isSharingLocation = false;
+        }
+      });
+  }
+
+  isLocationMessage(message: ThreadMessage): boolean {
+    try {
+      const data = JSON.parse(message.message);
+      return data.__type === 'location';
+    } catch {
+      return false;
+    }
+  }
+
+  parseLocationData(message: ThreadMessage): LocationData | null {
+    try {
+      const data = JSON.parse(message.message);
+      if (data.__type === 'location') return data;
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  getLocationAddress(loc: LocationData): string {
+    const parts = [loc.address1];
+    if (loc.address2) parts.push(loc.address2);
+    parts.push(`${loc.city}, ${loc.state} ${loc.zipcode}`);
+    return parts.join(', ');
+  }
+
+  getGoogleMapsUrl(loc: LocationData): string {
+    if (loc.latitude && loc.longitude) {
+      return `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
+    }
+    const address = this.getLocationAddress(loc);
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
 
   onImageError(event: any): void {
