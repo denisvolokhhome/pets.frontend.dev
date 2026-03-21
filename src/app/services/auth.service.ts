@@ -179,4 +179,18 @@ export class AuthService {
       })
     );
   }
+
+  /**
+   * Request password reset email
+   */
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(this.apiurl + '/auth/forgot-password', { email });
+  }
+
+  /**
+   * Reset password using token from email
+   */
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post(this.apiurl + '/auth/reset-password', { token, password });
+  }
 }

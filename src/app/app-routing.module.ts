@@ -28,11 +28,13 @@ import { OffspringGridComponent } from './components/offspring-grid/offspring-gr
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 
 import { MessageNewComponent } from './components/message-new/message-new.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,

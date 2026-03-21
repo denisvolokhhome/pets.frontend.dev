@@ -502,6 +502,36 @@
               0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
+.form-group select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-group select:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1),
+              0 4px 12px rgba(255, 107, 107, 0.15);
+}
+
+.form-group select.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
 .error-message {
   color: #dc2626;
   font-size: 0.85rem;

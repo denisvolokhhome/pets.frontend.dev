@@ -17,6 +17,7 @@ export class GeneralSettingsComponent implements OnInit {
   saveSuccess: boolean = false;
   saveError: string | null = null;
   currentUser: IUser | null = null;
+  resetEmailSent: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -143,5 +144,21 @@ export class GeneralSettingsComponent implements OnInit {
       this.isLoading = false;
       this.cdr.detectChanges();
     }
+  }
+
+  sendPasswordReset(): void {
+    if (this.resetEmailSent || !this.currentUser?.email) return;
+    this.authService.forgotPassword(this.currentUser.email).subscribe({
+      next: () => {
+        this.resetEmailSent = true;
+        this.toastr.success('Password reset email sent. Check your inbox.', 'Email Sent');
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.resetEmailSent = true;
+        this.toastr.success('If the account exists, a reset email has been sent.', 'Email Sent');
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

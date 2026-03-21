@@ -13,15 +13,20 @@ export class AppComponent {
   location: any;
   logoURL: any;
   route: any;
+  cookiesAccepted: boolean = !!localStorage.getItem('cookies_accepted');
 
   constructor(private router: Router, private loc: Location) {}
 
   ngOnInit(): void {
     this.router.events.subscribe((res) => {
-      // Get the path without query parameters
       const fullPath = this.loc.path();
-      this.route = fullPath.split('?')[0]; // Remove query parameters
+      this.route = fullPath.split('?')[0];
     });
+  }
+
+  acceptCookies(): void {
+    localStorage.setItem('cookies_accepted', '1');
+    this.cookiesAccepted = true;
   }
 
   /**

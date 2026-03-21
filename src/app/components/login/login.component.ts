@@ -26,6 +26,11 @@ export class LoginComponent {
   error: any;
   loginError: string | null = null;
   showUserTypeModal: boolean = false;
+  showForgotPassword: boolean = false;
+  forgotPasswordEmail: string = '';
+  forgotPasswordLoading: boolean = false;
+  forgotPasswordSent: boolean = false;
+  forgotPasswordError: string | null = null;
 
   loginForm = this.builder.group({
     email: this.builder.control('', [Validators.required, Validators.email]),
@@ -169,5 +174,24 @@ export class LoginComponent {
 
   signInWithGoogle() {
     this.service.signInWithGoogle();
+  }
+
+  submitForgotPassword() {
+    if (!this.forgotPasswordEmail) return;
+    this.forgotPasswordLoading = true;
+    this.forgotPasswordError = null;
+    this.service.forgotPassword(this.forgotPasswordEmail).subscribe({
+      next: () => {
+        this.forgotPasswordSent = true;
+        this.forgotPasswordLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        // Always show success to prevent email enumeration
+        this.forgotPasswordSent = true;
+        this.forgotPasswordLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

@@ -439,3 +439,25 @@
     font-size: 1.125rem;
   }
 }
+
+/* Forgot Password Link */
+.forgot-password-link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-align: right;
+}
+
+.forgot-password-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/* Forgot Password Modal */
+.forgot-modal {
+  max-width: 440px;
+}

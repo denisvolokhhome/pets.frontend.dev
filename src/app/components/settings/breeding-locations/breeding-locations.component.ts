@@ -22,6 +22,17 @@ export class BreedingLocationsComponent implements OnInit {
   locationToDelete: ILocation | null = null;
   deleteErrorPets: string[] = [];
 
+  usStates = [
+    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+    'Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+    'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan',
+    'Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire',
+    'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio',
+    'Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+    'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia',
+    'Wisconsin','Wyoming','District of Columbia'
+  ];
+
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
@@ -34,7 +45,7 @@ export class BreedingLocationsComponent implements OnInit {
       address2: [''],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      country: ['', Validators.required],
+      country: ['United States', Validators.required],
       zipcode: ['', Validators.required],
       location_type: ['user', Validators.required]
     });
@@ -92,7 +103,7 @@ export class BreedingLocationsComponent implements OnInit {
 
   showAddForm(): void {
     this.editingLocation = null;
-    this.locationForm.reset({ location_type: 'user' });
+    this.locationForm.reset({ location_type: 'user', country: 'United States' });
     this.showForm = true;
     this.saveError = null;
     this.saveSuccess = false;
