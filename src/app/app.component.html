@@ -3,7 +3,7 @@
 <main id="main-content" class="main-wrapper flex flex-row h-100">
   <app-left-menu
     *ngIf="
-      !(this.route == '/login' || this.route == '/register' || this.route == '/register/pet-seeker' || this.route == '/register/from-message' || this.route == '' || this.route == '/search-pets')
+      !(this.route == '/login' || this.route == '/register' || this.route == '/register/pet-seeker' || this.route == '/register/from-message' || this.route == '/reset-password' || this.route == '' || this.route == '/search-pets')
     "
   ></app-left-menu>
   <div class="content-wrapper w-100 mx-3 mt-3" [ngClass]="{'public-page': isPublicPage()}">
