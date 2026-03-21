@@ -82,48 +82,106 @@
           [rowsPerPageOptions]="[10, 25, 50, 100]"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} pets"
-          [globalFilterFields]="['name', 'breed_name', 'description', 'gender']"
+          [globalFilterFields]="['name', 'breed_name', 'description', 'gender', 'location_name']"
           styleClass="p-datatable-sm p-datatable-striped"
           responsiveLayout="scroll"
           *ngIf="!isLoading && filteredPets && filteredPets.length > 0">
           
           <ng-template pTemplate="header">
             <tr>
+              <th style="width: 60px"></th>
               <th pSortableColumn="name">
                 Name <p-sortIcon field="name"></p-sortIcon>
               </th>
               <th pSortableColumn="breed_name">
                 Breed <p-sortIcon field="breed_name"></p-sortIcon>
               </th>
-              <th pSortableColumn="description">
-                Description <p-sortIcon field="description"></p-sortIcon>
+              <th pSortableColumn="gender">
+                Gender <p-sortIcon field="gender"></p-sortIcon>
               </th>
               <th pSortableColumn="date_of_birth">
                 Date of Birth <p-sortIcon field="date_of_birth"></p-sortIcon>
               </th>
-              <th pSortableColumn="gender">
-                Gender <p-sortIcon field="gender"></p-sortIcon>
-              </th>
               <th pSortableColumn="weight">
                 Weight <p-sortIcon field="weight"></p-sortIcon>
               </th>
+              <th pSortableColumn="location_name">
+                Location <p-sortIcon field="location_name"></p-sortIcon>
+              </th>
+              <th>Health</th>
+              <th style="width: 160px; text-align: center">Actions</th>
             </tr>
           </ng-template>
           
           <ng-template pTemplate="body" let-pet>
             <tr>
-              <td>{{ pet.name }}</td>
+              <!-- Thumbnail -->
+              <td>
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                  <img *ngIf="pet.image_url || pet.image_path"
+                       [src]="getPetImageUrl(pet)"
+                       [alt]="pet.name"
+                       class="w-full h-full object-cover" />
+                  <div *ngIf="!pet.image_url && !pet.image_path" class="w-full h-full flex items-center justify-center text-gray-300">
+                    <i class="bi bi-card-image"></i>
+                  </div>
+                </div>
+              </td>
+              <!-- Name -->
+              <td class="font-medium">{{ pet.name }}</td>
+              <!-- Breed -->
               <td>{{ pet.breed_name }}</td>
-              <td>{{ pet.description }}</td>
+              <!-- Gender -->
+              <td>
+                <span class="inline-flex items-center gap-1 text-sm">
+                  <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male text-blue-400' : 'bi-gender-female text-pink-400'"></i>
+                  {{ pet.gender }}
+                </span>
+              </td>
+              <!-- DOB -->
               <td>{{ pet.date_of_birth }}</td>
-              <td>{{ pet.gender }}</td>
+              <!-- Weight -->
               <td>{{ pet.weight }}</td>
+              <!-- Location -->
+              <td>
+                <span *ngIf="pet.location_name" class="inline-flex items-center gap-1 text-sm text-gray-600">
+                  <i class="bi bi-geo-alt-fill text-xs text-primary"></i>
+                  {{ pet.location_name }}
+                </span>
+              </td>
+              <!-- Health badges -->
+              <td>
+                <div class="flex flex-wrap gap-1">
+                  <span *ngIf="pet.has_vaccination" class="health-badge" title="Vaccinated"><i class="bi bi-shield-fill-check"></i></span>
+                  <span *ngIf="pet.has_microchip" class="health-badge" title="Microchipped"><i class="bi bi-cpu"></i></span>
+                  <span *ngIf="pet.has_healthcertificate" class="health-badge" title="Health Certificate"><i class="bi bi-file-medical"></i></span>
+                  <span *ngIf="pet.has_dewormed" class="health-badge" title="Dewormed"><i class="bi bi-capsule"></i></span>
+                  <span *ngIf="pet.has_birthcertificate" class="health-badge" title="Birth Certificate"><i class="bi bi-file-earmark-text"></i></span>
+                </div>
+              </td>
+              <!-- Actions -->
+              <td>
+                <div class="flex items-center justify-center gap-1.5">
+                  <button class="table-action-btn btn-edit" title="Edit" (click)="editPet(pet)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="table-action-btn btn-breeding" title="Quick Breeding" (click)="openQuickBreeding(pet)">
+                    <i class="bi bi-hearts"></i>
+                  </button>
+                  <button class="table-action-btn btn-docs" title="Documents" (click)="openPetDocuments(pet)">
+                    <i class="bi bi-file-earmark-text"></i>
+                  </button>
+                  <button class="table-action-btn btn-remove" title="Remove" (click)="deletePet(pet.id)">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                </div>
+              </td>
             </tr>
           </ng-template>
           
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="6" class="text-center">No pets found</td>
+              <td colspan="9" class="text-center">No pets found</td>
             </tr>
           </ng-template>
         </p-table>

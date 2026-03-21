@@ -725,3 +725,67 @@
 .no-locations-banner a:hover {
   color: #78350f;
 }
+
+/* Table Action Buttons */
+.table-action-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 0.9375rem;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.table-action-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.table-action-btn:active {
+  transform: scale(0.95);
+}
+
+.table-action-btn.btn-edit {
+  background: linear-gradient(135deg, #FFE66D, #FFDB4D);
+  color: #2C3E50;
+}
+
+.table-action-btn.btn-breeding {
+  background: linear-gradient(135deg, #95E1D3, #7FD4C4);
+  color: #2C3E50;
+}
+
+.table-action-btn.btn-docs {
+  background: linear-gradient(135deg, #93C5FD, #60A5FA);
+}
+
+.table-action-btn.btn-remove {
+  background: rgba(255, 255, 255, 0.85);
+  color: #9ca3af;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.table-action-btn.btn-remove:hover {
+  background: #fee2e2;
+  color: #f87171;
+}
+
+/* Health Badges in Table */
+.health-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.12), rgba(78, 205, 196, 0.06));
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #0d9488;
+}

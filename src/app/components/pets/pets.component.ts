@@ -4,12 +4,12 @@ import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
-import { IPetType, PET_TYPES } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 import { PageHeaderConfig } from '../page-header/page-header.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -46,7 +46,7 @@ export class PetsComponent implements OnInit {
   locations: ILocation[] = [];
   breeds: IBreed[] = [];
   pet: IPet;
-  view: string = 'cards';
+  view: string = localStorage.getItem('pets_view') || 'cards';
   title: string = 'Pets';
   term: string = '';
   petId: string = '';
@@ -54,6 +54,7 @@ export class PetsComponent implements OnInit {
   selectedPetForDocuments: IPet | null = null;
   isLoading: boolean = true;
   locationsLoaded: boolean = false;
+  apiHost = environment.API_HOST;
   
   // Filter widget configuration
   filterConfig: FilterConfig = {
@@ -206,6 +207,7 @@ export class PetsComponent implements OnInit {
   
   onLayoutChange(layout: 'table' | 'cards') {
     this.view = layout;
+    localStorage.setItem('pets_view', layout);
   }
   
   onSearchTermChange(term: string) {
@@ -249,6 +251,12 @@ export class PetsComponent implements OnInit {
   onPetUpdated(): void {
     // Reload pets list after update
     this.loadPets();
+  }
+
+  getPetImageUrl(pet: IPet): string {
+    if (pet.image_url) return `${this.apiHost}${pet.image_url}`;
+    if (pet.image_path) return `${this.apiHost}/storage/${pet.image_path}`;
+    return '';
   }
 
 }
