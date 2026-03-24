@@ -95,12 +95,15 @@ export class SearchService {
    * @param searchTerm - Partial breed name to search for
    * @returns Observable of matching breeds
    */
-  searchBreeds(searchTerm: string): Observable<BreedAutocomplete[]> {
+  searchBreeds(searchTerm: string, kind?: string): Observable<BreedAutocomplete[]> {
     if (!searchTerm || searchTerm.length < 2) {
       return throwError(() => new Error('Search term must be at least 2 characters'));
     }
 
-    const params = new HttpParams().set('search_term', searchTerm);
+    let params = new HttpParams().set('search_term', searchTerm);
+    if (kind) {
+      params = params.set('kind', kind);
+    }
 
     return this.http.get<BreedAutocomplete[]>(
       `${this.apiUrl}/breeds/autocomplete`,

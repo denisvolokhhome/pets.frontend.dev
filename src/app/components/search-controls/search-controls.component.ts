@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { Subject, Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, map, catchError } from 'rxjs/operators';
+import { debounceTime, switchMap, map, catchError } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
 import { Breed } from '../../models/search';
 
@@ -10,7 +10,7 @@ import { Breed } from '../../models/search';
   templateUrl: './search-controls.component.html',
   styleUrls: ['./search-controls.component.css']
 })
-export class SearchControlsComponent implements OnInit {
+export class SearchControlsComponent implements OnInit, OnChanges {
   @Input() zipCode: string = '';
   @Output() zipCodeChange = new EventEmitter<string>();
 
@@ -45,14 +45,13 @@ export class SearchControlsComponent implements OnInit {
     // Requirement 11.4: Handle breed autocomplete errors
     this.breedSuggestions$ = this.breedSearch$.pipe(
       debounceTime(400),
-      distinctUntilChanged(),
       switchMap(term => {
         if (term.length < 2) {
           this.breedSearchError = null;
           return of([]);
         }
         
-        return this.searchService.searchBreeds(term).pipe(
+        return this.searchService.searchBreeds(term, this.selectedAnimalKind || undefined).pipe(
           map(breeds => {
             this.breedSearchError = null;
             return breeds;
@@ -70,6 +69,16 @@ export class SearchControlsComponent implements OnInit {
     this.breedSuggestions$.subscribe(suggestions => {
       this.showBreedDropdown = suggestions.length > 0 || this.breedSearchError !== null;
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedAnimalKind'] && !changes['selectedAnimalKind'].firstChange) {
+      // Clear breed selection when animal kind changes
+      this.breedSearchTerm = '';
+      this.selectedBreed = null;
+      this.selectedBreedChange.emit(null);
+      this.showBreedDropdown = false;
+    }
   }
 
   onZipCodeInput(value: string): void {
