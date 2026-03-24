@@ -25,7 +25,8 @@
         class="form-control"
         [value]="breedSearchTerm"
         (input)="onBreedSearchInput($any($event.target).value)"
-        (focus)="onBreedSearchInput(breedSearchTerm)"
+        (focus)="onBreedFocus()"
+        (blur)="onBreedBlur()"
         placeholder="Breed (optional)"
         autocomplete="off"
         [class.error]="breedSearchError"
@@ -37,11 +38,11 @@
         </div>
         <div
           class="breed-option"
-          *ngFor="let breed of breedSuggestions$ | async"
+          *ngFor="let breed of breedSuggestions"
           (click)="selectBreed(breed)">
           {{ breed.name }}
         </div>
-        <div class="breed-option no-results" *ngIf="!breedSearchError && (breedSuggestions$ | async)?.length === 0 && breedSearchTerm.length >= 2">
+        <div class="breed-option no-results" *ngIf="!breedSearchError && breedSuggestions.length === 0 && breedSearchTerm.length >= 2">
           🔍 No breeds found
         </div>
       </div>

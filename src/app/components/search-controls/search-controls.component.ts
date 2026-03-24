@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output } from '@angular/core';
-import { Subject, Observable, of } from 'rxjs';
-import { debounceTime, switchMap, map, catchError } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { SearchService } from '../../services/search.service';
 import { Breed } from '../../models/search';
 
@@ -10,7 +11,7 @@ import { Breed } from '../../models/search';
   templateUrl: './search-controls.component.html',
   styleUrls: ['./search-controls.component.css']
 })
-export class SearchControlsComponent implements OnInit, OnChanges {
+export class SearchControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() zipCode: string = '';
   @Output() zipCodeChange = new EventEmitter<string>();
 
@@ -25,8 +26,10 @@ export class SearchControlsComponent implements OnInit, OnChanges {
   @Input() selectedAnimalKind: string = '';
   @Output() animalKindChange = new EventEmitter<string>();
 
-  breedSearch$ = new Subject<string>();
-  breedSuggestions$: Observable<Breed[]> = of([]);
+  private breedSearch$ = new Subject<string>();
+  private searchSub!: Subscription;
+
+  breedSuggestions: Breed[] = [];
   showBreedDropdown = false;
   breedSearchTerm = '';
   breedSearchError: string | null = null;
@@ -37,25 +40,17 @@ export class SearchControlsComponent implements OnInit, OnChanges {
   quickSelectRadii = [10, 20, 40, 60];
   customRadiusInput: number | null = null;
 
-  constructor(private searchService: SearchService) {}
+  constructor(private searchService: SearchService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // Set up breed autocomplete with debouncing
-    // Requirement 4.2: Debounce breed search input
-    // Requirement 11.4: Handle breed autocomplete errors
-    this.breedSuggestions$ = this.breedSearch$.pipe(
+    this.searchSub = this.breedSearch$.pipe(
       debounceTime(400),
       switchMap(term => {
         if (term.length < 2) {
           this.breedSearchError = null;
           return of([]);
         }
-        
         return this.searchService.searchBreeds(term, this.selectedAnimalKind || undefined).pipe(
-          map(breeds => {
-            this.breedSearchError = null;
-            return breeds;
-          }),
           catchError(error => {
             this.breedSearchError = 'Failed to load breed suggestions';
             console.error('Breed search error:', error);
@@ -63,37 +58,37 @@ export class SearchControlsComponent implements OnInit, OnChanges {
           })
         );
       })
-    );
-
-    // Subscribe to breed suggestions to show/hide dropdown
-    this.breedSuggestions$.subscribe(suggestions => {
-      this.showBreedDropdown = suggestions.length > 0 || this.breedSearchError !== null;
+    ).subscribe(breeds => {
+      this.breedSearchError = null;
+      this.breedSuggestions = breeds;
+      this.showBreedDropdown = breeds.length > 0 || this.breedSearchError !== null;
+      this.cdr.detectChanges();
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedAnimalKind'] && !changes['selectedAnimalKind'].firstChange) {
-      // Clear breed selection when animal kind changes
       this.breedSearchTerm = '';
       this.selectedBreed = null;
       this.selectedBreedChange.emit(null);
+      this.breedSuggestions = [];
       this.showBreedDropdown = false;
     }
   }
 
+  ngOnDestroy(): void {
+    this.searchSub?.unsubscribe();
+  }
+
   onZipCodeInput(value: string): void {
-    // Validate ZIP code - numeric only
     if (value && !/^\d*$/.test(value)) {
       this.zipError = 'ZIP code must contain only numbers';
       return;
     }
-
-    // Validate length
     if (value && value.length > 5) {
       this.zipError = 'ZIP code must be 5 digits';
       return;
     }
-
     this.zipError = null;
     this.zipCode = value;
     this.zipCodeChange.emit(value);
@@ -101,21 +96,34 @@ export class SearchControlsComponent implements OnInit, OnChanges {
 
   onBreedSearchInput(value: string): void {
     this.breedSearchTerm = value;
-    
     if (!value) {
       this.selectedBreed = null;
       this.selectedBreedChange.emit(null);
+      this.breedSuggestions = [];
       this.showBreedDropdown = false;
       return;
     }
-
     this.breedSearch$.next(value);
+  }
+
+  onBreedFocus(): void {
+    if (this.breedSuggestions.length > 0) {
+      this.showBreedDropdown = true;
+    }
+  }
+
+  onBreedBlur(): void {
+    // Delay to allow click on dropdown option to register
+    setTimeout(() => {
+      this.showBreedDropdown = false;
+    }, 200);
   }
 
   selectBreed(breed: Breed): void {
     this.selectedBreed = breed;
     this.breedSearchTerm = breed.name;
     this.selectedBreedChange.emit(breed);
+    this.breedSuggestions = [];
     this.showBreedDropdown = false;
   }
 
@@ -128,18 +136,14 @@ export class SearchControlsComponent implements OnInit, OnChanges {
 
   onCustomRadiusInput(value: string): void {
     const numValue = parseFloat(value);
-
-    // Validate positive number
     if (isNaN(numValue) || numValue <= 0) {
       this.radiusError = 'Radius must be a positive number';
       return;
     }
-
     if (numValue > 100) {
       this.radiusError = 'Radius cannot exceed 100 miles';
       return;
     }
-
     this.radiusError = null;
     this.customRadiusInput = numValue;
     this.radius = numValue;
@@ -147,16 +151,13 @@ export class SearchControlsComponent implements OnInit, OnChanges {
   }
 
   onSearch(): void {
-    // Validate ZIP code before search
     if (!this.zipCode || this.zipCode.length !== 5) {
       this.zipError = 'Please enter a valid 5-digit ZIP code';
       return;
     }
-
     if (this.zipError || this.radiusError) {
       return;
     }
-
     this.search.emit();
   }
 
