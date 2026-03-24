@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -40,7 +40,7 @@ export class SearchControlsComponent implements OnInit, OnChanges, OnDestroy {
   quickSelectRadii = [10, 20, 40, 60];
   customRadiusInput: number | null = null;
 
-  constructor(private searchService: SearchService, private cdr: ChangeDetectorRef) {}
+  constructor(private searchService: SearchService, private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.searchSub = this.breedSearch$.pipe(
@@ -59,10 +59,12 @@ export class SearchControlsComponent implements OnInit, OnChanges, OnDestroy {
         );
       })
     ).subscribe(breeds => {
-      this.breedSearchError = null;
-      this.breedSuggestions = breeds;
-      this.showBreedDropdown = breeds.length > 0 || this.breedSearchError !== null;
-      this.cdr.detectChanges();
+      this.ngZone.run(() => {
+        this.breedSearchError = null;
+        this.breedSuggestions = breeds;
+        this.showBreedDropdown = breeds.length > 0 || this.breedSearchError !== null;
+        this.cdr.detectChanges();
+      });
     });
   }
 
