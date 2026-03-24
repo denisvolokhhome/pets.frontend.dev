@@ -191,6 +191,6 @@ export class AuthService {
    * Reset password using token from email
    */
   resetPassword(token: string, password: string): Observable<any> {
-    return this.http.post(this.apiurl + '/auth/reset-password', { token, password });
+    return this.http.post(this.apiurl + '/auth/reset-password', { token, password }, { responseType: 'text' });
   }
 }
