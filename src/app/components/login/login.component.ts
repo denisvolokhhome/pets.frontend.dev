@@ -25,6 +25,7 @@ export class LoginComponent {
   response: any;
   error: any;
   loginError: string | null = null;
+  isSubmitting: boolean = false;
   showUserTypeModal: boolean = false;
   showForgotPassword: boolean = false;
   forgotPasswordEmail: string = '';
@@ -43,6 +44,23 @@ export class LoginComponent {
   ngOnInit() {
     // Check for email query parameter from registration redirect
     this.route.queryParams.subscribe(params => {
+      // Handle OAuth errors
+      if (params['error']) {
+        setTimeout(() => {
+          if (params['error'] === 'access_denied') {
+            this.loginError = 'Google sign-in was cancelled.';
+            this.toastr.warning('Google sign-in was cancelled. You can try again or sign in with your email.', 'Sign-In Cancelled', {
+              timeOut: 6000, progressBar: true, closeButton: true
+            });
+          } else {
+            this.loginError = 'Google sign-in failed. Please try again.';
+            this.toastr.error('Google sign-in failed. Please try again or sign in with your email.', 'Sign-In Failed', {
+              timeOut: 6000, progressBar: true, closeButton: true
+            });
+          }
+        }, 100);
+      }
+
       if (params['email']) {
         this.loginForm.patchValue({
           email: params['email']
@@ -89,19 +107,20 @@ export class LoginComponent {
 
   proceedLogin() {
     if (this.loginForm.valid) {
-      this.loginError = null; // Clear any previous errors
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
+      this.loginError = null;
       
       this.service.LoginUser(this.loginForm.value).subscribe({
         next: (res: any) => {
           this.response = res;
 
-          // FastAPI returns access_token, not token
           if (this.response.access_token) {
             localStorage.setItem('id_token', this.response.access_token);
             
-            // Fetch user info after successful login
             this.service.IsLoggedIn().subscribe({
               next: (userResponse: any) => {
+                this.isSubmitting = false;
                 if (userResponse && userResponse.id) {
                   localStorage.setItem('id', userResponse.id);
                   this.toastr.success('Welcome back!', 'Login Successful', {
@@ -112,6 +131,7 @@ export class LoginComponent {
                 }
               },
               error: (err: HttpErrorResponse) => {
+                this.isSubmitting = false;
                 console.error('Error fetching user info:', err);
                 this.loginError = 'Error fetching user information. Please try again.';
                 this.toastr.error('Error fetching user information', 'Error', {
@@ -120,9 +140,12 @@ export class LoginComponent {
                 });
               }
             });
+          } else {
+            this.isSubmitting = false;
           }
         },
         error: (err: HttpErrorResponse) => {
+          this.isSubmitting = false;
           console.error('Login error:', err);
           
           // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
