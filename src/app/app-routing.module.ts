@@ -30,6 +30,7 @@ import { FavoritesListComponent } from './components/favorites-list/favorites-li
 
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { GenealogyComponent } from './components/genealogy/genealogy.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -55,6 +56,7 @@ const routes: Routes = [
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [AuthGuard] },
+  { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
   { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
   { path: 'messages/new', component: MessageNewComponent, canActivate: [AuthGuard] },
   { path: 'messages/:id', component: MessageDetailComponent, canActivate: [AuthGuard] },

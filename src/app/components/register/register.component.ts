@@ -45,6 +45,7 @@ export class RegisterComponent {
 
   passwordErrors: string[] = [];
   emailExistsError: string | null = null;
+  isSubmitting = false;
 
   validatePassword(): boolean {
     this.passwordErrors = [];
@@ -74,10 +75,11 @@ export class RegisterComponent {
     this.emailExistsError = null;
     
     if (this.registerForm.valid) {
-      // Validate password before submitting
       if (!this.validatePassword()) {
         return;
       }
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
 
       // Combine first and last name into a single name field for the API
       const formValue = {

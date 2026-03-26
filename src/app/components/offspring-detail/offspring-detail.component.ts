@@ -9,6 +9,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
 import { OffspringEditComponent } from '../offspring-edit/offspring-edit.component';
+import { GenealogyService } from 'src/app/services/genealogy.service';
 
 @Component({
   standalone: true,
@@ -38,6 +39,10 @@ export class OffspringDetailComponent implements OnInit {
   displayCustom: boolean = false;
   activeIndex: number = 0;
 
+  // Convert to pet
+  showConvertConfirm: boolean = false;
+  isConverting: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -47,7 +52,8 @@ export class OffspringDetailComponent implements OnInit {
     private messageService: MessageService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private genealogyService: GenealogyService
   ) {}
 
   ngOnInit(): void {
@@ -446,6 +452,47 @@ export class OffspringDetailComponent implements OnInit {
    */
   isBreederView(): boolean {
     return this.viewMode === 'breeder';
+  }
+
+  /**
+   * Check if offspring can be converted to pet
+   */
+  canConvertToPet(): boolean {
+    return this.isBreederView() && !!this.offspring && this.offspring.status !== 'Archived';
+  }
+
+  openConvertConfirm(): void {
+    this.showConvertConfirm = true;
+  }
+
+  cancelConvert(): void {
+    this.showConvertConfirm = false;
+  }
+
+  confirmConvertToPet(): void {
+    if (!this.offspring) return;
+    this.isConverting = true;
+    this.genealogyService.convertOffspringToPet(this.offspring.id).subscribe({
+      next: (res) => {
+        this.toastr.success(res.message, 'Converted');
+        this.isConverting = false;
+        this.showConvertConfirm = false;
+        this.router.navigate(['/pets']);
+      },
+      error: (err) => {
+        const detail = err?.error?.detail || 'Conversion failed.';
+        if (detail === 'OFFSPRING_ALREADY_CONVERTED') {
+          this.toastr.warning('This offspring has already been converted.', 'Already Converted');
+        } else if (detail === 'OFFSPRING_ALREADY_ARCHIVED') {
+          this.toastr.warning('This offspring is archived.', 'Archived');
+        } else {
+          this.toastr.error(detail, 'Error');
+        }
+        this.isConverting = false;
+        this.showConvertConfirm = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   /**

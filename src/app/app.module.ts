@@ -73,6 +73,7 @@ import { BreederHelpWidgetComponent } from './components/breeder-help-widget/bre
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PetDocumentsComponent } from './components/pet-documents/pet-documents.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { GenealogyComponent } from './components/genealogy/genealogy.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { AuthService } from './services/auth.service';
 import { provideAppInitializer } from '@angular/core';
@@ -148,6 +149,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     OffspringGridComponent,
     FavoritesListComponent,
     ResetPasswordComponent,
+    GenealogyComponent,
     PhoneMaskDirective,
   ],
   imports: [

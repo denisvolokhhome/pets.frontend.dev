@@ -1,0 +1,168 @@
+<div class="genealogy-page">
+  <div class="page-header">
+    <h1><i class="bi bi-diagram-3"></i> Genealogy Tree</h1>
+    <div class="header-controls">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          placeholder="Search by pet name..."
+          [(ngModel)]="searchQuery"
+        />
+        <button *ngIf="searchQuery" class="search-clear" (click)="searchQuery = ''">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="zoom-controls">
+        <button (click)="zoomOut()" title="Zoom out"><i class="bi bi-dash-lg"></i></button>
+        <span class="zoom-level">{{ (scale * 100) | number:'1.0-0' }}%</span>
+        <button (click)="zoomIn()" title="Zoom in"><i class="bi bi-plus-lg"></i></button>
+        <button (click)="resetZoom()" title="Reset"><i class="bi bi-arrows-angle-contract"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading tree...</div>
+  <div *ngIf="error" class="error-msg"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
+
+  <div *ngIf="tree && !isLoading"
+       class="tree-viewport"
+       (wheel)="onWheel($event)"
+       (mousedown)="onMouseDown($event)"
+       (mousemove)="onMouseMove($event)"
+       (mouseup)="onMouseUp()"
+       (mouseleave)="onMouseUp()">
+
+    <div class="tree-canvas" [style.transform]="transformStyle">
+      <div *ngIf="tree.edges.length === 0" class="empty-state">
+        <i class="bi bi-diagram-3"></i>
+        <p>No breedings yet. Create a breeding and assign parent pets to see your genealogy tree.</p>
+      </div>
+
+      <div class="tree-rows">
+        <div *ngFor="let edge of tree.edges" class="breeding-row"
+             [class.dimmed]="hasSearchQuery && !edgeMatchesSearch(edge)"
+             [class.highlighted]="hasSearchQuery && edgeMatchesSearch(edge)">
+          <!-- Parents row -->
+          <div class="parents-row">
+            <div class="pet-card father" *ngIf="edge.father" [style.border-color]="genderColor(edge.father.gender)">
+              <div class="pet-avatar" [style.background-image]="edge.father.image_url ? 'url(' + edge.father.image_url + ')' : ''">
+                <i *ngIf="!edge.father.image_url" class="bi bi-gender-male"></i>
+              </div>
+              <div class="pet-info">
+                <span class="pet-name">{{ edge.father.name }}</span>
+                <span class="pet-breed">{{ edge.father.breed_name || 'Unknown breed' }}</span>
+                <span class="pet-dob">{{ formatDate(edge.father.date_of_birth) }}</span>
+              </div>
+            </div>
+            <div class="pet-card placeholder" *ngIf="!edge.father">
+              <i class="bi bi-gender-male"></i><span>No sire assigned</span>
+            </div>
+
+            <div class="connector-h"></div>
+
+            <div class="pet-card mother" *ngIf="edge.mother" [style.border-color]="genderColor(edge.mother.gender)">
+              <div class="pet-avatar" [style.background-image]="edge.mother.image_url ? 'url(' + edge.mother.image_url + ')' : ''">
+                <i *ngIf="!edge.mother.image_url" class="bi bi-gender-female"></i>
+              </div>
+              <div class="pet-info">
+                <span class="pet-name">{{ edge.mother.name }}</span>
+                <span class="pet-breed">{{ edge.mother.breed_name || 'Unknown breed' }}</span>
+                <span class="pet-dob">{{ formatDate(edge.mother.date_of_birth) }}</span>
+              </div>
+            </div>
+            <div class="pet-card placeholder" *ngIf="!edge.mother">
+              <i class="bi bi-gender-female"></i><span>No dam assigned</span>
+            </div>
+          </div>
+
+          <!-- Vertical connector -->
+          <div class="connector-v"></div>
+
+          <!-- Offspring group + converted pets row -->
+          <div class="children-row">
+            <!-- Offspring group card (clickable) -->
+            <div class="offspring-group-card" (click)="openGroup(edge)" *ngIf="edge.offspring_group.count > 0">
+              <div class="group-icon"><i class="bi bi-collection"></i></div>
+              <div class="group-info">
+                <span class="group-count">{{ edge.offspring_group.count }} offspring{{ edge.offspring_group.count > 1 ? 's' : '' }}</span>
+                <span class="group-date" *ngIf="edge.offspring_group.breeding_date">{{ formatDate(edge.offspring_group.breeding_date) }}</span>
+              </div>
+              <i class="bi bi-chevron-right group-arrow"></i>
+            </div>
+
+            <!-- Converted pets shown as individual cards -->
+            <div *ngFor="let cp of edge.converted_pets"
+                 class="pet-card converted" [style.border-color]="genderColor(cp.gender)">
+              <div class="converted-badge"><i class="bi bi-arrow-up-circle-fill"></i></div>
+              <div class="pet-avatar" [style.background-image]="cp.image_url ? 'url(' + cp.image_url + ')' : ''">
+                <i *ngIf="!cp.image_url" [class]="'bi ' + genderIcon(cp.gender)"></i>
+              </div>
+              <div class="pet-info">
+                <span class="pet-name">{{ cp.name }}</span>
+                <span class="pet-breed">{{ cp.breed_name || 'Unknown breed' }}</span>
+                <span class="pet-dob">{{ formatDate(cp.date_of_birth) }}</span>
+              </div>
+            </div>
+
+            <div *ngIf="edge.offspring_group.count === 0 && edge.converted_pets.length === 0" class="no-offspring">
+              <i class="bi bi-egg"></i> No offspring yet
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Offspring Group Popup -->
+<div *ngIf="selectedGroup" class="modal-backdrop" (click)="closeGroup()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="bi bi-collection"></i> Offspring — Breeding #{{ selectedGroup.breeding_id }}</h3>
+      <button class="modal-close" (click)="closeGroup()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="selectedGroup.offspring_group.offsprings.length === 0" class="empty-group">
+        All offspring from this breeding have been converted to pets.
+      </div>
+      <div class="offspring-grid">
+        <div *ngFor="let o of selectedGroup.offspring_group.offsprings" class="offspring-mini-card" [style.border-color]="genderColor(o.gender)">
+          <div class="mini-avatar" [style.background-image]="o.image_url ? 'url(' + o.image_url + ')' : ''">
+            <i *ngIf="!o.image_url" [class]="'bi ' + genderIcon(o.gender)"></i>
+          </div>
+          <div class="mini-info">
+            <span class="mini-name">{{ o.name || 'Unnamed' }}</span>
+            <span class="mini-detail">{{ o.breed_name || '' }} · {{ o.gender }}</span>
+            <span class="mini-detail">{{ formatDate(o.date_of_birth) }}</span>
+            <span class="mini-status" [class]="'status-' + o.status.toLowerCase()">{{ o.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Convert Confirmation Popup -->
+<div *ngIf="convertTarget" class="modal-backdrop" (click)="cancelConvert()">
+  <div class="modal-panel modal-sm" (click)="$event.stopPropagation()">
+    <div class="modal-header warn">
+      <h3><i class="bi bi-exclamation-triangle"></i> Convert to Pet</h3>
+      <button class="modal-close" (click)="cancelConvert()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <p>You are about to convert <strong>{{ convertTarget.name || 'this offspring' }}</strong> into a full Pet record.</p>
+      <ul class="convert-warn-list">
+        <li><i class="bi bi-arrow-right-circle"></i> <span>This is a <strong>one-way conversion</strong> and cannot be undone.</span></li>
+        <li><i class="bi bi-card-list"></i> <span>The offspring will be archived and a new Pet will be created with the same details.</span></li>
+        <li><i class="bi bi-heart"></i> <span>The new pet can then be used as a parent in future breedings.</span></li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancelConvert()" [disabled]="isConverting">Cancel</button>
+      <button class="btn-confirm" (click)="confirmConvert()" [disabled]="isConverting">
+        <i class="bi bi-check-lg"></i> {{ isConverting ? 'Converting...' : 'Convert to Pet' }}
+      </button>
+    </div>
+  </div>
+</div>

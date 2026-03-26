@@ -55,6 +55,17 @@
         <span *ngIf="!isCollapsed">Offsprings</span>
       </a>
     </li>
+    <li class="mb-2" *ngIf="isBreeder">
+      <a 
+        [routerLink]="['/genealogy']"
+        routerLinkActive="bg-primary text-white"
+        [routerLinkActiveOptions]="{exact: true}"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [title]="isCollapsed ? 'Genealogy' : ''">
+        <i class="bi bi-diagram-3 text-xl"></i>
+        <span *ngIf="!isCollapsed">Genealogy</span>
+      </a>
+    </li>
     
     <!-- Messages - available for all authenticated users -->
     <li class="mb-2" *ngIf="isAuthenticated">

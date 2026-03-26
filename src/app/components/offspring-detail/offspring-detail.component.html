@@ -23,6 +23,14 @@
           Edit
         </button>
         <button 
+          *ngIf="canConvertToPet()"
+          class="btn btn-convert-pet"
+          (click)="openConvertConfirm()"
+          type="button">
+          <i class="pi pi-arrow-up mr-2"></i>
+          Convert to Pet
+        </button>
+        <button 
           class="btn btn-danger"
           (click)="deleteOffspring()"
           [disabled]="isDeleting"
@@ -347,5 +355,40 @@
       (offspringSaved)="onOffspringSaved()"
       (modalClosed)="onModalClosed()">
     </app-offspring-edit>
+  </div>
+</div>
+
+<!-- Convert to Pet Confirmation -->
+<div *ngIf="showConvertConfirm" class="modal-overlay" (click)="cancelConvert()">
+  <div class="convert-modal" (click)="$event.stopPropagation()">
+    <div class="convert-modal-header">
+      <i class="pi pi-arrow-up" style="color: #8b5cf6;"></i>
+      <h3>Convert to Pet</h3>
+      <button class="convert-modal-close" (click)="cancelConvert()"><i class="pi pi-times"></i></button>
+    </div>
+    <div class="convert-modal-body">
+      <p>You are about to convert <strong>{{ offspring?.name || 'this offspring' }}</strong> into a full Pet record.</p>
+      <div class="convert-warn-list">
+        <div class="convert-warn-item">
+          <i class="pi pi-arrow-right" style="color: #d97706;"></i>
+          <span>This is a <strong>one-way conversion</strong> and cannot be undone.</span>
+        </div>
+        <div class="convert-warn-item">
+          <i class="pi pi-list" style="color: #d97706;"></i>
+          <span>The offspring will be archived and a new Pet will be created with the same details.</span>
+        </div>
+        <div class="convert-warn-item">
+          <i class="pi pi-heart" style="color: #d97706;"></i>
+          <span>The new pet can then be used as a parent in future breedings.</span>
+        </div>
+      </div>
+    </div>
+    <div class="convert-modal-footer">
+      <button class="btn btn-secondary" (click)="cancelConvert()" [disabled]="isConverting">Cancel</button>
+      <button class="btn btn-convert-confirm" (click)="confirmConvertToPet()" [disabled]="isConverting">
+        <i class="pi pi-check mr-2"></i>
+        {{ isConverting ? 'Converting...' : 'Convert to Pet' }}
+      </button>
+    </div>
   </div>
 </div>
