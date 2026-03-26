@@ -188,6 +188,22 @@ export class AuthService {
   }
 
   /**
+   * Convert current pet seeker account to breeder (irreversible)
+   */
+  convertToBreeder(): Observable<any> {
+    const header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post(this.apiurl + '/auth/convert-to-breeder', {}, { headers: header }).pipe(
+      tap((response: any) => {
+        // Refresh user data so is_breeder updates everywhere
+        this.IsLoggedIn().subscribe();
+      })
+    );
+  }
+
+  /**
    * Reset password using token from email
    */
   resetPassword(token: string, password: string): Observable<any> {

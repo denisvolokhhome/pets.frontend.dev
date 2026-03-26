@@ -146,4 +146,62 @@
       </button>
     </div>
   </form>
+
+  <!-- Convert to Breeder Section (pet seekers only) -->
+  <div class="form-section convert-section" *ngIf="!isLoading && isPetSeeker">
+    <div class="section-header">
+      <i class="bi bi-arrow-repeat"></i>
+      <h3>Convert to Breeder Account</h3>
+    </div>
+
+    <div *ngIf="!showConvertConfirm">
+      <p class="convert-description">
+        Want to list your animals and manage breedings? You can convert your pet seeker account to a breeder account.
+      </p>
+      <button type="button" class="btn-convert" (click)="openConvertConfirm()">
+        <i class="bi bi-shop"></i>
+        Become a Breeder
+      </button>
+    </div>
+
+    <div *ngIf="showConvertConfirm" class="convert-confirm-box">
+      <div class="convert-warning">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Please read carefully before proceeding:</strong>
+      </div>
+      <ul class="convert-warnings-list">
+        <li>
+          <i class="bi bi-chat-dots"></i>
+          <span>As a breeder, you will <strong>not</strong> be able to message other breeders within the application.</span>
+        </li>
+        <li>
+          <i class="bi bi-lock"></i>
+          <span>This change is <strong>irreversible</strong>. You can only revert by contacting <a href="mailto:support@breedly.us">support&#64;breedly.us</a>.</span>
+        </li>
+        <li>
+          <i class="bi bi-shield-check"></i>
+          <span>You will need to <strong>verify your breeding account</strong> before you can publish offspring listings or your public breeder profile.</span>
+        </li>
+      </ul>
+      <div class="convert-actions">
+        <button
+          type="button"
+          class="btn-confirm-convert"
+          [disabled]="isConverting"
+          (click)="confirmConvertToBreeder()"
+        >
+          <i class="bi bi-check-lg"></i>
+          {{ isConverting ? 'Converting...' : 'I understand, convert my account' }}
+        </button>
+        <button
+          type="button"
+          class="btn-cancel-convert"
+          [disabled]="isConverting"
+          (click)="cancelConvert()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

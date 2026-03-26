@@ -1,0 +1,113 @@
+.support-settings {
+  max-width: 800px;
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.settings-header { margin-bottom: 2rem; }
+.settings-header h2 { font-size: 1.75rem; font-weight: 600; color: var(--dark-color); margin: 0 0 0.5rem 0; }
+.settings-subtitle { color: var(--text-secondary); font-size: 0.9375rem; margin: 0; }
+
+/* Success banner */
+.success-banner {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+  background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px;
+  color: #166534; font-size: 0.9375rem;
+  animation: fadeInUp 0.3s ease;
+}
+.success-banner i { font-size: 1.25rem; margin-top: 2px; flex-shrink: 0; }
+.success-banner p { margin: 4px 0 0; font-size: 0.875rem; }
+.request-number { font-weight: 700; font-family: monospace; font-size: 0.9375rem; }
+
+/* Form section — matches general-settings */
+.form-section {
+  background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 1.75rem; margin-bottom: 1.5rem; transition: all 0.3s ease;
+}
+.form-section:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
+
+.section-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #f3f4f6;
+}
+.section-header i { font-size: 1.25rem; color: var(--primary-color); }
+.section-header h3 { font-size: 1.125rem; font-weight: 600; color: var(--dark-color); margin: 0; }
+
+/* Form groups */
+.form-group { margin-bottom: 1.25rem; }
+.form-group:last-child { margin-bottom: 0; }
+
+.form-group label {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-weight: 600; color: var(--dark-color); font-size: 0.875rem; margin-bottom: 0.5rem;
+}
+.form-group label i { font-size: 0.875rem; color: var(--primary-color); }
+.form-group:focus-within label { color: var(--primary-color); }
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+  width: 100%; padding: 0.625rem 0.875rem;
+  border: 2px solid #e5e7eb; border-radius: 8px;
+  font-size: 0.9375rem; background: white; color: var(--dark-color);
+  font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.form-group input[type="text"]:hover,
+.form-group textarea:hover,
+.form-group select:hover { border-color: #cbd5e1; }
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none; border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+.form-group textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+
+.form-group select { appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 2.5rem;
+}
+
+/* Field meta & errors */
+.field-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.375rem; }
+.char-count { font-size: 0.8125rem; color: #9ca3af; margin-left: auto; }
+.field-error { font-size: 0.8125rem; color: #dc2626; margin-top: 0.375rem; }
+.field-error.inline { margin-top: 0; }
+
+/* Actions */
+.form-actions {
+  display: flex; justify-content: flex-start;
+  margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #f3f4f6;
+}
+.btn-submit {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 2rem; background: var(--primary-color); color: white;
+  border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600;
+  cursor: pointer; transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+.btn-submit:hover:not(:disabled) {
+  background: #ff5252; transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+}
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-submit i { font-size: 1rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .settings-header h2 { font-size: 1.5rem; }
+  .form-section { padding: 1.25rem; }
+  .btn-submit { width: 100%; justify-content: center; }
+}
+@media (max-width: 480px) {
+  .settings-header h2 { font-size: 1.25rem; }
+  .form-section { padding: 1rem; }
+  .section-header h3 { font-size: 1rem; }
+}

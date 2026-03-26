@@ -294,7 +294,7 @@ textarea:focus,
   transition: var(--transition);
   border-radius: var(--border-radius);
   position: relative;
-  z-index: 1000;
+  z-index: 1200;
 }
 
 .logo-text {

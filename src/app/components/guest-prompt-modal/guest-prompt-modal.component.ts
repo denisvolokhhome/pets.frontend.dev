@@ -166,10 +166,19 @@ export class GuestPromptModalComponent implements OnInit {
       },
       error: (error) => {
         console.error('Registration error:', error);
-        this.toastService.error(
-          error.message || 'Failed to create account',
-          'Registration Failed'
-        );
+        if (error.error?.detail === 'REGISTER_SSO_ACCOUNT_EXISTS' || error.status === 409) {
+          this.toastService.info(
+            'An account with this email was created using Google Sign-In. Please sign in with Google.',
+            'Account Exists'
+          );
+          this.closeModal();
+          this.router.navigate(['/login'], { queryParams: { hint: 'sso' } });
+        } else {
+          this.toastService.error(
+            error.message || 'Failed to create account',
+            'Registration Failed'
+          );
+        }
         this.isRegistering = false;
       }
     });

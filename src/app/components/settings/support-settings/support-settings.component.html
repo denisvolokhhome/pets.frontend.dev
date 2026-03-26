@@ -1,0 +1,96 @@
+<div class="support-settings">
+  <div class="settings-header">
+    <h2>Help &amp; Support</h2>
+    <p class="settings-subtitle">Have a question or need help? Send us a message and we'll get back to you.</p>
+  </div>
+
+  <!-- Success confirmation -->
+  <div *ngIf="lastRequestNumber" class="success-banner">
+    <i class="bi bi-check-circle-fill"></i>
+    <div>
+      <strong>Request submitted!</strong>
+      <p>Your request number is <span class="request-number">{{ lastRequestNumber }}</span>. A confirmation has been sent to your email.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="supportForm" (ngSubmit)="submitRequest()">
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-envelope-paper"></i>
+        <h3>New Support Request</h3>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <label for="category">
+          <i class="bi bi-tag"></i>
+          Category
+        </label>
+        <select id="category" formControlName="category">
+          <option value="" disabled>Select a category</option>
+          <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+        </select>
+        <div class="field-error" *ngIf="supportForm.get('category')?.touched && supportForm.get('category')?.hasError('required')">
+          Please select a category.
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="form-group">
+        <label for="subject">
+          <i class="bi bi-chat-left-text"></i>
+          Subject
+        </label>
+        <input
+          type="text"
+          id="subject"
+          formControlName="subject"
+          placeholder="Brief description of your request"
+          maxlength="200"
+        />
+        <div class="field-error" *ngIf="supportForm.get('subject')?.touched && supportForm.get('subject')?.hasError('required')">
+          Subject is required.
+        </div>
+        <div class="field-error" *ngIf="supportForm.get('subject')?.touched && supportForm.get('subject')?.hasError('minlength')">
+          Subject must be at least 3 characters.
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="form-group">
+        <label for="message">
+          <i class="bi bi-pencil-square"></i>
+          Message
+        </label>
+        <textarea
+          id="message"
+          formControlName="message"
+          placeholder="Describe your issue or question in detail..."
+          rows="6"
+          maxlength="5000"
+        ></textarea>
+        <div class="field-meta">
+          <div class="field-error inline" *ngIf="supportForm.get('message')?.touched && supportForm.get('message')?.hasError('required')">
+            Message is required.
+          </div>
+          <div class="field-error inline" *ngIf="supportForm.get('message')?.touched && supportForm.get('message')?.hasError('minlength')">
+            Message must be at least 10 characters.
+          </div>
+          <span class="char-count">{{ messageLength }} / 5000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        [disabled]="isSubmitting || supportForm.invalid"
+        class="btn-submit"
+      >
+        <i class="bi bi-send"></i>
+        {{ isSubmitting ? 'Sending...' : 'Send Request' }}
+      </button>
+    </div>
+  </form>
+</div>

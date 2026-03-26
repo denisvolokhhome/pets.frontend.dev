@@ -102,7 +102,13 @@ export class RegisterComponent {
           console.error('Registration error:', error);
           
           // Handle specific error cases
-          if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
+          if (error.error?.detail === 'REGISTER_SSO_ACCOUNT_EXISTS' || error.status === 409) {
+            this.toastr.info(
+              'An account with this email was created using Google Sign-In. Please sign in with Google.',
+              'Account Exists'
+            );
+            this.router.navigate(['login'], { queryParams: { hint: 'sso' } });
+          } else if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || 
               (error.status === 400 && error.error?.detail?.includes('already exists'))) {
             this.emailExistsError = 'An account with this email already exists.';
           } else if (error.error?.detail) {

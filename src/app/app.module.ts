@@ -58,6 +58,7 @@ import { GuestToAccountComponent } from './components/guest-to-account/guest-to-
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
+import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
 import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
@@ -139,6 +140,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     AuthCallbackComponent,
     BreederySettingsComponent,
     NotificationSettingsComponent,
+    SupportSettingsComponent,
     QuickBreedingAddComponent,
     FilterWidgetComponent,
     OffspringListComponent,

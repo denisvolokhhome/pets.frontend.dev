@@ -96,4 +96,27 @@
       (click)="closeDropdown()">
     </div>
   }
+
+  <!-- Notification Detail Popup -->
+  @if (selectedNotification) {
+    <div class="fixed inset-0 z-[60] flex items-center justify-center" (click)="closeDetailPopup()">
+      <div class="fixed inset-0 bg-black/40"></div>
+      <div class="notification-detail-popup relative z-[61] bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden" (click)="$event.stopPropagation()">
+        <div class="popup-header">
+          <i [class]="'pi ' + getNotificationIcon(selectedNotification.type) + ' ' + getNotificationIconClass(selectedNotification.type)" style="font-size: 1.25rem;"></i>
+          <h3>{{ selectedNotification.title }}</h3>
+          <button type="button" class="popup-close" (click)="closeDetailPopup()" aria-label="Close">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        <div class="popup-body">
+          <p>{{ selectedNotification.message }}</p>
+        </div>
+        <div class="popup-footer">
+          <span class="popup-time">{{ formatTimestamp(selectedNotification.created_at) }}</span>
+          <button type="button" class="popup-dismiss" (click)="closeDetailPopup()">Got it</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

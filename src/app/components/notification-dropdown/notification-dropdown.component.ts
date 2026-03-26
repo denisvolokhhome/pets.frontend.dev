@@ -25,6 +25,7 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   unreadCount = 0;
   isLoading = false;
   isOpen = false;
+  selectedNotification: Notification | null = null;
   private pollingStarted = false;
   
   private destroy$ = new Subject<void>();
@@ -161,11 +162,20 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       this.markAsRead(notification);
     }
 
-    // Close dropdown
-    this.closeDropdown();
+    // If the notification has a navigation target, navigate
+    if (notification.related_id && notification.related_type) {
+      this.closeDropdown();
+      this.navigateToSource(notification);
+    } else {
+      // No navigation target — show the full message in a popup
+      this.selectedNotification = notification;
+      this.cdr.markForCheck();
+    }
+  }
 
-    // Navigate to the notification source
-    this.navigateToSource(notification);
+  closeDetailPopup(): void {
+    this.selectedNotification = null;
+    this.cdr.markForCheck();
   }
 
   markAsRead(notification: Notification): void {

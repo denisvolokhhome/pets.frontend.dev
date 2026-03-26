@@ -31,6 +31,12 @@
         Notifications
       </button>
       -->
+      <button 
+        class="sidebar-nav-item" 
+        [class.active]="isActive('support')"
+        (click)="navigateToSection('support')">
+        Help &amp; Support
+      </button>
     </nav>
   </div>
   

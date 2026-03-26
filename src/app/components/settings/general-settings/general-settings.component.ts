@@ -18,6 +18,8 @@ export class GeneralSettingsComponent implements OnInit {
   saveError: string | null = null;
   currentUser: IUser | null = null;
   resetEmailSent: boolean = false;
+  showConvertConfirm: boolean = false;
+  isConverting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -157,6 +159,41 @@ export class GeneralSettingsComponent implements OnInit {
       error: () => {
         this.resetEmailSent = true;
         this.toastr.success('If the account exists, a reset email has been sent.', 'Email Sent');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  get isPetSeeker(): boolean {
+    return this.authService.isPetSeeker;
+  }
+
+  openConvertConfirm(): void {
+    this.showConvertConfirm = true;
+  }
+
+  cancelConvert(): void {
+    this.showConvertConfirm = false;
+  }
+
+  confirmConvertToBreeder(): void {
+    this.isConverting = true;
+    this.authService.convertToBreeder().subscribe({
+      next: () => {
+        this.isConverting = false;
+        this.showConvertConfirm = false;
+        this.toastr.success('Your account has been converted to a Breeder account.', 'Account Converted');
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        this.isConverting = false;
+        const detail = error?.error?.detail || '';
+        if (detail === 'ALREADY_BREEDER') {
+          this.toastr.warning('Your account is already a breeder account.', 'Already a Breeder');
+        } else {
+          this.toastr.error('Failed to convert account. Please try again.', 'Error');
+        }
+        this.showConvertConfirm = false;
         this.cdr.detectChanges();
       }
     });
