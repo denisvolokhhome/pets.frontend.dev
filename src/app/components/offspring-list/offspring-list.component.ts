@@ -61,6 +61,8 @@ export class OffspringListComponent implements OnInit {
   showEditModal: boolean = false;
   selectedOffspring: OffspringRead | null = null;
   modalMode: 'create' | 'edit' = 'create';
+  showDocumentsModal: boolean = false;
+  documentsOffspring: OffspringRead | null = null;
 
   // Status options
   statusOptions = [
@@ -328,5 +330,15 @@ export class OffspringListComponent implements OnInit {
     if (petId) {
       this.router.navigate(['/pets', petId]);
     }
+  }
+
+  openDocuments(offspring: OffspringRead): void {
+    this.documentsOffspring = offspring;
+    this.showDocumentsModal = true;
+  }
+
+  closeDocuments(): void {
+    this.showDocumentsModal = false;
+    this.documentsOffspring = null;
   }
 }

@@ -61,8 +61,8 @@
         />
       </div>
 
-      <button type="submit" class="w-full auth-submit-btn">
-        <i class="bi bi-person-plus mr-2" aria-hidden="true"></i>Create Account
+      <button type="submit" class="w-full auth-submit-btn" [disabled]="isSubmitting">
+        <i [class]="isSubmitting ? 'bi bi-arrow-repeat spin mr-2' : 'bi bi-person-plus mr-2'" aria-hidden="true"></i>{{ isSubmitting ? 'Creating...' : 'Create Account' }}
       </button>
 
       <div class="divider">

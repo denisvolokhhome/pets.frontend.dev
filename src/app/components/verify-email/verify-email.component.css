@@ -1,0 +1,66 @@
+.verify-container {
+  min-height: calc(100vh - 120px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.verify-card {
+  background: white; border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  padding: 3rem; max-width: 480px; width: 100%; text-align: center;
+}
+.verify-content h1 {
+  font-size: 1.5rem; font-weight: 700; color: #1f2937; margin: 0 0 0.75rem;
+}
+.verify-subtitle {
+  font-size: 0.9375rem; color: #4b5563; line-height: 1.6; margin: 0 0 0.5rem;
+}
+.verify-hint {
+  font-size: 0.8125rem; color: #9ca3af; margin: 0 0 1.5rem;
+}
+.verify-icon {
+  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1.5rem;
+  display: flex; align-items: center; justify-content: center; font-size: 2rem;
+}
+.verify-icon.pending { background: #eff6ff; color: #3b82f6; }
+.verify-icon.verifying { background: #fef3c7; color: #d97706; }
+.verify-icon.success { background: #d1fae5; color: #059669; }
+.verify-icon.error { background: #fee2e2; color: #dc2626; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-resend {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.625rem 1.5rem; background: white; color: #374151;
+  border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.875rem;
+  font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
+}
+.btn-resend:hover:not(:disabled) { background: #f3f4f6; border-color: #9ca3af; }
+.btn-resend:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.verify-divider {
+  height: 1px; background: #e5e7eb; margin: 1.5rem 0;
+}
+.verify-footer-text {
+  font-size: 0.8125rem; color: #9ca3af; margin: 0 0 0.75rem;
+}
+.btn-login {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.625rem 1.5rem; background: transparent; color: var(--primary-color, #ff6b6b);
+  border: 1px solid var(--primary-color, #ff6b6b); border-radius: 8px;
+  font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-login:hover { background: rgba(255,107,107,0.08); }
+
+.btn-primary-action {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 2rem; background: var(--primary-color, #ff6b6b); color: white;
+  border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+}
+.btn-primary-action:hover { background: #ff5252; transform: translateY(-2px); }
+
+@media (max-width: 480px) {
+  .verify-card { padding: 2rem 1.5rem; }
+  .verify-content h1 { font-size: 1.25rem; }
+}

@@ -9,6 +9,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
 import { OffspringEditComponent } from '../offspring-edit/offspring-edit.component';
+import { OffspringDocumentsComponent } from '../offspring-documents/offspring-documents.component';
 import { GenealogyService } from 'src/app/services/genealogy.service';
 
 @Component({
@@ -16,7 +17,7 @@ import { GenealogyService } from 'src/app/services/genealogy.service';
   selector: 'app-offspring-detail',
   templateUrl: './offspring-detail.component.html',
   styleUrls: ['./offspring-detail.component.css'],
-  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent]
+  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent]
 })
 export class OffspringDetailComponent implements OnInit {
   offspringId: string = '';

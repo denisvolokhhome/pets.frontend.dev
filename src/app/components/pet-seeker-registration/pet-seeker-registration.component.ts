@@ -39,6 +39,7 @@ export class PetSeekerRegistrationComponent {
 
   passwordErrors: string[] = [];
   emailExistsError: string | null = null;
+  isSubmitting = false;
 
   validatePassword(): boolean {
     this.passwordErrors = [];
@@ -68,10 +69,11 @@ export class PetSeekerRegistrationComponent {
     this.emailExistsError = null;
     
     if (this.registerForm.valid) {
-      // Validate password before submitting
       if (!this.validatePassword()) {
         return;
       }
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
 
       const formValue = {
         email: this.registerForm.value.email,
@@ -86,15 +88,13 @@ export class PetSeekerRegistrationComponent {
             localStorage.setItem('id_token', response.access_token);
           }
           
-          this.toastr.success(
-            'Welcome to Breedly!',
-            'Account Created Successfully'
-          );
-          
-          // Redirect to pet seeker dashboard
-          this.router.navigate(['dashboard']);
+          // Redirect to verify email page
+          this.router.navigate(['/verify-email'], {
+            queryParams: { email: this.registerForm.value.email }
+          });
         },
         error: (error: HttpErrorResponse) => {
+          this.isSubmitting = false;
           console.error('Registration error:', error);
           console.error('Error detail:', error.error?.detail);
           console.error('Error status:', error.status);

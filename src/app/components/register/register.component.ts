@@ -94,13 +94,11 @@ export class RegisterComponent {
       this.service.RegisterUser(formValue).subscribe({
         next: () => {
           localStorage.setItem('breeder_just_registered', 'true');
-          this.toastr.success(
-            'Please sign in to get started',
-            'Account created successfully'
-          );
-          this.router.navigate(['login']);
+          this.isSubmitting = false;
+          this.router.navigate(['/verify-email'], { queryParams: { email: formValue.email } });
         },
         error: (error) => {
+          this.isSubmitting = false;
           console.error('Registration error:', error);
           
           // Handle specific error cases

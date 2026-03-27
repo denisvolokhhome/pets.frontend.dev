@@ -10,6 +10,7 @@ import { MessageService } from '../../services/message.service';
 import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { DataService } from '../../services/data.service';
 import { Subject, takeUntil, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -75,6 +76,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSharingLocation = false;
   showShareLocationConfirm = false;
+  isSharingDocuments = false;
+  showShareDocumentsConfirm = false;
+  hasOffspringDocuments = false;
   currentUserId?: string;
   isBreeder = false;
   
@@ -86,7 +90,8 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private authService: AuthService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dataService: DataService
   ) {
     this.replyForm = this.fb.group({
       message: ['', [Validators.required, Validators.maxLength(2000)]]
@@ -100,10 +105,12 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       this.markMessagesAsRead();
       this.startPolling();
     } else {
-      // No thread ID means new conversation - not loading
       this.isLoading = false;
     }
-    // Trigger change detection to ensure view updates
+    // Check if offspring has documents (for Share Documents button)
+    if (this.offspringContext?.id) {
+      this.checkOffspringDocuments();
+    }
     this.cdr.detectChanges();
   }
 
@@ -324,6 +331,55 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
 
   cancelShareLocation(): void {
     this.showShareLocationConfirm = false;
+  }
+
+  confirmShareDocuments(): void {
+    this.showShareDocumentsConfirm = true;
+  }
+
+  cancelShareDocuments(): void {
+    this.showShareDocumentsConfirm = false;
+  }
+
+  private checkOffspringDocuments(): void {
+    if (!this.offspringContext?.id) return;
+    this.dataService.getOffspringDocuments(this.offspringContext.id).subscribe({
+      next: (docs) => {
+        this.hasOffspringDocuments = docs && docs.length > 0;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.hasOffspringDocuments = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  shareDocuments(): void {
+    if (!this.threadId || this.isSharingDocuments) return;
+    this.showShareDocumentsConfirm = false;
+    this.isSharingDocuments = true;
+    this.messageService.shareDocuments(this.threadId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (message) => {
+          this.messages.push({
+            id: message.id,
+            sender_id: this.currentUserId!,
+            sender_name: this.authService.currentUser?.name || 'You',
+            sender_is_breeder: true,
+            message: message.content,
+            is_read: false,
+            created_at: message.created_at || new Date().toISOString()
+          });
+          this.toastService.success('Documents shared successfully', 'Shared');
+          this.isSharingDocuments = false;
+        },
+        error: (error) => {
+          this.toastService.error(error.message || 'Failed to share documents', 'Error');
+          this.isSharingDocuments = false;
+        }
+      });
   }
 
   shareLocation(): void {

@@ -150,6 +150,13 @@
                 <i class="bi bi-pencil-fill"></i>
               </button>
               <button 
+                class="btn-action btn-docs"
+                (click)="openDocuments(offspring)"
+                type="button"
+                title="Documents">
+                <i class="bi bi-file-earmark-text"></i>
+              </button>
+              <button 
                 class="btn-action btn-void"
                 (click)="deleteOffspring(offspring)"
                 [disabled]="isDeleting[offspring.id]"
@@ -192,5 +199,16 @@
       (offspringSaved)="onOffspringSaved()"
       (modalClosed)="onModalClosed()">
     </app-offspring-edit>
+  </div>
+</div>
+
+<!-- Documents Modal -->
+<div *ngIf="showDocumentsModal && documentsOffspring" class="modal-overlay" (click)="closeDocuments()">
+  <div class="modal-container modal-docs" (click)="$event.stopPropagation()">
+    <div class="modal-close-btn" (click)="closeDocuments()"><i class="bi bi-x-lg"></i></div>
+    <app-offspring-documents
+      [offspringId]="documentsOffspring.id"
+      [offspringName]="documentsOffspring.name">
+    </app-offspring-documents>
   </div>
 </div>

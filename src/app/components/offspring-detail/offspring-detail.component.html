@@ -153,6 +153,14 @@
           </button>
         </div>
 
+        <!-- Documents Card (Breeder View) -->
+        <div class="card mt-4" *ngIf="isBreederView() && offspring">
+          <app-offspring-documents
+            [offspringId]="offspring.id"
+            [offspringName]="offspring.name">
+          </app-offspring-documents>
+        </div>
+
         <!-- Breeder Info Card (Public View) -->
         <div class="card mt-4" *ngIf="isPublicView()">
           <h3 class="text-lg font-semibold mb-4">Breeder Information</h3>

@@ -166,6 +166,33 @@
           <i class="pi text-sm" [ngClass]="isSharingLocation ? 'pi-spin pi-spinner' : 'pi-map-marker'"></i>
           <span>Share Location</span>
         </button>
+
+        <!-- Share Documents Confirmation -->
+        <div *ngIf="showShareDocumentsConfirm" 
+             class="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm mt-1">
+          <i class="pi pi-info-circle text-blue-600"></i>
+          <span class="text-gray-700 flex-1">Share offspring documents with this person?</span>
+          <button type="button" (click)="shareDocuments()"
+            class="px-3 py-1 text-xs font-medium rounded-full bg-blue-600 text-white hover:opacity-90 transition-opacity">
+            Confirm
+          </button>
+          <button type="button" (click)="cancelShareDocuments()"
+            class="px-3 py-1 text-xs font-medium rounded-full border border-gray-300 text-gray-600 bg-white hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Share Documents button -->
+        <button
+          *ngIf="!showShareDocumentsConfirm && offspringContext"
+          type="button"
+          (click)="confirmShareDocuments()"
+          [disabled]="isSharingDocuments || !hasOffspringDocuments"
+          [title]="hasOffspringDocuments ? 'Share Documents' : 'No documents uploaded for this offspring'"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-1">
+          <i class="pi text-sm" [ngClass]="isSharingDocuments ? 'pi-spin pi-spinner' : 'pi-file'"></i>
+          <span>Share Documents</span>
+        </button>
       </div>
 
       <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">

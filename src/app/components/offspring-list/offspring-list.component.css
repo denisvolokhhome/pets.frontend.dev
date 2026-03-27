@@ -165,6 +165,31 @@
   color: #f87171;
 }
 
+.btn-docs {
+  background: linear-gradient(135deg, #a5f3fc, #22d3ee);
+  color: #164e63;
+}
+
+/* Modal docs */
+.modal-docs {
+  max-width: 420px !important;
+  width: 90% !important;
+  position: relative;
+  border-radius: 12px;
+}
+.modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 1.25rem;
+  z-index: 1;
+}
+.modal-close-btn:hover {
+  color: #374151;
+}
+
 /* Empty State */
 .empty-state {
   padding: 4rem 2rem;

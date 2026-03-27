@@ -83,6 +83,8 @@
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} pets"
           [globalFilterFields]="['name', 'breed_name', 'description', 'gender', 'location_name']"
+          [scrollable]="true"
+          scrollHeight="600px"
           styleClass="p-datatable-sm p-datatable-striped"
           responsiveLayout="scroll"
           *ngIf="!isLoading && filteredPets && filteredPets.length > 0">
@@ -109,7 +111,7 @@
                 Location <p-sortIcon field="location_name"></p-sortIcon>
               </th>
               <th>Health</th>
-              <th style="width: 160px; text-align: center">Actions</th>
+              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 160px; text-align: center">Actions</th>
             </tr>
           </ng-template>
           
@@ -160,7 +162,7 @@
                 </div>
               </td>
               <!-- Actions -->
-              <td>
+              <td pFrozenColumn [frozen]="true" alignFrozen="right">
                 <div class="flex items-center justify-center gap-1.5">
                   <button class="table-action-btn btn-edit" title="Edit" (click)="editPet(pet)">
                     <i class="bi bi-pencil"></i>

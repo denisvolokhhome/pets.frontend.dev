@@ -34,7 +34,7 @@ export class AppComponent {
    * Public pages should have a friendly design without sidebar
    */
   isPublicPage(): boolean {
-    const publicRoutes = ['', '/', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/search-pets'];
+    const publicRoutes = ['', '/', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', '/search-pets'];
     return publicRoutes.includes(this.route);
   }
 }

@@ -1,0 +1,68 @@
+<div class="verify-container">
+  <div class="verify-card">
+    <!-- Pending: Check your email -->
+    <div *ngIf="mode === 'pending'" class="verify-content">
+      <div class="verify-icon pending">
+        <i class="bi bi-envelope-paper"></i>
+      </div>
+      <h1>Check your email</h1>
+      <p class="verify-subtitle">
+        We've sent a verification link to
+        <strong *ngIf="email">{{ email }}</strong>
+        <span *ngIf="!email">your email address</span>.
+      </p>
+      <p class="verify-hint">Click the link in the email to verify your account. If you don't see it, check your spam folder.</p>
+
+      <button
+        class="btn-resend"
+        (click)="resendVerification()"
+        [disabled]="isResending || resendCooldown > 0 || !email">
+        <i class="bi bi-arrow-clockwise"></i>
+        {{ isResending ? 'Sending...' : resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend verification email' }}
+      </button>
+
+      <div class="verify-divider"></div>
+      <p class="verify-footer-text">Already verified?</p>
+      <button class="btn-login" (click)="goToLogin()">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In
+      </button>
+    </div>
+
+    <!-- Verifying: Processing token -->
+    <div *ngIf="mode === 'verifying'" class="verify-content">
+      <div class="verify-icon verifying">
+        <i class="bi bi-arrow-repeat spin"></i>
+      </div>
+      <h1>Verifying your email...</h1>
+      <p class="verify-subtitle">Please wait while we confirm your email address.</p>
+    </div>
+
+    <!-- Success -->
+    <div *ngIf="mode === 'success'" class="verify-content">
+      <div class="verify-icon success">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <h1>Email verified!</h1>
+      <p class="verify-subtitle">Your account is now active. You're all set to get started.</p>
+      <button class="btn-primary-action" (click)="goToLogin()">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In to Your Account
+      </button>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="mode === 'error'" class="verify-content">
+      <div class="verify-icon error">
+        <i class="bi bi-exclamation-triangle"></i>
+      </div>
+      <h1>Verification failed</h1>
+      <p class="verify-subtitle">{{ errorMessage }}</p>
+      <button class="btn-resend" (click)="resendVerification()" [disabled]="!email || isResending || resendCooldown > 0">
+        <i class="bi bi-arrow-clockwise"></i>
+        {{ resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Request new verification link' }}
+      </button>
+      <button class="btn-login" (click)="goToLogin()">
+        <i class="bi bi-box-arrow-in-right"></i> Back to Sign In
+      </button>
+    </div>
+  </div>
+</div>

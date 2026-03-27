@@ -496,4 +496,34 @@ export class DataService {
       .pipe(catchError(this.handleError));
   }
 
+  // Offspring document methods
+  getOffspringDocuments(offspringId: string): Observable<any[]> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.get<any[]>(this.apiurl + '/offsprings/' + offspringId + '/documents', { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  uploadOffspringDocument(offspringId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post<any>(this.apiurl + '/offsprings/' + offspringId + '/documents', formData, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteOffspringDocument(offspringId: string, documentId: number): Observable<void> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.delete<void>(this.apiurl + '/offsprings/' + offspringId + '/documents/' + documentId, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
 }

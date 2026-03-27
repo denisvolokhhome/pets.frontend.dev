@@ -245,6 +245,13 @@ export class MessageService {
       .pipe(catchError(this.handleError));
   }
 
+  shareDocuments(threadId: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<any>(`${this.apiUrl}/messages/threads/${threadId}/share-documents`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
   /**
    * Get authorization headers with JWT token
    */

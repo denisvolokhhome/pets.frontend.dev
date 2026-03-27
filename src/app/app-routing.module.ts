@@ -31,12 +31,14 @@ import { FavoritesListComponent } from './components/favorites-list/favorites-li
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'verify-email', component: VerifyEmailComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,

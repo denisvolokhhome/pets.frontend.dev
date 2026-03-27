@@ -72,8 +72,10 @@ import { NotificationDropdownComponent } from './components/notification-dropdow
 import { BreederHelpWidgetComponent } from './components/breeder-help-widget/breeder-help-widget.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PetDocumentsComponent } from './components/pet-documents/pet-documents.component';
+import { OffspringDocumentsComponent } from './components/offspring-documents/offspring-documents.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
+import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { AuthService } from './services/auth.service';
 import { provideAppInitializer } from '@angular/core';
@@ -150,6 +152,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     FavoritesListComponent,
     ResetPasswordComponent,
     GenealogyComponent,
+    VerifyEmailComponent,
     PhoneMaskDirective,
   ],
   imports: [
@@ -184,6 +187,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     OffspringEditComponent,
     PageHeaderComponent,
     PetDocumentsComponent,
+    OffspringDocumentsComponent,
 
   ],
   providers: [
