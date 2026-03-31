@@ -14,13 +14,17 @@ export class AppComponent {
   logoURL: any;
   route: any;
   cookiesAccepted: boolean = !!localStorage.getItem('cookies_accepted');
+  isAuthenticated: boolean = false;
 
-  constructor(private router: Router, private loc: Location) {}
+  constructor(private router: Router, private loc: Location) {
+    this.isAuthenticated = !!localStorage.getItem('id_token');
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe((res) => {
       const fullPath = this.loc.path();
       this.route = fullPath.split('?')[0];
+      this.isAuthenticated = !!localStorage.getItem('id_token');
     });
   }
 
@@ -35,6 +39,10 @@ export class AppComponent {
    */
   isPublicPage(): boolean {
     const publicRoutes = ['', '/', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', '/search-pets'];
-    return publicRoutes.includes(this.route);
+    if (publicRoutes.includes(this.route)) return true;
+    // Dynamic public routes
+    if (this.route?.startsWith('/breeder/')) return true;
+    if (this.route?.startsWith('/offspring/')) return true;
+    return false;
   }
 }

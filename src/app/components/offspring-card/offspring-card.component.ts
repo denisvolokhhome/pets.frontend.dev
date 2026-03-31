@@ -78,12 +78,20 @@ export class OffspringCardComponent implements OnInit {
    * Toggle favorite status
    */
   toggleFavorite(event: Event): void {
-    event.stopPropagation(); // Prevent card click
+    event.stopPropagation();
     
     if (!this.isAuthenticated()) {
-      // Store offspring context and show guest modal
       this.storeOffspringContext();
       this.showGuestModal = true;
+      return;
+    }
+
+    if (this.authService.isBreeder) {
+      this.toastr.warning(
+        'Breeder accounts cannot add favorites. Sign in as a pet seeker or create a pet seeker account.',
+        'Pet Seeker Feature',
+        { timeOut: 6000, progressBar: true }
+      );
       return;
     }
 

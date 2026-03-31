@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -14,6 +16,7 @@ export class OffspringGridComponent implements OnInit {
 
   offsprings: OffspringRead[] = [];
   isLoading: boolean = true;
+  breederInfo: any = null;
   
   // Pagination
   totalOffsprings: number = 0;
@@ -41,9 +44,11 @@ export class OffspringGridComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private offspringService: OffspringService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +60,7 @@ export class OffspringGridComponent implements OnInit {
         if (this.breederId) {
           this.loadFiltersFromSession();
           this.loadOffsprings();
+          this.loadBreederInfo();
         } else {
           console.error('Breeder ID not found in route parameters');
           this.isLoading = false;
@@ -63,6 +69,7 @@ export class OffspringGridComponent implements OnInit {
     } else {
       this.loadFiltersFromSession();
       this.loadOffsprings();
+      this.loadBreederInfo();
     }
   }
 
@@ -240,5 +247,30 @@ export class OffspringGridComponent implements OnInit {
         console.error('Error loading filters from session storage:', error);
       }
     }
+  }
+
+  private loadBreederInfo(): void {
+    if (!this.breederId) return;
+    this.http.get<any>(`${environment.API_URL}/users/breeder/${this.breederId}/public`).subscribe({
+      next: (info) => { this.breederInfo = info; this.cdr.detectChanges(); },
+      error: () => {}
+    });
+  }
+
+  getBreederImageUrl(): string | null {
+    return this.breederInfo?.profile_image_url
+      ? `${environment.API_HOST}${this.breederInfo.profile_image_url}`
+      : null;
+  }
+
+  goToSearch(): void {
+    this.router.navigate(['/search-pets']);
+  }
+
+  getBreederLocation(): string {
+    const loc = this.breederInfo?.location;
+    if (!loc) return '';
+    const parts = [loc.city, loc.state].filter(Boolean);
+    return parts.join(', ');
   }
 }

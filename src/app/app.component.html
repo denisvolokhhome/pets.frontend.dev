@@ -1,11 +1,7 @@
 <a href="#main-content" class="skip-to-main">Skip to main content</a>
 <app-top-menu></app-top-menu>
 <main id="main-content" class="main-wrapper flex flex-row h-100">
-  <app-left-menu
-    *ngIf="
-      !(this.route == '/login' || this.route == '/register' || this.route == '/register/pet-seeker' || this.route == '/register/from-message' || this.route == '/reset-password' || this.route == '/verify-email' || this.route == '/auth/callback' || this.route == '' || this.route == '/search-pets')
-    "
-  ></app-left-menu>
+  <app-left-menu *ngIf="isAuthenticated && !isPublicPage()"></app-left-menu>
   <div class="content-wrapper w-100 mx-3 mt-3" [ngClass]="{'public-page': isPublicPage()}">
     <router-outlet></router-outlet>
   </div>

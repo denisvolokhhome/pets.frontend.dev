@@ -40,8 +40,8 @@
       <button class="breeder-card__link breeder-card__link--primary" (click)="onViewProfile($event)">Profile</button>
       <span class="breeder-card__divider">·</span>
       <button class="breeder-card__link" (click)="onViewOffsprings($event)">Offsprings</button>
-      <span class="breeder-card__divider">·</span>
-      <button class="breeder-card__link" (click)="onContactBreeder($event)">Contact</button>
+      <span class="breeder-card__divider" *ngIf="!authService.isBreeder">·</span>
+      <button class="breeder-card__link" (click)="onContactBreeder($event)" *ngIf="!authService.isBreeder">Contact</button>
     </div>
   </div>
 </div>
@@ -53,3 +53,47 @@
   [(visible)]="showContactModal"
   (messageSent)="onMessageSent()">
 </app-contact-breeder>
+
+<!-- Guest Sign In Modal -->
+<app-guest-prompt-modal
+  [(visible)]="showGuestModal"
+  (authSuccess)="onGuestAuthSuccess()">
+</app-guest-prompt-modal>
+
+<!-- Breeder Profile Popup -->
+<div *ngIf="showProfilePopup" class="profile-backdrop" (click)="closeProfilePopup()">
+  <div class="profile-popup" (click)="$event.stopPropagation()">
+    <button class="profile-close" (click)="closeProfilePopup()"><i class="bi bi-x-lg"></i></button>
+
+    <div *ngIf="isLoadingProfile" class="profile-loading">
+      <i class="bi bi-arrow-repeat spin"></i>
+    </div>
+
+    <div *ngIf="!isLoadingProfile && breederProfile" class="profile-content">
+      <div class="profile-avatar" [style.background-image]="getProfileImageUrl() ? 'url(' + getProfileImageUrl() + ')' : ''">
+        <i *ngIf="!getProfileImageUrl()" class="bi bi-person-circle"></i>
+      </div>
+      <h3 class="profile-name">{{ breederProfile.breedery_name || breederProfile.name || 'Breeder' }}</h3>
+      <p class="profile-location" *ngIf="getLocationText()"><i class="bi bi-geo-alt"></i> {{ getLocationText() }}</p>
+      <p class="profile-desc" *ngIf="breederProfile.breedery_description">{{ breederProfile.breedery_description }}</p>
+      <div class="profile-tags" *ngIf="breederProfile.search_tags?.length">
+        <span class="profile-tag" *ngFor="let tag of breederProfile.search_tags">{{ tag }}</span>
+      </div>
+      <div class="profile-section" *ngIf="breederProfile.animal_kinds?.length">
+        <p class="profile-section-label">Animals</p>
+        <div class="profile-kinds">
+          <span class="profile-kind" *ngFor="let kind of breederProfile.animal_kinds">{{ kind }}</span>
+        </div>
+      </div>
+      <div class="profile-section" *ngIf="breederProfile.breeds?.length">
+        <p class="profile-section-label">Breeds</p>
+        <div class="profile-breeds">
+          <span class="profile-breed" *ngFor="let b of breederProfile.breeds">{{ b.name }}</span>
+        </div>
+      </div>
+      <button class="profile-view-btn" (click)="closeProfilePopup(); onViewOffsprings($event)">
+        <i class="bi bi-grid-3x3-gap"></i> View Offsprings
+      </button>
+    </div>
+  </div>
+</div>

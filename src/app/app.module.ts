@@ -73,6 +73,7 @@ import { BreederHelpWidgetComponent } from './components/breeder-help-widget/bre
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { PetDocumentsComponent } from './components/pet-documents/pet-documents.component';
 import { OffspringDocumentsComponent } from './components/offspring-documents/offspring-documents.component';
+import { GuestPromptModalComponent } from './components/guest-prompt-modal/guest-prompt-modal.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
@@ -188,6 +189,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     PageHeaderComponent,
     PetDocumentsComponent,
     OffspringDocumentsComponent,
+    GuestPromptModalComponent,
 
   ],
   providers: [

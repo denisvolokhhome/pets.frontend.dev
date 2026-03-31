@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { BreederSearchResult } from 'src/app/models/search';
+import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -18,8 +20,12 @@ export class BreederCardComponent {
 
   apihost = environment.API_HOST;
   showContactModal: boolean = false;
+  showGuestModal: boolean = false;
+  showProfilePopup: boolean = false;
+  breederProfile: any = null;
+  isLoadingProfile: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, public authService: AuthService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   /**
    * Get the full image URL for the breeder thumbnail
@@ -68,9 +74,37 @@ export class BreederCardComponent {
    * Handle view profile button click
    */
   onViewProfile(event: Event): void {
-    event.stopPropagation(); // Prevent card click event
-    // TODO: Navigate to breeder profile page
-    console.log('View profile for breeder:', this.breeder.user_id);
+    event.stopPropagation();
+    this.isLoadingProfile = true;
+    this.showProfilePopup = true;
+    this.http.get<any>(`${environment.API_URL}/users/breeder/${this.breeder.user_id}/public`).subscribe({
+      next: (profile) => {
+        this.breederProfile = profile;
+        this.isLoadingProfile = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoadingProfile = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  closeProfilePopup(): void {
+    this.showProfilePopup = false;
+    this.breederProfile = null;
+  }
+
+  getProfileImageUrl(): string | null {
+    return this.breederProfile?.profile_image_url
+      ? `${this.apihost}${this.breederProfile.profile_image_url}`
+      : null;
+  }
+
+  getLocationText(): string {
+    const loc = this.breederProfile?.location;
+    if (!loc) return '';
+    return [loc.city, loc.state].filter(Boolean).join(', ');
   }
 
   /**
@@ -85,8 +119,16 @@ export class BreederCardComponent {
    * Handle contact breeder button click
    */
   onContactBreeder(event: Event): void {
-    event.stopPropagation(); // Prevent card click event
+    event.stopPropagation();
+    if (!localStorage.getItem('id_token')) {
+      this.showGuestModal = true;
+      return;
+    }
     this.showContactModal = true;
+  }
+
+  onGuestAuthSuccess(): void {
+    this.showGuestModal = false;
   }
 
   /**
