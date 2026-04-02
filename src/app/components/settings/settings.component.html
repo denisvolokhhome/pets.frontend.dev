@@ -22,6 +22,13 @@
         (click)="navigateToSection('locations')">
         Breeding Locations
       </button>
+      <button 
+        *ngIf="isBreeder"
+        class="sidebar-nav-item" 
+        [class.active]="isActive('subscription')"
+        (click)="navigateToSection('subscription')">
+        Subscription
+      </button>
       <!-- Notifications settings temporarily disabled
       <button 
         *ngIf="isBreeder"

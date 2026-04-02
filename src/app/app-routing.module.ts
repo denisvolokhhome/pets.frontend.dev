@@ -23,6 +23,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
+import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
@@ -72,6 +73,7 @@ const routes: Routes = [
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
+      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
       { path: 'support', component: SupportSettingsComponent }
     ]
   },

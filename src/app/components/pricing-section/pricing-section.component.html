@@ -1,0 +1,60 @@
+<section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 id="pricing-heading" class="section-title">Simple, Transparent Pricing</h2>
+      <p class="section-subtitle">Choose the plan that fits your breeding program</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner" aria-live="polite">
+      <p>Loading plans...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="error-box" role="alert">
+      <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+      <div>
+        <p>{{ errorMessage }}</p>
+        <button class="btn-retry" (click)="loadPlans()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Retry
+        </button>
+      </div>
+    </div>
+
+    <!-- Plans Grid -->
+    <div *ngIf="!isLoading && !errorMessage" class="plans-grid" role="list">
+      <article
+        *ngFor="let plan of plans"
+        class="plan-card"
+        [class.plan-card-featured]="plan.is_default"
+        role="listitem"
+      >
+        <h3 class="plan-card-name">{{ plan.name }}</h3>
+        <p class="plan-card-price">{{ formatPrice(plan) }}</p>
+
+        <ul class="plan-card-limits" aria-label="Plan limits for {{ plan.name }}">
+          <li>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            {{ plan.max_pets }} Pets
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            {{ plan.max_published_locations }} Published {{ plan.max_published_locations === 1 ? 'Location' : 'Locations' }}
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            {{ plan.max_simultaneous_offsprings }} Simultaneous Offsprings
+          </li>
+        </ul>
+
+        <button
+          class="btn-get-started"
+          (click)="onGetStarted()"
+          aria-label="Get started with the {{ plan.name }} plan"
+        >
+          Get Started
+        </button>
+      </article>
+    </div>
+  </div>
+</section>

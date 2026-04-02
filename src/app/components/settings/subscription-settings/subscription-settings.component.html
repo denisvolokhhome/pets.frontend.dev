@@ -1,0 +1,110 @@
+<div class="subscription-settings">
+  <div class="settings-header">
+    <h2>Subscription</h2>
+    <p class="settings-subtitle">Manage your subscription plan and view usage limits</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <p>Loading subscription details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !isLoading" class="error-box">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <div>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadData()">
+        <i class="bi bi-arrow-clockwise"></i> Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && !errorMessage">
+    <!-- Current Plan Section -->
+    <div class="form-section" *ngIf="subscription">
+      <div class="section-header">
+        <i class="bi bi-credit-card-2-front"></i>
+        <h3>Current Plan</h3>
+      </div>
+
+      <div class="current-plan-info">
+        <div class="plan-detail">
+          <span class="plan-detail-label">Plan</span>
+          <span class="plan-detail-value">{{ subscription.plan.name }}</span>
+        </div>
+        <div class="plan-detail">
+          <span class="plan-detail-label">Status</span>
+          <span class="plan-status-badge" [ngClass]="{
+            'status-active': subscription.status === 'active',
+            'status-canceled': subscription.status === 'canceled',
+            'status-past-due': subscription.status === 'past_due'
+          }">
+            {{ getStatusLabel(subscription.status) }}
+          </span>
+        </div>
+        <div class="plan-detail">
+          <span class="plan-detail-label">Max Pets</span>
+          <span class="plan-detail-value">{{ subscription.plan.max_pets }}</span>
+        </div>
+        <div class="plan-detail">
+          <span class="plan-detail-label">Max Published Locations</span>
+          <span class="plan-detail-value">{{ subscription.plan.max_published_locations }}</span>
+        </div>
+        <div class="plan-detail">
+          <span class="plan-detail-label">Max Simultaneous Offsprings</span>
+          <span class="plan-detail-value">{{ subscription.plan.max_simultaneous_offsprings }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Plans Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <i class="bi bi-grid-3x3-gap"></i>
+        <h3>Available Plans</h3>
+      </div>
+
+      <div class="plans-grid">
+        <div
+          *ngFor="let plan of plans"
+          class="plan-card"
+          [class.plan-card-current]="isCurrentPlan(plan)"
+        >
+          <div class="plan-card-badge" *ngIf="isCurrentPlan(plan)">
+            Current Plan
+          </div>
+
+          <h4 class="plan-card-name">{{ plan.name }}</h4>
+          <p class="plan-card-price">{{ formatPrice(plan) }}</p>
+
+          <ul class="plan-card-limits">
+            <li>
+              <i class="bi bi-check-circle-fill"></i>
+              {{ plan.max_pets }} Pets
+            </li>
+            <li>
+              <i class="bi bi-check-circle-fill"></i>
+              {{ plan.max_published_locations }} Published {{ plan.max_published_locations === 1 ? 'Location' : 'Locations' }}
+            </li>
+            <li>
+              <i class="bi bi-check-circle-fill"></i>
+              {{ plan.max_simultaneous_offsprings }} Simultaneous Offsprings
+            </li>
+          </ul>
+
+          <button
+            *ngIf="!isCurrentPlan(plan) && isPaidPlan(plan)"
+            class="btn-upgrade"
+            [disabled]="isRedirecting"
+            (click)="onUpgrade(plan)"
+          >
+            <i class="bi bi-arrow-up-circle"></i>
+            {{ isRedirecting ? 'Redirecting...' : 'Upgrade' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

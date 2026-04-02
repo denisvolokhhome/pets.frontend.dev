@@ -28,6 +28,11 @@
           <!-- Auth links (not logged in) -->
           <div class="flex items-center" *ngIf="!checkToken">
             <ul class="flex items-center space-x-2">
+              <!-- Pricing link scrolls to #pricing on home page -->
+              <li>
+                <a href="/#pricing" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Pricing</a>
+              </li>
+              <span class="text-white/70 text-base" aria-hidden="true">/</span>
               <!-- Show Sign In when NOT on login page -->
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
@@ -88,6 +93,10 @@
           <!-- Auth links (not logged in) - Mobile -->
           <div *ngIf="!checkToken">
             <ul class="space-y-2">
+              <!-- Pricing link scrolls to #pricing on home page -->
+              <li>
+                <a href="/#pricing" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Pricing</a>
+              </li>
               <!-- Show Sign In when NOT on login page -->
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
