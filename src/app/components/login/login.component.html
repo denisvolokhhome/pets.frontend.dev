@@ -9,8 +9,24 @@
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="proceedLogin()" class="auth-form">
+      <!-- Suspension Alert -->
+      <div *ngIf="loginError && loginError.includes('suspended')" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg shadow" role="alert">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <i class="bi bi-shield-exclamation text-red-500 text-2xl"></i>
+          </div>
+          <div class="flex-1 ml-3">
+            <h3 class="text-red-900 font-semibold text-base mb-1">Account Suspended</h3>
+            <p class="text-red-800 text-sm mb-2">Your account has been suspended. If you believe this is a mistake, please contact Breedly support for clarification and to request reactivation.</p>
+            <a href="mailto:support@breedly.com" class="inline-flex items-center text-sm font-medium text-red-700 hover:text-red-900 underline">
+              <i class="bi bi-envelope mr-1"></i> support&#64;breedly.com
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- Error Alert -->
-      <div *ngIf="loginError" class="mb-4 p-4 bg-red-50 rounded-lg shadow">
+      <div *ngIf="loginError && !loginError.includes('suspended')" class="mb-4 p-4 bg-red-50 rounded-lg shadow">
         <div class="flex items-start">
           <div class="flex-shrink-0">
             <i class="bi bi-exclamation-circle-fill text-orange-500 text-2xl"></i>

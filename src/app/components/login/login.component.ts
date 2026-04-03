@@ -151,7 +151,19 @@ export class LoginComponent {
           // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
           setTimeout(() => {
             // Check if it's a bad credentials error
-            if (err.status === 400 && err.error?.detail === 'LOGIN_BAD_CREDENTIALS') {
+            if (err.status === 403) {
+              this.loginError = 'Your account has been suspended. If you believe this is a mistake, please contact Breedly support at support@breedly.com for clarification and to request reactivation.';
+              this.toastr.error(
+                'Your account has been suspended. Please contact support@breedly.com for assistance.',
+                'Account Suspended',
+                {
+                  timeOut: 12000,
+                  progressBar: true,
+                  closeButton: true,
+                  tapToDismiss: true
+                }
+              );
+            } else if (err.status === 400 && err.error?.detail === 'LOGIN_BAD_CREDENTIALS') {
               this.loginError = 'Invalid email or password';
               this.toastr.error(
                 'The email or password you entered is incorrect. Please try again or create a new account.',
