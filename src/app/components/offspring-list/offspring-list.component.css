@@ -145,7 +145,7 @@
 }
 
 .btn-view {
-  background: linear-gradient(135deg, #93C5FD, #3B82F6);
+  background: linear-gradient(135deg, var(--success-color), var(--secondary-color));
   color: white;
 }
 

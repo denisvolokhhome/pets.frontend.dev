@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
@@ -81,8 +81,6 @@ import { GenealogyComponent } from './components/genealogy/genealogy.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { AuthService } from './services/auth.service';
-import { provideAppInitializer } from '@angular/core';
-import { inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 // PrimeNG imports
@@ -197,6 +195,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 
   ],
   providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptorsFromDi()),
     MessageService,
     provideAppInitializer(() => {

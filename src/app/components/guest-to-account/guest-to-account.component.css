@@ -81,7 +81,7 @@
 
 .info-box i {
   font-size: 1.25rem;
-  color: #3B82F6;
+  color: var(--primary-color);
   flex-shrink: 0;
 }
 

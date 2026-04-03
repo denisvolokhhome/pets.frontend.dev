@@ -39,8 +39,8 @@
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
 .form-textarea {
@@ -76,12 +76,12 @@
 }
 
 .btn-primary {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #ff5252;
 }
 
 .btn-primary:disabled {
@@ -130,7 +130,7 @@
 }
 
 .badge-primary {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
   color: white;
 }
 
@@ -174,8 +174,8 @@
 }
 
 ::ng-deep .p-fileupload:hover {
-  border-color: #3b82f6;
-  background-color: #eff6ff;
+  border-color: var(--primary-color);
+  background-color: rgba(255, 107, 107, 0.05);
 }
 
 ::ng-deep .p-fileupload .p-fileupload-buttonbar {

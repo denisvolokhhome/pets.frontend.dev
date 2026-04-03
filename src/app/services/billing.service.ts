@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import {
   IPlan,
@@ -24,7 +24,7 @@ export class BillingService {
   getPlans(): Observable<IPlan[]> {
     return this.http
       .get<IPlan[]>(`${this.apiUrl}/billing/plans`)
-      .pipe(catchError(this.handleError));
+      .pipe(timeout(8000), catchError(this.handleError));
   }
 
   /**
@@ -88,10 +88,12 @@ export class BillingService {
   /**
    * Handle HTTP errors
    */
-  private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse | TimeoutError) {
     let errorMessage = 'An unknown error occurred';
 
-    if (error.error instanceof ErrorEvent) {
+    if (error instanceof TimeoutError) {
+      errorMessage = 'Request timed out. Please check your connection and try again.';
+    } else if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       if (error.status === 401) {

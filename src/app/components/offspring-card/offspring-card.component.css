@@ -172,7 +172,7 @@
 .contact-btn {
   width: 100%;
   padding: 10px 16px;
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 6px;
@@ -187,11 +187,11 @@
 }
 
 .contact-btn:hover {
-  background-color: #2563eb;
+  background-color: #ff5252;
 }
 
 .contact-btn:active {
-  background-color: #1d4ed8;
+  background-color: #e64545;
 }
 
 .contact-btn i {

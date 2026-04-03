@@ -111,12 +111,12 @@
 }
 
 .fab-button.fab-refresh {
-  background-color: #6366f1;
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .fab-button.fab-refresh:hover {
-  background-color: #4f46e5;
+  background-color: #3db8af;
 }
 
 .fab-button:disabled {

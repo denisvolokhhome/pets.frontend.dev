@@ -119,6 +119,15 @@
   box-shadow: 0 4px 16px rgba(255, 107, 107, 0.15);
 }
 
+.plan-card-illustration {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin: 0 auto 1rem;
+  display: block;
+  border-radius: 8px;
+}
+
 .plan-card-name {
   font-size: 1.375rem;
   font-weight: 700;

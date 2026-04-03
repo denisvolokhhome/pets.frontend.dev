@@ -29,6 +29,13 @@
         [class.plan-card-featured]="plan.is_default"
         role="listitem"
       >
+        <img
+          *ngIf="+plan.price === 0"
+          src="/assets/free-plan-illustration.png"
+          alt="Breeder and pet seeker connecting through Breedly"
+          class="plan-card-illustration"
+          loading="lazy"
+        >
         <h3 class="plan-card-name">{{ plan.name }}</h3>
         <p class="plan-card-price">{{ formatPrice(plan) }}</p>
 
@@ -44,6 +51,10 @@
           <li>
             <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
             {{ plan.max_simultaneous_offsprings }} Simultaneous Offsprings
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            {{ +plan.price === 0 ? 'Basic' : 'Priority' }} Support
           </li>
         </ul>
 

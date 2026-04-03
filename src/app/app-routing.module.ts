@@ -29,6 +29,7 @@ import { OffspringDetailComponent } from './components/offspring-detail/offsprin
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 
+import { PetSeekerGuard } from './guard/pet-seeker.guard';
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
@@ -58,7 +59,7 @@ const routes: Routes = [
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
-  { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [AuthGuard] },
+  { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
   { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
   { path: 'messages/new', component: MessageNewComponent, canActivate: [AuthGuard] },

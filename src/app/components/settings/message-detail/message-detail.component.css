@@ -138,14 +138,14 @@
 .sender-email {
   display: inline-block;
   font-size: 0.9375rem;
-  color: #3b82f6;
+  color: var(--primary-color);
   text-decoration: none;
   margin-bottom: 0.5rem;
   transition: color 0.2s;
 }
 
 .sender-email:hover {
-  color: #2563eb;
+  color: #ff5252;
   text-decoration: underline;
 }
 
@@ -267,8 +267,8 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
 .form-control::placeholder {
@@ -329,12 +329,12 @@ textarea.form-control {
 }
 
 .btn-primary {
-  background-color: #3b82f6;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2563eb;
+  background-color: #ff5252;
 }
 
 .btn-primary:disabled {
@@ -453,11 +453,11 @@ textarea.form-control {
 .btn-back:focus-visible,
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
 .form-control:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }

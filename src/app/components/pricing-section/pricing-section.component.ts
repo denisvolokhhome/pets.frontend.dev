@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { BillingService } from '../../services/billing.service';
 import { IPlan } from '../../models/billing.model';
@@ -16,7 +16,8 @@ export class PricingSectionComponent implements OnInit {
 
   constructor(
     private billingService: BillingService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -31,16 +32,18 @@ export class PricingSectionComponent implements OnInit {
       next: (plans) => {
         this.plans = plans;
         this.isLoading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.errorMessage = err.message || 'Unable to load pricing information.';
         this.isLoading = false;
+        this.cdr.markForCheck();
       }
     });
   }
 
   formatPrice(plan: IPlan): string {
-    if (plan.price === 0) {
+    if (+plan.price === 0) {
       return 'Free';
     }
     return `$${plan.price}/${plan.billing_interval}`;
