@@ -40,11 +40,12 @@
   padding: 1rem 1.25rem 0.5rem;
 }
 .guide-title { font-size: 0.9375rem; font-weight: 600; color: #1a1a2e; margin: 0; }
-.guide-header-actions { display: flex; align-items: center; gap: 0.25rem; }
+.guide-header-actions { display: flex; align-items: center; gap: 0.25rem; align-self: center; }
 .guide-icon-btn {
   background: none; border: none; color: #9ca3af; cursor: pointer;
   padding: 4px 6px; border-radius: 6px; font-size: 0.875rem;
   transition: all 0.15s ease; display: flex; align-items: center;
+  justify-content: center; line-height: 1;
 }
 .guide-icon-btn:hover { color: #4b5563; background: #f3f4f6; }
 
@@ -134,6 +135,17 @@
 .btn-inline-save:disabled { opacity: 0.5; cursor: not-allowed; }
 .guide-complete { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; color: #059669; font-size: 0.8125rem; font-weight: 500; }
 .guide-complete i { font-size: 1rem; }
+.guide-complete-section { padding: 0.5rem 0.75rem 0.75rem; }
+.guide-complete-msg { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; color: #059669; font-size: 0.8125rem; font-weight: 500; }
+.guide-complete-msg i { font-size: 1rem; }
+.btn-complete-guide {
+  display: block; width: 100%; margin-top: 0.5rem;
+  padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
+  color: #fff; background: var(--primary-color, #FF6B6B); border: none;
+  border-radius: 8px; cursor: pointer; transition: all 0.15s ease;
+  font-family: inherit; text-align: center;
+}
+.btn-complete-guide:hover { filter: brightness(0.95); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(255,107,107,0.3); }
 .guide-loading { display: flex; justify-content: center; padding: 2rem; }
 .guide-loading-spinner {
   width: 24px; height: 24px; border: 2.5px solid #e5e7eb;
