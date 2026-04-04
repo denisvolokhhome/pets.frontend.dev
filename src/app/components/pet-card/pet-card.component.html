@@ -4,6 +4,7 @@
       class="edit w-10 h-10 rounded-full border-0 bg-gradient-to-br from-yellow-300 to-yellow-400 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"
       (click)="editPet($event)"
       [attr.data-pet-id]="pet.pet_id"
+      aria-label="Edit pet"
     >
       <i class="bi bi-pencil text-xl text-gray-800"></i>
     </button>
@@ -13,6 +14,7 @@
       (click)="openQuickBreeding($event)"
       [attr.data-pet-id]="pet.pet_id"
       title="Quick Breeding"
+      aria-label="Quick Breeding"
     >
       <i class="bi bi-hearts text-xl text-gray-800"></i>
     </button>
@@ -21,6 +23,7 @@
       (click)="onOpenDocuments($event)"
       [attr.data-pet-id]="pet.pet_id"
       title="Documents"
+      aria-label="Documents"
     >
       <i class="bi bi-file-earmark-text text-xl text-white"></i>
     </button>
@@ -31,6 +34,7 @@
     (click)="deletePet($event)"
     [attr.data-pet-id]="pet.pet_id"
     title="Remove Pet"
+    aria-label="Remove Pet"
   >
     <i class="bi bi-x-circle text-lg text-gray-400 transition-colors duration-200 hover:text-red-400"></i>
   </button>
@@ -38,9 +42,11 @@
     *ngIf="pet.image_path || pet.image_url"
     class="w-full h-[200px] bg-cover bg-center bg-no-repeat relative"
     [style.background-image]="'url(' + getPetImageUrl() + ')'"
+    role="img"
+    [attr.aria-label]="pet.name + ' photo'"
   ></div>
   <div *ngIf="!pet.image_path && !pet.image_url" class="w-full h-[200px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
-    <i class="bi bi-card-image text-6xl"></i>
+    <i class="bi bi-card-image text-6xl" aria-hidden="true"></i>
   </div>
 
   <div class="p-6 relative pt-10">

@@ -2,7 +2,10 @@
   class="breeder-card" 
   [class.highlighted]="isHighlighted"
   (click)="onCardClick()"
-  (mouseenter)="onCardHover()">
+  (mouseenter)="onCardHover()"
+  tabindex="0"
+  role="article"
+  (keydown.enter)="onCardClick()">
   
   <!-- Thumbnail -->
   <div class="breeder-card__image">
@@ -63,7 +66,7 @@
 <!-- Breeder Profile Popup -->
 <div *ngIf="showProfilePopup" class="profile-backdrop" (click)="closeProfilePopup()">
   <div class="profile-popup" (click)="$event.stopPropagation()">
-    <button class="profile-close" (click)="closeProfilePopup()"><i class="bi bi-x-lg"></i></button>
+    <button class="profile-close" (click)="closeProfilePopup()" aria-label="Close profile"><i class="bi bi-x-lg"></i></button>
 
     <div *ngIf="isLoadingProfile" class="profile-loading">
       <i class="bi bi-arrow-repeat spin"></i>

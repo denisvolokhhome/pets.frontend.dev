@@ -252,7 +252,8 @@
   transition: opacity 0.25s ease;
 }
 
-.photo-preview-tile:hover .photo-overlay {
+.photo-preview-tile:hover .photo-overlay,
+.photo-preview-tile:focus-within .photo-overlay {
   opacity: 1;
 }
 

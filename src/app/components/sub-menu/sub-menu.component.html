@@ -2,13 +2,14 @@
   <div class="container mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-center w-full gap-3">
       <div class="flex gap-3">
-        <button mat-fab class="fab-button" (click)="changeLayout('table')">
+        <button mat-fab class="fab-button" (click)="changeLayout('table')" aria-label="Table view">
           <i class="bi bi-table"></i>
         </button>
         <button
           mat-fab
           class="fab-button"
           (click)="changeLayout('cards')"
+          aria-label="Card view"
         >
           <i class="bi bi-postcard-heart"></i>
         </button>
@@ -22,6 +23,7 @@
           placeholder="Search..."
           (input)="searchPets($event)"
           [(ngModel)]="term"
+          aria-label="Search pets"
         />
       </div>
       <div>
@@ -29,6 +31,7 @@
           mat-fab
           class="fab-button fab-success"
           (click)="openModal()"
+          aria-label="Add new item"
         >
           <i class="bi bi-plus-circle"></i>
         </button>

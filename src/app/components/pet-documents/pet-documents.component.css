@@ -5,3 +5,8 @@
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+/* Focus-within visibility for document actions */
+.group:focus-within .flex-shrink-0.flex.items-center.gap-1 {
+  opacity: 1;
+}

@@ -37,7 +37,7 @@
 
       <!-- Loading State -->
       @if (isLoading) {
-        <div class="flex items-center justify-center py-8">
+        <div class="flex items-center justify-center py-8" aria-live="polite">
           <i class="pi pi-spin pi-spinner text-2xl text-gray-400"></i>
         </div>
       }
@@ -58,7 +58,11 @@
             <div
               class="notification-item px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
               [class.unread]="!notification.is_read"
-              (click)="onNotificationClick(notification)">
+              (click)="onNotificationClick(notification)"
+              tabindex="0"
+              role="button"
+              (keydown.enter)="onNotificationClick(notification)"
+              (keydown.space)="onNotificationClick(notification); $event.preventDefault()">
               <div class="flex gap-3">
                 <div class="flex-shrink-0">
                   <i 
@@ -81,6 +85,7 @@
                 @if (!notification.is_read) {
                   <div class="flex-shrink-0">
                     <span class="inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
+                    <span class="absolute w-px h-px overflow-hidden" style="clip: rect(0,0,0,0)">Unread</span>
                   </div>
                 }
               </div>
@@ -93,13 +98,14 @@
     <!-- Backdrop to close dropdown -->
     <div 
       class="fixed inset-0 z-40"
-      (click)="closeDropdown()">
+      (click)="closeDropdown()"
+      aria-hidden="true">
     </div>
   }
 
   <!-- Notification Detail Popup -->
   @if (selectedNotification) {
-    <div class="fixed inset-0 z-[60] flex items-center justify-center" (click)="closeDetailPopup()">
+    <div class="fixed inset-0 z-[60] flex items-center justify-center" (click)="closeDetailPopup()" role="dialog" aria-modal="true">
       <div class="fixed inset-0 bg-black/40"></div>
       <div class="notification-detail-popup relative z-[61] bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden" (click)="$event.stopPropagation()">
         <div class="popup-header">

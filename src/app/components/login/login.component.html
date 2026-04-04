@@ -26,7 +26,7 @@
       </div>
 
       <!-- Error Alert -->
-      <div *ngIf="loginError && !loginError.includes('suspended')" class="mb-4 p-4 bg-red-50 rounded-lg shadow">
+      <div *ngIf="loginError && !loginError.includes('suspended')" class="mb-4 p-4 bg-red-50 rounded-lg shadow" role="alert">
         <div class="flex items-start">
           <div class="flex-shrink-0">
             <i class="bi bi-exclamation-circle-fill text-orange-500 text-2xl"></i>
@@ -97,12 +97,12 @@
 
 <!-- User Type Selection Modal -->
 <div class="modal-overlay" *ngIf="showUserTypeModal" (click)="showUserTypeModal = false">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="user-type-title" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-logo">
         <i class="material-icons">pets</i>
       </div>
-      <h2 class="modal-title">How are you?</h2>
+      <h2 class="modal-title" id="user-type-title">How are you?</h2>
       <p class="modal-subtitle">Choose your account type to get started</p>
     </div>
     
@@ -128,12 +128,12 @@
 
 <!-- Forgot Password Modal -->
 <div class="modal-overlay" *ngIf="showForgotPassword" (click)="showForgotPassword = false">
-  <div class="modal-content forgot-modal" (click)="$event.stopPropagation()">
+  <div class="modal-content forgot-modal" role="dialog" aria-modal="true" aria-labelledby="forgot-pw-title" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-logo">
         <i class="bi bi-envelope" style="font-size: 32px; color: white;"></i>
       </div>
-      <h2 class="modal-title">Reset Password</h2>
+      <h2 class="modal-title" id="forgot-pw-title">Reset Password</h2>
       <p class="modal-subtitle">Enter your email and we'll send you reset instructions</p>
     </div>
 

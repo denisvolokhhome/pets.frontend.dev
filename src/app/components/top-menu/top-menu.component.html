@@ -44,6 +44,9 @@
                   class="px-3 py-2 text-white/90 hover:text-white transition-colors flex items-center gap-1"
                   (mouseenter)="showGetStartedDropdown = true"
                   (mouseleave)="showGetStartedDropdown = false"
+                  (click)="showGetStartedDropdown = !showGetStartedDropdown"
+                  [attr.aria-expanded]="showGetStartedDropdown"
+                  aria-haspopup="true"
                   type="button">
                   Get Started
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,11 +57,12 @@
                   class="dropdown-menu"
                   [class.show]="showGetStartedDropdown"
                   (mouseenter)="showGetStartedDropdown = true"
-                  (mouseleave)="showGetStartedDropdown = false">
-                  <a href="/register" class="dropdown-item">
+                  (mouseleave)="showGetStartedDropdown = false"
+                  role="menu">
+                  <a href="/register" class="dropdown-item" role="menuitem">
                     <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                   </a>
-                  <a href="/register/pet-seeker" class="dropdown-item">
+                  <a href="/register/pet-seeker" class="dropdown-item" role="menuitem">
                     <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
                   </a>
                 </div>

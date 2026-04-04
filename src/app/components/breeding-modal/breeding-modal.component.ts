@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectorRef, HostListener } from '@angular/core';
 import { IBreeding } from 'src/app/models/breeding';
 import { IPet } from 'src/app/models/pet';
 import { IBreed } from 'src/app/models/breed';
@@ -18,6 +18,8 @@ export class BreedingModalComponent implements OnInit, OnChanges {
   @Input() mode: 'create' | 'update' | 'view' = 'create';
   @Input() breeding: IBreeding | null = null;
   @Output() breedingSaved = new EventEmitter<IBreeding>();
+
+  @HostListener('document:keydown.escape') onEscape() { if (this.isOpen) this.close(); }
 
   isOpen = false;
   formData = {

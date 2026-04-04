@@ -27,6 +27,7 @@
                 [(ngModel)]="puppy.name"
                 placeholder="Enter puppy name"
                 [disabled]="isLoading"
+                [attr.aria-label]="'Puppy ' + (i + 1) + ' name'"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </td>
@@ -34,6 +35,7 @@
               <select
                 [(ngModel)]="puppy.gender"
                 [disabled]="isLoading"
+                [attr.aria-label]="'Puppy ' + (i + 1) + ' gender'"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 <option value="Male">Male</option>
@@ -45,6 +47,7 @@
                 type="date"
                 [(ngModel)]="puppy.birth_date"
                 [disabled]="isLoading"
+                [attr.aria-label]="'Puppy ' + (i + 1) + ' birth date'"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
             </td>
@@ -53,6 +56,7 @@
                 (click)="removePuppy(i)"
                 [disabled]="puppies.length === 1 || isLoading"
                 title="Remove puppy"
+                [attr.aria-label]="'Remove puppy ' + (i + 1)"
                 class="px-3 py-1.5 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
               >
                 Remove

@@ -27,7 +27,8 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card:hover .actions {
+.card:hover .actions,
+.group:focus-within .actions {
   opacity: 1;
   transform: translateX(0);
 }
@@ -110,7 +111,8 @@
   transform: translateX(12px);
 }
 
-.card:hover .remove-btn {
+.card:hover .remove-btn,
+.group:focus-within .remove-btn {
   opacity: 1;
   transform: translateX(0);
 }

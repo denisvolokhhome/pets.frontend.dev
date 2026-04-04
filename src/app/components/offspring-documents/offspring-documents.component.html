@@ -39,12 +39,14 @@
       <div class="flex-shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer"
            class="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-           title="Open">
+           title="Open"
+           aria-label="Open document">
           <i class="bi bi-box-arrow-up-right text-sm"></i>
         </a>
         <button (click)="deleteDocument(doc)"
           class="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors border-0 bg-transparent cursor-pointer"
-          title="Delete">
+          title="Delete"
+          aria-label="Delete document">
           <i class="bi bi-trash3 text-sm"></i>
         </button>
       </div>

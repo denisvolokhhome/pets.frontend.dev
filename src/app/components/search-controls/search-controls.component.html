@@ -30,19 +30,24 @@
         placeholder="Breed (optional)"
         autocomplete="off"
         [class.error]="breedSearchError"
+        role="combobox"
+        [attr.aria-expanded]="showBreedDropdown"
+        aria-autocomplete="list"
+        aria-haspopup="listbox"
       />
-      <div class="breed-dropdown" *ngIf="showBreedDropdown">
-        <div class="breed-option error-option" *ngIf="breedSearchError">
+      <div class="breed-dropdown" *ngIf="showBreedDropdown" role="listbox">
+        <div class="breed-option error-option" *ngIf="breedSearchError" role="option">
           <span class="error-icon">⚠️</span>
           {{ breedSearchError }}
         </div>
         <div
           class="breed-option"
           *ngFor="let breed of breedSuggestions"
-          (click)="selectBreed(breed)">
+          (click)="selectBreed(breed)"
+          role="option">
           {{ breed.name }}
         </div>
-        <div class="breed-option no-results" *ngIf="!breedSearchError && breedSuggestions.length === 0 && breedSearchTerm.length >= 2">
+        <div class="breed-option no-results" *ngIf="!breedSearchError && breedSuggestions.length === 0 && breedSearchTerm.length >= 2" role="option">
           🔍 No breeds found
         </div>
       </div>
@@ -56,7 +61,8 @@
           type="button"
           class="radius-btn"
           [class.active]="isQuickRadiusSelected(miles)"
-          (click)="selectQuickRadius(miles)">
+          (click)="selectQuickRadius(miles)"
+          [attr.aria-pressed]="isQuickRadiusSelected(miles)">
           {{ miles }} mi
         </button>
       </div>

@@ -87,6 +87,12 @@ export class ProfileMenuComponent implements OnInit {
 
   toggleMenu(): void {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) {
+      setTimeout(() => {
+        const firstItem = document.querySelector('.profile-menu-container [role="menuitem"]') as HTMLElement;
+        firstItem?.focus();
+      });
+    }
   }
 
   navigateToSettings(): void {
@@ -113,6 +119,13 @@ export class ProfileMenuComponent implements OnInit {
     const target = event.target as HTMLElement;
     const clickedInside = target.closest('.profile-menu-container');
     if (!clickedInside && this.isOpen) {
+      this.isOpen = false;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && this.isOpen) {
       this.isOpen = false;
     }
   }

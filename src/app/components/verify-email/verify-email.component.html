@@ -1,5 +1,5 @@
 <div class="verify-container">
-  <div class="verify-card">
+  <div class="verify-card" aria-live="polite">
     <!-- Pending: Check your email -->
     <div *ngIf="mode === 'pending'" class="verify-content">
       <div class="verify-icon pending">
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Success -->
-    <div *ngIf="mode === 'success'" class="verify-content">
+    <div *ngIf="mode === 'success'" class="verify-content" role="status">
       <div class="verify-icon success">
         <i class="bi bi-check-circle"></i>
       </div>
@@ -50,7 +50,7 @@
     </div>
 
     <!-- Error -->
-    <div *ngIf="mode === 'error'" class="verify-content">
+    <div *ngIf="mode === 'error'" class="verify-content" role="alert">
       <div class="verify-icon error">
         <i class="bi bi-exclamation-triangle"></i>
       </div>

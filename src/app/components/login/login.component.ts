@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../services/toast.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,6 +13,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 })
 export class LoginComponent {
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.showUserTypeModal) this.showUserTypeModal = false;
+    else if (this.showForgotPassword) this.showForgotPassword = false;
+  }
+
   constructor(
     private builder: FormBuilder,
     private toastr: ToastService,

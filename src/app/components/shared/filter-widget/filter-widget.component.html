@@ -9,7 +9,8 @@
       class="btn-clear-filters"
       (click)="onClearFilters()"
       [disabled]="isLoading"
-      title="Clear all filters">
+      title="Clear all filters"
+      aria-label="Clear all filters">
       <i class="bi bi-x-circle-fill"></i>
     </button>
   </div>
@@ -17,11 +18,12 @@
   <div class="filters-content">
     <!-- Location Filter -->
     <div class="filter-group" *ngIf="config.showLocation">
-      <label class="filter-label">
+      <label class="filter-label" for="filter-location">
         <i class="bi bi-geo-alt-fill"></i>
         Location
       </label>
       <select 
+        id="filter-location"
         class="filter-select"
         [(ngModel)]="filterValues.location"
         (change)="onLocationChange(filterValues.location!)"
@@ -44,7 +46,8 @@
           class="gender-btn"
           [class.active]="filterValues.gender === 'Male'"
           (click)="onGenderChange(filterValues.gender === 'Male' ? '' : 'Male')"
-          [disabled]="isLoading">
+          [disabled]="isLoading"
+          [attr.aria-pressed]="filterValues.gender === 'Male'">
           <i class="bi bi-gender-male"></i>
           Male
         </button>
@@ -52,7 +55,8 @@
           class="gender-btn"
           [class.active]="filterValues.gender === 'Female'"
           (click)="onGenderChange(filterValues.gender === 'Female' ? '' : 'Female')"
-          [disabled]="isLoading">
+          [disabled]="isLoading"
+          [attr.aria-pressed]="filterValues.gender === 'Female'">
           <i class="bi bi-gender-female"></i>
           Female
         </button>
@@ -72,7 +76,8 @@
           [class.active]="filterValues.petType === type.value"
           (click)="onPetTypeChange(type.value)"
           [title]="type.label"
-          [disabled]="isLoading">
+          [disabled]="isLoading"
+          [attr.aria-pressed]="filterValues.petType === type.value">
           <span class="pet-type-icon-small">{{ type.icon }}</span>
           <span class="pet-type-label-small">{{ type.label }}</span>
         </button>
@@ -81,11 +86,12 @@
 
     <!-- Status Filter -->
     <div class="filter-group" *ngIf="config.showStatus">
-      <label class="filter-label">
+      <label class="filter-label" for="filter-status">
         <i class="bi bi-flag-fill"></i>
         Status
       </label>
       <select 
+        id="filter-status"
         class="filter-select"
         [(ngModel)]="filterValues.status"
         (change)="onStatusChange(filterValues.status!)"
@@ -107,11 +113,12 @@
 
     <!-- Breed Filter -->
     <div class="filter-group" *ngIf="config.showBreed">
-      <label class="filter-label">
+      <label class="filter-label" for="filter-breed">
         <i class="bi bi-award-fill"></i>
         Breed
       </label>
       <select 
+        id="filter-breed"
         class="filter-select"
         [(ngModel)]="filterValues.breed"
         (change)="onBreedChange(filterValues.breed!)"
@@ -195,11 +202,12 @@
 
     <!-- Sort Order Filter -->
     <div class="filter-group" *ngIf="config.showSortOrder">
-      <label class="filter-label">
+      <label class="filter-label" for="filter-sort">
         <i class="bi bi-sort-down"></i>
         Sort By
       </label>
       <select 
+        id="filter-sort"
         class="filter-select"
         [(ngModel)]="filterValues.sortOrder"
         (change)="onSortOrderChange(filterValues.sortOrder!)"
@@ -212,7 +220,7 @@
   </div>
 
   <!-- Results Count -->
-  <div class="results-count" *ngIf="!isLoading">
+  <div class="results-count" *ngIf="!isLoading" aria-live="polite" role="status">
     <i class="bi bi-check-circle-fill"></i>
     <span>{{ filteredCount }} of {{ totalCount }}</span>
   </div>

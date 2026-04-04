@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: './guest-prompt-modal.component.html',
   styleUrls: ['./guest-prompt-modal.component.css']
 })
-export class GuestPromptModalComponent implements OnInit {
+export class GuestPromptModalComponent implements OnInit, OnChanges {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() offspringId?: string;
@@ -28,11 +28,17 @@ export class GuestPromptModalComponent implements OnInit {
   isRegistering = false;
   showRegisterForm = false; // Toggle between login and register
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.visible) this.closeModal();
+  }
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private toastService: ToastService,
-    public router: Router
+    public router: Router,
+    private elementRef: ElementRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -58,6 +64,15 @@ export class GuestPromptModalComponent implements OnInit {
     if (email) {
       this.loginForm.patchValue({ email });
       this.registerForm.patchValue({ email });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && changes['visible'].currentValue === true) {
+      setTimeout(() => {
+        const firstInput = this.elementRef.nativeElement.querySelector('input');
+        if (firstInput) firstInput.focus();
+      }, 100);
     }
   }
 

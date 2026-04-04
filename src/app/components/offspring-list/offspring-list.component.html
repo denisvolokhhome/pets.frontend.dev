@@ -25,9 +25,9 @@
     <!-- Table Container -->
     <div class="table-container">
       <!-- Loading State -->
-      <div *ngIf="isLoading" class="loading-state">
+      <div *ngIf="isLoading" class="loading-state" role="status" aria-live="polite">
         <div class="spinner-container">
-          <svg class="spinner" viewBox="0 0 50 50">
+          <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
             <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
           </svg>
         </div>
@@ -139,21 +139,24 @@
                 class="btn-action btn-view"
                 (click)="viewOffspring(offspring)"
                 type="button"
-                title="View">
+                title="View"
+                aria-label="View">
                 <i class="bi bi-eye-fill"></i>
               </button>
               <button 
                 class="btn-action btn-edit"
                 (click)="editOffspring(offspring)"
                 type="button"
-                title="Edit">
+                title="Edit"
+                aria-label="Edit">
                 <i class="bi bi-pencil-fill"></i>
               </button>
               <button 
                 class="btn-action btn-docs"
                 (click)="openDocuments(offspring)"
                 type="button"
-                title="Documents">
+                title="Documents"
+                aria-label="Documents">
                 <i class="bi bi-file-earmark-text"></i>
               </button>
               <button 
@@ -161,7 +164,8 @@
                 (click)="deleteOffspring(offspring)"
                 [disabled]="isDeleting[offspring.id]"
                 type="button"
-                title="Remove">
+                title="Remove"
+                aria-label="Remove">
                 <i class="bi bi-x-circle"></i>
               </button>
             </td>
@@ -191,7 +195,7 @@
 </div>
 
 <!-- Offspring Edit Modal -->
-<div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()">
+<div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()" role="dialog" aria-modal="true" aria-label="Edit offspring">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <app-offspring-edit
       [offspring]="selectedOffspring"
@@ -203,9 +207,9 @@
 </div>
 
 <!-- Documents Modal -->
-<div *ngIf="showDocumentsModal && documentsOffspring" class="modal-overlay" (click)="closeDocuments()">
+<div *ngIf="showDocumentsModal && documentsOffspring" class="modal-overlay" (click)="closeDocuments()" role="dialog" aria-modal="true" aria-label="Offspring documents">
   <div class="modal-container modal-docs" (click)="$event.stopPropagation()">
-    <div class="modal-close-btn" (click)="closeDocuments()"><i class="bi bi-x-lg"></i></div>
+    <button type="button" class="modal-close-btn" (click)="closeDocuments()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     <app-offspring-documents
       [offspringId]="documentsOffspring.id"
       [offspringName]="documentsOffspring.name">

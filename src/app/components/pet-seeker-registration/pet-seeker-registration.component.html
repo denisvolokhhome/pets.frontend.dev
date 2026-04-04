@@ -10,7 +10,7 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="proceedRegistration()" class="auth-form">
       <!-- Email Already Exists Error -->
-      <div *ngIf="emailExistsError" class="alert alert-error">
+      <div *ngIf="emailExistsError" class="alert alert-error" role="alert">
         <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
         <div>
           <strong>Account Already Exists</strong>
@@ -41,8 +41,10 @@
           placeholder="Create a strong password"
           aria-label="Password"
           required
+          [attr.aria-describedby]="passwordErrors.length > 0 ? 'psr-pw-errors' : null"
+          [attr.aria-invalid]="passwordErrors.length > 0"
         />
-        <div *ngIf="passwordErrors.length > 0" class="validation-errors">
+        <div *ngIf="passwordErrors.length > 0" class="validation-errors" id="psr-pw-errors">
           <small *ngFor="let error of passwordErrors" class="error-text">
             <i class="bi bi-x-circle" aria-hidden="true"></i> {{ error }}
           </small>

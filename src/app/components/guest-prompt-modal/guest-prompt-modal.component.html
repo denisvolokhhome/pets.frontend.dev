@@ -1,23 +1,23 @@
 <div class="modal-backdrop" *ngIf="visible" (click)="closeModal()">
-  <div class="auth-card" (click)="$event.stopPropagation()">
-    <button class="close-btn" (click)="closeModal()"><i class="bi bi-x-lg"></i></button>
+  <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="guest-modal-title" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeModal()" aria-label="Close dialog"><i class="bi bi-x-lg"></i></button>
 
     <!-- Header -->
     <div class="auth-header">
       <div class="auth-logo"><i class="bi bi-shield-lock-fill"></i></div>
-      <h2 class="auth-title">Sign In Required</h2>
+      <h2 class="auth-title" id="guest-modal-title">Sign In Required</h2>
       <p class="auth-subtitle">Sign in or create an account to continue</p>
     </div>
 
     <!-- Login Form -->
     <form *ngIf="!showRegisterForm" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
       <div class="input-field-group">
-        <label class="input-label">Email Address</label>
-        <input type="email" formControlName="email" placeholder="your.email@example.com" class="input-field" />
+        <label class="input-label" for="gpm-login-email">Email Address</label>
+        <input type="email" formControlName="email" placeholder="your.email@example.com" class="input-field" id="gpm-login-email" />
       </div>
       <div class="input-field-group">
-        <label class="input-label">Password</label>
-        <input type="password" formControlName="password" placeholder="Enter your password" class="input-field" />
+        <label class="input-label" for="gpm-login-password">Password</label>
+        <input type="password" formControlName="password" placeholder="Enter your password" class="input-field" id="gpm-login-password" />
       </div>
       <button type="submit" class="auth-submit-btn" [disabled]="loginForm.invalid || isLoggingIn">
         <i [class]="isLoggingIn ? 'bi bi-arrow-repeat spin' : 'bi bi-box-arrow-in-right'"></i>
@@ -32,26 +32,26 @@
     <form *ngIf="showRegisterForm" [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
       <div class="name-row">
         <div class="input-field-group">
-          <label class="input-label">First Name</label>
-          <input type="text" formControlName="firstName" placeholder="First name" class="input-field" />
+          <label class="input-label" for="gpm-reg-first">First Name</label>
+          <input type="text" formControlName="firstName" placeholder="First name" class="input-field" id="gpm-reg-first" />
         </div>
         <div class="input-field-group">
-          <label class="input-label">Last Name</label>
-          <input type="text" formControlName="lastName" placeholder="Last name" class="input-field" />
+          <label class="input-label" for="gpm-reg-last">Last Name</label>
+          <input type="text" formControlName="lastName" placeholder="Last name" class="input-field" id="gpm-reg-last" />
         </div>
       </div>
       <div class="input-field-group">
-        <label class="input-label">Email Address</label>
-        <input type="email" formControlName="email" placeholder="your.email@example.com" class="input-field" />
+        <label class="input-label" for="gpm-reg-email">Email Address</label>
+        <input type="email" formControlName="email" placeholder="your.email@example.com" class="input-field" id="gpm-reg-email" />
       </div>
       <div class="input-field-group">
-        <label class="input-label">Password</label>
-        <input type="password" formControlName="password" placeholder="Create a password" class="input-field" />
+        <label class="input-label" for="gpm-reg-password">Password</label>
+        <input type="password" formControlName="password" placeholder="Create a password" class="input-field" id="gpm-reg-password" />
       </div>
       <div class="input-field-group">
-        <label class="input-label">Confirm Password</label>
-        <input type="password" formControlName="confirmPassword" placeholder="Confirm password" class="input-field" />
-        <small class="error-text" *ngIf="registerForm.errors?.['passwordMismatch'] && registerConfirmPassword?.touched">
+        <label class="input-label" for="gpm-reg-confirm">Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" placeholder="Confirm password" class="input-field" id="gpm-reg-confirm" [attr.aria-describedby]="registerForm.errors?.['passwordMismatch'] && registerConfirmPassword?.touched ? 'gpm-pw-mismatch' : null" />
+        <small class="error-text" id="gpm-pw-mismatch" *ngIf="registerForm.errors?.['passwordMismatch'] && registerConfirmPassword?.touched">
           Passwords do not match
         </small>
       </div>

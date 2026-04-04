@@ -41,9 +41,9 @@
       <!-- Loading/Empty state container -->
       <div class="state-container" *ngIf="isLoading || !filteredPets || filteredPets.length === 0">
         <!-- Loading state -->
-        <div *ngIf="isLoading" class="loading-state">
+        <div *ngIf="isLoading" class="loading-state" role="status" aria-live="polite">
           <div class="spinner-container">
-            <svg class="spinner" viewBox="0 0 50 50">
+            <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
               <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
             </svg>
           </div>
@@ -66,9 +66,9 @@
     <div *ngIf="view == 'table'">
       <div class="table-container">
         <!-- Loading state for table -->
-        <div *ngIf="isLoading" class="loading-state">
+        <div *ngIf="isLoading" class="loading-state" role="status" aria-live="polite">
           <div class="spinner-container">
-            <svg class="spinner" viewBox="0 0 50 50">
+            <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
               <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
             </svg>
           </div>
@@ -154,26 +154,26 @@
               <!-- Health badges -->
               <td>
                 <div class="flex flex-wrap gap-1">
-                  <span *ngIf="pet.has_vaccination" class="health-badge" title="Vaccinated"><i class="bi bi-shield-fill-check"></i></span>
-                  <span *ngIf="pet.has_microchip" class="health-badge" title="Microchipped"><i class="bi bi-cpu"></i></span>
-                  <span *ngIf="pet.has_healthcertificate" class="health-badge" title="Health Certificate"><i class="bi bi-file-medical"></i></span>
-                  <span *ngIf="pet.has_dewormed" class="health-badge" title="Dewormed"><i class="bi bi-capsule"></i></span>
-                  <span *ngIf="pet.has_birthcertificate" class="health-badge" title="Birth Certificate"><i class="bi bi-file-earmark-text"></i></span>
+                  <span *ngIf="pet.has_vaccination" class="health-badge" title="Vaccinated" aria-label="Vaccinated"><i class="bi bi-shield-fill-check"></i></span>
+                  <span *ngIf="pet.has_microchip" class="health-badge" title="Microchipped" aria-label="Microchipped"><i class="bi bi-cpu"></i></span>
+                  <span *ngIf="pet.has_healthcertificate" class="health-badge" title="Health Certificate" aria-label="Health Certificate"><i class="bi bi-file-medical"></i></span>
+                  <span *ngIf="pet.has_dewormed" class="health-badge" title="Dewormed" aria-label="Dewormed"><i class="bi bi-capsule"></i></span>
+                  <span *ngIf="pet.has_birthcertificate" class="health-badge" title="Birth Certificate" aria-label="Birth Certificate"><i class="bi bi-file-earmark-text"></i></span>
                 </div>
               </td>
               <!-- Actions -->
               <td pFrozenColumn [frozen]="true" alignFrozen="right">
                 <div class="flex items-center justify-center gap-1.5">
-                  <button class="table-action-btn btn-edit" title="Edit" (click)="editPet(pet)">
+                  <button class="table-action-btn btn-edit" title="Edit" aria-label="Edit" (click)="editPet(pet)">
                     <i class="bi bi-pencil"></i>
                   </button>
-                  <button class="table-action-btn btn-breeding" title="Quick Breeding" (click)="openQuickBreeding(pet)">
+                  <button class="table-action-btn btn-breeding" title="Quick Breeding" aria-label="Quick Breeding" (click)="openQuickBreeding(pet)">
                     <i class="bi bi-hearts"></i>
                   </button>
-                  <button class="table-action-btn btn-docs" title="Documents" (click)="openPetDocuments(pet)">
+                  <button class="table-action-btn btn-docs" title="Documents" aria-label="Documents" (click)="openPetDocuments(pet)">
                     <i class="bi bi-file-earmark-text"></i>
                   </button>
-                  <button class="table-action-btn btn-remove" title="Remove" (click)="deletePet(pet.id)">
+                  <button class="table-action-btn btn-remove" title="Remove" aria-label="Remove" (click)="deletePet(pet.id)">
                     <i class="bi bi-x-circle"></i>
                   </button>
                 </div>

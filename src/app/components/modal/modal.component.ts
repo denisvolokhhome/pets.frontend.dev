@@ -40,6 +40,11 @@ export class ModalComponent implements OnInit, OnDestroy {
           this.setupFocusTrap();
           this.focusFirstElement();
         }, 100);
+      } else {
+        // Restore focus to the element that opened the modal
+        if (this.previousActiveElement && typeof this.previousActiveElement.focus === 'function') {
+          this.previousActiveElement.focus();
+        }
       }
     });
   }

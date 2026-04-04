@@ -10,7 +10,7 @@
     <div class="offspring-form-header">
       <div class="header-content">
         <h2 class="offspring-form-title">{{ getTitle() }}</h2>
-        <button type="button" class="close-button" (click)="modalClose()">
+        <button type="button" class="close-button" (click)="modalClose()" aria-label="Close">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -181,14 +181,16 @@
                     class="photo-overlay-btn photo-overlay-btn-primary" 
                     (click)="setPrimaryImage(existingImg)"
                     [disabled]="existingImg.is_primary"
-                    title="Set as primary">
+                    title="Set as primary"
+                    aria-label="Set as primary">
                     <i class="bi bi-star-fill"></i>
                   </button>
                   <button 
                     type="button" 
                     class="photo-overlay-btn photo-overlay-btn-delete" 
                     (click)="removeExistingImage(existingImg.id)"
-                    title="Delete">
+                    title="Delete image"
+                    aria-label="Delete image">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -200,7 +202,8 @@
                     class="photo-overlay-btn" 
                     (click)="moveImageUp(i)"
                     [disabled]="i === 0"
-                    title="Move left">
+                    title="Move image left"
+                    aria-label="Move image left">
                     <i class="bi bi-arrow-left"></i>
                   </button>
                   <button 
@@ -208,7 +211,8 @@
                     class="photo-overlay-btn" 
                     (click)="moveImageDown(i)"
                     [disabled]="i === existingImages.length - 1"
-                    title="Move right">
+                    title="Move image right"
+                    aria-label="Move image right">
                     <i class="bi bi-arrow-right"></i>
                   </button>
                 </div>
@@ -230,7 +234,8 @@
                     type="button" 
                     class="photo-overlay-btn photo-overlay-btn-delete" 
                     (click)="removeImage(i)"
-                    title="Remove">
+                    title="Remove"
+                    [attr.aria-label]="'Remove new photo ' + (i + 1)">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
@@ -242,6 +247,11 @@
               class="photo-upload-tile"
               (click)="selectImages.click()"
               *ngIf="(existingImages.length + imagePreviews.length) < MAX_PHOTOS"
+              tabindex="0"
+              role="button"
+              aria-label="Upload photo"
+              (keydown.enter)="selectImages.click()"
+              (keydown.space)="selectImages.click(); $event.preventDefault()"
             >
               <i class="bi bi-plus-lg"></i>
               <span>Upload</span>

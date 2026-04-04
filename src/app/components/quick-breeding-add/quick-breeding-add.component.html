@@ -11,7 +11,7 @@
           <p class="modal-subtitle">Create a new breeding record</p>
         </div>
       </div>
-      <button type="button" class="close-button" (click)="close()">
+      <button type="button" class="close-button" (click)="close()" aria-label="Close">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
@@ -82,12 +82,17 @@
       </div>
 
       <!-- Available Pets List -->
-      <div class="pets-list" *ngIf="!isLoadingPets">
+      <div class="pets-list" *ngIf="!isLoadingPets" role="listbox" aria-label="Available partner pets">
         <div 
           class="pet-list-item"
           *ngFor="let pet of filteredPets"
           [class.selected]="selectedPartnerPet?.id === pet.id"
           (click)="selectPartnerPet(pet)"
+          tabindex="0"
+          role="option"
+          [attr.aria-selected]="selectedPartnerPet?.id === pet.id"
+          (keydown.enter)="selectPartnerPet(pet)"
+          (keydown.space)="selectPartnerPet(pet); $event.preventDefault()"
         >
           <div class="pet-item-avatar" *ngIf="pet.image_path" [style.background-image]="'url(' + getImageUrl(pet.image_path) + ')'"></div>
           <div class="pet-item-avatar no-image" *ngIf="!pet.image_path">

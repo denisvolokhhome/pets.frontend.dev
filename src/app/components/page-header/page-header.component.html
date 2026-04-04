@@ -16,7 +16,9 @@
         [class.active]="currentLayout === 'table'"
         (click)="onLayoutChange('table')"
         title="Table View"
-        type="button">
+        type="button"
+        aria-label="Table view"
+        [attr.aria-pressed]="currentLayout === 'table'">
         <i class="bi bi-table"></i>
       </button>
       <button 
@@ -24,7 +26,9 @@
         [class.active]="currentLayout === 'cards'"
         (click)="onLayoutChange('cards')"
         title="Card View"
-        type="button">
+        type="button"
+        aria-label="Card view"
+        [attr.aria-pressed]="currentLayout === 'cards'">
         <i class="bi bi-postcard-heart"></i>
       </button>
     </div>
@@ -37,6 +41,7 @@
         [placeholder]="config.searchPlaceholder || 'Search...'"
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchChange($event)"
+        [attr.aria-label]="config.searchPlaceholder || 'Search'"
       />
       <i class="bi bi-search search-icon"></i>
       <button
@@ -44,7 +49,8 @@
         (click)="clearSearch()"
         class="clear-button"
         type="button"
-        title="Clear search">
+        title="Clear search"
+        aria-label="Clear search">
         <i class="bi bi-x-circle-fill"></i>
       </button>
     </div>
@@ -60,7 +66,8 @@
       (click)="onActionClick()"
       [disabled]="config.actionButtonDisabled"
       [title]="config.actionButtonDisabled ? (config.actionButtonTooltip || 'Action unavailable') : (config.actionButtonTitle || 'Action')"
-      type="button">
+      type="button"
+      [attr.aria-label]="config.actionButtonTitle || 'Action'">
       <i [class]="config.actionButtonIcon || 'bi bi-plus-circle'"></i>
     </button>
   </div>

@@ -11,12 +11,13 @@
     (click)="$event.stopPropagation()"
     role="dialog"
     aria-modal="true"
-    [attr.aria-labelledby]="'modal-title-' + title"
+    [attr.aria-labelledby]="hideHeader ? null : ('modal-title-' + modalId)"
+    [attr.aria-label]="hideHeader ? title : null"
   >
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center" *ngIf="!hideHeader">
       <h1 
         class="text-xl font-semibold text-gray-900"
-        [id]="'modal-title-' + title"
+        [id]="'modal-title-' + modalId"
       >
         {{ title | titlecase }}
       </h1>

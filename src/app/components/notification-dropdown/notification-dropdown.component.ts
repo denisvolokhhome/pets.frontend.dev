@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -297,5 +297,14 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       return '99+';
     }
     return this.unreadCount.toString();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.selectedNotification) {
+      this.closeDetailPopup();
+    } else if (this.isOpen) {
+      this.closeDropdown();
+    }
   }
 }

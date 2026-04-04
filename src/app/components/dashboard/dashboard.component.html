@@ -119,8 +119,8 @@
   </div>
 
   <!-- Fallback for unauthenticated or loading state -->
-  <div *ngIf="!isBreeder && !isPetSeeker" class="text-center py-12">
-    <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4"></i>
+  <div *ngIf="!isBreeder && !isPetSeeker" class="text-center py-12" role="status" aria-live="polite">
+    <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4" aria-hidden="true"></i>
     <p class="text-gray-600">Loading dashboard...</p>
   </div>
 </div>
@@ -138,7 +138,7 @@
 </div>
 
 <!-- Welcome Modal for New Breeders -->
-<div class="welcome-modal-backdrop" *ngIf="showWelcomeModal" (click)="closeWelcomeModal()">
+<div class="welcome-modal-backdrop" *ngIf="showWelcomeModal" (click)="closeWelcomeModal()" (keydown.escape)="closeWelcomeModal()">
   <div class="welcome-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="welcome-modal-title">
     <div class="welcome-modal-header">
       <div class="welcome-icon-wrapper">

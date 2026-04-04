@@ -1,1 +1,5 @@
 /* Reuses Tailwind utility classes from template — no custom CSS needed */
+
+.group:focus-within .flex-shrink-0 {
+  opacity: 1 !important;
+}
