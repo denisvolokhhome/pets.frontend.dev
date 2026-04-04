@@ -1,54 +1,84 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
+import { ToastService } from '../../services/toast.service';
 import { Subject, takeUntil, forkJoin } from 'rxjs';
 import { IUser } from '../../models/user';
 import { ILocation } from '../../models/location';
 import { IPet } from '../../models/pet';
 
-export type HelpState =
-  | 'no-profile-no-locations'
-  | 'has-profile-no-locations'
-  | 'has-locations-no-profile'
-  | 'ready-no-pets'
-  | 'all-good'
-  | 'loading';
-
-export interface HelpMessage {
+export interface SetupStep {
+  id: string;
+  label: string;
   icon: string;
-  iconColor: string;
-  title: string;
-  body: string;
-  actionLabel?: string;
-  actionRoute?: string;
-  actionFragment?: string;
-  secondaryLabel?: string;
-  secondaryRoute?: string;
-  secondaryFragment?: string;
+  completed: boolean;
+  active: boolean;
 }
 
 @Component({
   selector: 'app-breeder-help-widget',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './breeder-help-widget.component.html',
-  styleUrls: ['./breeder-help-widget.component.css'],
+  styleUrl: './breeder-help-widget.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   isOpen = false;
-  helpState: HelpState = 'loading';
-  helpMessage: HelpMessage | null = null;
+  isLoading = true;
+  allComplete = false;
   private destroy$ = new Subject<void>();
+
+  // Setup steps
+  steps: SetupStep[] = [
+    { id: 'profile', label: 'Name your breedery', icon: 'bi-building', completed: false, active: false },
+    { id: 'location', label: 'Add a location', icon: 'bi-geo-alt', completed: false, active: false },
+    { id: 'pet', label: 'Add your first pet', icon: 'bi-heart', completed: false, active: false },
+  ];
+
+  // Inline forms
+  activeStep: string | null = null;
+  profileForm: FormGroup;
+  locationForm: FormGroup;
+  isSaving = false;
+
+  usStates = [
+    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
+    'Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+    'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan',
+    'Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire',
+    'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio',
+    'Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
+    'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia',
+    'Wisconsin','Wyoming','District of Columbia'
+  ];
 
   constructor(
     private authService: AuthService,
     private dataService: DataService,
+    private toastr: ToastService,
     private router: Router,
+    private fb: FormBuilder,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.profileForm = this.fb.group({
+      breedery_name: ['', Validators.required],
+      breedery_description: ['']
+    });
+    this.locationForm = this.fb.group({
+      name: ['', Validators.required],
+      address1: ['', Validators.required],
+      address2: [''],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      country: ['United States', Validators.required],
+      zipcode: ['', Validators.required],
+      location_type: ['user']
+    });
+  }
 
   ngOnInit(): void {
     if (!this.authService.hasValidToken()) return;
@@ -75,35 +105,135 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
     return this.authService.hasValidToken();
   }
 
+  get completedCount(): number {
+    return this.steps.filter(s => s.completed).length;
+  }
+
+  get totalSteps(): number {
+    return this.steps.length;
+  }
+
+  get progressPercent(): number {
+    return Math.round((this.completedCount / this.totalSteps) * 100);
+  }
+
   get showBadge(): boolean {
-    return this.helpState !== 'all-good' && this.helpState !== 'loading';
+    return !this.allComplete && !this.isLoading;
   }
 
   toggleDropdown(): void {
     if (!this.isAuthenticated || !this.isBreeder) return;
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
+      this.activeStep = null;
       this.loadState();
     }
   }
 
   closeDropdown(): void {
     this.isOpen = false;
+    this.activeStep = null;
   }
 
-  navigate(route?: string, fragment?: string): void {
-    if (!route) return;
-    this.closeDropdown();
-    if (fragment) {
-      this.router.navigate([route], { fragment });
-    } else {
-      this.router.navigate([route]);
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.activeStep) {
+      this.activeStep = null;
+      this.cdr.markForCheck();
+    } else if (this.isOpen) {
+      this.closeDropdown();
     }
+  }
+
+  onStepClick(step: SetupStep): void {
+    if (step.completed) return;
+
+    if (step.id === 'pet') {
+      // Navigate to pets page — no inline form for this one
+      this.closeDropdown();
+      this.router.navigate(['/pets']);
+      return;
+    }
+
+    this.activeStep = this.activeStep === step.id ? null : step.id;
+    this.cdr.markForCheck();
+  }
+
+  cancelInlineForm(): void {
+    this.activeStep = null;
+    this.cdr.markForCheck();
+  }
+
+  saveProfile(): void {
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSaving = true;
+    this.cdr.markForCheck();
+
+    const data = {
+      breedery_name: this.profileForm.value.breedery_name,
+      breedery_description: this.profileForm.value.breedery_description
+    };
+
+    this.dataService.updateUserProfile(data)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.activeStep = null;
+          this.toastr.success('Breedery name saved', 'Success');
+          this.loadState();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.toastr.error(err.error?.detail || 'Failed to save', 'Error');
+          this.cdr.markForCheck();
+        }
+      });
+  }
+
+  saveLocation(): void {
+    if (this.locationForm.invalid) {
+      Object.keys(this.locationForm.controls).forEach(key => {
+        this.locationForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
+    this.isSaving = true;
+    this.cdr.markForCheck();
+
+    this.dataService.createLocation(this.locationForm.value)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.activeStep = null;
+          this.locationForm.reset({ country: 'United States', location_type: 'user' });
+          this.toastr.success('Location added', 'Success');
+          this.loadState();
+        },
+        error: (err) => {
+          this.isSaving = false;
+          this.toastr.error(err.error?.detail || 'Failed to save location', 'Error');
+          this.cdr.markForCheck();
+        }
+      });
+  }
+
+  dismissGuide(): void {
+    this.closeDropdown();
   }
 
   private loadState(): void {
     const userId = this.authService.currentUser?.id;
     if (!userId) return;
+
+    this.isLoading = true;
+    this.cdr.markForCheck();
 
     forkJoin({
       profile: this.dataService.getCurrentUserProfile(),
@@ -113,86 +243,32 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: ({ profile, locations, pets }) => {
-          const profileComplete = this.isProfileComplete(profile);
+          const hasProfile = !!(profile.breedery_name && profile.breedery_name.trim());
           const hasLocations = locations && locations.length > 0;
           const hasPets = pets && pets.filter(p => !p.is_puppy).length > 0;
 
-          if (!profileComplete && !hasLocations) {
-            this.helpState = 'no-profile-no-locations';
-          } else if (profileComplete && !hasLocations) {
-            this.helpState = 'has-profile-no-locations';
-          } else if (!profileComplete && hasLocations) {
-            this.helpState = 'has-locations-no-profile';
-          } else if (profileComplete && hasLocations && !hasPets) {
-            this.helpState = 'ready-no-pets';
-          } else {
-            this.helpState = 'all-good';
+          this.steps[0].completed = hasProfile;
+          this.steps[1].completed = hasLocations;
+          this.steps[2].completed = hasPets;
+
+          this.allComplete = hasProfile && hasLocations && hasPets;
+
+          // Pre-fill profile form if data exists
+          if (profile.breedery_name) {
+            this.profileForm.patchValue({
+              breedery_name: profile.breedery_name,
+              breedery_description: profile.breedery_description || ''
+            });
           }
 
-          this.helpMessage = this.getMessageForState(this.helpState);
+          this.isLoading = false;
           this.cdr.markForCheck();
         },
         error: () => {
-          this.helpState = 'all-good';
-          this.helpMessage = null;
+          this.allComplete = true;
+          this.isLoading = false;
           this.cdr.markForCheck();
         }
       });
-  }
-
-  private isProfileComplete(user: IUser): boolean {
-    return !!(user.breedery_name && user.breedery_name.trim());
-  }
-
-  private getMessageForState(state: HelpState): HelpMessage | null {
-    switch (state) {
-      case 'no-profile-no-locations':
-        return {
-          icon: 'bi-rocket-takeoff',
-          iconColor: '#f59e0b',
-          title: 'Let\'s get you set up!',
-          body: 'Before you can add pets and create breedings, you\'ll need to complete two quick steps: fill in your Breeder Profile and add at least one location.',
-          actionLabel: 'Complete Your Breedery Information',
-          actionRoute: '/settings/breedery',
-          secondaryLabel: 'Add a Location',
-          secondaryRoute: '/settings/locations'
-        };
-      case 'has-profile-no-locations':
-        return {
-          icon: 'bi-geo-alt',
-          iconColor: '#3b82f6',
-          title: 'Almost there — add a location',
-          body: 'Your breeder profile looks great! Now add at least one breeding location so pet seekers can find you. It doesn\'t need to be published yet.',
-          actionLabel: 'Add a Location',
-          actionRoute: '/settings/locations'
-        };
-      case 'has-locations-no-profile':
-        return {
-          icon: 'bi-person-badge',
-          iconColor: '#8b5cf6',
-          title: 'Complete your breeder profile',
-          body: 'You\'ve got a location set up — nice! Now head to Settings and fill in your breedery name and description so pet seekers can learn about you.',
-          actionLabel: 'Complete Profile',
-          actionRoute: '/settings/breedery'
-        };
-      case 'ready-no-pets':
-        return {
-          icon: 'bi-stars',
-          iconColor: '#10b981',
-          title: 'You\'re all set — time to add pets!',
-          body: 'Your profile and locations are ready. Head over to the Pets page and add your first pet to start building your portfolio.',
-          actionLabel: 'Go to Pets',
-          actionRoute: '/pets'
-        };
-      case 'all-good':
-        return {
-          icon: 'bi-check-circle',
-          iconColor: '#10b981',
-          title: 'You\'re in great shape!',
-          body: 'Your profile, locations, and pets are all set up. Keep doing what you\'re doing!',
-        };
-      default:
-        return null;
-    }
   }
 }

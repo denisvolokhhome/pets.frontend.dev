@@ -1,52 +1,153 @@
-<div class="help-widget relative" *ngIf="isAuthenticated && isBreeder">
-  <!-- Help Button -->
+<div class="help-widget" *ngIf="isAuthenticated && isBreeder">
+  <!-- Setup Guide Button -->
   <button
     type="button"
-    class="help-bell relative p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+    class="guide-trigger"
     (click)="toggleDropdown()"
-    aria-label="Breeder setup help">
-    <i class="bi bi-question-circle text-xl"></i>
-    <span *ngIf="showBadge" class="help-badge">
-      <span class="help-badge-dot"></span>
+    [class.all-done]="allComplete"
+    aria-label="Setup guide">
+    <span class="guide-trigger-label">Setup guide</span>
+    <span *ngIf="showBadge" class="guide-badge">
+      <span class="guide-badge-ring"></span>
     </span>
   </button>
 
   <!-- Dropdown Panel -->
-  <div *ngIf="isOpen && helpMessage" class="help-dropdown" (click)="$event.stopPropagation()">
-    <!-- Header -->
-    <div class="help-dropdown-header">
-      <div class="help-header-icon" [style.background-color]="helpMessage.iconColor">
-        <i [class]="'bi ' + helpMessage.icon"></i>
+  <div *ngIf="isOpen" class="guide-panel" (click)="$event.stopPropagation()" role="dialog" aria-labelledby="guide-title">
+
+    <!-- Panel Header -->
+    <div class="guide-header">
+      <h3 id="guide-title" class="guide-title">Setup guide</h3>
+      <div class="guide-header-actions">
+        <button type="button" class="guide-icon-btn" (click)="closeDropdown()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
-      <h3 class="help-header-title">{{ helpMessage.title }}</h3>
-      <button type="button" class="help-close-btn" (click)="closeDropdown()" aria-label="Close">
-        <i class="bi bi-x-lg"></i>
-      </button>
     </div>
 
-    <!-- Body -->
-    <div class="help-dropdown-body">
-      <p class="help-body-text">{{ helpMessage.body }}</p>
+    <!-- Progress Bar -->
+    <div class="guide-progress">
+      <div class="guide-progress-track">
+        <div class="guide-progress-fill" [style.width.%]="progressPercent"></div>
+        <div class="guide-progress-dot" [style.left.%]="progressPercent"></div>
+      </div>
     </div>
 
-    <!-- Actions -->
-    <div class="help-dropdown-actions" *ngIf="helpMessage.actionLabel">
-      <button
-        class="help-action-primary"
-        (click)="navigate(helpMessage.actionRoute, helpMessage.actionFragment)">
-        {{ helpMessage.actionLabel }}
-        <i class="bi bi-arrow-right"></i>
-      </button>
-      <button
-        *ngIf="helpMessage.secondaryLabel"
-        class="help-action-secondary"
-        (click)="navigate(helpMessage.secondaryRoute, helpMessage.secondaryFragment)">
-        {{ helpMessage.secondaryLabel }}
-        <i class="bi bi-arrow-right"></i>
-      </button>
+    <!-- Steps List -->
+    <div class="guide-steps" *ngIf="!isLoading">
+
+      <div *ngFor="let step of steps; let i = index"
+           class="guide-step"
+           [class.completed]="step.completed"
+           [class.active]="activeStep === step.id"
+           [class.clickable]="!step.completed">
+
+        <!-- Step Row -->
+        <button
+          type="button"
+          class="step-row"
+          (click)="onStepClick(step)"
+          [disabled]="step.completed"
+          [attr.aria-expanded]="activeStep === step.id">
+          <span class="step-indicator" [class.done]="step.completed">
+            <i *ngIf="step.completed" class="bi bi-check2"></i>
+            <span *ngIf="!step.completed" class="step-dot"></span>
+          </span>
+          <span class="step-label" [class.completed-label]="step.completed">{{ step.label }}</span>
+          <i *ngIf="!step.completed" class="bi bi-chevron-right step-chevron"></i>
+        </button>
+
+        <!-- Inline: Profile Form -->
+        <div *ngIf="activeStep === 'profile' && step.id === 'profile'" class="step-inline-form" (click)="$event.stopPropagation()">
+          <p class="inline-hint">Give your breedery a name so pet seekers can find you.</p>
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <div class="inline-field">
+              <label for="setup_breedery_name">Breedery name</label>
+              <input
+                type="text"
+                id="setup_breedery_name"
+                formControlName="breedery_name"
+                placeholder="e.g., Happy Paws Kennel"
+                autocomplete="organization" />
+            </div>
+            <div class="inline-field">
+              <label for="setup_breedery_desc">Description <span class="optional">(optional)</span></label>
+              <textarea
+                id="setup_breedery_desc"
+                formControlName="breedery_description"
+                rows="2"
+                placeholder="A short intro about your breedery..."></textarea>
+            </div>
+            <div class="inline-actions">
+              <button type="button" class="btn-inline-cancel" (click)="cancelInlineForm()">Cancel</button>
+              <button type="submit" class="btn-inline-save" [disabled]="isSaving || profileForm.invalid">
+                {{ isSaving ? 'Saving...' : 'Continue' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Inline: Location Form -->
+        <div *ngIf="activeStep === 'location' && step.id === 'location'" class="step-inline-form" (click)="$event.stopPropagation()">
+          <p class="inline-hint">Add your first breeding location so pet seekers can find you on the map.</p>
+          <form [formGroup]="locationForm" (ngSubmit)="saveLocation()">
+            <div class="inline-field">
+              <label for="setup_loc_name">Location name</label>
+              <input type="text" id="setup_loc_name" formControlName="name" placeholder="e.g., Main Kennel" />
+            </div>
+            <div class="inline-field">
+              <label for="setup_loc_addr">Address</label>
+              <input type="text" id="setup_loc_addr" formControlName="address1" placeholder="Street address" />
+            </div>
+            <div class="inline-row">
+              <div class="inline-field flex-1">
+                <label for="setup_loc_city">City</label>
+                <input type="text" id="setup_loc_city" formControlName="city" placeholder="City" />
+              </div>
+              <div class="inline-field flex-1">
+                <label for="setup_loc_state">State</label>
+                <select id="setup_loc_state" formControlName="state">
+                  <option value="" disabled>Select</option>
+                  <option *ngFor="let s of usStates" [value]="s">{{ s }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="inline-row">
+              <div class="inline-field flex-1">
+                <label for="setup_loc_zip">Zip code</label>
+                <input type="text" id="setup_loc_zip" formControlName="zipcode" placeholder="Zip" />
+              </div>
+              <div class="inline-field flex-1">
+                <label for="setup_loc_country">Country</label>
+                <select id="setup_loc_country" formControlName="country">
+                  <option value="United States">United States</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+            </div>
+            <div class="inline-actions">
+              <button type="button" class="btn-inline-cancel" (click)="cancelInlineForm()">Cancel</button>
+              <button type="submit" class="btn-inline-save" [disabled]="isSaving || locationForm.invalid">
+                {{ isSaving ? 'Saving...' : 'Continue' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- All Done State -->
+      <div *ngIf="allComplete" class="guide-complete">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>You're all set up. Nice work!</span>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="guide-loading">
+      <div class="guide-loading-spinner"></div>
     </div>
   </div>
 
   <!-- Backdrop -->
-  <div *ngIf="isOpen" class="fixed inset-0 z-40" (click)="closeDropdown()"></div>
+  <div *ngIf="isOpen" class="guide-backdrop" (click)="closeDropdown()" aria-hidden="true"></div>
 </div>
