@@ -92,6 +92,15 @@
                       <span class="text-xs text-blue-600 font-medium">Open in Google Maps</span>
                     </div>
                   </a>
+
+                  <!-- Review Prompt after location-share messages -->
+                  <app-review-prompt
+                    [breederId]="breederId"
+                    [breederName]="breederName"
+                    [breederImage]="breederProfileImage"
+                    [threadId]="threadId || ''"
+                    [isBreeder]="isBreeder">
+                  </app-review-prompt>
                 </ng-container>
               </ng-container>
 

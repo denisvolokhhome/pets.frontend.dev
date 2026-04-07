@@ -1,0 +1,51 @@
+.review-prompt {
+  margin: 0.75rem 0;
+}
+
+.prompt-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.prompt-card.reviewed {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.prompt-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.reviewed .prompt-text {
+  color: #166534;
+}
+
+.rate-button {
+  padding: 0.375rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: white;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+.rate-button:hover {
+  background-color: #ff5252;
+}
+
+.rate-button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}

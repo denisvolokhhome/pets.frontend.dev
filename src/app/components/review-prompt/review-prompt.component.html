@@ -1,0 +1,23 @@
+<div class="review-prompt" *ngIf="state === 'eligible' || state === 'already_reviewed'">
+  <!-- Eligible: show prompt to rate -->
+  <div class="prompt-card" *ngIf="state === 'eligible' && !showForm">
+    <p class="prompt-text">How was your experience with {{ breederName }}?</p>
+    <button type="button" class="rate-button" (click)="openForm()">Rate</button>
+  </div>
+
+  <!-- Already reviewed: show summary -->
+  <div class="prompt-card reviewed" *ngIf="state === 'already_reviewed'">
+    <p class="prompt-text">You rated {{ breederName }} {{ submittedRating }} stars</p>
+  </div>
+
+  <!-- Review form overlay -->
+  <app-review-form
+    *ngIf="showForm"
+    [breederId]="breederId"
+    [breederName]="breederName"
+    [breederImage]="breederImage"
+    [threadId]="threadId"
+    (close)="closeForm()"
+    (reviewSubmitted)="onReviewSubmitted($event)">
+  </app-review-form>
+</div>

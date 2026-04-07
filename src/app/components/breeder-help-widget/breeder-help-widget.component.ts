@@ -6,9 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
 import { Subject, takeUntil, forkJoin } from 'rxjs';
-import { IUser } from '../../models/user';
-import { ILocation } from '../../models/location';
-import { IPet } from '../../models/pet';
 
 export interface SetupStep {
   id: string;
@@ -30,7 +27,6 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   isOpen = false;
   isLoading = true;
   allComplete = false;
-  guideDismissed = false;
   private destroy$ = new Subject<void>();
 
   // Setup steps
@@ -84,8 +80,6 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.authService.hasValidToken()) return;
 
-    this.guideDismissed = localStorage.getItem('breeder_setup_guide_dismissed') === 'true';
-
     this.authService.isLoggedIn$
       .pipe(takeUntil(this.destroy$))
       .subscribe(loggedIn => {
@@ -134,10 +128,6 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   }
 
   closeDropdown(): void {
-    if (this.allComplete) {
-      localStorage.setItem('breeder_setup_guide_dismissed', 'true');
-      this.guideDismissed = true;
-    }
     this.isOpen = false;
     this.activeStep = null;
   }
@@ -236,10 +226,7 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   }
 
   completeGuide(): void {
-    localStorage.setItem('breeder_setup_guide_dismissed', 'true');
-    this.guideDismissed = true;
     this.closeDropdown();
-    this.cdr.markForCheck();
   }
 
   private loadState(): void {

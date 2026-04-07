@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BreederSearchResult } from 'src/app/models/search';
 import { AuthService } from 'src/app/services/auth.service';
+import { ReviewService } from 'src/app/services/review.service';
+import { ReviewSummary, ReviewRead } from 'src/app/models/review.model';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -25,7 +27,21 @@ export class BreederCardComponent {
   breederProfile: any = null;
   isLoadingProfile: boolean = false;
 
-  constructor(private router: Router, public authService: AuthService, private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  // Review data
+  reviewSummary: ReviewSummary | null = null;
+  reviews: ReviewRead[] = [];
+  reviewPage: number = 0;
+  reviewTotal: number = 0;
+  isLoadingReviews: boolean = false;
+  topTags: { name: string; count: number }[] = [];
+
+  constructor(
+    private router: Router,
+    public authService: AuthService,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private reviewService: ReviewService
+  ) {}
 
   /**
    * Get the full image URL for the breeder thumbnail
@@ -77,6 +93,12 @@ export class BreederCardComponent {
     event.stopPropagation();
     this.isLoadingProfile = true;
     this.showProfilePopup = true;
+    this.reviewSummary = null;
+    this.reviews = [];
+    this.reviewPage = 0;
+    this.reviewTotal = 0;
+    this.topTags = [];
+
     this.http.get<any>(`${environment.API_URL}/users/breeder/${this.breeder.user_id}/public`).subscribe({
       next: (profile) => {
         this.breederProfile = profile;
@@ -88,6 +110,21 @@ export class BreederCardComponent {
         this.cdr.detectChanges();
       }
     });
+
+    // Fetch review summary
+    this.reviewService.getBreederSummary(this.breeder.user_id).subscribe({
+      next: (summary) => {
+        this.reviewSummary = summary;
+        this.topTags = this.getTopTags(summary.tag_counts, 3);
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cdr.detectChanges();
+      }
+    });
+
+    // Fetch first page of reviews
+    this.loadReviews(0);
   }
 
   closeProfilePopup(): void {
@@ -143,6 +180,60 @@ export class BreederCardComponent {
    */
   onMessageSent(): void {
     this.showContactModal = false;
+  }
+
+  /**
+   * Load a page of reviews for the breeder
+   */
+  loadReviews(page: number): void {
+    this.isLoadingReviews = true;
+    this.reviewService.getBreederReviews(this.breeder.user_id, page).subscribe({
+      next: (result) => {
+        this.reviews = result.items;
+        this.reviewTotal = result.total;
+        this.reviewPage = page;
+        this.isLoadingReviews = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isLoadingReviews = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * Get top N tags sorted by count descending
+   */
+  getTopTags(tagCounts: Record<string, number>, limit: number): { name: string; count: number }[] {
+    return Object.entries(tagCounts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
+  }
+
+  /**
+   * Total number of review pages
+   */
+  get totalReviewPages(): number {
+    return Math.ceil(this.reviewTotal / 10);
+  }
+
+  /**
+   * Navigate to a review page
+   */
+  onReviewPageChange(page: number): void {
+    if (page >= 0 && page < this.totalReviewPages) {
+      this.loadReviews(page);
+    }
+  }
+
+  /**
+   * Format a review date for display
+   */
+  formatReviewDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
   /**

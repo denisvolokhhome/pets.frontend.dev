@@ -49,6 +49,31 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     });
   }
 
+  /**
+   * Build HTML string for rating display inside a Leaflet popup.
+   * Shows filled/half/empty stars with review count, or a "New" badge when there are no reviews.
+   */
+  private buildPopupRatingHtml(rating: number | null, reviewCount: number): string {
+    if (!reviewCount || reviewCount === 0) {
+      return '<div class="popup-rating"><span class="popup-new-badge">New</span></div>';
+    }
+
+    const r = Math.max(0, Math.min(5, rating ?? 0));
+    let starsHtml = '';
+    for (let i = 1; i <= 5; i++) {
+      if (r >= i) {
+        starsHtml += '<i class="bi bi-star-fill popup-star--filled"></i>';
+      } else if (r >= i - 0.5) {
+        starsHtml += '<i class="bi bi-star-half popup-star--filled"></i>';
+      } else {
+        starsHtml += '<i class="bi bi-star popup-star--empty"></i>';
+      }
+    }
+
+    const countText = reviewCount === 1 ? '(1 review)' : `(${reviewCount} reviews)`;
+    return `<div class="popup-rating"><span class="popup-stars">${starsHtml}</span> <span class="popup-count">${countText}</span></div>`;
+  }
+
   ngOnInit(): void {
     // Component initialization
   }
@@ -167,6 +192,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
       marker.bindPopup(`
         <div class="breeder-popup">
           <h4>${breederMarker.breeder.breeder_name}</h4>
+          ${this.buildPopupRatingHtml(breederMarker.breeder.rating, breederMarker.breeder.review_count)}
           <p>~${breederMarker.breeder.distance.toFixed(1)} miles away</p>
           <p class="approx-notice">📍 Approximate location</p>
           ${breederMarker.breeder.available_breeds.length > 0 

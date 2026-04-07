@@ -1,0 +1,86 @@
+<div class="review-overlay" (click)="onClose()">
+  <div class="review-dialog" (click)="$event.stopPropagation()" role="dialog" aria-labelledby="review-title">
+    <!-- Header -->
+    <div class="review-header">
+      <h2 id="review-title" class="review-title">Rate Breeder</h2>
+      <button type="button" class="close-button" (click)="onClose()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="review-body">
+      <!-- Breeder Info -->
+      <div class="breeder-info">
+        <div class="breeder-avatar" [style.background-image]="breederImage ? 'url(' + breederImage + ')' : ''">
+          <i *ngIf="!breederImage" class="bi bi-person-circle"></i>
+        </div>
+        <p class="breeder-question">How was your experience with {{ breederName }}?</p>
+      </div>
+
+      <!-- Disclaimer -->
+      <p class="disclaimer">Ratings and reviews are visible to everyone on Breedly</p>
+
+      <!-- Star Rating Selector -->
+      <div class="star-selector" role="radiogroup" aria-label="Star rating">
+        <button
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          type="button"
+          class="star-button"
+          [class.star-active]="isStarActive(star)"
+          (click)="selectStar(star)"
+          (mouseenter)="hoverStar(star)"
+          (mouseleave)="clearHover()"
+          [attr.aria-label]="star + ' star' + (star > 1 ? 's' : '')"
+          [attr.aria-checked]="selectedRating === star"
+          role="radio">
+          <i class="bi" [class.bi-star-fill]="isStarActive(star)" [class.bi-star]="!isStarActive(star)"></i>
+        </button>
+      </div>
+
+      <!-- Tags Section -->
+      <div class="tags-section" *ngIf="tags.length > 0">
+        <h3 class="tags-label">What went well?</h3>
+        <div class="tags-container">
+          <button
+            *ngFor="let tag of tags"
+            type="button"
+            class="tag-pill"
+            [class.tag-selected]="isTagSelected(tag)"
+            (click)="toggleTag(tag)"
+            [attr.aria-pressed]="isTagSelected(tag)">
+            {{ tag }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Comment Text Area -->
+      <div class="comment-section">
+        <label for="review-comment" class="comment-label">Additional comments (optional)</label>
+        <textarea
+          id="review-comment"
+          class="comment-input"
+          [(ngModel)]="comment"
+          [maxlength]="maxCommentLength"
+          placeholder="Share more about your experience..."
+          rows="4"></textarea>
+        <div class="char-counter" [class.char-warning]="remainingCharacters < 100">
+          {{ characterCount }} / {{ maxCommentLength }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="review-footer">
+      <button
+        type="button"
+        class="btn btn-primary submit-button"
+        [disabled]="isSubmitDisabled"
+        (click)="onSubmit()">
+        <span *ngIf="!submitting">Submit</span>
+        <span *ngIf="submitting">
+          <span class="spinner"></span> Submitting...
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

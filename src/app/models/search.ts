@@ -53,6 +53,7 @@ export interface BreederSearchResult {
   thumbnail_url: string | null;
   location_description: string | null;
   rating: number | null;
+  review_count: number;
 }
 
 /**

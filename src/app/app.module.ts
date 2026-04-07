@@ -79,6 +79,9 @@ import { GuestPromptModalComponent } from './components/guest-prompt-modal/guest
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { StarRatingComponent } from './components/star-rating/star-rating.component';
+import { ReviewFormComponent } from './components/review-form/review-form.component';
+import { ReviewPromptComponent } from './components/review-prompt/review-prompt.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { AuthService } from './services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -155,6 +158,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     ResetPasswordComponent,
     GenealogyComponent,
     VerifyEmailComponent,
+    StarRatingComponent,
     PhoneMaskDirective,
     PricingSectionComponent,
   ],
@@ -192,7 +196,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     PetDocumentsComponent,
     OffspringDocumentsComponent,
     GuestPromptModalComponent,
-
+    ReviewFormComponent,
+    ReviewPromptComponent,
   ],
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),

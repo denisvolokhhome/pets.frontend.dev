@@ -11,6 +11,7 @@ import { NotificationService } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { DataService } from '../../services/data.service';
+import { ReviewPromptComponent } from '../review-prompt/review-prompt.component';
 import { Subject, takeUntil, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -59,7 +60,8 @@ export interface OffspringContext {
     Textarea,
     CardModule,
     AvatarModule,
-    BadgeModule
+    BadgeModule,
+    ReviewPromptComponent
   ],
   templateUrl: './message-thread.component.html',
   styleUrls: ['./message-thread.component.css']
@@ -263,6 +265,16 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
 
   isSentByCurrentUser(message: ThreadMessage): boolean {
     return message.sender_id === this.currentUserId;
+  }
+
+  /**
+   * Get the breeder's profile image URL from messages
+   */
+  get breederProfileImage(): string | null {
+    const breederMsg = this.messages.find(m => m.sender_is_breeder && m.sender_profile_image_url);
+    return breederMsg?.sender_profile_image_url
+      ? this.getProfileImageUrl(breederMsg.sender_profile_image_url)
+      : null;
   }
 
   formatTimestamp(timestamp: string): string {

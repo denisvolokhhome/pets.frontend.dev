@@ -79,6 +79,50 @@
   font-style: italic;
 }
 
+/* Popup rating styles */
+:host ::ng-deep .popup-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0;
+  font-size: 13px;
+  line-height: 1;
+}
+
+:host ::ng-deep .popup-stars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+:host ::ng-deep .popup-star--filled {
+  color: #f59e0b;
+  font-size: 13px;
+}
+
+:host ::ng-deep .popup-star--empty {
+  color: #d1d5db;
+  font-size: 13px;
+}
+
+:host ::ng-deep .popup-count {
+  color: #6b7280;
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+:host ::ng-deep .popup-new-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #dbeafe;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
 /* Fix Leaflet marker icon paths */
 :host ::ng-deep .leaflet-marker-icon {
   background: transparent;

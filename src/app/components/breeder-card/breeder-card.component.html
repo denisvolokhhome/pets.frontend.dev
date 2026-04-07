@@ -33,9 +33,7 @@
       <span class="breeder-card__approx">
         <i class="bi bi-geo-alt"></i> Approximate location
       </span>
-      <div class="breeder-card__rating" *ngIf="breeder.rating">
-        <i class="bi bi-star-fill"></i> {{ breeder.rating.toFixed(1) }}
-      </div>
+      <app-star-rating [rating]="breeder.rating ?? 0" [reviewCount]="breeder.review_count"></app-star-rating>
     </div>
 
     <!-- Inline action links -->
@@ -97,6 +95,51 @@
       <button class="profile-view-btn" (click)="closeProfilePopup(); onViewOffsprings($event)">
         <i class="bi bi-grid-3x3-gap"></i> View Offsprings
       </button>
+
+      <!-- Reviews Section -->
+      <div class="profile-reviews">
+        <div class="profile-reviews__header" *ngIf="reviewSummary">
+          <app-star-rating [rating]="reviewSummary.average_rating" [reviewCount]="reviewSummary.review_count"></app-star-rating>
+          <div class="profile-reviews__top-tags" *ngIf="topTags.length > 0">
+            <span class="profile-reviews__tag" *ngFor="let tag of topTags">{{ tag.name }} ({{ tag.count }})</span>
+          </div>
+        </div>
+
+        <p class="profile-section-label">Reviews</p>
+
+        <div *ngIf="reviewSummary && reviewSummary.review_count === 0" class="profile-reviews__empty">
+          No reviews yet
+        </div>
+
+        <div *ngIf="isLoadingReviews && reviews.length === 0" class="profile-reviews__loading">
+          <i class="bi bi-arrow-repeat spin"></i>
+        </div>
+
+        <div *ngIf="reviews.length > 0" class="profile-reviews__list">
+          <div class="profile-review" *ngFor="let review of reviews">
+            <div class="profile-review__top">
+              <span class="profile-review__name">{{ review.reviewer_name || 'Anonymous' }}</span>
+              <span class="profile-review__date">{{ formatReviewDate(review.created_at) }}</span>
+            </div>
+            <app-star-rating [rating]="review.rating" [reviewCount]="0"></app-star-rating>
+            <div class="profile-review__tags" *ngIf="review.tags && review.tags.length > 0">
+              <span class="profile-review__tag" *ngFor="let tag of review.tags">{{ tag }}</span>
+            </div>
+            <p class="profile-review__comment" *ngIf="review.comment">{{ review.comment }}</p>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div *ngIf="totalReviewPages > 1" class="profile-reviews__pagination">
+          <button class="profile-reviews__page-btn" [disabled]="reviewPage === 0" (click)="onReviewPageChange(reviewPage - 1)">
+            <i class="bi bi-chevron-left"></i> Prev
+          </button>
+          <span class="profile-reviews__page-info">{{ reviewPage + 1 }} / {{ totalReviewPages }}</span>
+          <button class="profile-reviews__page-btn" [disabled]="reviewPage >= totalReviewPages - 1" (click)="onReviewPageChange(reviewPage + 1)">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

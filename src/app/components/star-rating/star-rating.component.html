@@ -1,0 +1,14 @@
+<div class="star-rating" role="img" [attr.aria-label]="'Rating: ' + rating + ' out of 5 stars, ' + reviewCount + ' reviews'">
+  <span class="star-rating__stars">
+    <i *ngFor="let star of stars"
+       class="bi"
+       [class.bi-star-fill]="star === 'full'"
+       [class.bi-star-half]="star === 'half'"
+       [class.bi-star]="star === 'empty'"
+       [class.star--filled]="star === 'full' || star === 'half'"
+       [class.star--empty]="star === 'empty'">
+    </i>
+  </span>
+  <span class="star-rating__count" *ngIf="reviewCount > 0">{{ getReviewCountText() }}</span>
+  <span class="star-rating__new" *ngIf="reviewCount === 0">New</span>
+</div>
