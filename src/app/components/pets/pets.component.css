@@ -789,3 +789,186 @@
   font-size: 0.75rem;
   color: #0d9488;
 }
+
+/* ============================================
+   SPEED-DIAL FAB
+   ============================================ */
+
+.speed-dial-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Backdrop */
+.speed-dial-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: -1;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Main trigger button */
+.speed-dial-trigger {
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--success-color, #22c55e);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 1.5rem;
+  z-index: 2;
+}
+
+.speed-dial-trigger:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.speed-dial-trigger:active {
+  transform: scale(0.95);
+}
+
+.speed-dial-trigger-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.speed-dial-trigger-open .speed-dial-trigger-icon {
+  transform: rotate(45deg);
+}
+
+.speed-dial-trigger-open {
+  background: #6b7280;
+}
+
+/* Action items container */
+.speed-dial-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.speed-dial-actions-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Individual action item */
+.speed-dial-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Action label pill */
+.speed-dial-label {
+  background: white;
+  color: #374151;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+/* Action buttons */
+.speed-dial-action-btn {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.speed-dial-action-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.speed-dial-action-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Add Pet button */
+.speed-dial-add-btn {
+  background: var(--success-color, #22c55e);
+  color: white;
+}
+
+/* Import CSV button — teal/mint accent pill style */
+.speed-dial-import-btn {
+  background: linear-gradient(135deg, #4ecdc4, #0d9488);
+  color: white;
+  border-radius: 22px;
+  width: auto;
+  padding: 0 1rem;
+  gap: 0.375rem;
+}
+
+/* Disabled state for Import CSV */
+.speed-dial-item-disabled .speed-dial-action-btn {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.speed-dial-item-disabled .speed-dial-action-btn:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.speed-dial-item-disabled .speed-dial-label {
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .speed-dial-container {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .speed-dial-trigger {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .speed-dial-action-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}

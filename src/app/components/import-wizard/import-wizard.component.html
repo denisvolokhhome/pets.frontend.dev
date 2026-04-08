@@ -1,0 +1,270 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="import-wizard-title">
+
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-header-content">
+        <div class="modal-icon">
+          <i class="bi bi-file-earmark-arrow-up"></i>
+        </div>
+        <div class="modal-title-section">
+          <h2 id="import-wizard-title">Import Pets from CSV</h2>
+          <p class="modal-subtitle">Step {{ currentStep }} of 3</p>
+        </div>
+      </div>
+      <button type="button" class="close-button" (click)="close()" aria-label="Close">&times;</button>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+        <div class="step-circle">1</div>
+        <span class="step-label">Template</span>
+      </div>
+      <div class="step-line" [class.completed]="currentStep > 1"></div>
+      <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+        <div class="step-circle">2</div>
+        <span class="step-label">Upload</span>
+      </div>
+      <div class="step-line" [class.completed]="currentStep > 2"></div>
+      <div class="step" [class.active]="currentStep === 3">
+        <div class="step-circle">3</div>
+        <span class="step-label">Results</span>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+
+      <!-- ═══ STEP 1: Template ═══ -->
+      <div *ngIf="currentStep === 1" class="step-content">
+        <div class="instructions-card">
+          <h3><i class="bi bi-info-circle"></i> How to import pets</h3>
+          <ol>
+            <li>Download the CSV template below</li>
+            <li>Fill in your pet data — one row per pet. Only <strong>name</strong> is required.</li>
+            <li>Use the breed and location names listed below as reference values</li>
+            <li>Save the file and upload it in the next step</li>
+          </ol>
+        </div>
+
+        <button type="button" class="btn-download" (click)="downloadTemplate()">
+          <i class="bi bi-download"></i> Download Template
+        </button>
+
+        <!-- Breed / Location reference -->
+        <div class="reference-section" *ngIf="breeds.length > 0 || locations.length > 0">
+          <div class="reference-block" *ngIf="breeds.length > 0">
+            <h4><i class="bi bi-tags"></i> Available Breeds</h4>
+            <div class="tag-list">
+              <span class="tag" *ngFor="let breed of breeds">{{ breed.name }}</span>
+            </div>
+          </div>
+          <div class="reference-block" *ngIf="locations.length > 0">
+            <h4><i class="bi bi-geo-alt"></i> Your Locations</h4>
+            <div class="tag-list">
+              <span class="tag tag-location" *ngFor="let loc of locations">{{ loc.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 2: Upload & Validate ═══ -->
+      <div *ngIf="currentStep === 2" class="step-content">
+        <!-- File drop zone -->
+        <div
+          class="drop-zone"
+          [class.drag-over]="isDragOver"
+          [class.has-file]="selectedFile"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="fileInput.click()"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="fileInput.click()"
+          (keydown.space)="fileInput.click()"
+          aria-label="Drop CSV file here or click to browse"
+        >
+          <input
+            #fileInput
+            type="file"
+            accept=".csv"
+            (change)="onFileSelected($event)"
+            hidden
+          />
+          <div *ngIf="!selectedFile && !isParsing">
+            <i class="bi bi-cloud-arrow-up drop-icon"></i>
+            <p class="drop-text">Drag & drop your CSV file here</p>
+            <p class="drop-hint">or click to browse (.csv only, 5MB max)</p>
+          </div>
+          <div *ngIf="selectedFile && !isParsing">
+            <i class="bi bi-file-earmark-check drop-icon text-success"></i>
+            <p class="drop-text">{{ selectedFile.name }}</p>
+            <p class="drop-hint">Click to choose a different file</p>
+          </div>
+          <div *ngIf="isParsing">
+            <i class="bi bi-hourglass-split drop-icon animate-spin"></i>
+            <p class="drop-text">Parsing file...</p>
+          </div>
+        </div>
+
+        <!-- Parse errors -->
+        <div *ngIf="parseErrors.length > 0" class="error-banner">
+          <i class="bi bi-exclamation-triangle"></i>
+          <div>
+            <p *ngFor="let err of parseErrors">{{ err }}</p>
+          </div>
+        </div>
+
+        <!-- Billing limit warning -->
+        <div *ngIf="isOverLimit" class="warning-banner">
+          <i class="bi bi-exclamation-circle"></i>
+          <p>
+            Your plan allows <strong>{{ maxPets }}</strong> pets.
+            You currently have <strong>{{ currentPetCount }}</strong>.
+            Only the first <strong>{{ allowedPets }}</strong> pets from the file will be imported.
+          </p>
+        </div>
+
+        <!-- All fit confirmation -->
+        <div *ngIf="allFitWithinLimit" class="success-banner">
+          <i class="bi bi-check-circle"></i>
+          <p>All <strong>{{ validRowCount }}</strong> pets will be imported.</p>
+        </div>
+
+        <!-- Preview table -->
+        <div *ngIf="parsedRows.length > 0" class="preview-section">
+          <h4>Preview ({{ parsedRows.length }} rows)</h4>
+          <div class="table-wrapper">
+            <table class="preview-table">
+              <thead>
+                <tr>
+                  <th>Row</th>
+                  <th>Name</th>
+                  <th>Breed</th>
+                  <th>Gender</th>
+                  <th>DOB</th>
+                  <th>Weight</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let row of parsedRows"
+                  [class.row-invalid]="!row.isValid"
+                  [class.row-skipped]="row.isValid && !row.willBeImported"
+                >
+                  <td>{{ row.rowNumber }}</td>
+                  <td>{{ row.name || '—' }}</td>
+                  <td>{{ row.breed || '—' }}</td>
+                  <td>{{ row.gender || '—' }}</td>
+                  <td>{{ row.dateOfBirth || '—' }}</td>
+                  <td>{{ row.weight !== undefined ? row.weight : '—' }}</td>
+                  <td>{{ row.location || '—' }}</td>
+                  <td>
+                    <span *ngIf="row.isValid && row.willBeImported" class="status-badge status-ok">
+                      <i class="bi bi-check-circle"></i> Ready
+                    </span>
+                    <span *ngIf="row.isValid && !row.willBeImported" class="status-badge status-limit">
+                      <i class="bi bi-dash-circle"></i> Over limit
+                    </span>
+                    <span *ngIf="!row.isValid" class="status-badge status-error" [title]="row.errors.join('; ')">
+                      <i class="bi bi-x-circle"></i> Invalid
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Row error details -->
+          <div *ngFor="let row of parsedRows">
+            <div *ngIf="!row.isValid" class="row-error-detail">
+              <strong>Row {{ row.rowNumber }}:</strong>
+              <span *ngFor="let e of row.errors; let last = last">{{ e }}{{ last ? '' : '; ' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 3: Results ═══ -->
+      <div *ngIf="currentStep === 3 && importResult" class="step-content">
+        <div class="results-summary">
+          <div class="result-card result-created">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+              <span class="result-count">{{ importResult.created_count }}</span>
+              <span class="result-label">Pets Created</span>
+            </div>
+          </div>
+          <div class="result-card result-skipped">
+            <i class="bi bi-skip-forward-fill"></i>
+            <div>
+              <span class="result-count">{{ importResult.skipped_count }}</span>
+              <span class="result-label">Rows Skipped</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan limit notice -->
+        <div *ngIf="importResult.plan_limit_applied" class="warning-banner">
+          <i class="bi bi-exclamation-circle"></i>
+          <p>
+            Your plan's pet limit was reached. Some pets were not imported.
+            Consider <strong>upgrading your plan</strong> to import more pets.
+          </p>
+        </div>
+
+        <!-- Error list -->
+        <div *ngIf="importResult.errors.length > 0" class="error-list-section">
+          <button type="button" class="btn-toggle-errors" (click)="toggleErrorList()">
+            <i class="bi" [ngClass]="showErrorList ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            {{ importResult.errors.length }} row{{ importResult.errors.length === 1 ? '' : 's' }} with errors
+          </button>
+          <div *ngIf="showErrorList" class="error-list">
+            <div *ngFor="let err of importResult.errors" class="error-item">
+              <span class="error-row">Row {{ err.row }}</span>
+              <span class="error-reason">{{ err.reason }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <!-- Step 1 -->
+      <ng-container *ngIf="currentStep === 1">
+        <button type="button" class="btn-secondary" (click)="close()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="goToStep(2)">
+          Next <i class="bi bi-arrow-right"></i>
+        </button>
+      </ng-container>
+
+      <!-- Step 2 -->
+      <ng-container *ngIf="currentStep === 2">
+        <button type="button" class="btn-secondary" (click)="goToStep(1)">
+          <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button
+          type="button"
+          class="btn-primary"
+          [disabled]="!canImport"
+          (click)="startImport()"
+        >
+          <i class="bi" [ngClass]="isImporting ? 'bi-hourglass-split' : 'bi-upload'"></i>
+          {{ isImporting ? 'Importing...' : 'Import ' + importableRowCount + ' Pets' }}
+        </button>
+      </ng-container>
+
+      <!-- Step 3 -->
+      <ng-container *ngIf="currentStep === 3">
+        <button type="button" class="btn-primary" (click)="close()">
+          Close
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>

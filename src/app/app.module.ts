@@ -82,6 +82,7 @@ import { VerifyEmailComponent } from './components/verify-email/verify-email.com
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
 import { ReviewFormComponent } from './components/review-form/review-form.component';
 import { ReviewPromptComponent } from './components/review-prompt/review-prompt.component';
+import { ImportWizardComponent } from './components/import-wizard/import-wizard.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
 import { AuthService } from './services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -161,6 +162,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     StarRatingComponent,
     PhoneMaskDirective,
     PricingSectionComponent,
+    ImportWizardComponent,
   ],
   imports: [
     BrowserModule,

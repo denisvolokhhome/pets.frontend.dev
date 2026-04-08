@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 import { PageHeaderConfig } from '../page-header/page-header.component';
 import { environment } from 'src/environments/environment';
+import { ImportWizardComponent, IMPORT_WIZARD_MODAL_ID } from '../import-wizard/import-wizard.component';
 
 @Component({
   standalone: false,
@@ -26,12 +27,13 @@ export class PetsComponent implements OnInit {
     showLayoutSwitcher: true,
     showSearch: true,
     searchPlaceholder: 'Search pets...',
-    showActionButton: true,
-    actionButtonIcon: 'bi bi-plus-circle',
-    actionButtonColor: 'var(--success-color)',
-    actionButtonTitle: 'Add Pet',
-    actionButtonDisabled: true
+    showActionButton: false
   };
+
+  /** Speed-dial FAB state */
+  isSpeedDialOpen = false;
+
+  @ViewChild(ImportWizardComponent) importWizard!: ImportWizardComponent;
 
   constructor(
     public DataService: DataService,
@@ -116,20 +118,7 @@ export class PetsComponent implements OnInit {
     this.DataService.getLocations().subscribe((locations) => {
       this.locations = locations;
       this.locationsLoaded = true;
-      this.updateAddPetButton();
     });
-  }
-
-  updateAddPetButton(): void {
-    const hasLocations = this.locationsLoaded && this.locations && this.locations.length > 0;
-    this.headerConfig = {
-      ...this.headerConfig,
-      actionButtonDisabled: this.locationsLoaded && !hasLocations,
-      actionButtonTooltip: hasLocations
-        ? 'Add Pet'
-        : 'You need to create at least one location in Settings before adding pets'
-    };
-    this.cdr.detectChanges();
   }
 
   loadBreeds(): void {
@@ -215,7 +204,40 @@ export class PetsComponent implements OnInit {
   }
   
   onAddPetClick() {
+    this.isSpeedDialOpen = false;
     this.openAddPetModal();
+  }
+
+  toggleSpeedDial(): void {
+    this.isSpeedDialOpen = !this.isSpeedDialOpen;
+  }
+
+  closeSpeedDial(): void {
+    this.isSpeedDialOpen = false;
+  }
+
+  get isImportCsvDisabled(): boolean {
+    return !this.locations || this.locations.length === 0;
+  }
+
+  get importCsvTooltip(): string {
+    return this.isImportCsvDisabled
+      ? 'You need to create at least one location in Settings before importing pets'
+      : 'Import CSV';
+  }
+
+  openImportWizard(): void {
+    if (this.isImportCsvDisabled) return;
+    this.isSpeedDialOpen = false;
+
+    // Set wizard inputs before opening
+    if (this.importWizard) {
+      this.importWizard.breeds = this.breeds;
+      this.importWizard.locations = this.locations;
+      this.importWizard.currentPetCount = this.pets.length;
+    }
+
+    this.ModalService.open(IMPORT_WIZARD_MODAL_ID);
   }
 
   searchPets(event: any){
