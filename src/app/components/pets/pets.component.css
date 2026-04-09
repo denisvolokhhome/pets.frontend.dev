@@ -876,7 +876,7 @@
 /* Dropdown menu */
 .split-btn-dropdown {
   position: absolute;
-  bottom: calc(100% + 0.5rem);
+  top: calc(100% + 0.5rem);
   right: 0;
   background: white;
   border-radius: 0.75rem;
