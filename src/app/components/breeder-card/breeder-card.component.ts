@@ -206,6 +206,7 @@ export class BreederCardComponent {
    * Get top N tags sorted by count descending
    */
   getTopTags(tagCounts: Record<string, number>, limit: number): { name: string; count: number }[] {
+    if (!tagCounts) return [];
     return Object.entries(tagCounts)
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)

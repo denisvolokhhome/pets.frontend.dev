@@ -3,8 +3,11 @@
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
-    (searchChange)="onSearchTermChange($event)"
-    (actionButtonClick)="onRefreshClick()">
+    (searchChange)="onSearchTermChange($event)">
+    <button class="header-action-btn" (click)="onRefreshClick()" type="button">
+      <i class="bi bi-arrow-clockwise"></i>
+      <span>Refresh</span>
+    </button>
   </app-page-header>
 
   <!-- Content Section -->

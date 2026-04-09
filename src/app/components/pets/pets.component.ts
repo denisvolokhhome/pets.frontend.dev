@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
@@ -30,10 +30,18 @@ export class PetsComponent implements OnInit {
     showActionButton: false
   };
 
-  /** Speed-dial FAB state */
-  isSpeedDialOpen = false;
+  /** Speed-dial is no longer used — buttons are inline in header */
+  isDropdownOpen = false;
 
   @ViewChild(ImportWizardComponent) importWizard!: ImportWizardComponent;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.split-btn-group')) {
+      this.isDropdownOpen = false;
+    }
+  }
 
   constructor(
     public DataService: DataService,
@@ -204,16 +212,8 @@ export class PetsComponent implements OnInit {
   }
   
   onAddPetClick() {
-    this.isSpeedDialOpen = false;
+    if (this.isImportCsvDisabled) return;
     this.openAddPetModal();
-  }
-
-  toggleSpeedDial(): void {
-    this.isSpeedDialOpen = !this.isSpeedDialOpen;
-  }
-
-  closeSpeedDial(): void {
-    this.isSpeedDialOpen = false;
   }
 
   get isImportCsvDisabled(): boolean {
@@ -228,7 +228,6 @@ export class PetsComponent implements OnInit {
 
   openImportWizard(): void {
     if (this.isImportCsvDisabled) return;
-    this.isSpeedDialOpen = false;
 
     // Set wizard inputs before opening
     if (this.importWizard) {

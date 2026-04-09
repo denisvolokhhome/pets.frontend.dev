@@ -27,7 +27,6 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     searchPlaceholder: 'Search breedings...',
     showActionButton: true,
     actionButtonIcon: 'bi bi-plus-circle',
-    actionButtonColor: 'var(--success-color)',
     actionButtonTitle: 'Add Breeding'
   };
 
@@ -147,6 +146,10 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     this.currentFilters = {};
     this.searchTerm = '';
     this.applyFilters();
+  }
+
+  hasActiveFilters(): boolean {
+    return this.currentFilters && Object.keys(this.currentFilters).length > 0;
   }
 
   applyFilters(): void {

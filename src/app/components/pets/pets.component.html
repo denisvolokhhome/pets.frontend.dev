@@ -6,6 +6,40 @@
     [searchTerm]="term"
     (layoutChange)="onLayoutChange($event)"
     (searchChange)="onSearchTermChange($event)">
+
+    <!-- Split Button projected into header-right -->
+    <div class="split-btn-group">
+      <button
+        class="split-btn-main w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [disabled]="isImportCsvDisabled"
+        [title]="isImportCsvDisabled ? 'Complete setup guide first' : 'Add Pet'"
+        (click)="openAddPetModal()"
+        type="button">
+        <i class="bi bi-plus-heart"></i>
+        <span>Add Pet</span>
+      </button>
+      <button
+        class="split-btn-toggle w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [disabled]="isImportCsvDisabled"
+        (click)="isDropdownOpen = !isDropdownOpen"
+        type="button"
+        aria-label="More actions"
+        [attr.aria-expanded]="isDropdownOpen">
+        <i class="bi bi-chevron-up"></i>
+      </button>
+      <div class="split-btn-dropdown" *ngIf="isDropdownOpen">
+        <button
+          class="split-btn-dropdown-item"
+          [disabled]="isImportCsvDisabled"
+          [title]="importCsvTooltip"
+          (click)="openImportWizard(); isDropdownOpen = false"
+          type="button">
+          <i class="bi bi-file-earmark-arrow-up"></i>
+          Import CSV
+        </button>
+      </div>
+    </div>
+
   </app-page-header>
 
   <!-- Content Section -->
@@ -191,9 +225,9 @@
         <div *ngIf="!isLoading && (!filteredPets || filteredPets.length === 0)" class="empty-state">
           <i class="bi bi-search"></i>
           <h3>No pets found</h3>
-          <p *ngIf="currentFilters && Object.keys(currentFilters).length > 0">Try adjusting your filters to see more results.</p>
-          <p *ngIf="!currentFilters || Object.keys(currentFilters).length === 0">Please add a pet to get started.</p>
-          <button *ngIf="currentFilters && Object.keys(currentFilters).length > 0" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" (click)="onClearFilters()">
+          <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <button *ngIf="hasActiveFilters()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" (click)="onClearFilters()">
             Clear Filters
           </button>
         </div>
@@ -203,53 +237,7 @@
   </div>
 </div>
 
-<!-- Speed-Dial FAB -->
-<div class="speed-dial-container">
-  <!-- Backdrop overlay when open -->
-  <div class="speed-dial-backdrop" *ngIf="isSpeedDialOpen" (click)="closeSpeedDial()"></div>
 
-  <!-- Speed-dial action items -->
-  <div class="speed-dial-actions" [class.speed-dial-actions-open]="isSpeedDialOpen">
-    <!-- Import CSV action -->
-    <div class="speed-dial-item" [class.speed-dial-item-disabled]="isImportCsvDisabled">
-      <span class="speed-dial-label">Import CSV</span>
-      <button
-        class="speed-dial-action-btn speed-dial-import-btn"
-        [disabled]="isImportCsvDisabled"
-        [title]="importCsvTooltip"
-        [attr.aria-label]="importCsvTooltip"
-        (click)="openImportWizard()"
-        type="button">
-        <i class="bi bi-file-earmark-arrow-up"></i>
-      </button>
-    </div>
-
-    <!-- Add Pet action -->
-    <div class="speed-dial-item">
-      <span class="speed-dial-label">Add Pet</span>
-      <button
-        class="speed-dial-action-btn speed-dial-add-btn"
-        title="Add Pet"
-        aria-label="Add Pet"
-        (click)="onAddPetClick()"
-        type="button">
-        <i class="bi bi-plus-heart"></i>
-      </button>
-    </div>
-  </div>
-
-  <!-- Main FAB trigger -->
-  <button
-    class="speed-dial-trigger"
-    [class.speed-dial-trigger-open]="isSpeedDialOpen"
-    (click)="toggleSpeedDial()"
-    type="button"
-    title="Actions"
-    aria-label="Actions menu"
-    [attr.aria-expanded]="isSpeedDialOpen">
-    <i class="bi bi-plus-lg speed-dial-trigger-icon"></i>
-  </button>
-</div>
 
 <!-- TODO: Make single modal for different actions -->
 <div

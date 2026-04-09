@@ -34,7 +34,7 @@ export class MessagesListComponent implements OnInit {
     searchPlaceholder: 'Search messages...',
     showActionButton: true,
     actionButtonIcon: 'bi bi-arrow-clockwise',
-    actionButtonColor: 'var(--secondary-color)',
+    actionButtonColor: 'var(--primary-color)',
     actionButtonTitle: 'Refresh'
   };
   messages: MessageListItem[] = [];

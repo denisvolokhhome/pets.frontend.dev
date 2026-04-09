@@ -3,8 +3,11 @@
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
-    (searchChange)="onSearchTermChange($event)"
-    (actionButtonClick)="onActionButtonClick()">
+    (searchChange)="onSearchTermChange($event)">
+    <button class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer" (click)="onActionButtonClick()" type="button">
+      <i class="bi bi-plus-circle"></i>
+      <span>Add Offspring</span>
+    </button>
   </app-page-header>
 
   <!-- Content Section -->

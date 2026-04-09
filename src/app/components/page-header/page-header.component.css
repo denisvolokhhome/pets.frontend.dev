@@ -38,8 +38,16 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
   justify-content: center;
+  min-width: 0;
+}
+
+/* Header Right */
+.header-right {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* Layout Switcher */
@@ -88,7 +96,7 @@
   height: 48px;
   padding: 0 3rem 0 3rem;
   border: 2px solid #e5e7eb;
-  border-radius: 25px;
+  border-radius: 8px;
   font-size: 1rem;
   line-height: 1;
   transition: all 0.2s ease;
@@ -137,53 +145,45 @@
 /* Header Right */
 .header-right {
   flex-shrink: 0;
-  min-width: 56px;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
 }
 
-/* Action Button */
-.fab-button {
-  width: 56px;
-  height: 56px;
-  border: 0;
-  border-radius: 50%;
-  display: flex;
+/* Action Button — removed, use ng-content projection instead */
+
+/* Projected action button — consistent outlined style matching sidebar */
+:host ::ng-deep .header-action-btn,
+.header-action-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+  height: 48px;
+  padding: 0 1.125rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  background: white;
+  color: var(--primary-color);
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  font-size: 1.5rem;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
   flex-shrink: 0;
-  color: var(--dark-color);
 }
 
-.fab-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.header-action-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: white;
 }
 
-.fab-button:active {
-  transform: scale(0.95);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-}
-
-.fab-button-disabled {
+.header-action-btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.fab-button-disabled:hover {
-  transform: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .search-container {
-    max-width: 400px;
-  }
 }
 
 @media (max-width: 992px) {
@@ -207,6 +207,7 @@
   }
 
   .search-container {
+    width: 100%;
     max-width: 100%;
   }
 

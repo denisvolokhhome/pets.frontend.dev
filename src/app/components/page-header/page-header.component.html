@@ -6,34 +6,9 @@
       {{ config.title }}
     </h1>
   </div>
-  
-  <!-- Center: Layout Switcher + Search -->
+
+  <!-- Center: Search -->
   <div class="header-center">
-    <!-- Layout Switcher (optional) -->
-    <div class="layout-switcher" *ngIf="config.showLayoutSwitcher">
-      <button 
-        class="layout-btn"
-        [class.active]="currentLayout === 'table'"
-        (click)="onLayoutChange('table')"
-        title="Table View"
-        type="button"
-        aria-label="Table view"
-        [attr.aria-pressed]="currentLayout === 'table'">
-        <i class="bi bi-table"></i>
-      </button>
-      <button 
-        class="layout-btn"
-        [class.active]="currentLayout === 'cards'"
-        (click)="onLayoutChange('cards')"
-        title="Card View"
-        type="button"
-        aria-label="Card view"
-        [attr.aria-pressed]="currentLayout === 'cards'">
-        <i class="bi bi-postcard-heart"></i>
-      </button>
-    </div>
-    
-    <!-- Search (optional) -->
     <div class="search-container" *ngIf="config.showSearch">
       <input
         type="text"
@@ -55,20 +30,31 @@
       </button>
     </div>
   </div>
-  
-  <!-- Right: Action Button (optional) -->
+
+  <!-- Right: Layout Switcher + projected content -->
   <div class="header-right">
-    <button 
-      *ngIf="config.showActionButton"
-      class="fab-button"
-      [class.fab-button-disabled]="config.actionButtonDisabled"
-      [style.background-color]="config.actionButtonDisabled ? '#d1d5db' : (config.actionButtonColor || 'var(--success-color)')"
-      (click)="onActionClick()"
-      [disabled]="config.actionButtonDisabled"
-      [title]="config.actionButtonDisabled ? (config.actionButtonTooltip || 'Action unavailable') : (config.actionButtonTitle || 'Action')"
-      type="button"
-      [attr.aria-label]="config.actionButtonTitle || 'Action'">
-      <i [class]="config.actionButtonIcon || 'bi bi-plus-circle'"></i>
-    </button>
+    <div class="layout-switcher" *ngIf="config.showLayoutSwitcher">
+      <button
+        class="layout-btn"
+        [class.active]="currentLayout === 'table'"
+        (click)="onLayoutChange('table')"
+        title="Table View"
+        type="button"
+        aria-label="Table view"
+        [attr.aria-pressed]="currentLayout === 'table'">
+        <i class="bi bi-table"></i>
+      </button>
+      <button
+        class="layout-btn"
+        [class.active]="currentLayout === 'cards'"
+        (click)="onLayoutChange('cards')"
+        title="Card View"
+        type="button"
+        aria-label="Card view"
+        [attr.aria-pressed]="currentLayout === 'cards'">
+        <i class="bi bi-postcard-heart"></i>
+      </button>
+    </div>
+    <ng-content></ng-content>
   </div>
 </header>

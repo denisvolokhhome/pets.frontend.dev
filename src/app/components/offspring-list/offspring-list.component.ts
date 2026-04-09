@@ -22,7 +22,7 @@ export class OffspringListComponent implements OnInit {
     searchPlaceholder: 'Search offsprings...',
     showActionButton: true,
     actionButtonTitle: 'Add Offspring',
-    actionButtonIcon: 'bi bi-plus-lg'
+    actionButtonColor: 'var(--primary-color)'
   };
   
   // Filter widget configuration

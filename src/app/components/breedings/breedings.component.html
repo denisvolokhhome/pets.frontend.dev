@@ -3,8 +3,11 @@
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
-    (searchChange)="onSearchTermChange($event)"
-    (actionButtonClick)="onAddBreedingClick()">
+    (searchChange)="onSearchTermChange($event)">
+    <button class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer" (click)="onAddBreedingClick()" type="button">
+      <i class="bi bi-plus-circle"></i>
+      <span>Add Breeding</span>
+    </button>
   </app-page-header>
 
   <!-- Content Section -->
@@ -135,9 +138,9 @@
       <div *ngIf="!isLoading && (!filteredBreedings || filteredBreedings.length === 0)" class="empty-state">
         <i class="bi bi-inbox"></i>
         <h3>No breedings found</h3>
-        <p *ngIf="currentFilters && Object.keys(currentFilters).length > 0">Try adjusting your filters to see more results.</p>
-        <p *ngIf="!currentFilters || Object.keys(currentFilters).length === 0">Click the + button above to create your first breeding.</p>
-        <button *ngIf="currentFilters && Object.keys(currentFilters).length > 0" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+        <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
+        <p *ngIf="!hasActiveFilters()">Click the + button above to create your first breeding.</p>
+        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
           Clear Filters
         </button>
       </div>

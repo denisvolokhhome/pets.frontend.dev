@@ -5,6 +5,7 @@ import {
   PetNode, OffspringMini
 } from '../../services/genealogy.service';
 import { ToastService } from '../../services/toast.service';
+import { PageHeaderConfig } from '../page-header/page-header.component';
 
 @Component({
   standalone: false,
@@ -16,6 +17,16 @@ export class GenealogyComponent implements OnInit {
   tree: GenealogyTree | null = null;
   isLoading = true;
   error: string | null = null;
+
+  headerConfig: PageHeaderConfig = {
+    title: 'Genealogy Tree',
+    icon: 'bi bi-diagram-3',
+    iconColor: '#ec4899',
+    showLayoutSwitcher: false,
+    showSearch: true,
+    searchPlaceholder: 'Search by pet name...',
+    showActionButton: false,
+  };
 
   // Zoom / pan
   scale = 1;
