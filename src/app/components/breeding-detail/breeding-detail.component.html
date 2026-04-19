@@ -177,65 +177,93 @@
 <!-- Application Form Builder Modal -->
 <div class="modal-overlay" *ngIf="showFormBuilder" (click)="closeFormBuilder()">
   <div class="form-builder-modal" (click)="$event.stopPropagation()">
+
     <div class="form-builder-header">
-      <h3>Application Form Builder</h3>
-      <button class="close-btn" (click)="closeFormBuilder()"><i class="bi bi-x-lg"></i></button>
+      <div class="form-builder-header-left">
+        <div class="form-builder-icon">
+          <i class="bi bi-ui-checks-grid"></i>
+        </div>
+        <div>
+          <h3>Application Form Builder</h3>
+          <p class="form-builder-subtitle">Customize what pet seekers must fill out</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeFormBuilder()" aria-label="Close">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
     <div class="form-builder-body">
-      <p class="form-builder-hint">
-        Add fields that pet seekers must fill out before contacting you about an offspring from this breeding.
-      </p>
 
       <div class="field-list" *ngIf="formFields.length > 0">
         <div class="field-item" *ngFor="let field of formFields; let i = index">
-          <div class="field-controls">
+          <span class="field-index">{{ i + 1 }}</span>
+
+          <span class="field-type-badge" [class.badge-textarea]="field.type === 'textarea'">
+            <i class="bi" [class.bi-text-left]="field.type === 'text'" [class.bi-textarea-t]="field.type === 'textarea'"></i>
+            {{ field.type === 'textarea' ? 'Long text' : 'Short text' }}
+          </span>
+
+          <input
+            type="text"
+            class="field-label-input"
+            [(ngModel)]="field.label"
+            placeholder="e.g. Why do you want this pet?"
+            maxlength="255"
+          />
+
+          <label class="required-toggle" title="Required">
+            <input type="checkbox" [(ngModel)]="field.required" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="toggle-label">Required</span>
+          </label>
+
+          <div class="field-actions">
             <button class="icon-btn" (click)="moveField(i, -1)" [disabled]="i === 0" title="Move up">
-              <i class="bi bi-arrow-up"></i>
+              <i class="bi bi-chevron-up"></i>
             </button>
             <button class="icon-btn" (click)="moveField(i, 1)" [disabled]="i === formFields.length - 1" title="Move down">
-              <i class="bi bi-arrow-down"></i>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <button class="icon-btn danger" (click)="removeField(i)" title="Remove field">
+              <i class="bi bi-trash3"></i>
             </button>
           </div>
-          <div class="field-config">
-            <div class="field-row">
-              <span class="field-type-badge">{{ field.type }}</span>
-              <input
-                type="text"
-                class="field-label-input"
-                [(ngModel)]="field.label"
-                placeholder="Field label (e.g. Why do you want this pet?)"
-                maxlength="255"
-              />
-              <label class="required-toggle">
-                <input type="checkbox" [(ngModel)]="field.required" />
-                Required
-              </label>
-            </div>
-          </div>
-          <button class="icon-btn danger" (click)="removeField(i)" title="Remove field">
-            <i class="bi bi-trash"></i>
-          </button>
         </div>
       </div>
 
-      <p class="empty-fields" *ngIf="formFields.length === 0">No fields yet. Add one below.</p>
+      <div class="empty-state" *ngIf="formFields.length === 0">
+        <i class="bi bi-clipboard-plus empty-icon"></i>
+        <p>No fields yet</p>
+        <span>Add a field below to get started</span>
+      </div>
 
       <div class="add-field-row">
         <button class="add-field-btn" (click)="addField('text')">
-          <i class="bi bi-plus-circle"></i> Add Text Field
+          <i class="bi bi-plus"></i>
+          Short text
         </button>
         <button class="add-field-btn" (click)="addField('textarea')">
-          <i class="bi bi-plus-circle"></i> Add Text Area
+          <i class="bi bi-plus"></i>
+          Long text
         </button>
       </div>
     </div>
 
     <div class="form-builder-footer">
-      <button class="btn-cancel" (click)="closeFormBuilder()">Cancel</button>
-      <button class="btn-save" (click)="saveForm()" [disabled]="isSavingForm">
-        {{ isSavingForm ? 'Saving...' : 'Save Form' }}
-      </button>
+      <span class="field-count" *ngIf="formFields.length > 0">
+        {{ formFields.length }} field{{ formFields.length !== 1 ? 's' : '' }}
+      </span>
+      <div class="footer-actions">
+        <button class="btn-cancel" (click)="closeFormBuilder()">Cancel</button>
+        <button class="btn-save" (click)="saveForm()" [disabled]="isSavingForm">
+          <i class="bi" [class.bi-check2]="!isSavingForm" [class.bi-hourglass-split]="isSavingForm"></i>
+          {{ isSavingForm ? 'Saving...' : 'Save Form' }}
+        </button>
+      </div>
     </div>
+
   </div>
 </div>
