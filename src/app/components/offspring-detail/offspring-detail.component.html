@@ -16,6 +16,17 @@
       <!-- Breeder Actions -->
       <div class="flex gap-2" *ngIf="isBreederView()">
         <button 
+          class="btn"
+          [class.btn-publish]="!offspring?.is_published"
+          [class.btn-unpublish]="offspring?.is_published"
+          (click)="togglePublish()"
+          [disabled]="isTogglingPublish"
+          type="button"
+          [title]="offspring?.is_published ? 'Click to hide from pet seekers' : 'Click to make visible to pet seekers'">
+          <i [class]="offspring?.is_published ? 'pi pi-eye-slash mr-2' : 'pi pi-eye mr-2'"></i>
+          {{ isTogglingPublish ? 'Updating...' : (offspring?.is_published ? 'Unpublish' : 'Publish') }}
+        </button>
+        <button 
           class="btn btn-primary"
           (click)="editOffspring()"
           type="button">
@@ -58,7 +69,7 @@
           (click)="contactBreeder()"
           type="button">
           <i class="pi pi-envelope mr-2"></i>
-          Contact Breeder
+          {{ hasApplicationForm() ? 'Apply for Offspring' : 'Contact Breeder' }}
         </button>
       </div>
     </div>
@@ -194,6 +205,14 @@
               <label class="info-label">Status</label>
               <span [class]="'badge ' + getStatusClass(offspring.status)">
                 {{ getStatusLabel(offspring.status) }}
+              </span>
+            </div>
+
+            <div class="info-item" *ngIf="isBreederView()">
+              <label class="info-label">Visibility</label>
+              <span [class]="offspring.is_published ? 'badge badge-published' : 'badge badge-unpublished'">
+                <i [class]="offspring.is_published ? 'pi pi-eye mr-1' : 'pi pi-eye-slash mr-1'"></i>
+                {{ offspring.is_published ? 'Published' : 'Unpublished' }}
               </span>
             </div>
 
@@ -353,6 +372,15 @@
   [offspringName]="offspring?.name"
   (authSuccess)="onAuthSuccess()">
 </app-guest-prompt-modal>
+
+<!-- Application Form Modal (pet seeker) -->
+<app-application-form-modal
+  *ngIf="showApplicationForm && offspring"
+  [breedingId]="offspring.breeding_id"
+  [offspringName]="offspring.name || 'this offspring'"
+  (submitted)="onApplicationFormSubmitted($event)"
+  (cancelled)="onApplicationFormCancelled()">
+</app-application-form-modal>
 
 <!-- Offspring Edit Modal -->
 <div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()">

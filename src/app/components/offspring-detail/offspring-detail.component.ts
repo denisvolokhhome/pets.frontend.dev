@@ -11,13 +11,14 @@ import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-mo
 import { OffspringEditComponent } from '../offspring-edit/offspring-edit.component';
 import { OffspringDocumentsComponent } from '../offspring-documents/offspring-documents.component';
 import { GenealogyService } from 'src/app/services/genealogy.service';
+import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../application-form-modal/application-form-modal.component';
 
 @Component({
   standalone: true,
   selector: 'app-offspring-detail',
   templateUrl: './offspring-detail.component.html',
   styleUrls: ['./offspring-detail.component.css'],
-  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent]
+  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent]
 })
 export class OffspringDetailComponent implements OnInit {
   offspringId: string = '';
@@ -43,6 +44,12 @@ export class OffspringDetailComponent implements OnInit {
   // Convert to pet
   showConvertConfirm: boolean = false;
   isConverting: boolean = false;
+
+  // Publish toggle
+  isTogglingPublish: boolean = false;
+
+  // Application form modal (pet seeker)
+  showApplicationForm: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -363,25 +370,70 @@ export class OffspringDetailComponent implements OnInit {
 
     if (!this.offspring) return;
 
-    // Check if there's an existing thread for this offspring
+    // If breeding has an application form, show it first
+    if (this.hasApplicationForm()) {
+      this.showApplicationForm = true;
+      return;
+    }
+
+    this.navigateToMessageThread();
+  }
+
+  hasApplicationForm(): boolean {
+    return !!(this.offspring?.breeding?.application_form?.form_fields?.length);
+  }
+
+  getBreedingId(): number | null {
+    return this.offspring?.breeding_id ?? null;
+  }
+
+  onApplicationFormSubmitted(submission: ApplicationFormSubmission): void {
+    this.showApplicationForm = false;
+    if (!this.offspring) return;
+
+    // Navigate to messaging with the form response pre-filled as the initial message
+    this.messageService.checkOffspringThread(this.offspring.id).subscribe({
+      next: (response) => {
+        const queryParams: any = {
+          breederId: this.offspring!.user_id,
+          offspringId: this.offspring!.id,
+          initialMessage: submission.formattedMessage
+        };
+        if (response.has_thread && response.thread_id) {
+          queryParams.threadId = response.thread_id;
+        }
+        this.router.navigate(['/messages/new'], { queryParams });
+      },
+      error: () => {
+        this.router.navigate(['/messages/new'], {
+          queryParams: {
+            breederId: this.offspring!.user_id,
+            offspringId: this.offspring!.id,
+            initialMessage: submission.formattedMessage
+          }
+        });
+      }
+    });
+  }
+
+  onApplicationFormCancelled(): void {
+    this.showApplicationForm = false;
+  }
+
+  private navigateToMessageThread(): void {
+    if (!this.offspring) return;
     this.messageService.checkOffspringThread(this.offspring.id).subscribe({
       next: (response) => {
         const queryParams: any = {
           breederId: this.offspring!.user_id,
           offspringId: this.offspring!.id
         };
-
-        // If there's an existing thread, include it in the query params
         if (response.has_thread && response.thread_id) {
           queryParams.threadId = response.thread_id;
         }
-
-        // Navigate to message thread with offspring context
         this.router.navigate(['/messages/new'], { queryParams });
       },
-      error: (error) => {
-        console.error('Error checking for existing thread:', error);
-        // Even if check fails, still navigate to message page
+      error: () => {
         this.router.navigate(['/messages/new'], {
           queryParams: {
             breederId: this.offspring!.user_id,
@@ -501,6 +553,28 @@ export class OffspringDetailComponent implements OnInit {
    */
   isPublicView(): boolean {
     return this.viewMode === 'public';
+  }
+
+  /**
+   * Toggle published state of this offspring (breeder only)
+   */
+  togglePublish(): void {
+    if (!this.offspring || this.isTogglingPublish) return;
+    this.isTogglingPublish = true;
+    this.offspringService.togglePublish(this.offspring.id).subscribe({
+      next: (updated) => {
+        this.offspring = updated;
+        this.isTogglingPublish = false;
+        const msg = updated.is_published ? 'Offspring is now visible to pet seekers.' : 'Offspring is now hidden from pet seekers.';
+        this.toastr.success(msg, updated.is_published ? 'Published' : 'Unpublished');
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.isTogglingPublish = false;
+        this.toastr.error('Failed to update publish status.', 'Error');
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   /**

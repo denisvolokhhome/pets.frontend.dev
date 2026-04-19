@@ -46,6 +46,7 @@ export interface OffspringRead extends OffspringBase {
   age: string;
   favorites_count: number;
   thread_count: number;  // Number of unique conversation threads
+  is_published: boolean;
   breeding?: any;
   breed?: any;
   images: OffspringImage[];
@@ -223,6 +224,16 @@ export class OffspringService {
 
     return this.http
       .get<OffspringRead>(`${this.apiUrl}/offsprings/public/${offspringId}`, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Toggle published state of an offspring (breeder only)
+   */
+  togglePublish(offspringId: string): Observable<OffspringRead> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .patch<OffspringRead>(`${this.apiUrl}/offsprings/${offspringId}/publish`, {}, { headers })
       .pipe(catchError(this.handleError));
   }
 

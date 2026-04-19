@@ -275,16 +275,11 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
           next: (updatedBreeding: any) => {
             this.isSaving = false;
             
-            // Show success message with clickable link
-            const breedingUrl = `/breeding/${newBreeding.id}`;
+            // Show success message
             this.toastr.success(
-              `<a href="${breedingUrl}" style="color: white; text-decoration: underline;">Click here to view breeding</a>`,
+              'Redirecting to breeding details...',
               'Breeding Created Successfully',
-              {
-                enableHtml: true,
-                timeOut: 10000,
-                closeButton: true
-              }
+              { timeOut: 3000 }
             );
             
             this.close();

@@ -1,0 +1,52 @@
+<div class="modal-overlay" (click)="onCancel()">
+  <div class="form-modal" (click)="$event.stopPropagation()">
+    <div class="form-modal-header">
+      <h3>Apply for {{ offspringName }}</h3>
+      <button class="close-btn" (click)="onCancel()">&#x2715;</button>
+    </div>
+
+    <div class="form-modal-body">
+      <div *ngIf="isLoading" class="loading-state">
+        <span>Loading form...</span>
+      </div>
+
+      <ng-container *ngIf="!isLoading">
+        <p class="form-intro">Please fill out the breeder's application form. Your answers will be included in your first message.</p>
+
+        <div class="field-group" *ngFor="let field of fields">
+          <label class="field-label">
+            {{ field.label }}
+            <span class="required-star" *ngIf="field.required">*</span>
+          </label>
+
+          <input
+            *ngIf="field.type === 'text'"
+            type="text"
+            class="field-input"
+            [class.field-error]="validationErrors[field.id]"
+            [(ngModel)]="answers[field.id]"
+            [placeholder]="'Your answer...'"
+          />
+
+          <textarea
+            *ngIf="field.type === 'textarea'"
+            class="field-textarea"
+            [class.field-error]="validationErrors[field.id]"
+            [(ngModel)]="answers[field.id]"
+            rows="4"
+            [placeholder]="'Your answer...'"
+          ></textarea>
+
+          <span class="error-msg" *ngIf="validationErrors[field.id]">{{ validationErrors[field.id] }}</span>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="form-modal-footer">
+      <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+      <button class="btn-submit" (click)="onSubmit()" [disabled]="isLoading || isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Submit & Message Breeder' }}
+      </button>
+    </div>
+  </div>
+</div>

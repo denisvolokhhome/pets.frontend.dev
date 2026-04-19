@@ -33,6 +33,7 @@ export class MessageNewComponent implements OnInit {
   threadId?: string;
   offspringContext?: OffspringContext;
   isLoading: boolean = true;
+  initialMessage?: string;
   
   // Threads sidebar
   threads: MessageThread[] = [];
@@ -58,6 +59,7 @@ export class MessageNewComponent implements OnInit {
       this.breederId = params['breederId'];
       this.offspringId = params['offspringId'];
       this.threadId = params['threadId'];
+      this.initialMessage = params['initialMessage'];
 
       if (!this.breederId && !this.threadId) {
         // No specific thread selected, just show threads list

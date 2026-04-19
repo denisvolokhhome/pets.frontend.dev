@@ -71,6 +71,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   @Input() offspringContext?: OffspringContext;
   @Input() breederId!: string;
   @Input() breederName: string = 'Breeder';
+  @Input() initialMessage?: string;
 
   messages: ThreadMessage[] = [];
   replyForm: FormGroup;
@@ -108,6 +109,10 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       this.startPolling();
     } else {
       this.isLoading = false;
+    }
+    // Pre-fill message from application form response
+    if (this.initialMessage) {
+      this.replyForm.patchValue({ message: this.initialMessage });
     }
     // Check if offspring has documents (for Share Documents button)
     if (this.offspringContext?.id) {

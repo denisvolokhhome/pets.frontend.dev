@@ -118,6 +118,43 @@
       No offspring added yet. Click "Add Offspring" to add the first one.
     </p>
   </div>
+
+  <!-- Application Form Section -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2 class="section-title">Application Form</h2>
+      <div class="form-actions">
+        <button class="add-offspring-button" (click)="openFormBuilder()" *ngIf="!hasApplicationForm">
+          <i class="bi bi-plus-circle"></i>
+          Add Application Form
+        </button>
+        <ng-container *ngIf="hasApplicationForm">
+          <button class="add-offspring-button" (click)="openFormBuilder()">
+            <i class="bi bi-pencil"></i>
+            Edit Form
+          </button>
+          <button class="btn-remove-form" (click)="deleteForm()" [disabled]="isDeletingForm">
+            <i class="bi bi-trash"></i>
+            {{ isDeletingForm ? 'Removing...' : 'Remove Form' }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="hasApplicationForm" class="form-preview">
+      <p class="form-preview-hint">Pet seekers will see this form before contacting you about an offspring.</p>
+      <div class="form-field-preview" *ngFor="let field of breeding.application_form.form_fields; let i = index">
+        <span class="field-num">{{ i + 1 }}.</span>
+        <span class="field-label">{{ field.label }}</span>
+        <span class="field-type-tag">{{ field.type }}</span>
+        <span class="required-tag" *ngIf="field.required">Required</span>
+      </div>
+    </div>
+
+    <p class="empty-message" *ngIf="!hasApplicationForm">
+      No application form configured. Add one to require pet seekers to answer questions before contacting you.
+    </p>
+  </div>
 </div>
 
 <!-- Loading State -->
@@ -136,3 +173,69 @@
   (close)="closeOffspringModal()"
   (offspringAdded)="onOffspringAdded()"
 ></app-offspring-modal>
+
+<!-- Application Form Builder Modal -->
+<div class="modal-overlay" *ngIf="showFormBuilder" (click)="closeFormBuilder()">
+  <div class="form-builder-modal" (click)="$event.stopPropagation()">
+    <div class="form-builder-header">
+      <h3>Application Form Builder</h3>
+      <button class="close-btn" (click)="closeFormBuilder()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="form-builder-body">
+      <p class="form-builder-hint">
+        Add fields that pet seekers must fill out before contacting you about an offspring from this breeding.
+      </p>
+
+      <div class="field-list" *ngIf="formFields.length > 0">
+        <div class="field-item" *ngFor="let field of formFields; let i = index">
+          <div class="field-controls">
+            <button class="icon-btn" (click)="moveField(i, -1)" [disabled]="i === 0" title="Move up">
+              <i class="bi bi-arrow-up"></i>
+            </button>
+            <button class="icon-btn" (click)="moveField(i, 1)" [disabled]="i === formFields.length - 1" title="Move down">
+              <i class="bi bi-arrow-down"></i>
+            </button>
+          </div>
+          <div class="field-config">
+            <div class="field-row">
+              <span class="field-type-badge">{{ field.type }}</span>
+              <input
+                type="text"
+                class="field-label-input"
+                [(ngModel)]="field.label"
+                placeholder="Field label (e.g. Why do you want this pet?)"
+                maxlength="255"
+              />
+              <label class="required-toggle">
+                <input type="checkbox" [(ngModel)]="field.required" />
+                Required
+              </label>
+            </div>
+          </div>
+          <button class="icon-btn danger" (click)="removeField(i)" title="Remove field">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <p class="empty-fields" *ngIf="formFields.length === 0">No fields yet. Add one below.</p>
+
+      <div class="add-field-row">
+        <button class="add-field-btn" (click)="addField('text')">
+          <i class="bi bi-plus-circle"></i> Add Text Field
+        </button>
+        <button class="add-field-btn" (click)="addField('textarea')">
+          <i class="bi bi-plus-circle"></i> Add Text Area
+        </button>
+      </div>
+    </div>
+
+    <div class="form-builder-footer">
+      <button class="btn-cancel" (click)="closeFormBuilder()">Cancel</button>
+      <button class="btn-save" (click)="saveForm()" [disabled]="isSavingForm">
+        {{ isSavingForm ? 'Saving...' : 'Save Form' }}
+      </button>
+    </div>
+  </div>
+</div>

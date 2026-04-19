@@ -526,4 +526,29 @@ export class DataService {
       .pipe(catchError(this.handleError));
   }
 
+  // ── Application Form ──────────────────────────────────────────────────────
+
+  getApplicationForm(breedingId: number): Observable<any> {
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
+    return this.http.get<any>(`${this.apiurl}/breedings/${breedingId}/application-form`, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  upsertApplicationForm(breedingId: number, formFields: any[]): Observable<any> {
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
+    return this.http.put<any>(`${this.apiurl}/breedings/${breedingId}/application-form`, { form_fields: formFields }, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteApplicationForm(breedingId: number): Observable<void> {
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
+    return this.http.delete<void>(`${this.apiurl}/breedings/${breedingId}/application-form`, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  getPublicApplicationForm(breedingId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiurl}/breedings/public/${breedingId}/application-form`)
+      .pipe(catchError(this.handleError));
+  }
+
 }
