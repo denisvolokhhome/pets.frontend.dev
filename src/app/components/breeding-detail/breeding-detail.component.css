@@ -50,15 +50,107 @@
 .info-card {
   background: white;
   border-radius: var(--border-radius);
-  padding: 2rem;
+  padding: 1.5rem 2rem;
   box-shadow: var(--box-shadow);
   margin-bottom: 2rem;
 }
 
+/* Two-column layout: metadata left, parent pets right */
+.info-panel-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
 .info-grid {
+  flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem 1.5rem;
+}
+
+.panel-divider {
+  width: 1px;
+  align-self: stretch;
+  background: #f1f5f9;
+  margin: 0 1.75rem;
+  flex-shrink: 0;
+}
+
+/* Parent pets — right column */
+.parent-pets-panel {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.parent-pets-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.parent-pet-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.parent-pet-chip:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.07);
+}
+
+.pet-chip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.male-icon {
+  background-color: #DBEAFE;
+  color: #1E40AF;
+}
+
+.female-icon {
+  background-color: #FCE7F3;
+  color: #BE185D;
+}
+
+.pet-chip-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.pet-chip-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pet-chip-meta {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info-item {
@@ -138,68 +230,7 @@
   margin: 0;
 }
 
-/* Parent Pets Grid */
-.parent-pets-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.parent-pet-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background-color: #F9FAFB;
-  border-radius: var(--border-radius);
-  border: 2px solid #E5E7EB;
-  transition: var(--transition);
-}
-
-.parent-pet-card:hover {
-  border-color: var(--secondary-color);
-  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
-}
-
-.pet-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  flex-shrink: 0;
-}
-
-.male-icon {
-  background-color: #DBEAFE;
-  color: #1E40AF;
-}
-
-.female-icon {
-  background-color: #FCE7F3;
-  color: #BE185D;
-}
-
-.pet-info {
-  flex: 1;
-}
-
-.pet-name {
-  font-family: var(--font-primary);
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--dark-color);
-  margin: 0 0 0.25rem 0;
-}
-
-.pet-detail {
-  font-family: var(--font-secondary);
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin: 0.125rem 0;
-}
+/* Parent pets styles now live in .parent-pets-panel / .parent-pet-chip above */
 
 /* Add Offspring Button */
 .add-offspring-button {
@@ -317,8 +348,18 @@
     gap: 1rem;
   }
 
-  .parent-pets-grid {
-    grid-template-columns: 1fr;
+  .info-panel-layout {
+    flex-direction: column;
+  }
+
+  .panel-divider {
+    width: 100%;
+    height: 1px;
+    margin: 1rem 0;
+  }
+
+  .parent-pets-panel {
+    width: 100%;
   }
 
   .section-header {

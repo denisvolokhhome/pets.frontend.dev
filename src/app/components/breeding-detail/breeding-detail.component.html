@@ -8,56 +8,63 @@
     <h1 class="page-title">Breeding Details</h1>
   </div>
 
-  <!-- Breeding Information Card -->
+  <!-- Breeding Information Card + Parent Pets (combined top panel) -->
   <div class="info-card">
-    <div class="info-grid">
-      <div class="info-item">
-        <label class="info-label">Description</label>
-        <p class="info-value">{{ breeding.description || 'No description' }}</p>
-      </div>
+    <div class="info-panel-layout">
 
-      <div class="info-item">
-        <label class="info-label">Status</label>
-        <span class="status-badge" [ngClass]="getStatusClass(breeding.status)">
-          {{ getStatusLabel(breeding.status) }}
-        </span>
-      </div>
-
-      <div class="info-item">
-        <label class="info-label">Breed</label>
-        <p class="info-value">{{ getBreedDisplay() }}</p>
-      </div>
-
-      <div class="info-item">
-        <label class="info-label">Date Created</label>
-        <p class="info-value">{{ formatDate(breeding.created_at) }}</p>
-      </div>
-
-      <div class="info-item">
-        <label class="info-label">Date Modified</label>
-        <p class="info-value">{{ formatDate(breeding.updated_at) }}</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Parent Pets Section -->
-  <div class="section-card">
-    <h2 class="section-title">Parent Pets</h2>
-    <div class="parent-pets-grid" *ngIf="breeding.parent_pets && breeding.parent_pets.length > 0">
-      <div class="parent-pet-card" *ngFor="let pet of breeding.parent_pets">
-        <div class="pet-icon" [ngClass]="pet.gender === 'Male' ? 'male-icon' : 'female-icon'">
-          <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+      <!-- Left: breeding metadata -->
+      <div class="info-grid">
+        <div class="info-item">
+          <label class="info-label">Description</label>
+          <p class="info-value">{{ breeding.description || 'No description' }}</p>
         </div>
-        <div class="pet-info">
-          <h3 class="pet-name">{{ pet.name }}</h3>
-          <p class="pet-detail">{{ pet.breed_name || 'Unknown breed' }}</p>
-          <p class="pet-detail">{{ pet.location_name || 'No location' }}</p>
+
+        <div class="info-item">
+          <label class="info-label">Status</label>
+          <span class="status-badge" [ngClass]="getStatusClass(breeding.status)">
+            {{ getStatusLabel(breeding.status) }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">Breed</label>
+          <p class="info-value">{{ getBreedDisplay() }}</p>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">Date Created</label>
+          <p class="info-value">{{ formatDate(breeding.created_at) }}</p>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">Date Modified</label>
+          <p class="info-value">{{ formatDate(breeding.updated_at) }}</p>
         </div>
       </div>
+
+      <!-- Divider -->
+      <div class="panel-divider"></div>
+
+      <!-- Right: parent pets -->
+      <div class="parent-pets-panel">
+        <label class="info-label">Parent Pets</label>
+        <div class="parent-pets-chips" *ngIf="breeding.parent_pets && breeding.parent_pets.length > 0">
+          <div class="parent-pet-chip" *ngFor="let pet of breeding.parent_pets">
+            <div class="pet-chip-icon" [ngClass]="pet.gender === 'Male' ? 'male-icon' : 'female-icon'">
+              <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
+            </div>
+            <div class="pet-chip-info">
+              <span class="pet-chip-name">{{ pet.name }}</span>
+              <span class="pet-chip-meta">{{ pet.breed_name || 'Unknown breed' }}</span>
+            </div>
+          </div>
+        </div>
+        <p class="empty-message" *ngIf="!breeding.parent_pets || breeding.parent_pets.length === 0">
+          No parent pets assigned
+        </p>
+      </div>
+
     </div>
-    <p class="empty-message" *ngIf="!breeding.parent_pets || breeding.parent_pets.length === 0">
-      No parent pets assigned yet
-    </p>
   </div>
 
   <!-- Offspring Section -->
