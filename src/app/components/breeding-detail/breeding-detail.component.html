@@ -90,7 +90,7 @@
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offspring"
         [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-sm"
+        styleClass="p-datatable-sm offspring-table"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -110,7 +110,7 @@
               </span>
             </td>
             <td>{{ formatDate(offspring.birth_date) }}</td>
-            <td>{{ offspring.microchip || 'N/A' }}</td>
+            <td class="microchip-cell">{{ offspring.microchip || 'N/A' }}</td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

@@ -213,6 +213,15 @@
   padding: 2rem;
   box-shadow: var(--box-shadow);
   margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+/* Table container bleeds to card edges */
+.table-container {
+  margin: 1.5rem -2rem -2rem -2rem;
+  border-top: 1px solid #f1f5f9;
+  overflow: hidden;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .section-header {
@@ -343,6 +352,10 @@
     padding: 1.5rem;
   }
 
+  .table-container {
+    margin: 1rem -1.5rem -1.5rem -1.5rem;
+  }
+
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -374,250 +387,179 @@
   }
 }
 
-/* PrimeNG Table Custom Styling */
-::ng-deep .breeding-detail-container .p-datatable {
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  border: none;
+/* ── Offspring Table ────────────────────────────────────────────── */
+
+/* Remove fixed layout — let Name column expand, others stay content-sized */
+::ng-deep .breeding-detail-container .offspring-table,
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-table {
+  width: 100%;
+  table-layout: fixed;
 }
 
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-header {
-  background: transparent;
-  border: none;
-  padding: 0;
+/* Column widths: Name gets the bulk, others are fixed */
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(1),
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(1) {
+  width: auto !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(2),
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(2) {
+  width: 140px !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(3),
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(3) {
+  width: 160px !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(4),
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(4) {
+  width: 160px !important;
 }
 
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-thead > tr > th {
-  background-color: #F9FAFB;
-  color: var(--text-secondary);
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.75rem;
+/* Header */
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 1rem;
+  letter-spacing: 0.07em;
+  padding: 0.75rem 1.25rem;
   border: none;
-  border-bottom: 2px solid #E5E7EB;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
 }
 
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-tbody > tr {
-  background-color: white;
-  transition: var(--transition);
+/* Rows */
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr {
+  background: white;
+  transition: background 0.1s;
 }
-
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #F9FAFB;
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr:hover {
+  background: #f8fafc;
 }
-
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-tbody > tr > td {
-  padding: 1rem;
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td {
+  padding: 0.875rem 1.25rem;
   border: none;
-  border-bottom: 1px solid #F3F4F6;
-  font-family: var(--font-secondary);
-  font-size: 0.9375rem;
-  color: var(--dark-color);
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+  color: #1e293b;
 }
-
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-tbody > tr:last-child > td {
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr:last-child > td {
   border-bottom: none;
 }
 
-/* Sortable column headers */
-::ng-deep .breeding-detail-container .p-datatable .p-sortable-column {
-  cursor: pointer;
-  user-select: none;
-}
+/* Sort */
+::ng-deep .breeding-detail-container .offspring-table .p-sortable-column { cursor: pointer; user-select: none; }
+::ng-deep .breeding-detail-container .offspring-table .p-sortable-column:hover { background: #f1f5f9 !important; }
+::ng-deep .breeding-detail-container .offspring-table .p-sortable-column.p-highlight { background: #eff6ff !important; color: #2563eb !important; }
+::ng-deep .breeding-detail-container .offspring-table .p-sortable-column.p-highlight .p-sortable-column-icon { color: #2563eb !important; }
+::ng-deep .breeding-detail-container .offspring-table .p-sortable-column-icon { font-size: 0.65rem; margin-left: 0.3rem; color: #94a3b8; }
 
-::ng-deep .breeding-detail-container .p-datatable .p-sortable-column:hover {
-  background-color: #F3F4F6;
-}
+/* Microchip — muted */
+.microchip-cell { color: #94a3b8 !important; }
 
-::ng-deep .breeding-detail-container .p-datatable .p-sortable-column .p-sortable-column-icon {
-  margin-left: 0.5rem;
-  color: var(--text-secondary);
-}
-
-::ng-deep .breeding-detail-container .p-datatable .p-sortable-column.p-highlight {
-  color: var(--primary-color);
-}
-
-::ng-deep .breeding-detail-container .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
-  color: var(--primary-color);
-}
-
-/* Paginator - Complete Reset and Custom Styling */
-::ng-deep .breeding-detail-container .p-paginator {
-  background: transparent !important;
+/* ── Paginator ── */
+::ng-deep .breeding-detail-container .offspring-table .p-paginator {
+  background: #f8fafc !important;
   border: none !important;
-  padding: 1rem 0 !important;
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-left-content {
-  flex: 0 0 auto !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-current {
-  font-family: var(--font-secondary) !important;
-  font-size: 0.875rem !important;
-  color: var(--text-secondary) !important;
-  margin: 0 !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-pages {
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 0.625rem 1.25rem !important;
   display: flex !important;
   align-items: center !important;
-  gap: 0.25rem !important;
+  justify-content: flex-end !important;
+  gap: 0.375rem !important;
+  flex-wrap: wrap !important;
 }
 
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-pages .p-paginator-page {
-  min-width: 2.5rem !important;
-  height: 2.5rem !important;
-  margin: 0 !important;
-  border-radius: 0.5rem !important;
-  border: none !important;
-  background-color: transparent !important;
-  color: var(--dark-color) !important;
-  font-family: var(--font-primary) !important;
-  font-weight: 500 !important;
-  font-size: 0.875rem !important;
-  transition: var(--transition) !important;
-  cursor: pointer !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-pages .p-paginator-page:hover {
-  background-color: #F3F4F6 !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background-color: var(--primary-color) !important;
-  color: white !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-first,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-prev,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-next,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-last {
-  min-width: 2.5rem !important;
-  height: 2.5rem !important;
-  margin: 0 0.25rem !important;
-  border-radius: 0.5rem !important;
-  border: none !important;
-  background-color: transparent !important;
-  color: var(--dark-color) !important;
-  transition: var(--transition) !important;
-  cursor: pointer !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-first:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-prev:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-next:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-last:not(.p-disabled):hover {
-  background-color: #F3F4F6 !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-first.p-disabled,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-prev.p-disabled,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-next.p-disabled,
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-last.p-disabled {
-  opacity: 0.4 !important;
-  cursor: not-allowed !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-paginator-right-content {
-  flex: 0 0 auto !important;
+/* "Showing X to Y" — push to left */
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-current {
+  font-size: 0.8rem !important;
+  color: #94a3b8 !important;
+  margin-right: auto !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
   display: flex !important;
   align-items: center !important;
-  gap: 0.5rem !important;
 }
 
-::ng-deep .breeding-detail-container .p-paginator .p-dropdown {
-  border: 1px solid #E5E7EB !important;
-  border-radius: 0.5rem !important;
-  height: 2.5rem !important;
-  min-width: 4.5rem !important;
-  font-family: var(--font-secondary) !important;
+/* Nav buttons */
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-first,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-prev,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-next,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-last {
+  width: 2rem !important; height: 2rem !important;
+  min-width: unset !important;
+  border-radius: 6px !important; border: none !important;
+  background: transparent !important; color: #475569 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  transition: background 0.1s !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-first:not(.p-disabled):hover,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-prev:not(.p-disabled):hover,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-next:not(.p-disabled):hover,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-last:not(.p-disabled):hover {
+  background: #e2e8f0 !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-disabled {
+  opacity: 0.3 !important; cursor: not-allowed !important;
+}
+
+/* Page number buttons */
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages {
+  display: flex !important; align-items: center !important; gap: 0.125rem !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page {
+  width: 2rem !important; height: 2rem !important;
+  min-width: unset !important;
+  border-radius: 6px !important; border: none !important;
+  background: transparent !important; color: #475569 !important;
+  font-size: 0.8125rem !important; font-weight: 500 !important;
+  transition: background 0.1s !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page:hover {
+  background: #e2e8f0 !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: #2563eb !important; color: white !important;
+}
+
+/* Rows-per-page dropdown (p-dropdown v17 / p-select v18) */
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select {
+  height: 2rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  background: white !important;
+  margin-left: 0.5rem !important;
+  align-items: center !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown .p-dropdown-label,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select .p-select-label {
+  padding: 0 0.5rem !important;
+  font-size: 0.8rem !important;
+  line-height: 2rem !important;
+  color: #475569 !important;
+}
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown .p-dropdown-trigger,
+::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select .p-select-dropdown {
+  width: 1.5rem !important; color: #94a3b8 !important;
+}
+
+/* Empty message */
+::ng-deep .breeding-detail-container .offspring-table .p-datatable-emptymessage > td {
+  text-align: center !important;
+  padding: 3rem !important;
+  color: #94a3b8 !important;
   font-size: 0.875rem !important;
-  background-color: white !important;
-  transition: var(--transition) !important;
+  font-style: italic !important;
 }
 
-::ng-deep .breeding-detail-container .p-paginator .p-dropdown:hover {
-  border-color: var(--secondary-color) !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-dropdown.p-focus {
-  outline: none !important;
-  border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1) !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-dropdown .p-dropdown-label {
-  padding: 0.5rem 0.75rem !important;
-  font-family: var(--font-secondary) !important;
-  font-size: 0.875rem !important;
-  color: var(--dark-color) !important;
-}
-
-::ng-deep .breeding-detail-container .p-paginator .p-dropdown .p-dropdown-trigger {
-  width: 2rem !important;
-  color: var(--text-secondary) !important;
-}
-
-/* Dropdown Panel */
-::ng-deep .p-dropdown-panel {
-  border: 1px solid #E5E7EB !important;
-  border-radius: 0.5rem !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-  margin-top: 0.25rem !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-items {
-  padding: 0.25rem !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item {
-  padding: 0.5rem 0.75rem !important;
-  border-radius: 0.375rem !important;
-  font-family: var(--font-secondary) !important;
-  font-size: 0.875rem !important;
-  color: var(--dark-color) !important;
-  transition: var(--transition) !important;
-  cursor: pointer !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: #F3F4F6 !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: var(--primary-color) !important;
-  color: white !important;
-}
-
-/* Empty message styling */
-::ng-deep .breeding-detail-container .p-datatable .p-datatable-emptymessage > td {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: var(--text-secondary);
-  font-family: var(--font-secondary);
-  font-size: 1rem;
-  font-style: italic;
-}
-
-/* Responsive table */
 @media (max-width: 768px) {
-  ::ng-deep .breeding-detail-container .p-datatable .p-datatable-thead > tr > th,
-  ::ng-deep .breeding-detail-container .p-datatable .p-datatable-tbody > tr > td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.875rem;
+  ::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th,
+  ::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td {
+    padding: 0.75rem 0.875rem;
   }
-
-  ::ng-deep .breeding-detail-container .p-paginator {
-    flex-direction: column;
-    gap: 1rem;
+  ::ng-deep .breeding-detail-container .offspring-table .p-paginator {
+    justify-content: center !important;
   }
 }
 
