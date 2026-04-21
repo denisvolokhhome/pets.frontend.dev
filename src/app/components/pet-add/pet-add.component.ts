@@ -56,6 +56,13 @@ export class PetAddComponent implements OnInit {
 
     this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
       this.locations = locations;
+      // Auto-select: default location, or the only location if there's just one
+      const defaultLocation = locations.find(l => l.is_default);
+      if (defaultLocation) {
+        this.location_name.setValue(defaultLocation.name);
+      } else if (locations.length === 1) {
+        this.location_name.setValue(locations[0].name);
+      }
     });
   }
 

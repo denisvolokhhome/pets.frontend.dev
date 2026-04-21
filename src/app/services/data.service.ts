@@ -277,6 +277,17 @@ export class DataService {
       );
   }
 
+  setDefaultLocation(id: number): Observable<ILocation> {
+    let header = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('id_token')
+    );
+    return this.http.post<ILocation>(this.apiurl + '/locations/' + id + '/set-default', {}, { headers: header })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   // Breeding management methods (formerly Litters)
   getBreedings(filters?: IBreedingFilter): Observable<any[]> {
     let header = new HttpHeaders().set(

@@ -17,5 +17,6 @@ export interface ILocation {
   zipcode: string;
   location_type: string;
   is_published?: boolean;
+  is_default?: boolean;
   pets?: IPetBasicInfo[];
 }

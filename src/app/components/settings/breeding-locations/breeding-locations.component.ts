@@ -212,6 +212,24 @@ export class BreedingLocationsComponent implements OnInit {
     });
   }
 
+  setDefaultLocation(location: ILocation, event: Event): void {
+    event.stopPropagation();
+
+    this.dataService.setDefaultLocation(location.id!).subscribe({
+      next: () => {
+        // Update local state: unset all, then set this one
+        this.locations.forEach(l => l.is_default = false);
+        location.is_default = true;
+        this.toastr.success(`"${location.name}" is now the default location`, 'Default Set');
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error setting default location:', error);
+        this.toastr.error(error.error?.detail || 'Failed to set default location', 'Error');
+      }
+    });
+  }
+
   confirmDelete(location: ILocation): void {
     this.locationToDelete = location;
     this.deleteErrorPets = [];

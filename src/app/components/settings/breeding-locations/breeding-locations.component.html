@@ -29,7 +29,12 @@
     <div class="location-card" *ngFor="let location of locations">
       <div class="location-info">
         <div class="location-header">
-          <h3>{{ location.name }}</h3>
+          <h3>
+            {{ location.name }}
+            <span *ngIf="location.is_default" class="default-badge">
+              <i class="bi bi-star-fill"></i> Default
+            </span>
+          </h3>
           <!-- Published Toggle -->
           <div class="published-toggle">
             <label class="toggle-label">
@@ -66,6 +71,13 @@
         </div>
       </div>
       <div class="location-actions">
+        <button 
+          *ngIf="!location.is_default"
+          class="px-3 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors text-sm"
+          (click)="setDefaultLocation(location, $event)"
+          title="Set as default location for new pets">
+          <i class="bi bi-star"></i> Set Default
+        </button>
         <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="editLocation(location)">
           Edit
         </button>
