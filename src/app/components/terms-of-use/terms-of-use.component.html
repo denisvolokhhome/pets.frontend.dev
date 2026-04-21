@@ -1,0 +1,305 @@
+<div class="terms-page">
+  <div class="container mx-auto px-4 py-10 max-w-4xl">
+
+    <!-- Header -->
+    <div class="terms-header">
+      <h1 class="terms-title">Terms of Use</h1>
+      <p class="terms-meta">Last Updated: {{ lastUpdated }}</p>
+      <button class="download-btn" (click)="downloadTerms()" aria-label="Download terms of use as text file">
+        <i class="bi bi-download" aria-hidden="true"></i>
+        Download Terms of Use
+      </button>
+    </div>
+
+    <!-- Section 1 -->
+    <section class="terms-section" aria-labelledby="acceptance-heading">
+      <h2 id="acceptance-heading" class="section-title">1. Acceptance of Terms</h2>
+      <p>
+        By accessing or using the Breedly platform at <strong>breedly.us</strong> ("Service"), you agree to be
+        bound by these Terms of Use ("Terms"). If you do not agree, do not use the Service.
+      </p>
+      <p>
+        Breedly is registered and operating in the State of Maryland, United States. Contact us at
+        <a href="mailto:legal@breedly.us" class="terms-link">legal@breedly.us</a> or
+        <a href="tel:+12402429483" class="terms-link">(240) 242-9483</a>.
+      </p>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="terms-section" aria-labelledby="eligibility-heading">
+      <h2 id="eligibility-heading" class="section-title">2. Who May Use Breedly</h2>
+      <p>
+        You must be at least <strong>18 years old</strong> to create an account or use the Service.
+        By using Breedly, you represent and warrant that you meet this requirement.
+      </p>
+      <p>Breedly is intended for use within the United States only.</p>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="terms-section" aria-labelledby="accounts-heading">
+      <h2 id="accounts-heading" class="section-title">3. User Accounts</h2>
+
+      <h3 class="subsection-title">3.1 Account Types</h3>
+      <ul class="terms-list">
+        <li><strong>Breeder accounts</strong> — For individuals or businesses that breed and list animals.</li>
+        <li><strong>Pet Seeker accounts</strong> — For individuals looking to acquire an offspring.</li>
+        <li><strong>Guest access</strong> — Limited browsing and messaging without a registered account. Guests who send a message are automatically registered as Pet Seeker accounts.</li>
+      </ul>
+
+      <h3 class="subsection-title">3.2 Account Responsibilities</h3>
+      <ul class="terms-list">
+        <li>You are responsible for maintaining the confidentiality of your login credentials.</li>
+        <li>You are responsible for all activity that occurs under your account.</li>
+        <li>You must provide accurate and truthful information when registering.</li>
+        <li>You must promptly update your account information if it changes.</li>
+        <li>Notify us immediately of any unauthorized use at <a href="mailto:legal@breedly.us" class="terms-link">legal@breedly.us</a>.</li>
+      </ul>
+
+      <h3 class="subsection-title">3.3 Account Termination</h3>
+      <p>
+        We reserve the right to suspend or permanently ban accounts that violate these Terms, engage in
+        fraudulent activity, send abusive or harmful messages, upload prohibited content, or harm other
+        users or the platform. Bans may be issued without prior warning for serious violations.
+      </p>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="terms-section" aria-labelledby="breeder-heading">
+      <h2 id="breeder-heading" class="section-title">4. Breeder Responsibilities</h2>
+
+      <h3 class="subsection-title">4.1 Accurate Listings</h3>
+      <ul class="terms-list">
+        <li>Provide truthful, accurate, and complete information about all pets and offspring.</li>
+        <li>Only list animals that are genuinely available.</li>
+        <li>Keep listing status (Available, Reserved, Sold, Archived) current and accurate.</li>
+        <li>Use accurate breed, age, gender, health, and pricing information.</li>
+      </ul>
+
+      <h3 class="subsection-title">4.2 Animal Welfare</h3>
+      <ul class="terms-list">
+        <li>Comply with all applicable federal, state, and local laws regarding animal breeding, sale, and welfare.</li>
+        <li>Maintain appropriate care standards for all animals listed on the platform.</li>
+        <li>Accurately represent the health status of animals, including vaccination records, microchip information, and health certificates.</li>
+      </ul>
+
+      <h3 class="subsection-title">4.3 Honest Communication</h3>
+      <ul class="terms-list">
+        <li>Respond to messages from pet seekers in good faith.</li>
+        <li>Honor commitments made to pet seekers regarding reserved or sold offspring.</li>
+        <li>Not engage in deceptive pricing, bait-and-switch tactics, or misrepresentation.</li>
+      </ul>
+
+      <h3 class="subsection-title">4.4 Location Accuracy</h3>
+      <p>
+        Provide accurate location information for your breedery. Note: Breedly offsets displayed map
+        coordinates by 0.5–1.5 miles to protect your exact address privacy. Your full address is only
+        shared as you choose.
+      </p>
+    </section>
+
+    <!-- Section 5 -->
+    <section class="terms-section" aria-labelledby="seeker-heading">
+      <h2 id="seeker-heading" class="section-title">5. Pet Seeker Responsibilities</h2>
+      <ul class="terms-list">
+        <li>Use the platform in good faith when contacting breeders.</li>
+        <li>Not submit false inquiries or abuse the messaging system.</li>
+        <li>Conduct your own due diligence before acquiring any animal.</li>
+        <li>Comply with all applicable laws regarding animal ownership in your jurisdiction.</li>
+      </ul>
+    </section>
+
+    <!-- Section 6 -->
+    <section class="terms-section" aria-labelledby="prohibited-heading">
+      <h2 id="prohibited-heading" class="section-title">6. Prohibited Conduct</h2>
+      <p>You may not use Breedly to:</p>
+      <ul class="terms-list">
+        <li>Post false, misleading, or fraudulent listings or information.</li>
+        <li>List animals obtained through illegal means or from unlicensed operations where licensing is required by law.</li>
+        <li>Send abusive, threatening, harassing, hateful, or harmful messages to other users.</li>
+        <li>Upload, share, or submit pornographic, sexually explicit, or obscene images or content of any kind.</li>
+        <li>Scrape, crawl, or systematically extract data from the platform without written permission.</li>
+        <li>Attempt to gain unauthorized access to any part of the Service or its systems.</li>
+        <li>Use the Service for any unlawful purpose or in violation of any applicable law.</li>
+        <li>Impersonate another person or entity.</li>
+        <li>Transmit spam, malware, or any harmful code.</li>
+        <li>Circumvent any security or access control measures.</li>
+        <li>Sell or transfer your account to another person.</li>
+      </ul>
+      <div class="terms-warning">
+        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+        <strong>Abusive or harmful messages:</strong> Any abusive, threatening, or harmful communication directed at other users will result in an <strong>immediate permanent ban</strong> of your account with no right of appeal.
+      </div>
+      <div class="terms-warning" style="margin-top: 0.75rem;">
+        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+        <strong>Pornographic or sexually explicit content:</strong> Uploading such content will result in an <strong>immediate permanent ban</strong> of your account and may expose you to <strong>civil and criminal legal liability</strong> under applicable federal and state law, including but not limited to 18 U.S.C. § 1460 and Maryland obscenity statutes. We will cooperate fully with law enforcement investigations.
+      </div>
+      <p class="terms-warning">
+        <i class="bi bi-shield-exclamation" aria-hidden="true"></i>
+        Violations of this section may result in an <strong>immediate permanent account ban</strong>, removal of all content, and referral to law enforcement where applicable. Breedly reserves the right to take legal action to recover damages caused by prohibited conduct.
+      </p>
+    </section>
+
+    <!-- Section 7 -->
+    <section class="terms-section" aria-labelledby="content-heading">
+      <h2 id="content-heading" class="section-title">7. Content and Intellectual Property</h2>
+
+      <h3 class="subsection-title">7.1 Your Content</h3>
+      <p>
+        You retain ownership of content you submit to Breedly (listings, images, messages, profile information).
+        By submitting content, you grant Breedly a non-exclusive, royalty-free, worldwide license to display,
+        store, and use that content solely to operate and improve the Service.
+      </p>
+
+      <h3 class="subsection-title">7.2 Content Standards</h3>
+      <p>All content you submit must:</p>
+      <ul class="terms-list">
+        <li>Be accurate and not misleading.</li>
+        <li>Not infringe any third-party intellectual property rights.</li>
+        <li>Not contain offensive, abusive, or illegal material.</li>
+        <li>Not include personal contact information in public listing descriptions — use the messaging system instead.</li>
+      </ul>
+
+      <h3 class="subsection-title">7.3 Breedly's Intellectual Property</h3>
+      <p>
+        The Breedly name, logo, platform design, and all software are owned by Breedly. You may not copy,
+        reproduce, or create derivative works from our intellectual property without written permission.
+      </p>
+    </section>
+
+    <!-- Section 8 -->
+    <section class="terms-section" aria-labelledby="payments-heading">
+      <h2 id="payments-heading" class="section-title">8. Payments and Subscriptions</h2>
+
+      <h3 class="subsection-title">8.1 Subscription Plans</h3>
+      <p>Certain features of Breedly require a paid subscription. Details and pricing are described on the pricing page.</p>
+
+      <h3 class="subsection-title">8.2 Payment Processing</h3>
+      <p>
+        All payments are processed by Stripe. By subscribing, you agree to
+        <a href="https://stripe.com/legal" target="_blank" rel="noopener noreferrer" class="terms-link">Stripe's Terms of Service</a>
+        and authorize Stripe to charge your payment method on a recurring basis per your selected plan.
+        Breedly does not store your raw payment card details.
+      </p>
+
+      <h3 class="subsection-title">8.3 Cancellation and Refunds</h3>
+      <ul class="terms-list">
+        <li>You may cancel your subscription at any time through your account settings.</li>
+        <li>Cancellation takes effect at the end of the current billing period.</li>
+        <li>Refunds are not provided for partial billing periods unless required by law.</li>
+      </ul>
+    </section>
+
+    <!-- Section 9 -->
+    <section class="terms-section" aria-labelledby="disclaimers-heading">
+      <h2 id="disclaimers-heading" class="section-title">9. Disclaimers</h2>
+
+      <h3 class="subsection-title">9.1 Platform Role</h3>
+      <p>
+        Breedly is a marketplace platform connecting breeders and pet seekers. We do not breed, sell, or
+        take custody of any animals. We are not a party to any transaction between breeders and pet seekers.
+      </p>
+
+      <h3 class="subsection-title">9.2 No Warranty</h3>
+      <p>
+        THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED,
+        INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+        NON-INFRINGEMENT. We do not warrant that the Service will be uninterrupted, error-free, or that
+        listings are accurate, complete, or current.
+      </p>
+
+      <h3 class="subsection-title">9.3 Animal Transactions</h3>
+      <p>
+        Breedly does not guarantee the health, temperament, or suitability of any animal listed on the platform.
+        Pet seekers are solely responsible for conducting their own due diligence before acquiring any animal.
+      </p>
+    </section>
+
+    <!-- Section 10 -->
+    <section class="terms-section" aria-labelledby="liability-heading">
+      <h2 id="liability-heading" class="section-title">10. Limitation of Liability</h2>
+      <p>
+        TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, BREEDLY SHALL NOT BE LIABLE FOR ANY INDIRECT,
+        INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SERVICE,
+        INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR PROFITS, DISPUTES BETWEEN USERS, ANIMAL HEALTH ISSUES,
+        OR UNAUTHORIZED ACCOUNT ACCESS.
+      </p>
+      <p>
+        OUR TOTAL LIABILITY TO YOU FOR ANY CLAIM SHALL NOT EXCEED THE AMOUNT YOU PAID TO BREEDLY IN THE
+        12 MONTHS PRECEDING THE CLAIM, OR $100, WHICHEVER IS GREATER.
+      </p>
+    </section>
+
+    <!-- Section 11 -->
+    <section class="terms-section" aria-labelledby="indemnification-heading">
+      <h2 id="indemnification-heading" class="section-title">11. Indemnification</h2>
+      <p>
+        You agree to indemnify and hold harmless Breedly, its officers, employees, and agents from any claims,
+        damages, losses, or expenses (including reasonable attorneys' fees) arising from your use of the Service,
+        your violation of these Terms, your violation of any applicable law or third-party rights, or content
+        you submit to the platform.
+      </p>
+    </section>
+
+    <!-- Section 12 -->
+    <section class="terms-section" aria-labelledby="third-party-heading">
+      <h2 id="third-party-heading" class="section-title">12. Third-Party Services</h2>
+      <p>Breedly integrates with third-party services including:</p>
+      <ul class="terms-list">
+        <li><strong>Stripe</strong> (payment processing) — <a href="https://stripe.com/legal" target="_blank" rel="noopener noreferrer" class="terms-link">stripe.com/legal</a></li>
+        <li><strong>Google</strong> (authentication) — <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" class="terms-link">policies.google.com/terms</a></li>
+        <li><strong>OpenStreetMap / Nominatim</strong> (geocoding) — <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" class="terms-link">openstreetmap.org/copyright</a></li>
+      </ul>
+      <p>Your use of these services is subject to their respective terms. Breedly is not responsible for the practices or content of third-party services.</p>
+    </section>
+
+    <!-- Section 13 -->
+    <section class="terms-section" aria-labelledby="modifications-heading">
+      <h2 id="modifications-heading" class="section-title">13. Modifications to the Service and Terms</h2>
+      <p>
+        We reserve the right to modify, suspend, or discontinue any part of the Service at any time.
+        When we make material changes to these Terms, we will post the updated Terms on this page with a
+        new "Last Updated" date and notify registered users by email for significant changes. Your continued
+        use of the Service after changes are posted constitutes acceptance of the updated Terms.
+      </p>
+    </section>
+
+    <!-- Section 14 -->
+    <section class="terms-section" aria-labelledby="governing-heading">
+      <h2 id="governing-heading" class="section-title">14. Governing Law and Disputes</h2>
+      <p>
+        These Terms are governed by the laws of the <strong>State of Maryland, United States</strong>,
+        without regard to its conflict of law provisions.
+      </p>
+      <p>
+        Any dispute arising from these Terms or your use of the Service shall be resolved through
+        good-faith negotiation first. If unresolved, disputes shall be subject to the exclusive
+        jurisdiction of the courts located in Maryland, United States.
+      </p>
+    </section>
+
+    <!-- Section 15 -->
+    <section class="terms-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title">15. Contact Us</h2>
+      <p>For questions about these Terms:</p>
+      <ul class="terms-list">
+        <li>Email: <a href="mailto:legal@breedly.us" class="terms-link">legal@breedly.us</a></li>
+        <li>Phone: <a href="tel:+12402429483" class="terms-link">(240) 242-9483</a></li>
+        <li>Website: <a href="https://breedly.us" class="terms-link">https://breedly.us</a></li>
+        <li>State of registration: Maryland, United States</li>
+      </ul>
+    </section>
+
+    <!-- Download CTA at bottom -->
+    <div class="terms-footer-cta">
+      <button class="download-btn" (click)="downloadTerms()" aria-label="Download terms of use as text file">
+        <i class="bi bi-download" aria-hidden="true"></i>
+        Download Terms of Use
+      </button>
+      <a routerLink="/" class="back-link">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        Back to Home
+      </a>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="legal-page">
+  <div class="container mx-auto px-4 py-10 max-w-4xl">
+
+    <div class="legal-header">
+      <h1 class="legal-title">Cookie Policy</h1>
+      <p class="legal-meta">Last Updated: {{ lastUpdated }}</p>
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download cookie policy">
+        <i class="bi bi-download" aria-hidden="true"></i> Download Cookie Policy
+      </button>
+    </div>
+
+    <section class="legal-section" aria-labelledby="what-heading">
+      <h2 id="what-heading" class="section-title">1. What Are Cookies</h2>
+      <p>Cookies are small text files placed on your device when you visit a website. They help the site remember information about your visit, making your next visit easier and the site more useful to you.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="how-heading">
+      <h2 id="how-heading" class="section-title">2. How Breedly Uses Cookies</h2>
+      <p>Breedly uses only the cookies necessary to operate the platform. We do not use advertising cookies, tracking pixels, or third-party analytics cookies.</p>
+
+      <h3 class="subsection-title">2.1 Strictly Necessary Cookies</h3>
+      <p>These cookies are required for the platform to function and cannot be disabled without breaking core features.</p>
+      <ul class="legal-list">
+        <li><strong>Authentication token (id_token)</strong> — Stores your JWT login token so you remain logged in as you navigate. Expires when you log out or the token expires (default: 1 hour).</li>
+        <li><strong>Cookie consent (cookies_accepted)</strong> — Records that you have acknowledged our cookie banner. Stored in localStorage. Persists until you clear browser data.</li>
+      </ul>
+
+      <h3 class="subsection-title">2.2 Functional Cookies</h3>
+      <ul class="legal-list">
+        <li><strong>Session preferences</strong> — Remembers UI state such as selected filters or navigation state during your session. Cleared when you close your browser.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" aria-labelledby="not-use-heading">
+      <h2 id="not-use-heading" class="section-title">3. What We Do Not Use</h2>
+      <p class="legal-highlight">
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        We do <strong>not</strong> use advertising cookies, third-party tracking pixels, cross-site tracking, analytics cookies (e.g., Google Analytics), or social media tracking cookies.
+      </p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="manage-heading">
+      <h2 id="manage-heading" class="section-title">4. Managing Cookies</h2>
+      <p>You can control cookies through your browser settings:</p>
+      <ul class="legal-list">
+        <li><strong>Chrome:</strong> Settings &gt; Privacy and Security &gt; Cookies</li>
+        <li><strong>Firefox:</strong> Settings &gt; Privacy &amp; Security &gt; Cookies and Site Data</li>
+        <li><strong>Safari:</strong> Preferences &gt; Privacy &gt; Manage Website Data</li>
+        <li><strong>Edge:</strong> Settings &gt; Cookies and Site Permissions</li>
+      </ul>
+      <p>Note: Disabling strictly necessary cookies will prevent you from logging in and using authenticated features.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="changes-heading">
+      <h2 id="changes-heading" class="section-title">5. Changes to This Policy</h2>
+      <p>We may update this Cookie Policy from time to time. Changes will be posted on this page with a new "Last Updated" date.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title">6. Contact Us</h2>
+      <ul class="legal-list">
+        <li>Email: <a href="mailto:privacy@breedly.us" class="legal-link">privacy@breedly.us</a></li>
+        <li>Phone: <a href="tel:+12402429483" class="legal-link">(240) 242-9483</a></li>
+        <li>Website: <a href="https://breedly.us" class="legal-link">https://breedly.us</a></li>
+      </ul>
+    </section>
+
+    <div class="legal-footer-cta">
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download cookie policy">
+        <i class="bi bi-download" aria-hidden="true"></i> Download Cookie Policy
+      </button>
+      <a routerLink="/" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Home</a>
+    </div>
+
+  </div>
+</div>

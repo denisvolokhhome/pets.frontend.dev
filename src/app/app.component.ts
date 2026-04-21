@@ -38,7 +38,7 @@ export class AppComponent {
    * Public pages should have a friendly design without sidebar
    */
   isPublicPage(): boolean {
-    const publicRoutes = ['', '/', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', '/search-pets'];
+    const publicRoutes = ['', '/', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', '/search-pets', '/privacy-policy', '/terms-of-use', '/cookie-policy', '/acceptable-use-policy', '/breeder-agreement', '/refund-policy'];
     if (publicRoutes.includes(this.route)) return true;
     // Dynamic public routes
     if (this.route?.startsWith('/breeder/')) return true;

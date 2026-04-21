@@ -1,0 +1,96 @@
+<div class="legal-page">
+  <div class="container mx-auto px-4 py-10 max-w-4xl">
+
+    <div class="legal-header">
+      <h1 class="legal-title">Refund &amp; Cancellation Policy</h1>
+      <p class="legal-meta">Last Updated: {{ lastUpdated }}</p>
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download refund policy">
+        <i class="bi bi-download" aria-hidden="true"></i> Download Refund Policy
+      </button>
+    </div>
+
+    <section class="legal-section" aria-labelledby="scope-heading">
+      <h2 id="scope-heading" class="section-title">1. Scope</h2>
+      <p>This policy applies to <strong>Breedly subscription fees</strong> paid by Breeders. It does not govern transactions between breeders and pet seekers for the purchase of animals — those are private transactions.</p>
+      <p class="legal-note"><i class="bi bi-info-circle" aria-hidden="true"></i> This policy covers Breedly platform fees only. It does <strong>not</strong> cover money exchanged between breeders and pet seekers for animals, or Stripe processing fees (which are non-refundable).</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="cancel-heading">
+      <h2 id="cancel-heading" class="section-title">2. Subscription Cancellation</h2>
+
+      <h3 class="subsection-title">2.1 How to Cancel</h3>
+      <p>You may cancel your Breedly subscription at any time through your account <strong>Settings &gt; Subscription</strong> page, or by contacting us at <a href="mailto:billing@breedly.us" class="legal-link">billing@breedly.us</a> or <a href="tel:+12402429483" class="legal-link">(240) 242-9483</a>.</p>
+
+      <h3 class="subsection-title">2.2 When Cancellation Takes Effect</h3>
+      <p>Cancellation takes effect at the end of your current billing period. You retain full access to your subscription features until that date and will not be charged for the next period.</p>
+
+      <h3 class="subsection-title">2.3 No Partial Refunds for Cancellation</h3>
+      <p>We do not provide refunds for the unused portion of a billing period when you cancel mid-cycle. Your access continues until the period ends.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="refunds-heading">
+      <h2 id="refunds-heading" class="section-title">3. Refunds</h2>
+
+      <h3 class="subsection-title">3.1 General Policy</h3>
+      <p>Subscription fees are non-refundable except in the circumstances described below.</p>
+
+      <h3 class="subsection-title">3.2 Eligible Refund Circumstances</h3>
+      <p>You may be eligible for a full or partial refund if:</p>
+      <ul class="legal-list">
+        <li><strong>Duplicate charge</strong> — You were charged more than once for the same billing period.</li>
+        <li><strong>Charge after cancellation</strong> — You were charged after a confirmed cancellation.</li>
+        <li><strong>Service unavailability</strong> — Breedly was completely unavailable for more than 72 consecutive hours during a paid billing period due to our fault.</li>
+        <li><strong>Billing error</strong> — An error on our part resulted in an incorrect charge amount.</li>
+      </ul>
+
+      <h3 class="subsection-title">3.3 How to Request a Refund</h3>
+      <p>Contact us within <strong>30 days</strong> of the charge:</p>
+      <ul class="legal-list">
+        <li>Email: <a href="mailto:billing@breedly.us" class="legal-link">billing@breedly.us</a></li>
+        <li>Phone: <a href="tel:+12402429483" class="legal-link">(240) 242-9483</a></li>
+        <li>Include your account email, the charge date, and the reason for your request.</li>
+      </ul>
+      <p>We will respond within 5 business days. Approved refunds are processed back to your original payment method within 5–10 business days.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="plan-heading">
+      <h2 id="plan-heading" class="section-title">4. Plan Changes</h2>
+      <ul class="legal-list">
+        <li><strong>Upgrading</strong> — You will be charged a prorated amount for the remainder of the current billing period.</li>
+        <li><strong>Downgrading</strong> — The change takes effect at the start of your next billing period. No refund is issued for the difference in the current period.</li>
+      </ul>
+    </section>
+
+    <section class="legal-section" aria-labelledby="trial-heading">
+      <h2 id="trial-heading" class="section-title">5. Free Trials</h2>
+      <p>If Breedly offers a free trial, no charge is made during the trial. Cancel before the trial ends to avoid being charged. If you do not cancel, your subscription begins automatically at the end of the trial period.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="animal-heading">
+      <h2 id="animal-heading" class="section-title">6. Animal Purchase Transactions</h2>
+      <p>Breedly is a marketplace platform. We are not a party to transactions between breeders and pet seekers. Any refund, return, or dispute regarding the purchase of an animal must be resolved directly between the buyer and the breeder. Breedly does not mediate, arbitrate, or provide refunds for animal purchase transactions.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="chargeback-heading">
+      <h2 id="chargeback-heading" class="section-title">7. Chargebacks</h2>
+      <p>If you initiate a chargeback with your bank or card issuer without first contacting us, we reserve the right to suspend your account pending resolution. Contact us first at <a href="mailto:billing@breedly.us" class="legal-link">billing@breedly.us</a> — most issues can be resolved quickly.</p>
+    </section>
+
+    <section class="legal-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title">8. Contact Us</h2>
+      <ul class="legal-list">
+        <li>Email: <a href="mailto:billing@breedly.us" class="legal-link">billing@breedly.us</a></li>
+        <li>Phone: <a href="tel:+12402429483" class="legal-link">(240) 242-9483</a></li>
+        <li>Website: <a href="https://breedly.us" class="legal-link">https://breedly.us</a></li>
+      </ul>
+    </section>
+
+    <div class="legal-footer-cta">
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download refund policy">
+        <i class="bi bi-download" aria-hidden="true"></i> Download Refund Policy
+      </button>
+      <a routerLink="/" class="back-link"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Home</a>
+    </div>
+
+  </div>
+</div>

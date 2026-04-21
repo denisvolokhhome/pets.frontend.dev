@@ -84,6 +84,12 @@ import { ReviewFormComponent } from './components/review-form/review-form.compon
 import { ReviewPromptComponent } from './components/review-prompt/review-prompt.component';
 import { ImportWizardComponent } from './components/import-wizard/import-wizard.component';
 import { PhoneMaskDirective } from './directives/phone-mask.directive';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { TermsOfUseComponent } from './components/terms-of-use/terms-of-use.component';
+import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
+import { AcceptableUsePolicyComponent } from './components/acceptable-use-policy/acceptable-use-policy.component';
+import { BreederAgreementComponent } from './components/breeder-agreement/breeder-agreement.component';
+import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 import { AuthService } from './services/auth.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -161,6 +167,12 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     VerifyEmailComponent,
     StarRatingComponent,
     PhoneMaskDirective,
+    PrivacyPolicyComponent,
+    TermsOfUseComponent,
+    CookiePolicyComponent,
+    AcceptableUsePolicyComponent,
+    BreederAgreementComponent,
+    RefundPolicyComponent,
     PricingSectionComponent,
     ImportWizardComponent,
   ],

@@ -1,0 +1,325 @@
+<div class="privacy-policy-page">
+  <div class="container mx-auto px-4 py-10 max-w-4xl">
+
+    <!-- Header -->
+    <div class="policy-header">
+      <h1 class="policy-title">Privacy Policy</h1>
+      <p class="policy-meta">Last Updated: {{ lastUpdated }}</p>
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download privacy policy as text file">
+        <i class="bi bi-download" aria-hidden="true"></i>
+        Download Privacy Policy
+      </button>
+    </div>
+
+    <!-- Section 1 -->
+    <section class="policy-section" aria-labelledby="intro-heading">
+      <h2 id="intro-heading" class="section-title">1. Introduction</h2>
+      <p>
+        Breedly ("we," "us," or "our") operates the Breedly platform at <strong>breedly.us</strong> — a pet
+        breeding management service connecting responsible breeders with pet seekers, registered and operating
+        in the State of Maryland, United States. This Privacy Policy explains how we collect, use, share, and
+        protect your personal information when you use our website and services.
+      </p>
+      <p>
+        By using Breedly, you agree to the collection and use of information as described in this policy.
+        Contact us with privacy questions at:
+        <a href="mailto:privacy@breedly.us" class="policy-link">privacy@breedly.us</a>
+        or call <a href="tel:+12402429483" class="policy-link">(240) 242-9483</a>.
+      </p>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="policy-section" aria-labelledby="who-heading">
+      <h2 id="who-heading" class="section-title">2. Who This Policy Covers</h2>
+      <p>Breedly serves three types of users:</p>
+      <ul class="policy-list">
+        <li><strong>Breeders</strong> — Users who manage pets, litters, and individual offspring listings.</li>
+        <li><strong>Pet Seekers</strong> — Users who browse, favorite, and contact breeders about available offspring.</li>
+        <li><strong>Guests</strong> — Unauthenticated visitors who may browse listings and initiate contact with breeders.
+          Guests who send a message are automatically registered as Pet Seeker accounts.</li>
+      </ul>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="policy-section" aria-labelledby="collect-heading">
+      <h2 id="collect-heading" class="section-title">3. Information We Collect</h2>
+
+      <h3 class="subsection-title">3.1 Information You Provide Directly</h3>
+      <p><strong>Account Registration:</strong></p>
+      <ul class="policy-list">
+        <li>Email address (required, unique identifier)</li>
+        <li>Password (stored as a secure hash — never in plain text)</li>
+        <li>Full name (optional)</li>
+        <li>Phone number (optional)</li>
+        <li>User type: Breeder or Pet Seeker</li>
+      </ul>
+
+      <p><strong>Breeder Profile Information:</strong></p>
+      <ul class="policy-list">
+        <li>Breedery name, description, and profile image</li>
+        <li>Search tags and social media links (Facebook, YouTube, Twitter, LinkedIn)</li>
+        <li>Website URL</li>
+      </ul>
+
+      <p><strong>Location Information (Breeders):</strong></p>
+      <ul class="policy-list">
+        <li>Physical address (street, city, state, country, postcode)</li>
+        <li>Geographic coordinates derived from your address via geocoding</li>
+      </ul>
+
+      <p><strong>Pet and Offspring Listings:</strong></p>
+      <ul class="policy-list">
+        <li>Pet names, dates of birth, gender, weight, breed, and description</li>
+        <li>Health records: microchip numbers, vaccination status, health certificates, deworming records, birth certificates</li>
+        <li>Offspring details: name, gender, date of birth, price, availability status, colour markings, description</li>
+        <li>Images uploaded for pets and offspring</li>
+      </ul>
+
+      <p><strong>Messages:</strong></p>
+      <ul class="policy-list">
+        <li>Message content between pet seekers and breeders</li>
+        <li>Thread identifiers for conversation grouping</li>
+        <li>Context linking to specific offspring listings</li>
+      </ul>
+
+      <p><strong>Billing Information (Breeders on paid plans):</strong></p>
+      <ul class="policy-list">
+        <li>Subscription plan selection</li>
+        <li>Payment is processed by Stripe — we do not store raw card numbers</li>
+        <li>We store encrypted Stripe customer IDs and subscription IDs (AES-256-GCM)</li>
+        <li>Invoice records: amount, currency, billing period, payment status</li>
+      </ul>
+
+      <h3 class="subsection-title">3.2 Information Collected Automatically</h3>
+      <ul class="policy-list">
+        <li>IP address (logged in billing audit records for security purposes)</li>
+        <li>Browser type and version, device type and operating system</li>
+        <li>Pages visited, features used, and session duration</li>
+        <li>Cookie data (see Section 9)</li>
+      </ul>
+
+      <h3 class="subsection-title">3.3 Information from Third Parties</h3>
+      <p><strong>Google OAuth</strong> (if you sign in with Google):</p>
+      <ul class="policy-list">
+        <li>Email address and Google account identifier</li>
+        <li>We do not receive your Google password</li>
+        <li>We store only the OAuth provider name and a provider-specific identifier</li>
+      </ul>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="policy-section" aria-labelledby="use-heading">
+      <h2 id="use-heading" class="section-title">4. How We Use Your Information</h2>
+      <p><strong>Service Delivery:</strong></p>
+      <ul class="policy-list">
+        <li>Create and manage your account</li>
+        <li>Display your breeder profile and listings to pet seekers</li>
+        <li>Enable messaging between breeders and pet seekers</li>
+        <li>Process subscription payments via Stripe</li>
+        <li>Send in-app notifications (new messages, favorites added)</li>
+        <li>Enable location-based search for nearby breeders and offspring</li>
+      </ul>
+      <p><strong>Security and Fraud Prevention:</strong></p>
+      <ul class="policy-list">
+        <li>Verify account identity and detect fraudulent activity</li>
+        <li>Maintain billing audit logs (IP address, operation type, outcome)</li>
+        <li>Encrypt sensitive billing identifiers at rest using AES-256-GCM</li>
+      </ul>
+      <p><strong>Privacy-Protective Measures:</strong></p>
+      <ul class="policy-list">
+        <li>Breeder location coordinates are offset by 0.5–1.5 miles on public maps to protect exact address privacy while enabling proximity search.</li>
+      </ul>
+    </section>
+
+    <!-- Section 5 -->
+    <section class="policy-section" aria-labelledby="legal-basis-heading">
+      <h2 id="legal-basis-heading" class="section-title">5. Legal Basis for Processing</h2>
+      <p>
+        Breedly is a US-based service operating under US law, registered in the State of Maryland.
+        We do not specifically target users outside the United States.
+      </p>
+      <p>Our legal bases for processing personal information under applicable US law are:</p>
+      <ul class="policy-list">
+        <li><strong>Contractual necessity</strong> — We process your personal information to provide the Breedly service you signed up for, including account management, listings, messaging, and payment processing.</li>
+        <li><strong>Legitimate business interests</strong> — We process certain data for security monitoring, fraud prevention, platform analytics, and service improvement, where those interests are not overridden by your privacy rights.</li>
+        <li><strong>Legal obligation</strong> — We may process or retain data as required to comply with applicable federal or state laws, respond to lawful government requests, or enforce our Terms of Use.</li>
+        <li><strong>Consent</strong> — Where required by law (e.g., for non-essential cookies or marketing communications), we rely on your explicit consent, which you may withdraw at any time.</li>
+      </ul>
+      <p class="policy-note">
+        Breedly currently operates exclusively within the United States and does not target users in the European Union or other jurisdictions with separate legal basis requirements. If this changes in the future, this section will be updated accordingly.
+      </p>
+    </section>
+
+    <!-- Section 6 -->
+    <section class="policy-section" aria-labelledby="sharing-heading">
+      <h2 id="sharing-heading" class="section-title">6. Data Sharing and Third Parties</h2>
+      <p>We share your data with:</p>
+      <ul class="policy-list">
+        <li>
+          <strong>Stripe</strong> (Payment Processing) — Stripe receives billing information to process payments.
+          <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">Stripe Privacy Policy</a>
+        </li>
+        <li>
+          <strong>Google</strong> (Authentication) — If you use "Sign in with Google," Google processes your authentication.
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">Google Privacy Policy</a>
+        </li>
+        <li>
+          <strong>Nominatim / OpenStreetMap</strong> (Geocoding) — Address data is sent to resolve coordinates for map search.
+          <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" class="policy-link">OpenStreetMap Privacy Policy</a>
+        </li>
+        <li><strong>Hosting and Infrastructure</strong> — Our platform runs on cloud infrastructure where your data is stored.</li>
+      </ul>
+      <p class="policy-highlight">
+        <i class="bi bi-shield-check" aria-hidden="true"></i>
+        We do <strong>not</strong> sell your personal data to third parties. We do <strong>not</strong> share your data with advertisers.
+      </p>
+    </section>
+
+    <!-- Section 7 -->
+    <section class="policy-section" aria-labelledby="transfers-heading">
+      <h2 id="transfers-heading" class="section-title">7. Data Location and Transfers</h2>
+      <p>
+        Breedly is operated from the United States and is intended exclusively for use within the United States.
+        All personal information you provide is collected, stored, and processed in the United States.
+      </p>
+      <p>
+        We do not intentionally collect personal information from individuals located outside the United States.
+        If you access Breedly from outside the US, you do so at your own discretion and your information will
+        be transferred to and processed in the United States, where data protection laws may differ from those
+        in your country.
+      </p>
+      <p>
+        Our infrastructure, databases, and third-party service providers (including Stripe and Google) operate
+        primarily within the United States.
+      </p>
+    </section>
+
+    <!-- Section 8 -->
+    <section class="policy-section" aria-labelledby="retention-heading">
+      <h2 id="retention-heading" class="section-title">8. Data Retention</h2>
+      <ul class="policy-list">
+        <li><strong>Account data</strong> — Retained while your account is active. Upon deletion, personal data is removed within 30 days.</li>
+        <li><strong>Pet and offspring listings</strong> — Retained while your account is active. Deleted pets are soft-deleted for data integrity.</li>
+        <li><strong>Messages</strong> — Soft-deleted messages are permanently removed after 90 days.</li>
+        <li><strong>Billing records</strong> — Retained for 7 years for legal and tax compliance.</li>
+        <li><strong>Audit logs</strong> — Retained for 12 months for security monitoring.</li>
+        <li><strong>Geocoding cache</strong> — Address-to-coordinate mappings cached for up to 24 hours.</li>
+      </ul>
+    </section>
+
+    <!-- Section 9 -->
+    <section class="policy-section" aria-labelledby="cookies-heading">
+      <h2 id="cookies-heading" class="section-title">9. Cookies and Tracking</h2>
+      <p>We use cookies to:</p>
+      <ul class="policy-list">
+        <li>Maintain your login session (strictly necessary)</li>
+        <li>Remember your cookie consent preference (strictly necessary)</li>
+        <li>Improve platform performance and user experience (functional)</li>
+      </ul>
+      <p>
+        We display a cookie consent banner when you first visit Breedly. By clicking "Got it," you consent
+        to our use of cookies as described above. You can manage cookies through your browser settings.
+        Disabling cookies may affect your ability to log in and use certain features.
+      </p>
+    </section>
+
+    <!-- Section 10 -->
+    <section class="policy-section" aria-labelledby="security-heading">
+      <h2 id="security-heading" class="section-title">10. Security</h2>
+      <p>We protect your data using:</p>
+      <ul class="policy-list">
+        <li>HTTPS encryption for all data in transit</li>
+        <li>Bcrypt hashing for passwords (never stored in plain text)</li>
+        <li>AES-256-GCM encryption for sensitive billing identifiers (Stripe IDs)</li>
+        <li>JWT-based authentication with configurable token expiry</li>
+        <li>Role-based access controls (Breeder, Pet Seeker, Admin)</li>
+        <li>Billing audit logs for security-relevant operations</li>
+        <li>Admin access protected by API key, separate from user authentication</li>
+      </ul>
+      <p>No system is 100% secure. In the event of a data breach, we will notify affected users as required by applicable law.</p>
+    </section>
+
+    <!-- Section 11 -->
+    <section class="policy-section" aria-labelledby="children-heading">
+      <h2 id="children-heading" class="section-title">11. Children's Privacy</h2>
+      <p>
+        Breedly is not directed at children under the age of 13 (or 16 in the EU). We do not knowingly
+        collect personal data from children. If you believe a child has provided us with personal data,
+        please contact us at <a href="mailto:privacy@breedly.us" class="policy-link">privacy@breedly.us</a>
+        and we will delete it promptly.
+      </p>
+    </section>
+
+    <!-- Section 12 -->
+    <section class="policy-section" aria-labelledby="rights-heading">
+      <h2 id="rights-heading" class="section-title">12. Your Rights</h2>
+      <p>Depending on your location, you may have the following rights:</p>
+      <ul class="policy-list">
+        <li><strong>Right to Access</strong> — Request a copy of the personal data we hold about you.</li>
+        <li><strong>Right to Correction</strong> — Request correction of inaccurate or incomplete data.</li>
+        <li><strong>Right to Deletion</strong> — Request deletion of your personal data ("right to be forgotten").</li>
+        <li><strong>Right to Restrict Processing</strong> — Request that we limit how we use your data.</li>
+        <li><strong>Right to Data Portability</strong> — Request your data in a machine-readable format.</li>
+        <li><strong>Right to Object</strong> — Object to processing based on legitimate interests.</li>
+        <li><strong>Right to Withdraw Consent</strong> — Withdraw consent at any time where processing is based on consent.</li>
+        <li><strong>Right to Lodge a Complaint</strong> — Contact your local data protection authority.</li>
+      </ul>
+      <p>
+        To exercise any of these rights, contact us at:
+        <a href="mailto:privacy@breedly.us" class="policy-link">privacy@breedly.us</a>
+        or call <a href="tel:+12402429483" class="policy-link">(240) 242-9483</a>.
+        We will respond within 30 days.
+      </p>
+      <p>
+        <strong>California Residents (CCPA/CPRA):</strong> You have the right to know what personal information
+        we collect, the right to delete your personal information, and the right to opt-out of the sale of your
+        personal information. We do not sell personal information.
+      </p>
+    </section>
+
+    <!-- Section 13 -->
+    <section class="policy-section" aria-labelledby="links-heading">
+      <h2 id="links-heading" class="section-title">13. Third-Party Links</h2>
+      <p>
+        Our platform may contain links to third-party websites (e.g., breeder social media profiles).
+        We are not responsible for the privacy practices of those sites. We encourage you to review
+        their privacy policies before providing any personal data.
+      </p>
+    </section>
+
+    <!-- Section 14 -->
+    <section class="policy-section" aria-labelledby="changes-heading">
+      <h2 id="changes-heading" class="section-title">14. Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. When we make material changes, we will notify
+        you by posting the updated policy on this page with a new "Last Updated" date and, for significant
+        changes, by sending an email notification to registered users.
+      </p>
+    </section>
+
+    <!-- Section 15 -->
+    <section class="policy-section" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title">15. Contact Us</h2>
+      <p>For privacy-related questions, requests, or concerns:</p>
+      <ul class="policy-list">
+        <li>Email: <a href="mailto:privacy@breedly.us" class="policy-link">privacy@breedly.us</a></li>
+        <li>Phone: <a href="tel:+12402429483" class="policy-link">(240) 242-9483</a></li>
+        <li>Website: <a href="https://breedly.us" class="policy-link">https://breedly.us</a></li>
+        <li>State of registration: Maryland, United States</li>
+      </ul>
+    </section>
+
+    <!-- Download CTA at bottom -->
+    <div class="policy-footer-cta">
+      <button class="download-btn" (click)="downloadPolicy()" aria-label="Download privacy policy as text file">
+        <i class="bi bi-download" aria-hidden="true"></i>
+        Download Privacy Policy
+      </button>
+      <a routerLink="/" class="back-link">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+        Back to Home
+      </a>
+    </div>
+
+  </div>
+</div>

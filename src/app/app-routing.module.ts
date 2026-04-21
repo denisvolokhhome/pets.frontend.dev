@@ -34,6 +34,12 @@ import { MessageNewComponent } from './components/message-new/message-new.compon
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { TermsOfUseComponent } from './components/terms-of-use/terms-of-use.component';
+import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.component';
+import { AcceptableUsePolicyComponent } from './components/acceptable-use-policy/acceptable-use-policy.component';
+import { BreederAgreementComponent } from './components/breeder-agreement/breeder-agreement.component';
+import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -41,6 +47,12 @@ const routes: Routes = [
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'terms-of-use', component: TermsOfUseComponent },
+  { path: 'cookie-policy', component: CookiePolicyComponent },
+  { path: 'acceptable-use-policy', component: AcceptableUsePolicyComponent },
+  { path: 'breeder-agreement', component: BreederAgreementComponent },
+  { path: 'refund-policy', component: RefundPolicyComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
