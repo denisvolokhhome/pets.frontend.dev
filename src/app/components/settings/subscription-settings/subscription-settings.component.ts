@@ -14,6 +14,7 @@ export class SubscriptionSettingsComponent implements OnInit {
   plans: IPlan[] = [];
   isLoading = true;
   isRedirecting = false;
+  isOpeningPortal = false;
   errorMessage: string | null = null;
 
   constructor(
@@ -92,6 +93,28 @@ export class SubscriptionSettingsComponent implements OnInit {
         this.isRedirecting = false;
         const msg = err.message || 'Failed to start checkout. Please try again.';
         this.toastr.error(msg, 'Checkout Error');
+      }
+    });
+  }
+
+  get hasActivePaymentPlan(): boolean {
+    return !!this.subscription &&
+      this.subscription.status === 'active' &&
+      this.subscription.plan.price > 0 &&
+      !!this.subscription.stripe_customer_id;
+  }
+
+  onViewInvoices(): void {
+    if (this.isOpeningPortal) return;
+    this.isOpeningPortal = true;
+    this.billingService.createPortalSession().subscribe({
+      next: (response) => {
+        window.location.href = response.portal_url;
+      },
+      error: (err) => {
+        this.isOpeningPortal = false;
+        const msg = err.message || 'Failed to open billing portal. Please try again.';
+        this.toastr.error(msg, 'Portal Error');
       }
     });
   }

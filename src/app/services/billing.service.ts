@@ -8,6 +8,7 @@ import {
   ISubscription,
   IInvoice,
   ICheckoutSessionResponse,
+  IPortalSessionResponse,
 } from '../models/billing.model';
 
 @Injectable({
@@ -66,10 +67,23 @@ export class BillingService {
   }
 
   /**
+   * Create a Stripe Customer Portal session for invoice management
+   */
+  createPortalSession(): Observable<IPortalSessionResponse> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<IPortalSessionResponse>(
+        `${this.apiUrl}/billing/portal-session`,
+        {},
+        { headers }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Get the breeder's invoice history (ordered by creation date descending)
    */
-  getInvoices(): Observable<IInvoice[]> {
-    const headers = this.getAuthHeaders();
+  getInvoices(): Observable<IInvoice[]> {    const headers = this.getAuthHeaders();
     return this.http
       .get<IInvoice[]>(`${this.apiUrl}/billing/invoices`, { headers })
       .pipe(catchError(this.handleError));

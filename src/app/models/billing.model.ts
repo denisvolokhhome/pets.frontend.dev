@@ -37,3 +37,7 @@ export interface IInvoice {
 export interface ICheckoutSessionResponse {
   checkout_url: string;
 }
+
+export interface IPortalSessionResponse {
+  portal_url: string;
+}

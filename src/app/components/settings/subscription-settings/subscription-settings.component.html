@@ -57,6 +57,17 @@
           <span class="plan-detail-value">{{ subscription.plan.max_simultaneous_offsprings }}</span>
         </div>
       </div>
+
+      <div class="plan-actions" *ngIf="hasActivePaymentPlan">
+        <button
+          class="btn-portal"
+          [disabled]="isOpeningPortal"
+          (click)="onViewInvoices()"
+        >
+          <i class="bi bi-receipt"></i>
+          {{ isOpeningPortal ? 'Opening...' : 'View Invoices' }}
+        </button>
+      </div>
     </div>
 
     <!-- Available Plans Section -->
