@@ -64,9 +64,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Request geolocation permission on component initialization
-    // Don't show loading overlay for geolocation - only show it during actual search
-    this.requestGeolocation();
+    // Try to restore previous search state (e.g. when navigating back from offspring page)
+    const restored = this.restoreSearchState();
+
+    if (!restored) {
+      // No saved state — request geolocation for a fresh search
+      this.requestGeolocation();
+    }
 
     // Drawer breed autocomplete
     this.drawerBreedSub = this.drawerBreedSearch$.pipe(
@@ -146,7 +150,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           } else {
             const message = 'Could not determine ZIP code from your location. Please enter it manually.';
             this.geolocationError = message;
-            this.toastService.warning(message);
+            // No toast — the inline banner is sufficient
             this.cdr.detectChanges();
           }
         },
@@ -154,7 +158,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           // Geocoding failed - that's okay, user can enter ZIP manually
           const message = 'Could not detect your location automatically. Please enter your ZIP code to search.';
           this.geolocationError = message;
-          this.toastService.info(message);
+          // No toast — the inline banner is sufficient
           this.cdr.detectChanges();
         }
       });
@@ -171,21 +175,17 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     switch (error.code) {
       case error.PERMISSION_DENIED:
         errorMessage = 'Location access denied. Please enter your ZIP code to search.';
-        this.toastService.warning(errorMessage);
         break;
       case error.POSITION_UNAVAILABLE:
         errorMessage = 'Location information unavailable. Please enter your ZIP code to search.';
-        this.toastService.error(errorMessage);
         break;
       case error.TIMEOUT:
         errorMessage = 'Location request timed out. Please enter your ZIP code to search.';
-        this.toastService.warning(errorMessage);
         break;
       default:
         errorMessage = 'Unable to detect your location. Please enter your ZIP code to search.';
-        this.toastService.info(errorMessage);
     }
-    
+    // Show inline banner only — no toast for geolocation errors (banner is sufficient)
     this.geolocationError = errorMessage;
   }
 
@@ -270,6 +270,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
             this.mobileActiveTab = 'list';
           }
         }
+
+        // Persist state so navigating back restores results
+        this.saveSearchState();
       },
       error: (err) => {
         // Clear loading state
@@ -455,5 +458,45 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.drawerBreedTerm = '';
     this.drawerBreedSuggestions = [];
     this.drawerBreedOpen = false;
+  }
+
+  // ─── Search state persistence (survive back-navigation) ─────────────────
+
+  private saveSearchState(): void {
+    const state = {
+      zipCode: this.zipCode,
+      selectedBreed: this.selectedBreed,
+      selectedAnimalKind: this.selectedAnimalKind,
+      radius: this.radius,
+      mapCenter: this.mapCenter,
+      searchResults: this.searchResults,
+      breederMarkers: this.breederMarkers,
+      hasSearched: this.hasSearched,
+      mobileActiveTab: this.mobileActiveTab,
+      drawerBreedTerm: this.drawerBreedTerm,
+    };
+    sessionStorage.setItem('search_page_state', JSON.stringify(state));
+  }
+
+  private restoreSearchState(): boolean {
+    const raw = sessionStorage.getItem('search_page_state');
+    if (!raw) return false;
+    try {
+      const state = JSON.parse(raw);
+      this.zipCode = state.zipCode ?? '';
+      this.selectedBreed = state.selectedBreed ?? null;
+      this.selectedAnimalKind = state.selectedAnimalKind ?? '';
+      this.radius = state.radius ?? 40;
+      this.mapCenter = state.mapCenter ?? { latitude: 39.8283, longitude: -98.5795 };
+      this.searchResults = state.searchResults ?? [];
+      this.breederMarkers = state.breederMarkers ?? [];
+      this.hasSearched = state.hasSearched ?? false;
+      this.mobileActiveTab = state.mobileActiveTab ?? 'list';
+      this.drawerBreedTerm = state.drawerBreedTerm ?? '';
+      this.cdr.detectChanges();
+      return this.hasSearched; // only skip geolocation if we actually had results
+    } catch {
+      return false;
+    }
   }
 }

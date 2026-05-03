@@ -1583,3 +1583,42 @@ select {
 .p-toast .p-toast-message.p-toast-message-leave {
   animation: p-toast-message-leave 0.3s ease-in;
 }
+
+
+/* ===== PrimeNG Toast — Mobile Overrides ===== */
+@media (max-width: 768px) {
+  /* Move toast to bottom, full width, compact */
+  .p-toast {
+    width: calc(100vw - 1.5rem) !important;
+    left: 0.75rem !important;
+    right: 0.75rem !important;
+    top: auto !important;
+    bottom: 1.5rem !important;
+  }
+
+  .p-toast .p-toast-message {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18) !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .p-toast .p-toast-message-content {
+    padding: 0.625rem 0.875rem !important;
+    align-items: center !important;
+  }
+
+  .p-toast .p-toast-summary {
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+  }
+
+  .p-toast .p-toast-detail {
+    font-size: 0.8125rem !important;
+    margin-top: 0.125rem !important;
+  }
+
+  .p-toast .p-toast-icon-close {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+  }
+}
