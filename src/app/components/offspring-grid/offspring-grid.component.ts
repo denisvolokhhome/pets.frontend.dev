@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -48,6 +49,7 @@ export class OffspringGridComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private offspringService: OffspringService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef,
@@ -276,7 +278,7 @@ export class OffspringGridComponent implements OnInit {
   }
 
   goToSearch(): void {
-    this.router.navigate(['/search-pets']);
+    this.location.back();
   }
 
   getBreederLocation(): string {
