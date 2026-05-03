@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  z-index: 1300;
   padding: 1rem;
 }
 
@@ -228,11 +228,23 @@ textarea.form-control {
 
 /* Responsive Design */
 @media (max-width: 640px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
   .modal-dialog {
     max-width: 100%;
+    width: 100%;
     margin: 0;
-    border-radius: 0;
-    max-height: 100vh;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    animation: slideUpSheet 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
   }
 
   .modal-header,
@@ -241,16 +253,33 @@ textarea.form-control {
     padding: 1rem;
   }
 
+  .modal-header {
+    padding-top: 0.75rem;
+  }
+
+  /* Drag handle */
+  .modal-header::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: #d1d5db;
+    border-radius: 2px;
+    margin: 0 auto 0.75rem;
+  }
+
   .modal-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
 
   .modal-footer {
     flex-direction: column-reverse;
+    padding-bottom: 2rem;
   }
 
   .btn {
     width: 100%;
+    min-height: 48px;
   }
 }
 
