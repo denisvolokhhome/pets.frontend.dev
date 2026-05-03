@@ -27,6 +27,9 @@ export class OffspringGridComponent implements OnInit {
   selectedBreedId: number | undefined;
   selectedGender: string | undefined;
   selectedStatus: string | undefined;
+
+  // Mobile filter drawer
+  isMobileFilterOpen: boolean = false;
   
   // Filter options
   breeds: any[] = [];
@@ -161,6 +164,15 @@ export class OffspringGridComponent implements OnInit {
    */
   onStatusFilterChange(status: string | undefined): void {
     this.selectedStatus = status;
+    this.currentPage = 0;
+    this.loadOffsprings();
+  }
+
+  /**
+   * Apply filters from mobile drawer and close it
+   */
+  applyMobileFilters(): void {
+    this.isMobileFilterOpen = false;
     this.currentPage = 0;
     this.loadOffsprings();
   }

@@ -1,113 +1,195 @@
-<div class="page-layout">
-  <!-- Left Sidebar: Breeder Info + Filters -->
-  <aside class="sidebar">
-    <!-- Breeder Info -->
-    <div class="sidebar-card" *ngIf="breederInfo">
-      <div class="breeder-avatar" [style.background-image]="getBreederImageUrl() ? 'url(' + getBreederImageUrl() + ')' : ''">
+<div class="offspring-page">
+
+  <!-- ===== MOBILE: Compact breeder bar ===== -->
+  <div class="mobile-breeder-bar">
+    <button class="mobile-back-btn" (click)="goToSearch()" aria-label="Back to search">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <div class="mobile-breeder-info">
+      <div class="mobile-breeder-avatar"
+           [style.background-image]="getBreederImageUrl() ? 'url(' + getBreederImageUrl() + ')' : ''">
         <i *ngIf="!getBreederImageUrl()" class="bi bi-person-circle"></i>
       </div>
-      <h2 class="breeder-name">{{ breederInfo.breedery_name || breederInfo.name || 'Breeder' }}</h2>
-      <p class="breeder-location" *ngIf="getBreederLocation()">
-        <i class="bi bi-geo-alt"></i> {{ getBreederLocation() }}
-      </p>
-      <p class="breeder-desc" *ngIf="breederInfo.breedery_description">{{ breederInfo.breedery_description }}</p>
-      <div class="breeder-tags" *ngIf="breederInfo.search_tags?.length">
-        <span class="breeder-tag" *ngFor="let tag of breederInfo.search_tags">{{ tag }}</span>
+      <div class="mobile-breeder-text">
+        <span class="mobile-breeder-name">{{ breederInfo?.breedery_name || breederInfo?.name || 'Breeder' }}</span>
+        <span class="mobile-breeder-location" *ngIf="getBreederLocation()">
+          <i class="bi bi-geo-alt"></i> {{ getBreederLocation() }}
+        </span>
       </div>
     </div>
+    <button class="mobile-filter-btn"
+            (click)="isMobileFilterOpen = true"
+            aria-label="Open filters"
+            [class.has-filters]="hasActiveFilters()">
+      <i class="bi bi-sliders"></i>
+      <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
+    </button>
+  </div>
 
-    <!-- Mini Map -->
-    <div class="sidebar-card map-card" *ngIf="breederInfo?.location?.latitude">
-      <div class="mini-map">
-        <img
-          [src]="'https://maps.googleapis.com/maps/api/staticmap?center=' + breederInfo.location.latitude + ',' + breederInfo.location.longitude + '&zoom=11&size=300x180&markers=color:red%7C' + breederInfo.location.latitude + ',' + breederInfo.location.longitude + '&key='"
-          alt="Breeder location"
-          class="map-img"
-          onerror="this.style.display='none'"
-        />
-        <!-- Fallback: simple location display if no Google Maps key -->
-        <div class="map-fallback">
-          <i class="bi bi-geo-alt-fill"></i>
-          <span>{{ getBreederLocation() }}</span>
-        </div>
-      </div>
-      <button class="btn-back-to-search" (click)="goToSearch()">
-        <i class="bi bi-arrow-left"></i> Back to Search
+  <!-- ===== MOBILE: Filter drawer backdrop ===== -->
+  <div class="mobile-filter-backdrop"
+       [class.open]="isMobileFilterOpen"
+       (click)="isMobileFilterOpen = false"
+       aria-hidden="true">
+  </div>
+
+  <!-- ===== MOBILE: Filter drawer ===== -->
+  <div class="mobile-filter-drawer"
+       [class.open]="isMobileFilterOpen"
+       role="dialog"
+       aria-label="Filter offsprings"
+       aria-modal="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Filter Offsprings</h2>
+      <button class="drawer-close" (click)="isMobileFilterOpen = false" aria-label="Close filters">
+        <i class="bi bi-x-lg"></i>
       </button>
     </div>
-
-    <!-- Back to search (if no location) -->
-    <div class="sidebar-card" *ngIf="!breederInfo?.location?.latitude">
-      <button class="btn-back-to-search" (click)="goToSearch()">
-        <i class="bi bi-arrow-left"></i> Back to Search
-      </button>
-    </div>
-
-    <!-- Filters -->
-    <div class="sidebar-card">
-      <h3 class="sidebar-title"><i class="bi bi-funnel"></i> Filter Offsprings</h3>
-      <div class="filter-group">
-        <label class="filter-label">Breed</label>
-        <select class="filter-select" [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
+    <div class="drawer-body">
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Breed</label>
+        <select class="drawer-filter-select" [(ngModel)]="selectedBreedId">
           <option [ngValue]="undefined">All Breeds</option>
           <option *ngFor="let breed of breeds.slice(1)" [ngValue]="breed.value">{{ breed.label }}</option>
         </select>
       </div>
-      <div class="filter-group">
-        <label class="filter-label">Gender</label>
-        <select class="filter-select" [(ngModel)]="selectedGender" (change)="onGenderFilterChange(selectedGender)">
-          <option [ngValue]="undefined">All</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Gender</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="selectedGender === undefined" (click)="selectedGender = undefined">All</button>
+          <button class="drawer-pill" [class.active]="selectedGender === 'Male'" (click)="selectedGender = 'Male'">♂ Male</button>
+          <button class="drawer-pill" [class.active]="selectedGender === 'Female'" (click)="selectedGender = 'Female'">♀ Female</button>
+        </div>
       </div>
-      <div class="filter-group">
-        <label class="filter-label">Status</label>
-        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange(selectedStatus)">
-          <option [ngValue]="undefined">All</option>
-          <option value="Available">Available</option>
-          <option value="Reserved">Reserved</option>
-          <option value="Sold">Sold</option>
-        </select>
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Status</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="selectedStatus === undefined" (click)="selectedStatus = undefined">All</button>
+          <button class="drawer-pill" [class.active]="selectedStatus === 'Available'" (click)="selectedStatus = 'Available'">Available</button>
+          <button class="drawer-pill" [class.active]="selectedStatus === 'Reserved'" (click)="selectedStatus = 'Reserved'">Reserved</button>
+          <button class="drawer-pill" [class.active]="selectedStatus === 'Sold'" (click)="selectedStatus = 'Sold'">Sold</button>
+        </div>
       </div>
-      <button *ngIf="hasActiveFilters()" class="btn-clear-filters" (click)="clearFilters()">
-        <i class="bi bi-x-lg"></i> Clear Filters
+    </div>
+    <div class="drawer-footer">
+      <button class="drawer-clear-btn" (click)="clearFilters(); isMobileFilterOpen = false">Clear all</button>
+      <button class="drawer-apply-btn" (click)="applyMobileFilters()">
+        <i class="bi bi-check-lg"></i> Apply
       </button>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="loading-container" *ngIf="isLoading">
-      <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
-      <p class="loading-text">Loading offsprings...</p>
-    </div>
+  <div class="page-layout">
+    <!-- Left Sidebar: Breeder Info + Filters (desktop) -->
+    <aside class="sidebar">
+      <!-- Breeder Info -->
+      <div class="sidebar-card" *ngIf="breederInfo">
+        <div class="breeder-avatar" [style.background-image]="getBreederImageUrl() ? 'url(' + getBreederImageUrl() + ')' : ''">
+          <i *ngIf="!getBreederImageUrl()" class="bi bi-person-circle"></i>
+        </div>
+        <h2 class="breeder-name">{{ breederInfo.breedery_name || breederInfo.name || 'Breeder' }}</h2>
+        <p class="breeder-location" *ngIf="getBreederLocation()">
+          <i class="bi bi-geo-alt"></i> {{ getBreederLocation() }}
+        </p>
+        <p class="breeder-desc" *ngIf="breederInfo.breedery_description">{{ breederInfo.breedery_description }}</p>
+        <div class="breeder-tags" *ngIf="breederInfo.search_tags?.length">
+          <span class="breeder-tag" *ngFor="let tag of breederInfo.search_tags">{{ tag }}</span>
+        </div>
+      </div>
 
-    <div class="empty-state" *ngIf="!isLoading && !hasOffsprings()">
-      <i class="pi pi-inbox empty-icon"></i>
-      <h3 class="empty-title">No Offsprings Found</h3>
-      <p class="empty-message">
-        <span *ngIf="hasActiveFilters()">No offsprings match your filters.</span>
-        <span *ngIf="!hasActiveFilters()">This breeder doesn't have any available offsprings at the moment.</span>
-      </p>
-      <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
-    </div>
+      <!-- Mini Map -->
+      <div class="sidebar-card map-card" *ngIf="breederInfo?.location?.latitude">
+        <div class="mini-map">
+          <img
+            [src]="'https://maps.googleapis.com/maps/api/staticmap?center=' + breederInfo.location.latitude + ',' + breederInfo.location.longitude + '&zoom=11&size=300x180&markers=color:red%7C' + breederInfo.location.latitude + ',' + breederInfo.location.longitude + '&key='"
+            alt="Breeder location"
+            class="map-img"
+            onerror="this.style.display='none'"
+          />
+          <div class="map-fallback">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span>{{ getBreederLocation() }}</span>
+          </div>
+        </div>
+        <button class="btn-back-to-search" (click)="goToSearch()">
+          <i class="bi bi-arrow-left"></i> Back to Search
+        </button>
+      </div>
 
-    <div class="offspring-grid" *ngIf="!isLoading && hasOffsprings()">
-      <app-offspring-card
-        *ngFor="let offspring of offsprings"
-        [offspring]="offspring"
-        [showFavorite]="true"
-        (favoriteToggled)="onFavoriteToggled($event)">
-      </app-offspring-card>
-    </div>
+      <!-- Back to search (if no location) -->
+      <div class="sidebar-card" *ngIf="!breederInfo?.location?.latitude">
+        <button class="btn-back-to-search" (click)="goToSearch()">
+          <i class="bi bi-arrow-left"></i> Back to Search
+        </button>
+      </div>
 
-    <div class="pagination-container" *ngIf="!isLoading && hasOffsprings() && totalOffsprings > pageSize">
-      <p-paginator [rows]="pageSize" [totalRecords]="totalOffsprings" [rowsPerPageOptions]="[12, 24, 48]" (onPageChange)="onPageChange($event)"></p-paginator>
-    </div>
+      <!-- Filters -->
+      <div class="sidebar-card">
+        <h3 class="sidebar-title"><i class="bi bi-funnel"></i> Filter Offsprings</h3>
+        <div class="filter-group">
+          <label class="filter-label">Breed</label>
+          <select class="filter-select" [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
+            <option [ngValue]="undefined">All Breeds</option>
+            <option *ngFor="let breed of breeds.slice(1)" [ngValue]="breed.value">{{ breed.label }}</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Gender</label>
+          <select class="filter-select" [(ngModel)]="selectedGender" (change)="onGenderFilterChange(selectedGender)">
+            <option [ngValue]="undefined">All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Status</label>
+          <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange(selectedStatus)">
+            <option [ngValue]="undefined">All</option>
+            <option value="Available">Available</option>
+            <option value="Reserved">Reserved</option>
+            <option value="Sold">Sold</option>
+          </select>
+        </div>
+        <button *ngIf="hasActiveFilters()" class="btn-clear-filters" (click)="clearFilters()">
+          <i class="bi bi-x-lg"></i> Clear Filters
+        </button>
+      </div>
+    </aside>
 
-    <div class="results-summary" *ngIf="!isLoading && hasOffsprings()">
-      <p>Showing {{ offsprings.length }} of {{ totalOffsprings }} offspring{{ totalOffsprings !== 1 ? 's' : '' }}</p>
-    </div>
-  </main>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="loading-container" *ngIf="isLoading">
+        <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
+        <p class="loading-text">Loading offsprings...</p>
+      </div>
+
+      <div class="empty-state" *ngIf="!isLoading && !hasOffsprings()">
+        <i class="pi pi-inbox empty-icon"></i>
+        <h3 class="empty-title">No Offsprings Found</h3>
+        <p class="empty-message">
+          <span *ngIf="hasActiveFilters()">No offsprings match your filters.</span>
+          <span *ngIf="!hasActiveFilters()">This breeder doesn't have any available offsprings at the moment.</span>
+        </p>
+        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+      </div>
+
+      <div class="offspring-grid" *ngIf="!isLoading && hasOffsprings()">
+        <app-offspring-card
+          *ngFor="let offspring of offsprings"
+          [offspring]="offspring"
+          [showFavorite]="true"
+          (favoriteToggled)="onFavoriteToggled($event)">
+        </app-offspring-card>
+      </div>
+
+      <div class="pagination-container" *ngIf="!isLoading && hasOffsprings() && totalOffsprings > pageSize">
+        <p-paginator [rows]="pageSize" [totalRecords]="totalOffsprings" [rowsPerPageOptions]="[12, 24, 48]" (onPageChange)="onPageChange($event)"></p-paginator>
+      </div>
+
+      <div class="results-summary" *ngIf="!isLoading && hasOffsprings()">
+        <p>Showing {{ offsprings.length }} of {{ totalOffsprings }} offspring{{ totalOffsprings !== 1 ? 's' : '' }}</p>
+      </div>
+    </main>
+  </div>
+
 </div>
