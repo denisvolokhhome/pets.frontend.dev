@@ -1,5 +1,5 @@
-<div class="modal-overlay" *ngIf="visible" (click)="closeDialog()">
-  <div class="modal-dialog" (click)="$event.stopPropagation()">
+<div class="modal-overlay" *ngIf="visible" [class.closing]="isClosing" (click)="closeDialog()">
+  <div class="modal-dialog" [class.closing]="isClosing" (click)="$event.stopPropagation()">
     <!-- Contact Form View -->
     <div *ngIf="!showAccountPrompt">
       <div class="modal-header">

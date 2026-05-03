@@ -101,12 +101,19 @@ export class ContactBreederComponent {
     });
   }
 
+  isClosing: boolean = false;
+  private readonly CLOSE_DURATION = 280;
+
   closeDialog(): void {
-    this.visible = false;
-    this.visibleChange.emit(this.visible);
-    this.contactForm.reset();
-    this.showAccountPrompt = false;
-    this.submittedEmail = '';
+    this.isClosing = true;
+    setTimeout(() => {
+      this.isClosing = false;
+      this.visible = false;
+      this.visibleChange.emit(false);
+      this.contactForm.reset();
+      this.showAccountPrompt = false;
+      this.submittedEmail = '';
+    }, this.CLOSE_DURATION);
   }
 
   onCancel(): void {
