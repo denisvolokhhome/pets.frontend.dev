@@ -1,6 +1,9 @@
-import { NgModule, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { NgModule, inject, provideAppInitializer, provideZoneChangeDetection, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+import * as Sentry from '@sentry/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -217,6 +220,22 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptorsFromDi()),
     MessageService,
+    // Sentry: replace the default Angular ErrorHandler so uncaught errors are reported
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({ showDialog: false }),
+    },
+    // Sentry: trace Angular router navigations as performance transactions
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    },
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       
