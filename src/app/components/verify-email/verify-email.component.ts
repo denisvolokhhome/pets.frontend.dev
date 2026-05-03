@@ -45,13 +45,23 @@ export class VerifyEmailComponent implements OnInit {
 
   verifyToken(token: string): void {
     this.mode = 'verifying';
-    this.http.post(
+    this.http.post<{ access_token: string; token_type: string; user: any }>(
       `${environment.API_URL}/auth/verify`,
       { token }
     ).subscribe({
-      next: () => {
+      next: (response) => {
+        // Store the JWT and update auth state so the user is logged in immediately
+        localStorage.setItem('id_token', response.access_token);
+        this.authService['isLoggedInSubject'].next(true);
+        this.authService.IsLoggedIn().subscribe();
+
         this.mode = 'success';
         this.toastr.success('Your email has been verified!', 'Verified');
+
+        // Redirect to dashboard after a short delay so the user sees the success message
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 2000);
       },
       error: (err) => {
         this.mode = 'error';
@@ -61,6 +71,9 @@ export class VerifyEmailComponent implements OnInit {
         } else if (detail === 'VERIFY_USER_ALREADY_VERIFIED') {
           this.mode = 'success';
           this.toastr.info('Your email is already verified.', 'Already Verified');
+          setTimeout(() => {
+            this.router.navigate(['/dashboard']);
+          }, 2000);
         } else {
           this.errorMessage = 'Verification failed. Please try again.';
         }

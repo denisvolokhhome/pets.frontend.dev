@@ -60,6 +60,11 @@
 }
 .btn-primary-action:hover { background: #ff5252; transform: translateY(-2px); }
 
+.verify-redirecting {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 1.25rem; font-size: 0.875rem; color: #6b7280;
+}
+
 @media (max-width: 480px) {
   .verify-card { padding: 2rem 1.5rem; }
   .verify-content h1 { font-size: 1.25rem; }
