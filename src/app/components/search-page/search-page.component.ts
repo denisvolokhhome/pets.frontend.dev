@@ -159,6 +159,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           const message = 'Could not detect your location automatically. Please enter your ZIP code to search.';
           this.geolocationError = message;
           // No toast — the inline banner is sufficient
+          // Auto-populate ZIP from last successful search if available
+          const lastZip = localStorage.getItem('last_zip_code');
+          if (lastZip && !this.zipCode) {
+            this.zipCode = lastZip;
+          }
           this.cdr.detectChanges();
         }
       });
@@ -187,6 +192,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     }
     // Show inline banner only — no toast for geolocation errors (banner is sufficient)
     this.geolocationError = errorMessage;
+
+    // Auto-populate ZIP from last successful search if available
+    const lastZip = localStorage.getItem('last_zip_code');
+    if (lastZip && !this.zipCode) {
+      this.zipCode = lastZip;
+      this.cdr.detectChanges();
+    }
   }
 
   /**
@@ -273,6 +285,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
         // Persist state so navigating back restores results
         this.saveSearchState();
+
+        // Remember the ZIP code for next visit
+        localStorage.setItem('last_zip_code', this.zipCode);
       },
       error: (err) => {
         // Clear loading state
