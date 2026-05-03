@@ -1,6 +1,7 @@
 <div class="search-page" [class.fullscreen-map]="isMapFullscreen">
-  <!-- Compact Search Header Bar -->
-  <div class="search-header-bar">
+
+  <!-- ===== DESKTOP Header Bar ===== -->
+  <div class="search-header-bar desktop-header">
     <div class="search-header-left">
       <h1 class="search-logo">🐾 Find Breeders</h1>
     </div>
@@ -13,6 +14,118 @@
         (animalKindChange)="onAnimalKindChange($event)"
         (search)="onSearch()">
       </app-search-controls>
+    </div>
+  </div>
+
+  <!-- ===== MOBILE Compact Bar ===== -->
+  <div class="mobile-search-bar">
+    <input
+      type="text"
+      class="mobile-zip-input"
+      [(ngModel)]="zipCode"
+      placeholder="ZIP code"
+      maxlength="5"
+      inputmode="numeric"
+      aria-label="ZIP code"
+      (keyup.enter)="onSearch()"
+    />
+    <button
+      class="mobile-filter-btn"
+      (click)="openMobileFilters()"
+      aria-label="Open filters"
+      [class.has-filters]="hasActiveFilters()">
+      <i class="bi bi-sliders"></i>
+      <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
+    </button>
+    <button
+      class="mobile-search-btn"
+      (click)="onSearch()"
+      aria-label="Search">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE Filter Drawer ===== -->
+  <div class="filter-drawer-backdrop"
+       [class.open]="isMobileFilterOpen"
+       (click)="closeMobileFilters()"
+       aria-hidden="true">
+  </div>
+  <div class="filter-drawer"
+       [class.open]="isMobileFilterOpen"
+       role="dialog"
+       aria-label="Search filters"
+       aria-modal="true">
+    <div class="filter-drawer-header">
+      <h2 class="filter-drawer-title">Filters</h2>
+      <button class="filter-drawer-close" (click)="closeMobileFilters()" aria-label="Close filters">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="filter-drawer-body">
+      <!-- Animal Kind -->
+      <div class="filter-section">
+        <label class="filter-label">Animal type</label>
+        <div class="filter-pills">
+          <button
+            *ngFor="let pt of petTypes"
+            class="filter-pill"
+            [class.active]="selectedAnimalKind === pt.value"
+            (click)="onAnimalKindChange(pt.value)">
+            <span>{{ pt.icon }}</span>
+            <span>{{ pt.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Breed -->
+      <div class="filter-section">
+        <label class="filter-label">Breed</label>
+        <div class="drawer-breed-wrap">
+          <input
+            type="text"
+            class="drawer-input"
+            [value]="drawerBreedTerm"
+            (input)="onDrawerBreedInput($any($event.target).value)"
+            (focus)="drawerBreedOpen = drawerBreedSuggestions.length > 0"
+            (blur)="onDrawerBreedBlur()"
+            placeholder="Search breed (optional)"
+            autocomplete="off"
+          />
+          <button *ngIf="drawerBreedTerm" class="drawer-input-clear" (click)="clearDrawerBreed()" aria-label="Clear breed">✕</button>
+          <div class="drawer-breed-dropdown" *ngIf="drawerBreedOpen && drawerBreedSuggestions.length > 0">
+            <div
+              class="drawer-breed-option"
+              *ngFor="let b of drawerBreedSuggestions"
+              (mousedown)="selectDrawerBreed(b)">
+              {{ b.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radius -->
+      <div class="filter-section">
+        <label class="filter-label">Distance</label>
+        <div class="filter-pills">
+          <button
+            *ngFor="let miles of [10, 20, 40, 60]"
+            class="filter-pill"
+            [class.active]="radius === miles"
+            (click)="radius = miles; radiusChange(miles)">
+            {{ miles }} mi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-drawer-footer">
+      <button class="filter-clear-btn" (click)="clearMobileFilters()">Clear all</button>
+      <button class="filter-apply-btn" (click)="applyMobileFilters()">
+        <i class="bi bi-search"></i>
+        Search
+      </button>
     </div>
   </div>
 
@@ -34,10 +147,35 @@
     </div>
   </div>
 
+  <!-- Mobile Tab Switcher (visible on mobile only) -->
+  <div class="mobile-tabs" role="tablist" aria-label="View switcher">
+    <button
+      class="mobile-tab"
+      [class.active]="mobileActiveTab === 'map'"
+      (click)="setMobileTab('map')"
+      role="tab"
+      [attr.aria-selected]="mobileActiveTab === 'map'">
+      <i class="bi bi-map"></i>
+      Map
+    </button>
+    <button
+      class="mobile-tab"
+      [class.active]="mobileActiveTab === 'list'"
+      (click)="setMobileTab('list')"
+      role="tab"
+      [attr.aria-selected]="mobileActiveTab === 'list'">
+      <i class="bi bi-list-ul"></i>
+      Breeders
+      <span class="mobile-tab-badge" *ngIf="searchResults.length > 0">{{ searchResults.length }}</span>
+    </button>
+  </div>
+
   <!-- Main Split Layout: Map Left, List Right -->
   <div class="search-content">
     <!-- Map Panel (Left) -->
-    <div class="map-panel" [class.map-fullscreen]="isMapFullscreen">
+    <div class="map-panel"
+         [class.map-fullscreen]="isMapFullscreen"
+         [class.mobile-hidden]="mobileActiveTab === 'list'">
       <app-map
         [center]="mapCenter"
         [markers]="breederMarkers"
@@ -71,7 +209,9 @@
     </div>
 
     <!-- Results Panel (Right) -->
-    <div class="results-panel" *ngIf="!isMapFullscreen">
+    <div class="results-panel"
+         *ngIf="!isMapFullscreen"
+         [class.mobile-hidden]="mobileActiveTab === 'map'">
       <div class="results-header">
         <h3 class="results-title">
           <i class="bi bi-geo-alt-fill"></i>

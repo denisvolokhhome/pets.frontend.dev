@@ -1,4 +1,7 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { SearchService } from '../../services/search.service';
 import { ToastService } from '../../services/toast.service';
 import { MapComponent } from '../map/map.component';
@@ -22,7 +25,7 @@ import {
   templateUrl: './search-page.component.html',
   styleUrls: ['./search-page.component.css']
 })
-export class SearchPageComponent implements OnInit {
+export class SearchPageComponent implements OnInit, OnDestroy {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   // Search state
@@ -41,6 +44,15 @@ export class SearchPageComponent implements OnInit {
   geolocationError: string | null = null;
   hasSearched: boolean = false;
   isMapFullscreen: boolean = false;
+  mobileActiveTab: 'map' | 'list' = 'map';
+
+  // Mobile filter drawer state
+  isMobileFilterOpen: boolean = false;
+  drawerBreedTerm: string = '';
+  drawerBreedSuggestions: Breed[] = [];
+  drawerBreedOpen: boolean = false;
+  private drawerBreedSearch$ = new Subject<string>();
+  private drawerBreedSub!: Subscription;
 
   // Pet types for filter
   petTypes: IPetType[] = PET_TYPES;
@@ -55,6 +67,25 @@ export class SearchPageComponent implements OnInit {
     // Request geolocation permission on component initialization
     // Don't show loading overlay for geolocation - only show it during actual search
     this.requestGeolocation();
+
+    // Drawer breed autocomplete
+    this.drawerBreedSub = this.drawerBreedSearch$.pipe(
+      debounceTime(350),
+      switchMap(term => {
+        if (term.length < 2) return of([]);
+        return this.searchService.searchBreeds(term, this.selectedAnimalKind || undefined).pipe(
+          catchError(() => of([]))
+        );
+      })
+    ).subscribe(breeds => {
+      this.drawerBreedSuggestions = breeds;
+      this.drawerBreedOpen = breeds.length > 0;
+      this.cdr.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.drawerBreedSub?.unsubscribe();
   }
 
   /**
@@ -234,6 +265,10 @@ export class SearchPageComponent implements OnInit {
         // Show success message with result count
         if (results.length > 0) {
           this.toastService.success(`Found ${results.length} breeder${results.length > 1 ? 's' : ''} near you`);
+          // On mobile, switch to list tab so results are immediately visible
+          if (window.innerWidth <= 768) {
+            this.mobileActiveTab = 'list';
+          }
         }
       },
       error: (err) => {
@@ -255,11 +290,28 @@ export class SearchPageComponent implements OnInit {
   }
 
   /**
+   * Set the active tab on mobile (map or list)
+   */
+  setMobileTab(tab: 'map' | 'list'): void {
+    this.mobileActiveTab = tab;
+    // Invalidate map size when switching back to map tab
+    if (tab === 'map') {
+      setTimeout(() => {
+        if (this.mapComponent && (this.mapComponent as any).map) {
+          (this.mapComponent as any).map.invalidateSize();
+        }
+      }, 50);
+    }
+  }
+
+  /**
    * Handle marker click from MapComponent
    * Requirement 9.1: Highlight corresponding breeder card when marker is clicked
    */
   onMarkerClick(breederId: string): void {
     this.highlightedBreederId = breederId;
+    // On mobile, switch to list tab so the card is visible
+    this.mobileActiveTab = 'list';
   }
 
   /**
@@ -338,5 +390,70 @@ export class SearchPageComponent implements OnInit {
     if (this.hasSearched && this.zipCode) {
       this.onSearch();
     }
+  }
+
+  // ─── Mobile filter drawer ────────────────────────────────────────────────
+
+  openMobileFilters(): void {
+    this.isMobileFilterOpen = true;
+    // Sync drawer breed term with current selection
+    this.drawerBreedTerm = this.selectedBreed?.name ?? '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeMobileFilters(): void {
+    this.isMobileFilterOpen = false;
+    document.body.style.overflow = '';
+  }
+
+  applyMobileFilters(): void {
+    this.closeMobileFilters();
+    this.onSearch();
+  }
+
+  clearMobileFilters(): void {
+    this.selectedBreed = null;
+    this.selectedAnimalKind = '';
+    this.radius = 40;
+    this.drawerBreedTerm = '';
+    this.drawerBreedSuggestions = [];
+  }
+
+  hasActiveFilters(): boolean {
+    return !!this.selectedBreed || !!this.selectedAnimalKind || this.radius !== 40;
+  }
+
+  radiusChange(miles: number): void {
+    this.radius = miles;
+  }
+
+  // Drawer breed autocomplete
+  onDrawerBreedInput(value: string): void {
+    this.drawerBreedTerm = value;
+    if (!value) {
+      this.selectedBreed = null;
+      this.drawerBreedSuggestions = [];
+      this.drawerBreedOpen = false;
+      return;
+    }
+    this.drawerBreedSearch$.next(value);
+  }
+
+  onDrawerBreedBlur(): void {
+    setTimeout(() => { this.drawerBreedOpen = false; }, 200);
+  }
+
+  selectDrawerBreed(breed: Breed): void {
+    this.selectedBreed = breed;
+    this.drawerBreedTerm = breed.name;
+    this.drawerBreedSuggestions = [];
+    this.drawerBreedOpen = false;
+  }
+
+  clearDrawerBreed(): void {
+    this.selectedBreed = null;
+    this.drawerBreedTerm = '';
+    this.drawerBreedSuggestions = [];
+    this.drawerBreedOpen = false;
   }
 }
