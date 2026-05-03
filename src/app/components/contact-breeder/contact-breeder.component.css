@@ -37,6 +37,12 @@
   animation: slideDown 0.28s cubic-bezier(0.4, 0, 1, 1) forwards;
 }
 
+/* No transition while finger is dragging */
+.modal-dialog.dragging {
+  transition: none !important;
+  animation: none !important;
+}
+
 @keyframes slideIn   { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideDown { from { opacity: 1; transform: translateY(0); }     to { opacity: 0; transform: translateY(40px); } }
 

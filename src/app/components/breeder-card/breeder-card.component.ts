@@ -27,6 +27,14 @@ export class BreederCardComponent {
   breederProfile: any = null;
   isLoadingProfile: boolean = false;
 
+  // Profile popup drag-to-dismiss
+  profileDragOffsetY = 0;
+  private profileDragStartY = 0;
+  private profileIsDragging = false;
+  private readonly PROFILE_DISMISS_THRESHOLD = 120;
+  private readonly PROFILE_CLOSE_DURATION = 280;
+  isProfileClosing = false;
+
   // Review data
   reviewSummary: ReviewSummary | null = null;
   reviews: ReviewRead[] = [];
@@ -128,8 +136,37 @@ export class BreederCardComponent {
   }
 
   closeProfilePopup(): void {
-    this.showProfilePopup = false;
-    this.breederProfile = null;
+    this.isProfileClosing = true;
+    setTimeout(() => {
+      this.isProfileClosing = false;
+      this.profileDragOffsetY = 0;
+      this.showProfilePopup = false;
+      this.breederProfile = null;
+    }, this.PROFILE_CLOSE_DURATION);
+  }
+
+  onProfileDragStart(event: TouchEvent): void {
+    if (window.innerWidth > 640) return;
+    this.profileIsDragging = true;
+    this.profileDragStartY = event.touches[0].clientY;
+    this.profileDragOffsetY = 0;
+  }
+
+  onProfileDragMove(event: TouchEvent): void {
+    if (!this.profileIsDragging) return;
+    const delta = event.touches[0].clientY - this.profileDragStartY;
+    this.profileDragOffsetY = Math.max(0, delta);
+  }
+
+  onProfileDragEnd(): void {
+    if (!this.profileIsDragging) return;
+    this.profileIsDragging = false;
+    if (this.profileDragOffsetY >= this.PROFILE_DISMISS_THRESHOLD) {
+      this.profileDragOffsetY = 0;
+      this.closeProfilePopup();
+    } else {
+      this.profileDragOffsetY = 0;
+    }
   }
 
   getProfileImageUrl(): string | null {

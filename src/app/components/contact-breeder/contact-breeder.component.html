@@ -1,5 +1,13 @@
 <div class="modal-overlay" *ngIf="visible" [class.closing]="isClosing" (click)="closeDialog()">
-  <div class="modal-dialog" [class.closing]="isClosing" (click)="$event.stopPropagation()">
+  <div class="modal-dialog"
+       #dialogEl
+       [class.closing]="isClosing"
+       [class.dragging]="dragOffsetY > 0"
+       [style.transform]="dragOffsetY > 0 ? 'translateY(' + dragOffsetY + 'px)' : ''"
+       (click)="$event.stopPropagation()"
+       (touchstart)="onDragStart($event)"
+       (touchmove)="onDragMove($event)"
+       (touchend)="onDragEnd()">
     <!-- Contact Form View -->
     <div *ngIf="!showAccountPrompt">
       <div class="modal-header">

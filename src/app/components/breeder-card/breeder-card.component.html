@@ -62,8 +62,16 @@
 </app-guest-prompt-modal>
 
 <!-- Breeder Profile Popup -->
-<div *ngIf="showProfilePopup" class="profile-backdrop" (click)="closeProfilePopup()">
-  <div class="profile-popup" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Breeder profile">
+<div *ngIf="showProfilePopup" class="profile-backdrop" [class.closing]="isProfileClosing" (click)="closeProfilePopup()">
+  <div class="profile-popup"
+       [class.closing]="isProfileClosing"
+       [class.dragging]="profileDragOffsetY > 0"
+       [style.transform]="profileDragOffsetY > 0 ? 'translateY(' + profileDragOffsetY + 'px)' : ''"
+       (click)="$event.stopPropagation()"
+       (touchstart)="onProfileDragStart($event)"
+       (touchmove)="onProfileDragMove($event)"
+       (touchend)="onProfileDragEnd()"
+       role="dialog" aria-modal="true" aria-label="Breeder profile">
 
     <!-- Drag handle (mobile visual cue) -->
     <div class="profile-handle"></div>
