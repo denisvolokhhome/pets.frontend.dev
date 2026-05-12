@@ -25,7 +25,8 @@
   transform-origin: top center; transition: transform 0.05s linear;
   padding: 2rem; min-width: max-content;
 }
-.empty-state { text-align: center; padding: 4rem 2rem; color: #9ca3af; }
+.empty-state { text-align: center; padding: 4rem 2rem; color: #9ca3af; max-width: 100%; box-sizing: border-box; }
+.empty-state p { white-space: normal; word-break: break-word; }
 .empty-state i { font-size: 3rem; display: block; margin-bottom: 1rem; }
 
 /* ── Tree structure ─────────────────────────────────── */
