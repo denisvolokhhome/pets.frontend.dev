@@ -58,6 +58,12 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   
   // Current filter values
   currentFilters: FilterValues = {};
+
+  // Mobile filter drawer
+  isMobileFilterOpen = false;
+  mobileFilters: { location: string; status: string; petType: string } = {
+    location: '', status: '', petType: ''
+  };
   
   // Loading states
   isLoading: boolean = false;
@@ -149,7 +155,24 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   }
 
   hasActiveFilters(): boolean {
-    return this.currentFilters && Object.keys(this.currentFilters).length > 0;
+    return (this.currentFilters && Object.keys(this.currentFilters).length > 0) ||
+           !!(this.mobileFilters.location || this.mobileFilters.status || this.mobileFilters.petType);
+  }
+
+  applyMobileFilters(): void {
+    this.currentFilters = {
+      ...(this.mobileFilters.location ? { location: this.mobileFilters.location } : {}),
+      ...(this.mobileFilters.status   ? { status:   this.mobileFilters.status }   : {}),
+      ...(this.mobileFilters.petType  ? { petType:  this.mobileFilters.petType }  : {}),
+    };
+    this.applyFilters();
+  }
+
+  clearMobileFilters(): void {
+    this.mobileFilters = { location: '', status: '', petType: '' };
+    this.currentFilters = {};
+    this.applyFilters();
+    this.isMobileFilterOpen = false;
   }
 
   applyFilters(): void {

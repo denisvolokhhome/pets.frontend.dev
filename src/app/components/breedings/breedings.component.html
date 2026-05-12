@@ -1,5 +1,6 @@
 <div class="breedings-container">
-  <!-- Page Header Component -->
+  <!-- Page Header Component (desktop) -->
+  <div class="desktop-page-header">
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
@@ -9,6 +10,95 @@
       <span>Add Breeding</span>
     </button>
   </app-page-header>
+  </div>
+
+  <!-- ===== MOBILE compact bar ===== -->
+  <div class="mobile-bar">
+    <div class="mobile-bar__search">
+      <i class="bi bi-search mobile-bar__search-icon"></i>
+      <input
+        type="text"
+        class="mobile-bar__input"
+        placeholder="Search breedings..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchTermChange($event)"
+        aria-label="Search breedings"
+      />
+    </div>
+    <button
+      class="mobile-icon-btn"
+      [class.has-filters]="hasActiveFilters()"
+      (click)="isMobileFilterOpen = true"
+      aria-label="Open filters">
+      <i class="bi bi-sliders"></i>
+      <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
+    </button>
+    <button
+      class="mobile-icon-btn mobile-icon-btn--primary"
+      (click)="onAddBreedingClick()"
+      aria-label="Add breeding">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE filter drawer backdrop ===== -->
+  <div class="mobile-filter-backdrop"
+       [class.open]="isMobileFilterOpen"
+       (click)="isMobileFilterOpen = false"
+       aria-hidden="true">
+  </div>
+
+  <!-- ===== MOBILE filter drawer ===== -->
+  <div class="mobile-filter-drawer"
+       [class.open]="isMobileFilterOpen"
+       role="dialog"
+       aria-label="Filter breedings"
+       aria-modal="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Filters</h2>
+      <button class="drawer-close" (click)="isMobileFilterOpen = false" aria-label="Close filters">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <!-- Location -->
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Location</label>
+        <select class="drawer-filter-select" [(ngModel)]="mobileFilters.location" (change)="applyMobileFilters()">
+          <option value="">All Locations</option>
+          <option *ngFor="let loc of locations" [value]="loc.id || loc.name">{{ loc.name }}</option>
+        </select>
+      </div>
+      <!-- Status -->
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Status</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="!mobileFilters.status" (click)="mobileFilters.status = ''; applyMobileFilters()">All</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Started'" (click)="mobileFilters.status = 'Started'; applyMobileFilters()">Started</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'InProcess'" (click)="mobileFilters.status = 'InProcess'; applyMobileFilters()">In Process</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Done'" (click)="mobileFilters.status = 'Done'; applyMobileFilters()">Done</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Voided'" (click)="mobileFilters.status = 'Voided'; applyMobileFilters()">Voided</button>
+        </div>
+      </div>
+      <!-- Animal Type -->
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Animal Type</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="!mobileFilters.petType" (click)="mobileFilters.petType = ''; applyMobileFilters()">All</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()">🐕 Dog</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()">🐈 Cat</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cow'" (click)="mobileFilters.petType = 'Cow'; applyMobileFilters()">🐄 Cow</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Horse'" (click)="mobileFilters.petType = 'Horse'; applyMobileFilters()">🐴 Horse</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="drawer-clear-btn" (click)="clearMobileFilters()">Clear all</button>
+      <button class="drawer-apply-btn" (click)="isMobileFilterOpen = false">
+        <i class="bi bi-check-lg"></i> Done
+      </button>
+    </div>
+  </div>
 
   <!-- Content Section -->
   <div class="breedings-layout">
