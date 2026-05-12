@@ -1,5 +1,6 @@
 <div class="messages-container">
-  <!-- Page Header Component -->
+  <!-- Page Header Component (desktop) -->
+  <div class="desktop-page-header">
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
@@ -9,6 +10,26 @@
       <span>Refresh</span>
     </button>
   </app-page-header>
+  </div>
+
+  <!-- ===== MOBILE compact bar ===== -->
+  <div class="mobile-bar">
+    <div class="mobile-bar__search">
+      <i class="bi bi-search mobile-bar__search-icon"></i>
+      <input type="text" class="mobile-bar__input" placeholder="Search messages..."
+        [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search messages"/>
+    </div>
+    <button class="mobile-icon-btn" (click)="onRefreshClick()" aria-label="Refresh messages">
+      <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE status filter pills ===== -->
+  <div class="mobile-status-pills">
+    <button class="status-pill" [class.active]="statusFilter === 'all'" (click)="onFilterChange('all')">All</button>
+    <button class="status-pill" [class.active]="statusFilter === 'unread'" (click)="onFilterChange('unread')">Unread</button>
+    <button class="status-pill" [class.active]="statusFilter === 'read'" (click)="onFilterChange('read')">Read</button>
+  </div>
 
   <!-- Content Section -->
   <div class="messages-layout">
