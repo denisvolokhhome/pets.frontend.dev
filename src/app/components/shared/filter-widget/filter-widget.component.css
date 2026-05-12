@@ -267,9 +267,8 @@
 }
 
 @media (max-width: 768px) {
+  /* Hide the sidebar on mobile — pets page uses a drawer instead */
   .filters-sidebar {
-    width: 100%;
-    position: static;
-    margin-bottom: 20px;
+    display: none;
   }
 }

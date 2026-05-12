@@ -79,6 +79,12 @@ export class PetsComponent implements OnInit {
   // Current filter values
   currentFilters: FilterValues = {};
 
+  // Mobile filter drawer
+  isMobileFilterOpen = false;
+  mobileFilters: { location: string; gender: string; petType: string } = {
+    location: '', gender: '', petType: ''
+  };
+
   ngOnInit(): void {
     this.loadPets();
     this.loadLocations();
@@ -194,7 +200,24 @@ export class PetsComponent implements OnInit {
   }
 
   hasActiveFilters(): boolean {
-    return this.currentFilters && Object.keys(this.currentFilters).length > 0;
+    return (this.currentFilters && Object.keys(this.currentFilters).length > 0) ||
+           !!(this.mobileFilters.location || this.mobileFilters.gender || this.mobileFilters.petType);
+  }
+
+  applyMobileFilters(): void {
+    this.currentFilters = {
+      ...(this.mobileFilters.location ? { location: this.mobileFilters.location } : {}),
+      ...(this.mobileFilters.gender   ? { gender:   this.mobileFilters.gender }   : {}),
+      ...(this.mobileFilters.petType  ? { petType:  this.mobileFilters.petType }  : {}),
+    };
+    this.applyFilters();
+  }
+
+  clearMobileFilters(): void {
+    this.mobileFilters = { location: '', gender: '', petType: '' };
+    this.currentFilters = {};
+    this.applyFilters();
+    this.isMobileFilterOpen = false;
   }
 
   changeLayout(viewType: string) {
