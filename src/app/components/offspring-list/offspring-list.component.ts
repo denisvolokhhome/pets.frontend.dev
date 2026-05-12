@@ -43,6 +43,10 @@ export class OffspringListComponent implements OnInit {
   
   // Current filter values
   currentFilters: FilterValues = {};
+
+  // Mobile filter drawer
+  isMobileFilterOpen = false;
+  mobileFilters: { status: string; gender: string } = { status: '', gender: '' };
   
   breeds: IBreed[] = [];
   offsprings: OffspringRead[] = [];
@@ -189,7 +193,23 @@ export class OffspringListComponent implements OnInit {
   }
   
   hasActiveFilters(): boolean {
-    return Object.keys(this.currentFilters).length > 0;
+    return Object.keys(this.currentFilters).length > 0 ||
+           !!(this.mobileFilters.status || this.mobileFilters.gender);
+  }
+
+  applyMobileFilters(): void {
+    this.currentFilters = {
+      ...(this.mobileFilters.status ? { status: this.mobileFilters.status } : {}),
+      ...(this.mobileFilters.gender ? { gender: this.mobileFilters.gender } : {}),
+    };
+    this.applySearch();
+  }
+
+  clearMobileFilters(): void {
+    this.mobileFilters = { status: '', gender: '' };
+    this.currentFilters = {};
+    this.applySearch();
+    this.isMobileFilterOpen = false;
   }
 
   onPageChange(event: any): void {

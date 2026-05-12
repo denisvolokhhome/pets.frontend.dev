@@ -1,5 +1,6 @@
 <div class="offspring-list-container">
-  <!-- Page Header Component -->
+  <!-- Page Header Component (desktop) -->
+  <div class="desktop-page-header">
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
@@ -9,6 +10,65 @@
       <span>Add Offspring</span>
     </button>
   </app-page-header>
+  </div>
+
+  <!-- ===== MOBILE compact bar ===== -->
+  <div class="mobile-bar">
+    <div class="mobile-bar__search">
+      <i class="bi bi-search mobile-bar__search-icon"></i>
+      <input type="text" class="mobile-bar__input" placeholder="Search offsprings..."
+        [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search offsprings"/>
+    </div>
+    <button class="mobile-icon-btn" [class.has-filters]="hasActiveFilters()"
+      (click)="isMobileFilterOpen = true" aria-label="Open filters">
+      <i class="bi bi-sliders"></i>
+      <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
+    </button>
+    <button class="mobile-icon-btn mobile-icon-btn--primary" (click)="onActionButtonClick()" aria-label="Add offspring">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE filter drawer backdrop ===== -->
+  <div class="mobile-filter-backdrop" [class.open]="isMobileFilterOpen"
+       (click)="isMobileFilterOpen = false" aria-hidden="true"></div>
+
+  <!-- ===== MOBILE filter drawer ===== -->
+  <div class="mobile-filter-drawer" [class.open]="isMobileFilterOpen"
+       role="dialog" aria-label="Filter offsprings" aria-modal="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Filters</h2>
+      <button class="drawer-close" (click)="isMobileFilterOpen = false" aria-label="Close filters">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Status</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="!mobileFilters.status" (click)="mobileFilters.status = ''; applyMobileFilters()">All</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Available'" (click)="mobileFilters.status = 'Available'; applyMobileFilters()">Available</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Reserved'" (click)="mobileFilters.status = 'Reserved'; applyMobileFilters()">Reserved</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Sold'" (click)="mobileFilters.status = 'Sold'; applyMobileFilters()">Sold</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'Archived'" (click)="mobileFilters.status = 'Archived'; applyMobileFilters()">Archived</button>
+        </div>
+      </div>
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Gender</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="!mobileFilters.gender" (click)="mobileFilters.gender = ''; applyMobileFilters()">All</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.gender === 'Male'" (click)="mobileFilters.gender = 'Male'; applyMobileFilters()">♂ Male</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.gender === 'Female'" (click)="mobileFilters.gender = 'Female'; applyMobileFilters()">♀ Female</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="drawer-clear-btn" (click)="clearMobileFilters()">Clear all</button>
+      <button class="drawer-apply-btn" (click)="isMobileFilterOpen = false">
+        <i class="bi bi-check-lg"></i> Done
+      </button>
+    </div>
+  </div>
 
   <!-- Content Section -->
   <div class="offspring-layout">
