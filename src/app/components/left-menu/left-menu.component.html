@@ -1,6 +1,6 @@
 
 <nav aria-label="Sidebar navigation">
-<div [ngClass]="isCollapsed ? 'w-[80px]' : 'w-[280px]'" class="flex flex-col shrink-0 p-3 h-full transition-all duration-300">
+<div [ngClass]="isCollapsed ? 'w-[80px]' : 'w-[280px]'" class="left-menu-sidebar flex flex-col shrink-0 p-3 h-full transition-all duration-300">
   <!-- Toggle Button -->
   <button 
     (click)="toggleMenu()"
@@ -111,4 +111,44 @@
     </li>
   </ul>
 </div>
+</nav>
+
+<!-- Mobile Bottom Tab Bar -->
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a [routerLink]="['/dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Dashboard">
+    <i class="bi bi-speedometer2"></i>
+    <span>Home</span>
+  </a>
+  <ng-container *ngIf="isBreeder">
+    <a [routerLink]="['/pets']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Pets">
+      <i class="bi bi-card-list"></i>
+      <span>Pets</span>
+    </a>
+    <a [routerLink]="['/breedings']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Breedings">
+      <i class="bi bi-water"></i>
+      <span>Breedings</span>
+    </a>
+    <a [routerLink]="['/offsprings']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Offsprings">
+      <i class="bi bi-grid-3x3"></i>
+      <span>Offsprings</span>
+    </a>
+  </ng-container>
+  <ng-container *ngIf="isPetSeeker">
+    <a [routerLink]="['/search-pets']" routerLinkActive="active" class="mobile-nav-item" aria-label="Search">
+      <i class="bi bi-search"></i>
+      <span>Search</span>
+    </a>
+    <a [routerLink]="['/favorites/offsprings']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Favorites">
+      <i class="bi bi-heart"></i>
+      <span>Favorites</span>
+    </a>
+  </ng-container>
+  <a [routerLink]="['/messages']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Messages">
+    <i class="bi bi-envelope"></i>
+    <span>Messages</span>
+  </a>
+  <a [routerLink]="['/settings']" routerLinkActive="active" class="mobile-nav-item" aria-label="Settings">
+    <i class="bi bi-gear"></i>
+    <span>Settings</span>
+  </a>
 </nav>

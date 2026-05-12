@@ -1,57 +1,57 @@
-<div class="container mx-auto p-6">
+<div class="dashboard-container">
   <!-- Breeder Dashboard -->
   <div *ngIf="isBreeder" class="breeder-dashboard">
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Breeder Dashboard</h1>
-      <p class="text-gray-600 mt-2">Welcome back, {{ currentUser?.name || currentUser?.email }}!</p>
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Breeder Dashboard</h1>
+      <p class="dashboard-subtitle">Welcome back, {{ currentUser?.name || currentUser?.email }}!</p>
     </div>
 
     <!-- Breeder Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
-        <div class="flex items-center justify-between">
+    <div class="stats-grid">
+      <div class="stat-card stat-card--blue">
+        <div class="stat-card__inner">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Total Pets</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : totalPets }}</p>
+            <p class="stat-card__label">Total Pets</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : totalPets }}</p>
           </div>
-          <i class="bi bi-card-list text-4xl text-blue-500"></i>
+          <i class="bi bi-card-list stat-card__icon text-blue-500"></i>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500">
-        <div class="flex items-center justify-between">
+      <div class="stat-card stat-card--green">
+        <div class="stat-card__inner">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Active Breedings</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : activeBreedings }}</p>
+            <p class="stat-card__label">Active Breedings</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : activeBreedings }}</p>
           </div>
-          <i class="bi bi-water text-4xl text-green-500"></i>
+          <i class="bi bi-water stat-card__icon text-green-500"></i>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-        <div class="flex items-center justify-between">
+      <div class="stat-card stat-card--purple">
+        <div class="stat-card__inner">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Unread Messages</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">{{ isLoading ? '-' : unreadMessages }}</p>
+            <p class="stat-card__label">Unread Messages</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : unreadMessages }}</p>
           </div>
-          <i class="bi bi-envelope text-4xl text-purple-500"></i>
+          <i class="bi bi-envelope stat-card__icon text-purple-500"></i>
         </div>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <button (click)="openAddPetModal()" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors cursor-pointer">
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Quick Actions</h2>
+      <div class="actions-grid">
+        <button (click)="openAddPetModal()" class="action-btn">
           <i class="bi bi-plus-circle text-2xl"></i>
           <span class="font-medium">Add New Pet</span>
         </button>
-        <a [routerLink]="['/breedings']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+        <a [routerLink]="['/breedings']" class="action-btn">
           <i class="bi bi-water text-2xl"></i>
           <span class="font-medium">Manage Breedings</span>
         </a>
-        <a [routerLink]="['/messages']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+        <a [routerLink]="['/messages']" class="action-btn">
           <i class="bi bi-envelope text-2xl"></i>
           <span class="font-medium">View Messages</span>
         </a>
@@ -59,51 +59,51 @@
     </div>
 
     <!-- Messages Section -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Messages</h2>
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Recent Messages</h2>
       <app-messages-list></app-messages-list>
     </div>
   </div>
 
   <!-- Pet Seeker Dashboard -->
   <div *ngIf="isPetSeeker" class="pet-seeker-dashboard">
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Pet Seeker Dashboard</h1>
-      <p class="text-gray-600 mt-2">Welcome, {{ currentUser?.name || currentUser?.email }}!</p>
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Pet Seeker Dashboard</h1>
+      <p class="dashboard-subtitle">Welcome, {{ currentUser?.name || currentUser?.email }}!</p>
     </div>
 
     <!-- Pet Seeker Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-500">
-        <div class="flex items-center justify-between">
+    <div class="stats-grid stats-grid--2col">
+      <div class="stat-card stat-card--purple">
+        <div class="stat-card__inner">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Messages Sent</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+            <p class="stat-card__label">Messages Sent</p>
+            <p class="stat-card__value">-</p>
           </div>
-          <i class="bi bi-envelope text-4xl text-purple-500"></i>
+          <i class="bi bi-envelope stat-card__icon text-purple-500"></i>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-500">
-        <div class="flex items-center justify-between">
+      <div class="stat-card stat-card--red">
+        <div class="stat-card__inner">
           <div>
-            <p class="text-gray-500 text-sm font-medium">Favorites</p>
-            <p class="text-3xl font-bold text-gray-800 mt-2">-</p>
+            <p class="stat-card__label">Favorites</p>
+            <p class="stat-card__value">-</p>
           </div>
-          <i class="bi bi-heart text-4xl text-red-500"></i>
+          <i class="bi bi-heart stat-card__icon text-red-500"></i>
         </div>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a [routerLink]="['/search-pets']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Quick Actions</h2>
+      <div class="actions-grid actions-grid--2col">
+        <a [routerLink]="['/search-pets']" class="action-btn">
           <i class="bi bi-search text-2xl"></i>
           <span class="font-medium">Search Pets</span>
         </a>
-        <a [routerLink]="['/messages']" class="flex items-center gap-3 p-4 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+        <a [routerLink]="['/messages']" class="action-btn">
           <i class="bi bi-envelope text-2xl"></i>
           <span class="font-medium">View Messages</span>
         </a>
@@ -111,8 +111,8 @@
     </div>
 
     <!-- Messages Section -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-xl font-bold text-gray-800 mb-4">Your Messages</h2>
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Your Messages</h2>
       <p class="text-gray-600 mb-4">View your conversations with breeders</p>
       <app-messages-list></app-messages-list>
     </div>
