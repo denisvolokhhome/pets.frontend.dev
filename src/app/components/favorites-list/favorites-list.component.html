@@ -1,16 +1,25 @@
 <div class="favorites-container">
-  <!-- Page Header Component -->
+  <!-- Page Header Component (desktop) -->
+  <div class="desktop-page-header">
   <app-page-header
     [config]="headerConfig"
     [searchTerm]="searchTerm"
     (searchChange)="onSearchTermChange($event)">
   </app-page-header>
-  
-  <!-- Subtitle -->
-  <div class="page-subtitle-container">
-    <p class="page-subtitle">
-      Keep track of offsprings you're interested in
-    </p>
+  </div>
+
+  <!-- ===== MOBILE compact bar ===== -->
+  <div class="mobile-bar">
+    <div class="mobile-bar__search">
+      <i class="bi bi-search mobile-bar__search-icon"></i>
+      <input type="text" class="mobile-bar__input" placeholder="Search favorites..."
+        [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search favorites"/>
+    </div>
+  </div>
+
+  <!-- Subtitle (desktop only) -->
+  <div class="page-subtitle-container desktop-only">
+    <p class="page-subtitle">Keep track of offsprings you're interested in</p>
   </div>
 
   <!-- Loading State -->
