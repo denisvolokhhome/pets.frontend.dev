@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BillingService } from '../../../services/billing.service';
 import { IPlan, ISubscription } from '../../../models/billing.model';
 import { ToastService } from '../../../services/toast.service';
@@ -15,15 +16,54 @@ export class SubscriptionSettingsComponent implements OnInit {
   isLoading = true;
   isRedirecting = false;
   isOpeningPortal = false;
+  isVerifyingSession = false;
   errorMessage: string | null = null;
 
   constructor(
     private billingService: BillingService,
-    private toastr: ToastService
+    private toastr: ToastService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    // Check if we're returning from a Stripe Checkout session
+    const sessionId = this.route.snapshot.queryParamMap.get('session_id');
+    const canceled = this.route.snapshot.queryParamMap.get('canceled');
+
+    if (sessionId) {
+      this.verifyAndLoadSession(sessionId);
+    } else {
+      if (canceled === 'true') {
+        this.toastr.info('Payment was canceled. Your plan has not changed.', 'Canceled');
+      }
+      this.loadData();
+    }
+  }
+
+  /**
+   * Verify the Stripe session and apply the plan upgrade, then load plans.
+   * This is the reliable path for post-payment redirect — doesn't depend on webhooks.
+   */
+  private verifyAndLoadSession(sessionId: string): void {
+    this.isLoading = true;
+    this.isVerifyingSession = true;
+    this.errorMessage = null;
+
+    this.billingService.verifyCheckoutSession(sessionId).subscribe({
+      next: (sub) => {
+        this.subscription = sub;
+        this.isVerifyingSession = false;
+        this.toastr.success(`You are now on the ${sub.plan.name} plan!`, 'Subscription Updated');
+        this.loadPlans();
+      },
+      error: (err) => {
+        this.isVerifyingSession = false;
+        // Session verify failed — fall back to normal load
+        // (webhook may have already processed it)
+        this.toastr.warning('Could not verify payment session. Loading current plan...', 'Notice');
+        this.loadData();
+      }
+    });
   }
 
   loadData(): void {

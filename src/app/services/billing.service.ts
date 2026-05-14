@@ -67,6 +67,20 @@ export class BillingService {
   }
 
   /**
+   * Verify a completed Stripe Checkout Session and apply the plan upgrade.
+   * Called after Stripe redirects back with ?session_id=...
+   */
+  verifyCheckoutSession(sessionId: string): Observable<ISubscription> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .get<ISubscription>(
+        `${this.apiUrl}/billing/verify-session/${sessionId}`,
+        { headers }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Create a Stripe Customer Portal session for invoice management
    */
   createPortalSession(): Observable<IPortalSessionResponse> {
