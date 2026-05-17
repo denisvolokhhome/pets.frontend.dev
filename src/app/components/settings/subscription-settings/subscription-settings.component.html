@@ -22,6 +22,7 @@
 
   <!-- Content -->
   <div *ngIf="!isLoading && !errorMessage">
+
     <!-- Current Plan Section -->
     <div class="form-section" *ngIf="subscription">
       <div class="section-header">
@@ -74,69 +75,15 @@
         </div>
       </div>
 
+      <!-- View Invoices button — shown whenever user has a Stripe customer ID -->
       <div class="plan-actions" *ngIf="hasActivePaymentPlan">
         <button
           class="btn-portal"
           [disabled]="isOpeningPortal"
-          (click)="onViewInvoices()"
-        >
+          (click)="onViewInvoices()">
           <i class="bi bi-receipt"></i>
           {{ isOpeningPortal ? 'Opening...' : 'View Invoices' }}
         </button>
-      </div>
-    </div>
-
-    <!-- Invoices Section — show if user has ever had a Stripe customer (even after downgrade) -->
-    <div class="form-section" *ngIf="hasStripeCustomer || paidInvoices.length > 0 || isLoadingInvoices">
-      <div class="section-header">
-        <i class="bi bi-receipt"></i>
-        <h3>Invoices</h3>
-      </div>
-
-      <div *ngIf="isLoadingInvoices" class="invoices-loading">
-        <span>Loading invoices...</span>
-      </div>
-
-      <div *ngIf="!isLoadingInvoices && paidInvoices.length === 0" class="invoices-empty">
-        No paid invoices yet.
-      </div>
-
-      <div *ngIf="!isLoadingInvoices && paidInvoices.length > 0" class="invoices-table-wrap">
-        <table class="invoices-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Period</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let invoice of paidInvoices">
-              <td>{{ formatInvoiceDate(invoice.created_at) }}</td>
-              <td class="invoice-period">{{ formatInvoicePeriod(invoice) }}</td>
-              <td class="invoice-amount">{{ formatInvoiceAmount(invoice) }}</td>
-              <td>
-                <span class="invoice-status-badge invoice-status-paid">
-                  <i class="bi bi-check-circle-fill"></i> Paid
-                </span>
-              </td>
-              <td>
-                <button
-                  class="btn-download"
-                  [disabled]="downloadingInvoiceId === invoice.id"
-                  (click)="onDownloadInvoice(invoice)"
-                  title="Download PDF"
-                  *ngIf="invoice.stripe_invoice_id">
-                  <i class="bi" [class.bi-download]="downloadingInvoiceId !== invoice.id"
-                               [class.bi-hourglass-split]="downloadingInvoiceId === invoice.id"></i>
-                  {{ downloadingInvoiceId === invoice.id ? 'Loading...' : 'PDF' }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
 
@@ -197,19 +144,16 @@
             *ngIf="!isCurrentPlan(plan) && isPaidPlan(plan)"
             class="btn-upgrade"
             [disabled]="isRedirecting || isDowngrading"
-            (click)="onUpgrade(plan)"
-          >
+            (click)="onUpgrade(plan)">
             <i class="bi bi-arrow-up-circle"></i>
             {{ isRedirecting ? 'Redirecting...' : 'Upgrade' }}
           </button>
 
-          <!-- Downgrade button: shown for cheaper plans that aren't current -->
           <button
             *ngIf="!isCurrentPlan(plan) && isDowngradePlan(plan)"
             class="btn-downgrade"
             [disabled]="isDowngrading"
-            (click)="onDowngrade(plan)"
-          >
+            (click)="onDowngrade(plan)">
             <i class="bi" [class.bi-arrow-down-circle]="!isDowngrading"
                           [class.bi-hourglass-split]="isDowngrading"></i>
             {{ isDowngrading ? 'Processing...' : 'Downgrade' }}
@@ -217,5 +161,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>

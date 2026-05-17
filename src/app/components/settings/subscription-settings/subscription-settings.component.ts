@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BillingService } from '../../../services/billing.service';
-import { IPlan, ISubscription, IInvoice } from '../../../models/billing.model';
+import { IPlan, ISubscription } from '../../../models/billing.model';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -13,14 +13,11 @@ import { ToastService } from '../../../services/toast.service';
 export class SubscriptionSettingsComponent implements OnInit {
   subscription: ISubscription | null = null;
   plans: IPlan[] = [];
-  invoices: IInvoice[] = [];
   isLoading = true;
-  isLoadingInvoices = false;
   isRedirecting = false;
   isDowngrading = false;
   isOpeningPortal = false;
   isVerifyingSession = false;
-  downloadingInvoiceId: string | null = null;
   downgradeViolations: string[] = [];
   errorMessage: string | null = null;
 
@@ -93,25 +90,11 @@ export class SubscriptionSettingsComponent implements OnInit {
       next: (plans) => {
         this.plans = plans;
         this.isLoading = false;
-        this.loadInvoices();
       },
       error: (err) => {
         this.errorMessage = err.message || 'Unable to load plans.';
         this.toastr.error(this.errorMessage!, 'Error');
         this.isLoading = false;
-      }
-    });
-  }
-
-  private loadInvoices(): void {
-    this.isLoadingInvoices = true;
-    this.billingService.getInvoices().subscribe({
-      next: (invoices) => {
-        this.invoices = invoices;
-        this.isLoadingInvoices = false;
-      },
-      error: () => {
-        this.isLoadingInvoices = false;
       }
     });
   }
@@ -248,49 +231,5 @@ export class SubscriptionSettingsComponent implements OnInit {
         this.toastr.error(msg, 'Portal Error');
       }
     });
-  }
-
-  onDownloadInvoice(invoice: IInvoice): void {
-    if (this.downloadingInvoiceId) return;
-    this.downloadingInvoiceId = invoice.id;
-
-    this.billingService.downloadInvoice(invoice.id).subscribe({
-      next: (response) => {
-        this.downloadingInvoiceId = null;
-        const url = response.invoice_pdf || response.hosted_invoice_url;
-        if (url) {
-          window.open(url, '_blank');
-        } else {
-          this.toastr.warning('No download link available for this invoice.', 'Not Available');
-        }
-      },
-      error: (err) => {
-        this.downloadingInvoiceId = null;
-        this.toastr.error(err.message || 'Failed to get invoice download link.', 'Error');
-      }
-    });
-  }
-
-  formatInvoiceAmount(invoice: IInvoice): string {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: invoice.currency.toUpperCase()
-    }).format(invoice.amount);
-  }
-
-  formatInvoiceDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'short', day: 'numeric'
-    });
-  }
-
-  formatInvoicePeriod(invoice: IInvoice): string {
-    const start = new Date(invoice.period_start).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const end = new Date(invoice.period_end).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    return `${start} – ${end}`;
-  }
-
-  get paidInvoices(): IInvoice[] {
-    return this.invoices.filter(i => i.status === 'paid');
   }
 }
