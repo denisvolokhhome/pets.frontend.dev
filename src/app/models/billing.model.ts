@@ -34,6 +34,11 @@ export interface IInvoice {
   created_at: string;
 }
 
+export interface IInvoiceDownload {
+  hosted_invoice_url: string | null;
+  invoice_pdf: string | null;
+}
+
 export interface ICheckoutSessionResponse {
   checkout_url: string;
 }

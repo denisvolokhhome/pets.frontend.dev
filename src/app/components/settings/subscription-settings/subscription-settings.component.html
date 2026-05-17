@@ -70,6 +70,60 @@
       </div>
     </div>
 
+    <!-- Invoices Section -->
+    <div class="form-section" *ngIf="paidInvoices.length > 0 || isLoadingInvoices">
+      <div class="section-header">
+        <i class="bi bi-receipt"></i>
+        <h3>Invoices</h3>
+      </div>
+
+      <div *ngIf="isLoadingInvoices" class="invoices-loading">
+        <span>Loading invoices...</span>
+      </div>
+
+      <div *ngIf="!isLoadingInvoices && paidInvoices.length === 0" class="invoices-empty">
+        No paid invoices yet.
+      </div>
+
+      <div *ngIf="!isLoadingInvoices && paidInvoices.length > 0" class="invoices-table-wrap">
+        <table class="invoices-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Period</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of paidInvoices">
+              <td>{{ formatInvoiceDate(invoice.created_at) }}</td>
+              <td class="invoice-period">{{ formatInvoicePeriod(invoice) }}</td>
+              <td class="invoice-amount">{{ formatInvoiceAmount(invoice) }}</td>
+              <td>
+                <span class="invoice-status-badge invoice-status-paid">
+                  <i class="bi bi-check-circle-fill"></i> Paid
+                </span>
+              </td>
+              <td>
+                <button
+                  class="btn-download"
+                  [disabled]="downloadingInvoiceId === invoice.id"
+                  (click)="onDownloadInvoice(invoice)"
+                  title="Download PDF"
+                  *ngIf="invoice.stripe_invoice_id">
+                  <i class="bi" [class.bi-download]="downloadingInvoiceId !== invoice.id"
+                               [class.bi-hourglass-split]="downloadingInvoiceId === invoice.id"></i>
+                  {{ downloadingInvoiceId === invoice.id ? 'Loading...' : 'PDF' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Available Plans Section -->
     <div class="form-section">
       <div class="section-header">

@@ -81,6 +81,19 @@ export class BillingService {
   }
 
   /**
+   * Get the Stripe-hosted invoice URL and PDF link for a specific invoice
+   */
+  downloadInvoice(invoiceId: string): Observable<{ hosted_invoice_url: string | null; invoice_pdf: string | null }> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .get<{ hosted_invoice_url: string | null; invoice_pdf: string | null }>(
+        `${this.apiUrl}/billing/invoices/${invoiceId}/download`,
+        { headers }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Create a Stripe Customer Portal session for invoice management
    */
   createPortalSession(): Observable<IPortalSessionResponse> {
