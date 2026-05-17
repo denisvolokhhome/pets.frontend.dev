@@ -126,8 +126,25 @@ export class SubscriptionSettingsComponent implements OnInit {
 
   isDowngradePlan(plan: IPlan): boolean {
     if (!this.subscription) return false;
-    // A downgrade is any plan cheaper than the current one (including Free)
+    // Don't show downgrade button if this plan is already the pending downgrade target
+    if (this.subscription.pending_plan_id === plan.id) return false;
     return plan.price < this.subscription.plan.price;
+  }
+
+  get hasPendingDowngrade(): boolean {
+    return !!(this.subscription?.pending_plan_id && this.subscription?.pending_plan_effective_date);
+  }
+
+  get pendingDowngradeDate(): string {
+    if (!this.subscription?.pending_plan_effective_date) return '';
+    return new Date(this.subscription.pending_plan_effective_date).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+
+  /** Show portal button if user has ever had a Stripe customer ID (even after downgrade) */
+  get hasStripeCustomer(): boolean {
+    return !!this.subscription?.stripe_customer_id;
   }
 
   onDowngrade(plan: IPlan): void {
@@ -139,12 +156,18 @@ export class SubscriptionSettingsComponent implements OnInit {
       next: (sub) => {
         this.subscription = sub;
         this.isDowngrading = false;
-        this.toastr.success(`You are now on the ${sub.plan.name} plan.`, 'Plan Changed');
+        if (sub.pending_plan_id) {
+          this.toastr.info(
+            `Your plan will switch to ${sub.pending_plan?.name ?? 'the new plan'} on ${this.pendingDowngradeDate}.`,
+            'Downgrade Scheduled'
+          );
+        } else {
+          this.toastr.success(`You are now on the ${sub.plan.name} plan.`, 'Plan Changed');
+        }
         this.loadData();
       },
       error: (err) => {
         this.isDowngrading = false;
-        // 422 = usage violations — show them inline
         if (err.status === 422 && err.error?.detail?.violations) {
           this.downgradeViolations = err.error.detail.violations;
         } else {
@@ -188,10 +211,28 @@ export class SubscriptionSettingsComponent implements OnInit {
   }
 
   get hasActivePaymentPlan(): boolean {
+    // Show portal button if user has a Stripe customer ID — even after downgrading to Free
     return !!this.subscription &&
       this.subscription.status === 'active' &&
-      this.subscription.plan.price > 0 &&
       !!this.subscription.stripe_customer_id;
+  }
+
+  /** Cancel a scheduled downgrade by re-subscribing to the current plan */
+  onCancelDowngrade(): void {
+    if (!this.subscription || this.isDowngrading) return;
+    this.isDowngrading = true;
+    // Re-subscribe to current plan clears the pending downgrade on the backend
+    this.billingService.cancelPendingDowngrade(this.subscription.id).subscribe({
+      next: (sub) => {
+        this.subscription = sub;
+        this.isDowngrading = false;
+        this.toastr.success('Scheduled downgrade has been canceled.', 'Downgrade Canceled');
+      },
+      error: (err) => {
+        this.isDowngrading = false;
+        this.toastr.error(err.message || 'Failed to cancel downgrade.', 'Error');
+      }
+    });
   }
 
   onViewInvoices(): void {

@@ -81,6 +81,20 @@ export class BillingService {
   }
 
   /**
+   * Cancel a scheduled pending downgrade
+   */
+  cancelPendingDowngrade(subscriptionId: string): Observable<ISubscription> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<ISubscription>(
+        `${this.apiUrl}/billing/cancel-pending-downgrade`,
+        {},
+        { headers }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Get the Stripe-hosted invoice URL and PDF link for a specific invoice
    */
   downloadInvoice(invoiceId: string): Observable<{ hosted_invoice_url: string | null; invoice_pdf: string | null }> {

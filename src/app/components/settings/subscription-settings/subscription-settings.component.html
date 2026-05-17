@@ -29,6 +29,22 @@
         <h3>Current Plan</h3>
       </div>
 
+      <!-- Grace period / pending downgrade banner -->
+      <div class="grace-period-banner" *ngIf="hasPendingDowngrade">
+        <i class="bi bi-clock-history"></i>
+        <div class="grace-period-text">
+          <strong>Downgrade scheduled</strong>
+          <span>
+            You're still on the <strong>{{ subscription!.plan.name }}</strong> plan until
+            <strong>{{ pendingDowngradeDate }}</strong>. After that, your plan will switch to
+            <strong>{{ subscription!.pending_plan?.name }}</strong>.
+          </span>
+        </div>
+        <button class="grace-period-cancel" (click)="onCancelDowngrade()" [disabled]="isDowngrading" title="Cancel scheduled downgrade">
+          <i class="bi bi-x-circle"></i> Cancel
+        </button>
+      </div>
+
       <div class="current-plan-info">
         <div class="plan-detail">
           <span class="plan-detail-label">Plan</span>
@@ -70,8 +86,8 @@
       </div>
     </div>
 
-    <!-- Invoices Section -->
-    <div class="form-section" *ngIf="paidInvoices.length > 0 || isLoadingInvoices">
+    <!-- Invoices Section — show if user has ever had a Stripe customer (even after downgrade) -->
+    <div class="form-section" *ngIf="hasStripeCustomer || paidInvoices.length > 0 || isLoadingInvoices">
       <div class="section-header">
         <i class="bi bi-receipt"></i>
         <h3>Invoices</h3>
@@ -150,9 +166,13 @@
           *ngFor="let plan of plans"
           class="plan-card"
           [class.plan-card-current]="isCurrentPlan(plan)"
+          [class.plan-card-pending]="subscription?.pending_plan_id === plan.id"
         >
           <div class="plan-card-badge" *ngIf="isCurrentPlan(plan)">
             Current Plan
+          </div>
+          <div class="plan-card-badge plan-card-badge--pending" *ngIf="subscription?.pending_plan_id === plan.id">
+            Scheduled {{ pendingDowngradeDate }}
           </div>
 
           <h4 class="plan-card-name">{{ plan.name }}</h4>

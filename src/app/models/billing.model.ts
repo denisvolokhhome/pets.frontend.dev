@@ -20,6 +20,9 @@ export interface ISubscription {
   current_period_end: string;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
+  pending_plan_id: string | null;
+  pending_plan_effective_date: string | null;
+  pending_plan: IPlan | null;
 }
 
 export interface IInvoice {
