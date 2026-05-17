@@ -131,6 +131,20 @@
         <h3>Available Plans</h3>
       </div>
 
+      <!-- Downgrade violations banner -->
+      <div class="downgrade-violations" *ngIf="downgradeViolations.length > 0">
+        <div class="violations-header">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <strong>Cannot downgrade — please resolve the following first:</strong>
+        </div>
+        <ul class="violations-list">
+          <li *ngFor="let v of downgradeViolations">{{ v }}</li>
+        </ul>
+        <button class="violations-dismiss" (click)="downgradeViolations = []">
+          <i class="bi bi-x"></i> Dismiss
+        </button>
+      </div>
+
       <div class="plans-grid">
         <div
           *ngFor="let plan of plans"
@@ -162,11 +176,23 @@
           <button
             *ngIf="!isCurrentPlan(plan) && isPaidPlan(plan)"
             class="btn-upgrade"
-            [disabled]="isRedirecting"
+            [disabled]="isRedirecting || isDowngrading"
             (click)="onUpgrade(plan)"
           >
             <i class="bi bi-arrow-up-circle"></i>
             {{ isRedirecting ? 'Redirecting...' : 'Upgrade' }}
+          </button>
+
+          <!-- Downgrade button: shown for cheaper plans that aren't current -->
+          <button
+            *ngIf="!isCurrentPlan(plan) && isDowngradePlan(plan)"
+            class="btn-downgrade"
+            [disabled]="isDowngrading"
+            (click)="onDowngrade(plan)"
+          >
+            <i class="bi" [class.bi-arrow-down-circle]="!isDowngrading"
+                          [class.bi-hourglass-split]="isDowngrading"></i>
+            {{ isDowngrading ? 'Processing...' : 'Downgrade' }}
           </button>
         </div>
       </div>

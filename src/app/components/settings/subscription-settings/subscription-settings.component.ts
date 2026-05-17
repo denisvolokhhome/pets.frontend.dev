@@ -17,9 +17,11 @@ export class SubscriptionSettingsComponent implements OnInit {
   isLoading = true;
   isLoadingInvoices = false;
   isRedirecting = false;
+  isDowngrading = false;
   isOpeningPortal = false;
   isVerifyingSession = false;
   downloadingInvoiceId: string | null = null;
+  downgradeViolations: string[] = [];
   errorMessage: string | null = null;
 
   constructor(
@@ -120,6 +122,37 @@ export class SubscriptionSettingsComponent implements OnInit {
 
   isPaidPlan(plan: IPlan): boolean {
     return plan.price > 0;
+  }
+
+  isDowngradePlan(plan: IPlan): boolean {
+    if (!this.subscription) return false;
+    // A downgrade is any plan cheaper than the current one (including Free)
+    return plan.price < this.subscription.plan.price;
+  }
+
+  onDowngrade(plan: IPlan): void {
+    if (this.isDowngrading || this.isCurrentPlan(plan)) return;
+    this.downgradeViolations = [];
+    this.isDowngrading = true;
+
+    this.billingService.subscribe(plan.id).subscribe({
+      next: (sub) => {
+        this.subscription = sub;
+        this.isDowngrading = false;
+        this.toastr.success(`You are now on the ${sub.plan.name} plan.`, 'Plan Changed');
+        this.loadData();
+      },
+      error: (err) => {
+        this.isDowngrading = false;
+        // 422 = usage violations — show them inline
+        if (err.status === 422 && err.error?.detail?.violations) {
+          this.downgradeViolations = err.error.detail.violations;
+        } else {
+          const msg = err.error?.detail?.message || err.message || 'Failed to change plan.';
+          this.toastr.error(msg, 'Downgrade Error');
+        }
+      }
+    });
   }
 
   formatPrice(plan: IPlan): string {
