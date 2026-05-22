@@ -28,6 +28,9 @@ import { OffspringListComponent } from './components/offspring-list/offspring-li
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
+import { ServiceProviderRegistrationComponent } from './components/service-provider-registration/service-provider-registration.component';
+import { ServicesComponent } from './components/services/services.component';
+import { ServiceProviderGuard } from './guard/service-provider.guard';
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
 import { MessageNewComponent } from './components/message-new/message-new.component';
@@ -60,6 +63,7 @@ const routes: Routes = [
   },
   { path: 'register', component: RegisterComponent },
   { path: 'register/pet-seeker', component: PetSeekerRegistrationComponent },
+  { path: 'register/service-provider', component: ServiceProviderRegistrationComponent },
   { path: 'register/from-message', component: GuestToAccountComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
@@ -73,6 +77,7 @@ const routes: Routes = [
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
+  { path: 'services', component: ServicesComponent, canActivate: [ServiceProviderGuard] },
   { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
   { path: 'messages/new', component: MessageNewComponent, canActivate: [AuthGuard] },
   { path: 'messages/:id', component: MessageDetailComponent, canActivate: [AuthGuard] },

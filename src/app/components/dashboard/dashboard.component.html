@@ -118,8 +118,64 @@
     </div>
   </div>
 
+  <!-- Service Provider Dashboard -->
+  <div *ngIf="isServiceProvider" class="service-provider-dashboard">
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Service Provider Dashboard</h1>
+      <p class="dashboard-subtitle">Welcome back, {{ currentUser?.name || currentUser?.email }}!</p>
+    </div>
+
+    <!-- Service Provider Stats Cards -->
+    <div class="stats-grid stats-grid--2col">
+      <div class="stat-card stat-card--purple">
+        <div class="stat-card__inner">
+          <div>
+            <p class="stat-card__label">Unread Messages</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : unreadMessages }}</p>
+          </div>
+          <i class="bi bi-envelope stat-card__icon text-purple-500"></i>
+        </div>
+      </div>
+
+      <div class="stat-card stat-card--blue">
+        <div class="stat-card__inner">
+          <div>
+            <p class="stat-card__label">Active Services</p>
+            <p class="stat-card__value">-</p>
+          </div>
+          <i class="bi bi-briefcase stat-card__icon text-blue-500"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Quick Actions</h2>
+      <div class="actions-grid">
+        <a [routerLink]="['/services']" class="action-btn">
+          <i class="bi bi-plus-circle text-2xl"></i>
+          <span class="font-medium">Add Service</span>
+        </a>
+        <a [routerLink]="['/settings/locations']" class="action-btn">
+          <i class="bi bi-geo-alt text-2xl"></i>
+          <span class="font-medium">Manage Locations</span>
+        </a>
+        <a [routerLink]="['/settings']" class="action-btn">
+          <i class="bi bi-person-circle text-2xl"></i>
+          <span class="font-medium">View Profile</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div class="dashboard-card">
+      <h2 class="dashboard-card__title">Recent Messages</h2>
+      <app-messages-list></app-messages-list>
+    </div>
+  </div>
+
   <!-- Fallback for unauthenticated or loading state -->
-  <div *ngIf="!isBreeder && !isPetSeeker" class="text-center py-12" role="status" aria-live="polite">
+  <div *ngIf="!isBreeder && !isPetSeeker && !isServiceProvider" class="text-center py-12" role="status" aria-live="polite">
     <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4" aria-hidden="true"></i>
     <p class="text-gray-600">Loading dashboard...</p>
   </div>

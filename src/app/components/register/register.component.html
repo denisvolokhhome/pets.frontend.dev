@@ -5,7 +5,7 @@
         <i class="material-icons">pets</i>
       </div>
       <h1 class="auth-title">Join Breedly Today</h1>
-      <p class="auth-subtitle">Create your account to start managing your breeding program</p>
+      <p class="auth-subtitle">Create your account to get started</p>
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="proceedRegistration()" class="auth-form">
@@ -18,100 +18,159 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="input-field-group">
-          <label for="firstName" class="input-label">First Name</label>
-          <input
-            type="text"
-            id="firstName"
-            class="input-field"
-            formControlName="firstName"
-            placeholder="Enter your first name"
-            aria-label="First name"
-          />
-        </div>
-        <div class="input-field-group">
-          <label for="lastName" class="input-label">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            class="input-field"
-            formControlName="lastName"
-            placeholder="Enter your last name"
-            aria-label="Last name"
-          />
+      <!-- Step 1: Account Type Selection -->
+      <div class="account-type-section">
+        <p class="account-type-label">I am joining as a...</p>
+        <div class="account-type-cards" role="radiogroup" aria-label="Account type">
+          <!-- Breeder -->
+          <button
+            type="button"
+            class="account-type-card"
+            [class.selected]="selectedAccountType === 'breeder'"
+            (click)="selectAccountType('breeder')"
+            aria-label="Breeder"
+            [attr.aria-pressed]="selectedAccountType === 'breeder'"
+          >
+            <span class="account-type-icon"><i class="bi bi-house-heart"></i></span>
+            <span class="account-type-name">Breeder</span>
+            <span class="account-type-desc">I breed and sell pets</span>
+          </button>
+
+          <!-- Pet Seeker -->
+          <button
+            type="button"
+            class="account-type-card"
+            [class.selected]="selectedAccountType === 'pet_seeker'"
+            (click)="selectAccountType('pet_seeker')"
+            aria-label="Pet Seeker"
+            [attr.aria-pressed]="selectedAccountType === 'pet_seeker'"
+          >
+            <span class="account-type-icon"><i class="bi bi-search-heart"></i></span>
+            <span class="account-type-name">Pet Seeker</span>
+            <span class="account-type-desc">I'm looking for a pet</span>
+          </button>
+
+          <!-- Service Provider -->
+          <button
+            type="button"
+            class="account-type-card"
+            [class.selected]="selectedAccountType === 'service'"
+            (click)="selectAccountType('service')"
+            aria-label="Service Provider"
+            [attr.aria-pressed]="selectedAccountType === 'service'"
+          >
+            <span class="account-type-icon"><i class="bi bi-briefcase"></i></span>
+            <span class="account-type-name">Service Provider</span>
+            <span class="account-type-desc">I offer pet-related services</span>
+          </button>
         </div>
       </div>
 
-      <div class="input-field-group">
-        <label for="email" class="input-label">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          class="input-field"
-          formControlName="email"
-          placeholder="your.email@example.com"
-          aria-label="Email address"
-        />
+      <!-- Step 2: Category Selection (Service Provider only) -->
+      <div *ngIf="selectedAccountType === 'service'" class="category-selection-section">
+        <app-service-provider-registration
+          [showError]="showCategoryError"
+          (categoriesSelected)="onCategoriesSelected($event)"
+        ></app-service-provider-registration>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="input-field-group">
-          <label for="password" class="input-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            class="input-field"
-            formControlName="password"
-            placeholder="Create a strong password"
-            aria-label="Password"
-            [attr.aria-describedby]="passwordErrors.length > 0 ? 'register-pw-errors' : null"
-            [attr.aria-invalid]="passwordErrors.length > 0"
-          />
-          <div *ngIf="passwordErrors.length > 0" class="validation-errors" id="register-pw-errors">
-            <small *ngFor="let error of passwordErrors" class="error-text">
-              <i class="bi bi-x-circle" aria-hidden="true"></i> {{ error }}
-            </small>
+      <!-- Registration Form Fields -->
+      <div *ngIf="selectedAccountType !== null">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="input-field-group">
+            <label for="firstName" class="input-label">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              class="input-field"
+              formControlName="firstName"
+              placeholder="Enter your first name"
+              aria-label="First name"
+            />
+          </div>
+          <div class="input-field-group">
+            <label for="lastName" class="input-label">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              class="input-field"
+              formControlName="lastName"
+              placeholder="Enter your last name"
+              aria-label="Last name"
+            />
           </div>
         </div>
-        <div class="input-field-group">
-          <label for="password_confirmation" class="input-label">Confirm Password</label>
+
+        <div class="input-field-group mt-6">
+          <label for="email" class="input-label">Email Address</label>
           <input
-            type="password"
-            id="password_confirmation"
+            type="email"
+            id="email"
             class="input-field"
-            formControlName="password_confirmation"
-            placeholder="Re-enter your password"
-            aria-label="Confirm password"
+            formControlName="email"
+            placeholder="your.email@example.com"
+            aria-label="Email address"
           />
         </div>
-      </div>
 
-      <div class="terms-checkbox-group">
-        <label class="terms-label">
-          <input
-            type="checkbox"
-            formControlName="acceptTerms"
-            class="terms-checkbox"
-            aria-label="Accept Privacy Policy and Terms of Use"
-          />
-          <span class="terms-text">
-            I agree to the <a href="/privacy-policy" target="_blank" class="terms-link">Privacy Policy</a>
-            and <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a>
-          </span>
-        </label>
-        <small *ngIf="registerForm.get('acceptTerms')?.touched && registerForm.get('acceptTerms')?.invalid" class="error-text">
-          <i class="bi bi-x-circle" aria-hidden="true"></i> You must accept the Privacy Policy and Terms of Use
-        </small>
-      </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div class="input-field-group">
+            <label for="password" class="input-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="input-field"
+              formControlName="password"
+              placeholder="Create a strong password"
+              aria-label="Password"
+              [attr.aria-describedby]="passwordErrors.length > 0 ? 'register-pw-errors' : null"
+              [attr.aria-invalid]="passwordErrors.length > 0"
+            />
+            <div *ngIf="passwordErrors.length > 0" class="validation-errors" id="register-pw-errors">
+              <small *ngFor="let error of passwordErrors" class="error-text">
+                <i class="bi bi-x-circle" aria-hidden="true"></i> {{ error }}
+              </small>
+            </div>
+          </div>
+          <div class="input-field-group">
+            <label for="password_confirmation" class="input-label">Confirm Password</label>
+            <input
+              type="password"
+              id="password_confirmation"
+              class="input-field"
+              formControlName="password_confirmation"
+              placeholder="Re-enter your password"
+              aria-label="Confirm password"
+            />
+          </div>
+        </div>
 
-      <button type="submit" class="w-full auth-submit-btn" [disabled]="isSubmitting">
-        <i [class]="isSubmitting ? 'bi bi-arrow-repeat spin mr-2' : 'bi bi-person-plus mr-2'" aria-hidden="true"></i>{{ isSubmitting ? 'Creating...' : 'Create Account' }}
-      </button>
+        <div class="terms-checkbox-group mt-6">
+          <label class="terms-label">
+            <input
+              type="checkbox"
+              formControlName="acceptTerms"
+              class="terms-checkbox"
+              aria-label="Accept Privacy Policy and Terms of Use"
+            />
+            <span class="terms-text">
+              I agree to the <a href="/privacy-policy" target="_blank" class="terms-link">Privacy Policy</a>
+              and <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a>
+            </span>
+          </label>
+          <small *ngIf="registerForm.get('acceptTerms')?.touched && registerForm.get('acceptTerms')?.invalid" class="error-text">
+            <i class="bi bi-x-circle" aria-hidden="true"></i> You must accept the Privacy Policy and Terms of Use
+          </small>
+        </div>
+
+        <button type="submit" class="w-full auth-submit-btn mt-6" [disabled]="isSubmitting">
+          <i [class]="isSubmitting ? 'bi bi-arrow-repeat spin mr-2' : 'bi bi-person-plus mr-2'" aria-hidden="true"></i>{{ isSubmitting ? 'Creating...' : 'Create Account' }}
+        </button>
+      </div>
 
       <div class="auth-footer">
         <p class="auth-footer-text">
-          Already have an account? 
+          Already have an account?
           <a routerLink="/login" class="auth-link">Sign in here</a>
         </p>
       </div>

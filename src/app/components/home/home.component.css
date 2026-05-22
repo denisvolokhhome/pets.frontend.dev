@@ -289,8 +289,50 @@
 
 /* Icon spacing in buttons */
 .cta-breeder i,
-.cta-pet-seeker i {
+.cta-pet-seeker i,
+.cta-service-provider i {
   font-size: 1.25rem;
+}
+
+/* Tertiary CTA Button (Service Provider) */
+.cta-service-provider {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  font-size: 1.125rem;
+  font-weight: 600;
+  padding: 1rem 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-service-provider:hover {
+  background-color: #ffffff;
+  color: #0d9488;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cta-service-provider:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 3px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cta-service-provider:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+.cta-service-provider:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Ensure text contrast meets accessibility standards */
@@ -518,7 +560,8 @@
   }
 
   .cta-breeder,
-  .cta-pet-seeker {
+  .cta-pet-seeker,
+  .cta-service-provider {
     font-size: 1rem;
     padding: 0.875rem 2rem;
   }
@@ -569,7 +612,8 @@
   }
 
   .cta-breeder,
-  .cta-pet-seeker {
+  .cta-pet-seeker,
+  .cta-service-provider {
     width: 100%;
     max-width: 320px;
     font-size: 1rem;
@@ -577,7 +621,8 @@
   }
 
   .cta-breeder i,
-  .cta-pet-seeker i {
+  .cta-pet-seeker i,
+  .cta-service-provider i {
     font-size: 1.125rem;
   }
 }
@@ -601,7 +646,8 @@
   }
 
   .cta-breeder,
-  .cta-pet-seeker {
+  .cta-pet-seeker,
+  .cta-service-provider {
     font-size: 0.9375rem;
     padding: 0.75rem 1.25rem;
   }
@@ -619,6 +665,7 @@
 @media (max-width: 767px) {
   .cta-breeder,
   .cta-pet-seeker,
+  .cta-service-provider,
   .cta-search-main {
     min-height: 48px;
     min-width: 48px;
@@ -642,6 +689,13 @@
   .cta-pet-seeker:active {
     background-color: rgba(255, 255, 255, 0.9);
     color: var(--secondary-color);
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .cta-service-provider:active {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #0d9488;
     transform: scale(0.98);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }

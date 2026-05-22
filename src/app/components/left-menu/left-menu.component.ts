@@ -47,6 +47,10 @@ export class LeftMenuComponent implements OnInit {
     return this.authService.isPetSeeker;
   }
 
+  get isServiceProvider(): boolean {
+    return this.authService.isServiceProvider;
+  }
+
   get isAuthenticated(): boolean {
     return this.authService.hasValidToken();
   }

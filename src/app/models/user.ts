@@ -14,6 +14,7 @@ export interface IUser {
   is_superuser?: boolean;
   is_verified?: boolean;
   is_breeder: boolean;
+  account_type?: 'breeder' | 'pet_seeker' | 'service';
 }
 
 export interface IProfileImageResponse {

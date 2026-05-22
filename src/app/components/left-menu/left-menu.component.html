@@ -26,6 +26,21 @@
       </a>
     </li>
     
+    <!-- Service provider-only menu items -->
+    <li class="mb-2" *ngIf="isServiceProvider">
+      <a 
+        [routerLink]="['/services']"
+        routerLinkActive="bg-primary text-white"
+        #rlaServices="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [attr.aria-current]="rlaServices.isActive ? 'page' : null"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        [title]="isCollapsed ? 'Services' : ''">
+        <i class="bi bi-briefcase text-xl"></i>
+        <span *ngIf="!isCollapsed">Services</span>
+      </a>
+    </li>
+
     <!-- Breeder-only menu items -->
     <li class="mb-2" *ngIf="isBreeder">
       <a 
@@ -119,6 +134,14 @@
     <i class="bi bi-speedometer2"></i>
     <span>Home</span>
   </a>
+  <!-- Service provider tabs: Home · Services · Messages · Settings -->
+  <ng-container *ngIf="isServiceProvider">
+    <a [routerLink]="['/services']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Services">
+      <i class="bi bi-briefcase"></i>
+      <span>Services</span>
+    </a>
+  </ng-container>
+  <!-- Breeder tabs -->
   <ng-container *ngIf="isBreeder">
     <a [routerLink]="['/pets']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Pets">
       <i class="bi bi-card-list"></i>
@@ -133,6 +156,7 @@
       <span>Offsprings</span>
     </a>
   </ng-container>
+  <!-- Pet seeker tabs -->
   <ng-container *ngIf="isPetSeeker">
     <a [routerLink]="['/search-pets']" routerLinkActive="active" class="mobile-nav-item" aria-label="Search">
       <i class="bi bi-search"></i>
