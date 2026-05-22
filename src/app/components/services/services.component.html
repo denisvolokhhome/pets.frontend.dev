@@ -1,0 +1,335 @@
+<div class="services-container">
+
+  <!-- ===== DESKTOP page header ===== -->
+  <div class="desktop-page-header">
+    <app-page-header
+      [config]="headerConfig"
+      [searchTerm]="searchTerm"
+      (searchChange)="onSearchChange($event)">
+
+      <button
+        class="btn-add-service"
+        (click)="toggleAddForm()"
+        type="button"
+        [class.active]="showAddForm">
+        <i class="bi bi-plus-lg"></i>
+        <span>Add Service</span>
+      </button>
+
+    </app-page-header>
+  </div>
+
+  <!-- ===== MOBILE compact bar ===== -->
+  <div class="mobile-bar">
+    <div class="mobile-bar__search">
+      <i class="bi bi-search mobile-bar__search-icon"></i>
+      <input
+        type="text"
+        class="mobile-bar__input"
+        placeholder="Search services..."
+        [(ngModel)]="searchTerm"
+        aria-label="Search services"
+      />
+    </div>
+    <button
+      class="mobile-icon-btn"
+      [class.has-filters]="hasActiveFilters()"
+      (click)="isMobileFilterOpen = true"
+      aria-label="Open filters">
+      <i class="bi bi-sliders"></i>
+      <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
+    </button>
+    <button
+      class="mobile-icon-btn mobile-icon-btn--primary"
+      (click)="toggleAddForm()"
+      aria-label="Add service">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
+
+  <!-- ===== MOBILE filter drawer backdrop ===== -->
+  <div class="mobile-filter-backdrop"
+       [class.open]="isMobileFilterOpen"
+       (click)="isMobileFilterOpen = false"
+       aria-hidden="true">
+  </div>
+
+  <!-- ===== MOBILE filter drawer ===== -->
+  <div class="mobile-filter-drawer"
+       [class.open]="isMobileFilterOpen"
+       role="dialog"
+       aria-label="Filter services"
+       aria-modal="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Filters</h2>
+      <button class="drawer-close" (click)="isMobileFilterOpen = false" aria-label="Close filters">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Category</label>
+        <select class="drawer-filter-select" [(ngModel)]="mobileFilters.category" (change)="applyMobileFilters()">
+          <option value="">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.slug">{{ cat.name }}</option>
+        </select>
+      </div>
+      <div class="drawer-filter-group">
+        <label class="drawer-filter-label">Status</label>
+        <div class="drawer-pills">
+          <button class="drawer-pill" [class.active]="!mobileFilters.status" (click)="mobileFilters.status = ''; applyMobileFilters()">All</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'active'" (click)="mobileFilters.status = 'active'; applyMobileFilters()">Active</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.status === 'inactive'" (click)="mobileFilters.status = 'inactive'; applyMobileFilters()">Inactive</button>
+        </div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="drawer-clear-btn" (click)="clearMobileFilters()">Clear all</button>
+      <button class="drawer-apply-btn" (click)="isMobileFilterOpen = false">
+        <i class="bi bi-check-lg"></i> Done
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Main content ===== -->
+  <div class="services-content">
+
+    <!-- No locations banner -->
+    <div class="no-locations-banner" *ngIf="hasNoLocations && !isLoading">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <div>
+        <strong>Add a location before creating services</strong>
+        <p>You need at least one location to offer services.
+          <a routerLink="/settings/locations">Add a location →</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Add Service form -->
+    <div class="service-form-card" *ngIf="showAddForm">
+      <div class="form-card-header">
+        <h3><i class="bi bi-plus-circle"></i> New Service</h3>
+        <button class="btn-icon-close" (click)="toggleAddForm()" aria-label="Close form">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="form-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category <span class="required">*</span></label>
+            <select class="form-select" [(ngModel)]="newService.category_id">
+              <option [ngValue]="0" disabled>Select a category</option>
+              <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title <span class="required">*</span></label>
+            <input type="text" class="form-input" [(ngModel)]="newService.title" placeholder="e.g. Professional Dog Grooming" maxlength="255" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" [(ngModel)]="newService.description" rows="3" placeholder="Describe your service..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Price From ($)</label>
+            <input type="number" class="form-input" [(ngModel)]="newService.price_from" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price To ($)</label>
+            <input type="number" class="form-input" [(ngModel)]="newService.price_to" min="0" step="0.01" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price Unit</label>
+            <select class="form-select" [(ngModel)]="newService.price_unit">
+              <option [ngValue]="undefined">— Select —</option>
+              <option value="per_session">Per Session</option>
+              <option value="per_hour">Per Hour</option>
+              <option value="per_day">Per Day</option>
+              <option value="per_visit">Per Visit</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Locations <span class="required">*</span></label>
+          <div class="location-checkboxes" *ngIf="locations.length > 0; else noLocationsMsg">
+            <label class="location-checkbox" *ngFor="let loc of locations">
+              <input
+                type="checkbox"
+                [checked]="isLocationSelected(loc.id, newService.location_ids)"
+                (change)="toggleLocationForNew(loc.id)"
+              />
+              <span>{{ loc.name || loc.address }}</span>
+            </label>
+          </div>
+          <ng-template #noLocationsMsg>
+            <p class="form-hint">No locations available. <a routerLink="/settings/locations">Add a location first.</a></p>
+          </ng-template>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <button class="btn-cancel" type="button" (click)="toggleAddForm()">Cancel</button>
+        <button class="btn-save" type="button" (click)="onAddService()" [disabled]="hasNoLocations">
+          <i class="bi bi-check-lg"></i> Create Service
+        </button>
+      </div>
+    </div>
+
+    <!-- Edit Service form -->
+    <div class="service-form-card" *ngIf="editingService">
+      <div class="form-card-header">
+        <h3><i class="bi bi-pencil"></i> Edit Service</h3>
+        <button class="btn-icon-close" (click)="cancelEdit()" aria-label="Close form">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="form-card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" [(ngModel)]="editForm.category_id">
+              <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title <span class="required">*</span></label>
+            <input type="text" class="form-input" [(ngModel)]="editForm.title" placeholder="Service title" maxlength="255" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" [(ngModel)]="editForm.description" rows="3" placeholder="Describe your service..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Price From ($)</label>
+            <input type="number" class="form-input" [(ngModel)]="editForm.price_from" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price To ($)</label>
+            <input type="number" class="form-input" [(ngModel)]="editForm.price_to" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Price Unit</label>
+            <select class="form-select" [(ngModel)]="editForm.price_unit">
+              <option [ngValue]="undefined">— Select —</option>
+              <option value="per_session">Per Session</option>
+              <option value="per_hour">Per Hour</option>
+              <option value="per_day">Per Day</option>
+              <option value="per_visit">Per Visit</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Locations</label>
+          <div class="location-checkboxes" *ngIf="locations.length > 0">
+            <label class="location-checkbox" *ngFor="let loc of locations">
+              <input
+                type="checkbox"
+                [checked]="isLocationSelected(loc.id, editForm.location_ids ?? [])"
+                (change)="toggleLocationForEdit(loc.id)"
+              />
+              <span>{{ loc.name || loc.address }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <div class="status-toggle">
+            <label class="toggle-label">
+              <input type="checkbox" [(ngModel)]="editForm.is_active" />
+              <span class="toggle-text">{{ editForm.is_active ? 'Active' : 'Inactive' }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>
+        <button class="btn-save" type="button" (click)="onUpdateService()">
+          <i class="bi bi-check-lg"></i> Save Changes
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="state-container" *ngIf="isLoading">
+      <div class="loading-state" role="status" aria-live="polite">
+        <div class="spinner-container">
+          <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+        </div>
+        <p>Loading services...</p>
+      </div>
+    </div>
+
+    <!-- Services list -->
+    <div class="services-list" *ngIf="!isLoading">
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="filteredServices.length === 0">
+        <i class="bi bi-briefcase"></i>
+        <h3>No services found</h3>
+        <p *ngIf="searchTerm || hasActiveFilters()">Try adjusting your search or filters.</p>
+        <p *ngIf="!searchTerm && !hasActiveFilters()">Add your first service to get started.</p>
+        <button
+          *ngIf="!searchTerm && !hasActiveFilters()"
+          class="btn-primary"
+          (click)="toggleAddForm()"
+          [disabled]="hasNoLocations">
+          <i class="bi bi-plus-lg"></i> Add Service
+        </button>
+      </div>
+
+      <!-- Service cards -->
+      <div class="service-card" *ngFor="let service of filteredServices">
+        <div class="service-card__header">
+          <div class="service-card__meta">
+            <span class="service-card__category">{{ service.category_name }}</span>
+            <span class="status-badge" [class.status-badge--active]="service.is_active" [class.status-badge--inactive]="!service.is_active">
+              {{ service.is_active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="service-card__actions">
+            <button
+              class="table-action-btn btn-edit"
+              title="Edit service"
+              aria-label="Edit service"
+              (click)="onEditService(service)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="table-action-btn btn-remove"
+              title="Delete service"
+              aria-label="Delete service"
+              (click)="onDeleteService(service.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="service-card__body">
+          <h4 class="service-card__title">{{ service.title }}</h4>
+          <p class="service-card__description" *ngIf="service.description">{{ service.description }}</p>
+          <div class="service-card__price" *ngIf="service.price_from != null || service.price_to != null">
+            <i class="bi bi-tag"></i>
+            <span>{{ formatPrice(service) }}</span>
+          </div>
+          <div class="service-card__price service-card__price--none" *ngIf="service.price_from == null && service.price_to == null">
+            <i class="bi bi-tag"></i>
+            <span>Price on request</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -59,6 +59,8 @@ import { MessageDetailComponent } from './components/settings/message-detail/mes
 import { PetSeekerRegistrationComponent } from './components/pet-seeker-registration/pet-seeker-registration.component';
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { ServiceProviderRegistrationComponent } from './components/service-provider-registration/service-provider-registration.component';
+import { ServicesComponent } from './components/services/services.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
@@ -155,6 +157,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     PetSeekerRegistrationComponent,
     GuestToAccountComponent,
     AuthCallbackComponent,
+    ServiceProviderRegistrationComponent,
+    ServicesComponent,
     BreederySettingsComponent,
     NotificationSettingsComponent,
     SubscriptionSettingsComponent,

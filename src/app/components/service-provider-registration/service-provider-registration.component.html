@@ -1,0 +1,55 @@
+<div class="spr-container">
+  <div class="spr-header">
+    <h3 class="spr-title">Select Your Service Categories</h3>
+    <p class="spr-subtitle">Choose all the services you offer. You can update these later.</p>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="spr-loading" aria-live="polite" aria-busy="true">
+    <i class="bi bi-arrow-repeat spin" aria-hidden="true"></i>
+    <span>Loading categories...</span>
+  </div>
+
+  <!-- Load error -->
+  <div *ngIf="loadError && !isLoading" class="spr-error-banner" role="alert">
+    <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+    {{ loadError }}
+  </div>
+
+  <!-- Category grid -->
+  <div
+    *ngIf="!isLoading && !loadError"
+    class="spr-grid"
+    role="group"
+    aria-label="Service categories"
+  >
+    <button
+      *ngFor="let category of categories"
+      type="button"
+      class="spr-card"
+      [class.spr-card--selected]="isSelected(category.id)"
+      (click)="toggleCategory(category.id)"
+      [attr.aria-pressed]="isSelected(category.id)"
+      [attr.aria-label]="category.name"
+    >
+      <span class="spr-card__icon" aria-hidden="true">
+        <i [class]="'bi bi-' + (category.icon || 'tag')"></i>
+      </span>
+      <span class="spr-card__name">{{ category.name }}</span>
+      <span *ngIf="isSelected(category.id)" class="spr-card__check" aria-hidden="true">
+        <i class="bi bi-check-circle-fill"></i>
+      </span>
+    </button>
+  </div>
+
+  <!-- Inline validation error -->
+  <div
+    *ngIf="hasError"
+    class="spr-validation-error"
+    role="alert"
+    aria-live="assertive"
+  >
+    <i class="bi bi-x-circle" aria-hidden="true"></i>
+    Please select at least one service category
+  </div>
+</div>

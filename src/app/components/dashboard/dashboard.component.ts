@@ -120,6 +120,10 @@ export class DashboardComponent implements OnInit {
     return this.authService.isPetSeeker;
   }
 
+  get isServiceProvider(): boolean {
+    return this.authService.isServiceProvider;
+  }
+
   get currentUser() {
     return this.authService.currentUser;
   }

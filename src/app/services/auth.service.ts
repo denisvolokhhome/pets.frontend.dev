@@ -46,6 +46,17 @@ export class AuthService {
     return this.http.post(this.apiurl + '/auth/register/pet-seeker', payload);
   }
 
+  RegisterServiceProvider(input: any) {
+    // Register service provider with category selections
+    const payload = {
+      email: input.email,
+      password: input.password,
+      name: input.name,
+      category_ids: input.category_ids
+    };
+    return this.http.post(this.apiurl + '/auth/register/service-provider', payload);
+  }
+
   ConvertGuestToAccount(input: any) {
     // Convert guest message sender to registered account
     const payload = {
@@ -145,9 +156,16 @@ export class AuthService {
   }
 
   // Computed property: Check if current user is a pet seeker
+  // Service providers are NOT pet seekers even though is_breeder=false
   get isPetSeeker(): boolean {
     const user = this.currentUserSubject.value;
-    return user ? !user.is_breeder : false;
+    if (!user) return false;
+    return user.account_type === 'pet_seeker' || (!user.account_type && !user.is_breeder);
+  }
+
+  // Computed property: Check if current user is a service provider
+  get isServiceProvider(): boolean {
+    return this.currentUserSubject.value?.account_type === 'service';
   }
 
   /**

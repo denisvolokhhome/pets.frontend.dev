@@ -36,6 +36,11 @@ export class HomeComponent {
       icon: 'verified_user',
       title: 'Connect Safely',
       description: 'Build trust with verified breeder profiles and secure communication channels to connect with potential pet families.'
+    },
+    {
+      icon: 'content_cut',
+      title: 'Pet Services',
+      description: 'Find trusted groomers, dog walkers, pet sitters, trainers, and more — all in one place, searchable by location.'
     }
   ];
 
@@ -93,16 +98,45 @@ export class HomeComponent {
     }
   ];
 
-  selectedFlow: 'breeder' | 'petSeeker' = 'breeder';
+  selectedFlow: 'breeder' | 'petSeeker' | 'serviceProvider' = 'breeder';
+
+  serviceProviderSteps: Step[] = [
+    {
+      number: 1,
+      title: 'Register',
+      description: 'Create a Service Provider account and select the categories that describe your services (grooming, walking, sitting, training, and more).',
+      icon: 'person_add'
+    },
+    {
+      number: 2,
+      title: 'Set Up Profile',
+      description: 'Add your business name, description, profile image, and contact information so pet owners can reach you.',
+      icon: 'badge'
+    },
+    {
+      number: 3,
+      title: 'Add Locations',
+      description: 'Add the areas where you offer your services. Each location is geocoded so nearby pet owners can find you on the map.',
+      icon: 'location_on'
+    },
+    {
+      number: 4,
+      title: 'List Services',
+      description: 'Create individual service listings with pricing, descriptions, and the locations where each service is available.',
+      icon: 'content_cut'
+    }
+  ];
 
   constructor(private router: Router) {}
 
-  selectFlow(flow: 'breeder' | 'petSeeker'): void {
+  selectFlow(flow: 'breeder' | 'petSeeker' | 'serviceProvider'): void {
     this.selectedFlow = flow;
   }
 
   get currentSteps(): Step[] {
-    return this.selectedFlow === 'breeder' ? this.breederSteps : this.petSeekerSteps;
+    if (this.selectedFlow === 'breeder') return this.breederSteps;
+    if (this.selectedFlow === 'serviceProvider') return this.serviceProviderSteps;
+    return this.petSeekerSteps;
   }
 
   navigateToBreederRegister(): void {
@@ -111,6 +145,10 @@ export class HomeComponent {
 
   navigateToPetSeekerRegister(): void {
     this.router.navigate(['/register/pet-seeker']);
+  }
+
+  navigateToServiceProviderRegister(): void {
+    this.router.navigate(['/register/service-provider']);
   }
 
   navigateToPets(): void {
