@@ -1,7 +1,7 @@
 export interface IBreed {
   id:         number;
   name:       string;
-  kind:       'dog' | 'cat' | 'cow' | 'horse';  // ← add this
+  kind: 'dog' | 'cat';  // dog and cat only
   code?:      string;
   group?:     string;
   created_at: string;

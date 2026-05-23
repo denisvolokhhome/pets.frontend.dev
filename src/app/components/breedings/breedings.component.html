@@ -87,8 +87,6 @@
           <button class="drawer-pill" [class.active]="!mobileFilters.petType" (click)="mobileFilters.petType = ''; applyMobileFilters()">All</button>
           <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()">🐕 Dog</button>
           <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()">🐈 Cat</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cow'" (click)="mobileFilters.petType = 'Cow'; applyMobileFilters()">🐄 Cow</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Horse'" (click)="mobileFilters.petType = 'Horse'; applyMobileFilters()">🐴 Horse</button>
         </div>
       </div>
     </div>

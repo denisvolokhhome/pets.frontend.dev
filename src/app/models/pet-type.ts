@@ -3,19 +3,18 @@
  */
 
 export interface IPetType {
-  value: string;   // matches IBreed.kind — 'dog' | 'cat' | 'cow' | 'horse'
+  value: string;   // matches IBreed.kind — 'dog' | 'cat'
   label: string;
   icon: string;    // emoji icon displayed in the tile
 }
 
 /**
- * Available pet types with their display labels and icons
+ * Available pet types with their display labels and icons.
+ * Cow and Horse are hidden — dogs and cats only for now.
  */
 export const PET_TYPES: IPetType[] = [
-  { value: 'dog',   label: 'Dog',   icon: '🐕' },
-  { value: 'cat',   label: 'Cat',   icon: '🐈' },
-  { value: 'cow',   label: 'Cow',   icon: '🐄' },
-  { value: 'horse', label: 'Horse', icon: '🐴' },
+  { value: 'dog', label: 'Dog', icon: '🐕' },
+  { value: 'cat', label: 'Cat', icon: '🐈' },
 ];
 
 /**
