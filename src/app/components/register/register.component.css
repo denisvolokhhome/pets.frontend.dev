@@ -353,6 +353,23 @@
   cursor: pointer;
 }
 
+/* ── Service provider hint ── */
+.sp-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(78, 205, 196, 0.08);
+  border: 1px solid rgba(78, 205, 196, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0d9488;
+  margin-top: 0.75rem;
+  animation: fadeInUp 0.2s ease-out;
+}
+
+.sp-hint i { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
 /* ── Step navigation buttons ── */
 .step-nav {
   display: flex;

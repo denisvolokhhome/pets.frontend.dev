@@ -10,26 +10,21 @@
       <p class="auth-subtitle">Create your account to get started</p>
     </div>
 
-    <!-- Stepper indicator -->
+    <!-- Stepper indicator (2 steps) -->
     <div class="stepper" role="navigation" aria-label="Registration steps">
       <div class="stepper-track">
-        <div
-          *ngFor="let n of [1, 2, 3]; let i = index"
-          class="stepper-item"
-          [class.stepper-item--active]="currentStep === n"
-          [class.stepper-item--done]="currentStep > n"
-          [class.stepper-item--hidden]="n === 3 && selectedAccountType !== 'service'"
-        >
-          <div class="stepper-circle" [attr.aria-current]="currentStep === n ? 'step' : null">
-            <i *ngIf="currentStep > n" class="bi bi-check-lg"></i>
-            <span *ngIf="currentStep <= n">{{ n }}</span>
+        <div class="stepper-item" [class.stepper-item--active]="currentStep === 1" [class.stepper-item--done]="currentStep > 1">
+          <div class="stepper-circle" [attr.aria-current]="currentStep === 1 ? 'step' : null">
+            <i *ngIf="currentStep > 1" class="bi bi-check-lg"></i>
+            <span *ngIf="currentStep <= 1">1</span>
           </div>
-          <span class="stepper-label">
-            <ng-container *ngIf="n === 1">Account Type</ng-container>
-            <ng-container *ngIf="n === 2 && selectedAccountType === 'service'">Your Services</ng-container>
-            <ng-container *ngIf="n === 2 && selectedAccountType !== 'service'">Create Account</ng-container>
-            <ng-container *ngIf="n === 3">Create Account</ng-container>
-          </span>
+          <span class="stepper-label">Account Type</span>
+        </div>
+        <div class="stepper-item" [class.stepper-item--active]="currentStep === 2" [class.stepper-item--done]="currentStep > 2">
+          <div class="stepper-circle" [attr.aria-current]="currentStep === 2 ? 'step' : null">
+            <span>2</span>
+          </div>
+          <span class="stepper-label">Create Account</span>
         </div>
         <div class="stepper-line"></div>
       </div>
@@ -78,6 +73,12 @@
           </button>
 
         </div>
+
+        <!-- Service provider hint -->
+        <div *ngIf="selectedAccountType === 'service'" class="sp-hint">
+          <i class="bi bi-info-circle"></i>
+          You can add your service categories after registration from your Settings.
+        </div>
       </div>
 
       <button
@@ -96,85 +97,8 @@
       </div>
     </div>
 
-    <!-- ── STEP 2 (service provider): Category Selection ── -->
-    <div *ngIf="currentStep === 2 && selectedAccountType === 'service'" class="step-panel" role="region" aria-label="Step 2: Select your services">
-
-      <div class="step-intro">
-        <h2 class="step-title">What services do you offer?</h2>
-        <p class="step-desc">Select all that apply. You can add or remove categories later from your settings.</p>
-      </div>
-
-      <!-- Loading -->
-      <div *ngIf="categoriesLoading" class="categories-loading" aria-live="polite">
-        <div class="spinner-sm"></div>
-        <span>Loading categories...</span>
-      </div>
-
-      <!-- Error -->
-      <div *ngIf="categoriesError && !categoriesLoading" class="categories-error" role="alert">
-        <i class="bi bi-exclamation-circle"></i>
-        <span>{{ categoriesError }}</span>
-        <button type="button" class="btn-retry" (click)="retryLoadCategories()">Try again</button>
-      </div>
-
-      <!-- Category grid -->
-      <div
-        *ngIf="!categoriesLoading && !categoriesError && categories.length > 0"
-        class="category-grid"
-        role="group"
-        aria-label="Service categories"
-      >
-        <button
-          *ngFor="let cat of categories"
-          type="button"
-          class="category-card"
-          [class.category-card--selected]="isCategorySelected(cat.id)"
-          (click)="toggleCategory(cat.id)"
-          [attr.aria-pressed]="isCategorySelected(cat.id)"
-          [attr.aria-label]="cat.name"
-        >
-          <i class="bi {{ getCategoryIcon(cat.slug) }} category-card__icon" aria-hidden="true"></i>
-          <span class="category-card__name">{{ cat.name }}</span>
-          <i *ngIf="isCategorySelected(cat.id)" class="bi bi-check-circle-fill category-card__check" aria-hidden="true"></i>
-        </button>
-      </div>
-
-      <!-- Validation error -->
-      <div *ngIf="showCategoryError" class="category-validation-error" role="alert" aria-live="assertive">
-        <i class="bi bi-x-circle"></i>
-        Please select at least one service category to continue
-      </div>
-
-      <!-- Navigation -->
-      <div class="step-nav mt-6">
-        <button type="button" class="btn-step-back" (click)="goToPrevStep()">
-          <i class="bi bi-arrow-left mr-2"></i> Back
-        </button>
-        <button
-          type="button"
-          class="btn-step-next"
-          (click)="goToNextStep()"
-          [disabled]="selectedCategoryIds.length === 0"
-        >
-          Continue <i class="bi bi-arrow-right ml-2"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- ── STEP 2 (breeder/seeker) or STEP 3 (service provider): Account Details ── -->
-    <div
-      *ngIf="(currentStep === 2 && selectedAccountType !== 'service') || (currentStep === 3 && selectedAccountType === 'service')"
-      class="step-panel"
-      role="region"
-      aria-label="Account details"
-    >
-
-      <!-- Summary pill for service providers -->
-      <div *ngIf="selectedAccountType === 'service' && selectedCategoryIds.length > 0" class="selected-categories-summary">
-        <i class="bi bi-briefcase-check"></i>
-        <span>{{ selectedCategoryIds.length }} service{{ selectedCategoryIds.length > 1 ? 's' : '' }} selected</span>
-        <button type="button" class="btn-edit-categories" (click)="currentStep = 2">Edit</button>
-      </div>
+    <!-- ── STEP 2: Account Details ── -->
+    <div *ngIf="currentStep === 2" class="step-panel" role="region" aria-label="Step 2: Create your account">
 
       <!-- Error alert -->
       <div *ngIf="emailExistsError" class="alert alert-error" role="alert">

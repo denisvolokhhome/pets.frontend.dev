@@ -3,8 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ServiceProviderService } from 'src/app/services/service-provider.service';
-import { IServiceCategory } from 'src/app/models/service-category';
 
 @Component({
   standalone: false,
@@ -17,7 +15,6 @@ export class RegisterComponent implements OnInit {
     private builder: FormBuilder,
     private toastr: ToastService,
     private service: AuthService,
-    private serviceProviderService: ServiceProviderService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -43,12 +40,11 @@ export class RegisterComponent implements OnInit {
   currentStep = 1;
 
   get totalSteps(): number {
-    return this.selectedAccountType === 'service' ? 3 : 2;
+    return 2;
   }
 
   get stepLabel(): string {
     if (this.currentStep === 1) return 'Choose Account Type';
-    if (this.currentStep === 2 && this.selectedAccountType === 'service') return 'Select Services';
     return 'Create Account';
   }
 
@@ -59,7 +55,6 @@ export class RegisterComponent implements OnInit {
     this.selectedAccountType = type;
     if (type !== 'service') {
       this.selectedCategoryIds = [];
-      this.showCategoryError = false;
     }
   }
 
@@ -70,18 +65,6 @@ export class RegisterComponent implements OnInit {
         return;
       }
       this.currentStep = 2;
-      // For service providers, load categories when entering step 2
-      if (this.selectedAccountType === 'service' && this.categories.length === 0 && !this.categoriesLoading) {
-        this.loadCategories();
-      }
-      return;
-    }
-    if (this.currentStep === 2 && this.selectedAccountType === 'service') {
-      if (this.selectedCategoryIds.length === 0) {
-        this.showCategoryError = true;
-        return;
-      }
-      this.currentStep = 3;
       return;
     }
   }
@@ -92,63 +75,9 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  // ── Categories (service provider step 2) ──────────────────────────────────
-  categories: IServiceCategory[] = [];
-  categoriesLoading = false;
-  categoriesError: string | null = null;
+  // ── Categories — removed from registration flow ───────────────────────────
+  // Categories are now managed post-registration via Settings → My Service Categories
   selectedCategoryIds: number[] = [];
-  showCategoryError = false;
-
-  private loadCategories(): void {
-    this.categoriesLoading = true;
-    this.categoriesError = null;
-    this.serviceProviderService.getCategories().subscribe({
-      next: (cats) => {
-        this.categories = cats;
-        this.categoriesLoading = false;
-      },
-      error: () => {
-        this.categoriesError = 'Failed to load service categories. Please try again.';
-        this.categoriesLoading = false;
-      },
-    });
-  }
-
-  retryLoadCategories(): void {
-    this.loadCategories();
-  }
-
-  toggleCategory(id: number): void {
-    const idx = this.selectedCategoryIds.indexOf(id);
-    if (idx === -1) {
-      this.selectedCategoryIds = [...this.selectedCategoryIds, id];
-    } else {
-      this.selectedCategoryIds = this.selectedCategoryIds.filter(c => c !== id);
-    }
-    if (this.selectedCategoryIds.length > 0) {
-      this.showCategoryError = false;
-    }
-  }
-
-  isCategorySelected(id: number): boolean {
-    return this.selectedCategoryIds.includes(id);
-  }
-
-  getCategoryIcon(slug: string): string {
-    const icons: Record<string, string> = {
-      'grooming': 'bi-scissors',
-      'dog-walking': 'bi-person-walking',
-      'cat-sitting': 'bi-house-heart',
-      'pet-sitting': 'bi-house-heart',
-      'pet-training': 'bi-award',
-      'pet-boarding': 'bi-building',
-      'veterinary': 'bi-heart-pulse',
-      'pet-photography': 'bi-camera',
-      'pet-transport': 'bi-truck',
-      'pet-daycare': 'bi-sun',
-    };
-    return icons[slug] || 'bi-tag';
-  }
 
   // ── Registration form (step 3 / step 2 for non-service) ───────────────────
   registerForm = this.builder.group({
@@ -234,7 +163,7 @@ export class RegisterComponent implements OnInit {
     };
 
     if (this.selectedAccountType === 'service') {
-      this.service.RegisterServiceProvider({ ...formValue, category_ids: this.selectedCategoryIds })
+      this.service.RegisterServiceProvider({ ...formValue, category_ids: [] })
         .subscribe({ next: handleSuccess, error: handleError });
     } else if (this.selectedAccountType === 'breeder') {
       this.service.RegisterUser(formValue).subscribe({ next: handleSuccess, error: handleError });
