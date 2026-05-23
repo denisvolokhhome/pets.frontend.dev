@@ -148,7 +148,7 @@ export class HomeComponent {
   }
 
   navigateToServiceProviderRegister(): void {
-    this.router.navigate(['/register/service-provider']);
+    this.router.navigate(['/register'], { queryParams: { type: 'service' } });
   }
 
   navigateToPets(): void {

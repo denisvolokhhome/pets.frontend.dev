@@ -25,7 +25,7 @@ export class ServiceProviderService {
    */
   getCategories(): Observable<IServiceCategory[]> {
     return this.http
-      .get<IServiceCategory[]>(`${this.apiUrl}/service-categories/`)
+      .get<IServiceCategory[]>(`${this.apiUrl}/service-categories`)
       .pipe(catchError(this.handleError));
   }
 

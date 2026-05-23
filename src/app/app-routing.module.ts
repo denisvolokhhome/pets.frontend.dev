@@ -63,7 +63,6 @@ const routes: Routes = [
   },
   { path: 'register', component: RegisterComponent },
   { path: 'register/pet-seeker', component: PetSeekerRegistrationComponent },
-  { path: 'register/service-provider', component: ServiceProviderRegistrationComponent },
   { path: 'register/from-message', component: GuestToAccountComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
