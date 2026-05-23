@@ -14,7 +14,7 @@ app-profile-menu {
   top: 100%;
   right: 0;
   margin-top: 0.5rem;
-  min-width: 200px;
+  min-width: 220px;
   background: white;
   border-radius: 0.5rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
@@ -22,7 +22,7 @@ app-profile-menu {
   visibility: hidden;
   transform: translateY(-10px);
   transition: all 0.2s ease-in-out;
-  z-index: 1000;
+  z-index: 1300;
   overflow: hidden;
 }
 
