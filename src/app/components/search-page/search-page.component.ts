@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, forkJoin, of } from 'rxjs';
 import { debounceTime, switchMap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { SearchService } from '../../services/search.service';
+import { ServiceProviderService } from '../../services/service-provider.service';
 import { ToastService } from '../../services/toast.service';
 import { MapComponent } from '../map/map.component';
 import { IPetType, PET_TYPES } from '../../models/pet-type';
@@ -14,6 +14,8 @@ import {
   toBreederMarkers,
   SearchValidators
 } from '../../models/search';
+
+export type SearchMode = 'breeders' | 'services' | 'both';
 
 /**
  * Main container component for the Pet Search with Map feature
@@ -36,7 +38,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   mapCenter: Coordinates = { latitude: 39.8283, longitude: -98.5795 };
   searchResults: BreederSearchResult[] = [];
   breederMarkers: BreederMarker[] = [];
+  serviceResults: any[] = [];
   highlightedBreederId: string | null = null;
+
+  // Search mode: breeders only, services only, or both
+  searchMode: SearchMode = 'both';
 
   // UI state
   isLoading: boolean = false;
@@ -59,6 +65,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private searchService: SearchService,
+    private serviceProviderService: ServiceProviderService,
     private toastService: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -240,71 +247,85 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Perform breeder search with coordinates
-   * @param coordinates - Center point for search
-   * Requirement 11.1: Display "No results found" message
-   * Requirement 11.5: Handle API request failures
+   * Perform search with coordinates — fetches breeders and/or services based on searchMode
    */
   private performSearch(coordinates: Coordinates): void {
-    // Set loading state and force immediate UI update
     this.isLoading = true;
     this.error = null;
     this.cdr.detectChanges();
 
-    // Call search service with coordinates, radius, and optional breed filter
-    this.searchService.searchBreeders(
-      coordinates.latitude,
-      coordinates.longitude,
-      this.radius,
-      this.selectedBreed?.id,
-      this.selectedAnimalKind || undefined
-    ).subscribe({
-      next: (results) => {
-        this.searchResults = results;
-        this.breederMarkers = toBreederMarkers(results);
-        this.hasSearched = true;
-        
-        // Clear loading state
-        this.isLoading = false;
+    const radiusKm = this.radius * 1.60934; // miles → km
 
-        // Clear any previous errors
+    const breeders$ = (this.searchMode === 'breeders' || this.searchMode === 'both')
+      ? this.searchService.searchBreeders(
+          coordinates.latitude, coordinates.longitude, this.radius,
+          this.selectedBreed?.id, this.selectedAnimalKind || undefined
+        ).pipe(catchError(() => of([])))
+      : of([]);
+
+    const services$ = (this.searchMode === 'services' || this.searchMode === 'both')
+      ? this.serviceProviderService.searchServices({
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+          radius_km: radiusKm,
+          page: 1,
+          page_size: 50,
+        }).pipe(catchError(() => of({ items: [] })))
+      : of({ items: [] });
+
+    forkJoin({ breeders: breeders$, services: services$ }).subscribe({
+      next: ({ breeders, services }) => {
+        this.searchResults = breeders as BreederSearchResult[];
+        this.serviceResults = (services as any).items || [];
+
+        // Build breeder markers (red/default)
+        const breederMarkers = toBreederMarkers(this.searchResults);
+
+        // Build service provider markers (teal) — reuse BreederMarker shape
+        const serviceMarkers: BreederMarker[] = this.serviceResults
+          .filter((sp: any) => sp.latitude && sp.longitude)
+          .map((sp: any) => ({
+            id: sp.user_id,
+            latitude: sp.latitude,
+            longitude: sp.longitude,
+            name: sp.provider_name,
+            isService: true,
+          }));
+
+        this.breederMarkers = [...breederMarkers, ...serviceMarkers];
+        this.hasSearched = true;
+        this.isLoading = false;
         this.error = null;
         this.geolocationError = null;
-
-        // Force change detection to update UI
         this.cdr.detectChanges();
 
-        // Show success message with result count
-        if (results.length > 0) {
-          this.toastService.success(`Found ${results.length} breeder${results.length > 1 ? 's' : ''} near you`);
-          // On mobile, switch to list tab so results are immediately visible
-          if (window.innerWidth <= 768) {
-            this.mobileActiveTab = 'list';
-          }
+        const total = this.searchResults.length + this.serviceResults.length;
+        if (total > 0) {
+          this.toastService.success(`Found ${this.searchResults.length} breeder${this.searchResults.length !== 1 ? 's' : ''} and ${this.serviceResults.length} service provider${this.serviceResults.length !== 1 ? 's' : ''}`);
+          if (window.innerWidth <= 768) this.mobileActiveTab = 'list';
         }
 
-        // Persist state so navigating back restores results
         this.saveSearchState();
-
-        // Remember the ZIP code for next visit
         localStorage.setItem('last_zip_code', this.zipCode);
       },
       error: (err) => {
-        // Clear loading state
         this.isLoading = false;
-        
-        const message = err.message || 'Failed to search for breeders. Please try again.';
+        const message = err.message || 'Search failed. Please try again.';
         this.error = message;
         this.searchResults = [];
+        this.serviceResults = [];
         this.breederMarkers = [];
-        
-        // Force change detection to update UI
         this.cdr.detectChanges();
-        
         this.toastService.error(message);
-        console.error('Search error:', err);
       }
     });
+  }
+
+  setSearchMode(mode: SearchMode): void {
+    this.searchMode = mode;
+    if (this.hasSearched && this.zipCode) {
+      this.onSearch();
+    }
   }
 
   /**
@@ -366,7 +387,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
    * Check if there are no search results
    */
   hasNoResults(): boolean {
-    return this.hasSearched && !this.isLoading && this.searchResults.length === 0;
+    return this.hasSearched && !this.isLoading &&
+      this.searchResults.length === 0 && this.serviceResults.length === 0;
   }
 
   /**
@@ -483,8 +505,10 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       selectedBreed: this.selectedBreed,
       selectedAnimalKind: this.selectedAnimalKind,
       radius: this.radius,
+      searchMode: this.searchMode,
       mapCenter: this.mapCenter,
       searchResults: this.searchResults,
+      serviceResults: this.serviceResults,
       breederMarkers: this.breederMarkers,
       hasSearched: this.hasSearched,
       mobileActiveTab: this.mobileActiveTab,
@@ -502,14 +526,16 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.selectedBreed = state.selectedBreed ?? null;
       this.selectedAnimalKind = state.selectedAnimalKind ?? '';
       this.radius = state.radius ?? 40;
+      this.searchMode = state.searchMode ?? 'both';
       this.mapCenter = state.mapCenter ?? { latitude: 39.8283, longitude: -98.5795 };
       this.searchResults = state.searchResults ?? [];
+      this.serviceResults = state.serviceResults ?? [];
       this.breederMarkers = state.breederMarkers ?? [];
       this.hasSearched = state.hasSearched ?? false;
       this.mobileActiveTab = state.mobileActiveTab ?? 'list';
       this.drawerBreedTerm = state.drawerBreedTerm ?? '';
       this.cdr.detectChanges();
-      return this.hasSearched; // only skip geolocation if we actually had results
+      return this.hasSearched;
     } catch {
       return false;
     }

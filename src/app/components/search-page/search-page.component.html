@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo">🐾 Find Breeders</h1>
+      <h1 class="search-logo">🐾 Find Breeders & Services</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -14,6 +14,41 @@
         (animalKindChange)="onAnimalKindChange($event)"
         (search)="onSearch()">
       </app-search-controls>
+    </div>
+  </div>
+
+  <!-- ===== Search Mode Toggle ===== -->
+  <div class="search-mode-bar">
+    <div class="search-mode-toggle" role="group" aria-label="What to search for">
+      <button
+        class="mode-btn"
+        [class.mode-btn--active]="searchMode === 'both'"
+        (click)="setSearchMode('both')"
+        type="button">
+        <i class="bi bi-grid-3x3-gap"></i> All
+      </button>
+      <button
+        class="mode-btn"
+        [class.mode-btn--active]="searchMode === 'breeders'"
+        (click)="setSearchMode('breeders')"
+        type="button">
+        <i class="bi bi-house-heart"></i> Breeders
+      </button>
+      <button
+        class="mode-btn mode-btn--service"
+        [class.mode-btn--active]="searchMode === 'services'"
+        (click)="setSearchMode('services')"
+        type="button">
+        <i class="bi bi-briefcase"></i> Services
+      </button>
+    </div>
+    <div class="search-mode-counts" *ngIf="hasSearched">
+      <span *ngIf="searchMode !== 'services'" class="count-badge count-badge--breeder">
+        {{ searchResults.length }} breeder{{ searchResults.length !== 1 ? 's' : '' }}
+      </span>
+      <span *ngIf="searchMode !== 'breeders'" class="count-badge count-badge--service">
+        {{ serviceResults.length }} service{{ serviceResults.length !== 1 ? 's' : '' }}
+      </span>
     </div>
   </div>
 
@@ -165,8 +200,8 @@
       role="tab"
       [attr.aria-selected]="mobileActiveTab === 'list'">
       <i class="bi bi-list-ul"></i>
-      Breeders
-      <span class="mobile-tab-badge" *ngIf="searchResults.length > 0">{{ searchResults.length }}</span>
+      Results
+      <span class="mobile-tab-badge" *ngIf="searchResults.length + serviceResults.length > 0">{{ searchResults.length + serviceResults.length }}</span>
     </button>
   </div>
 
@@ -215,13 +250,12 @@
       <div class="results-header">
         <h3 class="results-title">
           <i class="bi bi-geo-alt-fill"></i>
-          Breeders Near You
+          Near You
         </h3>
-        <span class="results-badge" *ngIf="searchResults.length > 0">{{ searchResults.length }}</span>
       </div>
 
-      <!-- Animal Kind Filter Pills -->
-      <div class="animal-kind-pills">
+      <!-- Animal Kind Filter Pills (breeders only) -->
+      <div class="animal-kind-pills" *ngIf="searchMode !== 'services'">
         <button
           *ngFor="let pt of petTypes"
           class="kind-pill"
@@ -233,13 +267,70 @@
       </div>
 
       <div class="results-list">
-        <app-breeder-card-list
-          [breeders]="searchResults"
-          [highlightedId]="highlightedBreederId"
-          [isLoading]="isLoading"
-          (cardClick)="onCardClick($event)"
-          (cardHover)="onCardHover($event)">
-        </app-breeder-card-list>
+
+        <!-- Breeders section -->
+        <div *ngIf="searchMode !== 'services'">
+          <div class="results-section-header" *ngIf="searchMode === 'both'">
+            <i class="bi bi-house-heart"></i>
+            <span>Breeders</span>
+            <span class="results-badge">{{ searchResults.length }}</span>
+          </div>
+          <app-breeder-card-list
+            [breeders]="searchResults"
+            [highlightedId]="highlightedBreederId"
+            [isLoading]="isLoading && searchMode !== 'services'"
+            (cardClick)="onCardClick($event)"
+            (cardHover)="onCardHover($event)">
+          </app-breeder-card-list>
+        </div>
+
+        <!-- Service Providers section -->
+        <div *ngIf="searchMode !== 'breeders'">
+          <div class="results-section-header results-section-header--service" *ngIf="searchMode === 'both'">
+            <i class="bi bi-briefcase"></i>
+            <span>Service Providers</span>
+            <span class="results-badge results-badge--service">{{ serviceResults.length }}</span>
+          </div>
+
+          <div *ngIf="isLoading && searchMode !== 'breeders'" class="sp-loading">
+            <div class="sp-spinner"></div>
+          </div>
+
+          <div *ngIf="!isLoading && serviceResults.length === 0 && hasSearched && searchMode === 'services'" class="sp-empty">
+            <i class="bi bi-briefcase"></i>
+            <p>No service providers found in this area.</p>
+          </div>
+
+          <div class="sp-card" *ngFor="let sp of serviceResults" (click)="onCardClick(sp.user_id)">
+            <div class="sp-card__header">
+              <div class="sp-card__avatar">
+                <img *ngIf="sp.profile_image_url" [src]="sp.profile_image_url" [alt]="sp.provider_name" />
+                <i *ngIf="!sp.profile_image_url" class="bi bi-person-circle"></i>
+              </div>
+              <div class="sp-card__info">
+                <h4 class="sp-card__name">{{ sp.provider_name }}</h4>
+                <div class="sp-card__distance" *ngIf="sp.distance_km != null">
+                  <i class="bi bi-geo-alt"></i>
+                  {{ (sp.distance_km * 0.621371).toFixed(1) }} mi away
+                </div>
+              </div>
+              <span class="sp-card__badge">Service</span>
+            </div>
+            <p class="sp-card__desc" *ngIf="sp.service_description">{{ sp.service_description }}</p>
+            <div class="sp-card__categories">
+              <span class="sp-cat-pill" *ngFor="let cat of sp.categories">
+                {{ cat.name }}
+              </span>
+            </div>
+            <div class="sp-card__footer">
+              <span class="sp-card__count">
+                <i class="bi bi-list-check"></i>
+                {{ sp.active_services_count }} service{{ sp.active_services_count !== 1 ? 's' : '' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
