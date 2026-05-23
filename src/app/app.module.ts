@@ -61,6 +61,7 @@ import { GuestToAccountComponent } from './components/guest-to-account/guest-to-
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { ServiceProviderRegistrationComponent } from './components/service-provider-registration/service-provider-registration.component';
 import { ServicesComponent } from './components/services/services.component';
+import { ServiceCategoriesSettingsComponent } from './components/settings/service-categories-settings/service-categories-settings.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
@@ -159,6 +160,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     AuthCallbackComponent,
     ServiceProviderRegistrationComponent,
     ServicesComponent,
+    ServiceCategoriesSettingsComponent,
     BreederySettingsComponent,
     NotificationSettingsComponent,
     SubscriptionSettingsComponent,

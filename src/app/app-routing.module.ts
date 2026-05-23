@@ -31,6 +31,7 @@ import { FavoritesListComponent } from './components/favorites-list/favorites-li
 import { ServiceProviderRegistrationComponent } from './components/service-provider-registration/service-provider-registration.component';
 import { ServicesComponent } from './components/services/services.component';
 import { ServiceProviderGuard } from './guard/service-provider.guard';
+import { ServiceCategoriesSettingsComponent } from './components/settings/service-categories-settings/service-categories-settings.component';
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
 import { MessageNewComponent } from './components/message-new/message-new.component';
@@ -88,10 +89,11 @@ const routes: Routes = [
       { path: '', redirectTo: 'general', pathMatch: 'full' },
       { path: 'general', component: GeneralSettingsComponent },
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
-      { path: 'locations', component: BreedingLocationsComponent, canActivate: [BreederGuard] },
+      { path: 'locations', component: BreedingLocationsComponent },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
       { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
-      { path: 'support', component: SupportSettingsComponent }
+      { path: 'support', component: SupportSettingsComponent },
+      { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }
     ]
   },
 ];

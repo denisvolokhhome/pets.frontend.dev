@@ -18,8 +18,12 @@ export class SettingsComponent {
   get isBreeder(): boolean {
     return this.authService.isBreeder;
   }
+
+  get isServiceProvider(): boolean {
+    return this.authService.isServiceProvider;
+  }
   
-  navigateToSection(section: 'general' | 'breedery' | 'locations' | 'messages' | 'notifications' | 'subscription' | 'support'): void {
+  navigateToSection(section: string): void {
     this.router.navigate(['/settings', section]);
   }
   

@@ -1,0 +1,54 @@
+<div class="section-container">
+  <div class="section-header">
+    <h2 class="section-title">My Service Categories</h2>
+    <p class="section-subtitle">Select all the services you offer. Changes are saved when you click Save.</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="state-loading" aria-live="polite">
+    <div class="spinner"></div>
+    <span>Loading categories...</span>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="loadError && !isLoading" class="state-error" role="alert">
+    <i class="bi bi-exclamation-circle"></i>
+    {{ loadError }}
+    <button type="button" class="btn-retry" (click)="loadData()">Try again</button>
+  </div>
+
+  <!-- Category grid -->
+  <div *ngIf="!isLoading && !loadError" class="categories-section">
+    <div class="category-grid" role="group" aria-label="Service categories">
+      <button
+        *ngFor="let cat of allCategories"
+        type="button"
+        class="category-card"
+        [class.category-card--selected]="isSelected(cat.id)"
+        (click)="toggleCategory(cat.id)"
+        [attr.aria-pressed]="isSelected(cat.id)"
+        [attr.aria-label]="cat.name"
+      >
+        <i class="bi {{ getCategoryIcon(cat.slug) }} category-card__icon" aria-hidden="true"></i>
+        <span class="category-card__name">{{ cat.name }}</span>
+        <i *ngIf="isSelected(cat.id)" class="bi bi-check-circle-fill category-card__check" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="save-row">
+      <span class="selected-count">
+        <i class="bi bi-briefcase-check"></i>
+        {{ selectedCount }} categor{{ selectedCount === 1 ? 'y' : 'ies' }} selected
+      </span>
+      <button
+        type="button"
+        class="btn-save"
+        (click)="saveCategories()"
+        [disabled]="isSaving || selectedCount === 0"
+      >
+        <i [class]="isSaving ? 'bi bi-arrow-repeat spin' : 'bi bi-check-lg'" aria-hidden="true"></i>
+        {{ isSaving ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </div>
+</div>

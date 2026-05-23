@@ -16,11 +16,18 @@
         Breedery Information
       </button>
       <button 
-        *ngIf="isBreeder"
+        *ngIf="isBreeder || isServiceProvider"
         class="sidebar-nav-item" 
         [class.active]="isActive('locations')"
         (click)="navigateToSection('locations')">
-        Breeding Locations
+        {{ isServiceProvider ? 'Service Locations' : 'Breeding Locations' }}
+      </button>
+      <button 
+        *ngIf="isServiceProvider"
+        class="sidebar-nav-item" 
+        [class.active]="isActive('service-categories')"
+        (click)="navigateToSection('service-categories')">
+        My Service Categories
       </button>
       <button 
         *ngIf="isBreeder"
