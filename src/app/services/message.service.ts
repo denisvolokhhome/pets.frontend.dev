@@ -207,9 +207,12 @@ export class MessageService {
         .pipe(catchError(this.handleError));
     }
     
-    // Otherwise use the general send endpoint
+    // Otherwise use the direct message endpoint (authenticated users only)
     return this.http
-      .post<ThreadMessage>(`${this.apiUrl}/messages/send`, messageData, { headers })
+      .post<ThreadMessage>(`${this.apiUrl}/messages/direct`, {
+        receiver_id: messageData.receiver_id,
+        message: messageData.message,
+      }, { headers })
       .pipe(catchError(this.handleError));
   }
 
