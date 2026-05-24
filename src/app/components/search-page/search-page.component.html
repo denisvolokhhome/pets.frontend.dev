@@ -327,8 +327,22 @@
                 <i class="bi bi-list-check"></i>
                 {{ sp.active_services_count }} service{{ sp.active_services_count !== 1 ? 's' : '' }}
               </span>
+              <button
+                class="sp-contact-btn"
+                type="button"
+                (click)="$event.stopPropagation(); openContactServiceProvider(sp)"
+                aria-label="Contact service provider">
+                <i class="bi bi-chat-dots"></i> Contact
+              </button>
             </div>
           </div>
+
+          <!-- Contact Service Provider Modal -->
+          <app-contact-service-provider
+            [providerId]="selectedServiceProvider?.user_id"
+            [providerName]="selectedServiceProvider?.provider_name"
+            [(visible)]="showContactServiceProvider">
+          </app-contact-service-provider>
         </div>
 
       </div>

@@ -44,6 +44,10 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   // Search mode: breeders only, services only, or both
   searchMode: SearchMode = 'both';
 
+  // Contact service provider modal
+  showContactServiceProvider = false;
+  selectedServiceProvider: any = null;
+
   // UI state
   isLoading: boolean = false;
   error: string | null = null;
@@ -281,15 +285,26 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         // Build breeder markers (red/default)
         const breederMarkers = toBreederMarkers(this.searchResults);
 
-        // Build service provider markers (teal) — reuse BreederMarker shape
+        // Build service provider markers — adapt to BreederMarker shape
         const serviceMarkers: BreederMarker[] = this.serviceResults
           .filter((sp: any) => sp.latitude && sp.longitude)
           .map((sp: any) => ({
             id: sp.user_id,
-            latitude: sp.latitude,
-            longitude: sp.longitude,
-            name: sp.provider_name,
-            isService: true,
+            position: { latitude: sp.latitude, longitude: sp.longitude },
+            breeder: {
+              location_id: 0,
+              user_id: sp.user_id,
+              breeder_name: sp.provider_name,
+              latitude: sp.latitude,
+              longitude: sp.longitude,
+              distance: sp.distance_km ?? 0,
+              available_breeds: [],
+              thumbnail_url: sp.profile_image_url ?? null,
+              location_description: sp.service_description ?? null,
+              rating: null,
+              review_count: 0,
+              isService: true,
+            } as any,
           }));
 
         this.breederMarkers = [...breederMarkers, ...serviceMarkers];
@@ -326,6 +341,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     if (this.hasSearched && this.zipCode) {
       this.onSearch();
     }
+  }
+
+  openContactServiceProvider(sp: any): void {
+    this.selectedServiceProvider = sp;
+    this.showContactServiceProvider = true;
   }
 
   /**

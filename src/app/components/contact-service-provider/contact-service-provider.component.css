@@ -1,0 +1,287 @@
+/* ── Overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.closing { animation: fadeOut 0.28s ease forwards; }
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ── Dialog ── */
+.modal-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideIn 0.25s ease-out;
+}
+
+.modal-dialog.closing { animation: slideDown 0.28s cubic-bezier(0.4, 0, 1, 1) forwards; }
+.modal-dialog.dragging { transition: none !important; animation: none !important; }
+
+@keyframes slideIn   { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 1; transform: translateY(0); }     to { opacity: 0; transform: translateY(40px); } }
+
+/* ── Header ── */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+}
+
+.close-btn:hover { background: #e5e7eb; color: #111827; }
+
+/* ── Body ── */
+.modal-body { padding: 1.5rem; }
+
+.modal-desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ── Auth required state ── */
+.auth-required {
+  text-align: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.auth-icon {
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.auth-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.75rem;
+}
+
+.auth-desc {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Success state ── */
+.success-state {
+  text-align: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+  color: #10b981;
+  margin-bottom: 1rem;
+}
+
+.success-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.75rem;
+}
+
+.success-desc {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Form ── */
+.form-group { margin-bottom: 1rem; }
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.required { color: #dc2626; }
+
+.form-control {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9375rem;
+  color: #111827;
+  background: white;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
+}
+
+textarea.form-control { resize: vertical; min-height: 120px; }
+
+.form-control.is-invalid { border-color: #dc2626; }
+
+.invalid-feedback {
+  display: block;
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  color: #dc2626;
+}
+
+.char-count {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: right;
+}
+
+/* ── Footer ── */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 42px;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--secondary-color, #4ecdc4);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) { background: #3aafa9; }
+
+.btn-outline {
+  background: white;
+  color: #374151;
+  border: 1.5px solid #d1d5db;
+}
+
+.btn-outline:hover:not(:disabled) { background: #f9fafb; border-color: #9ca3af; }
+
+.mr-2 { margin-right: 0.5rem; }
+
+/* ── Spinner ── */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Mobile bottom sheet ── */
+@media (max-width: 640px) {
+  .modal-overlay { align-items: flex-end; padding: 0; }
+
+  .modal-dialog {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    animation: slideUpSheet 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .modal-dialog.closing { animation: slideDownSheet 0.28s cubic-bezier(0.4, 0, 1, 1) forwards; }
+
+  @keyframes slideUpSheet   { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes slideDownSheet { from { transform: translateY(0); }    to { transform: translateY(100%); } }
+
+  /* Drag handle */
+  .modal-header::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background: #d1d5db;
+    border-radius: 2px;
+    margin: 0 auto 0.75rem;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer { padding: 1rem; }
+
+  .modal-footer { flex-direction: column-reverse; padding-bottom: 2rem; }
+
+  .btn { width: 100%; min-height: 48px; }
+
+  .auth-actions,
+  .success-actions { gap: 0.625rem; }
+}

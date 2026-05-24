@@ -901,6 +901,8 @@
 .sp-card__footer {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid #f3f4f6;
 }
@@ -908,6 +910,32 @@
 .sp-card__count {
   font-size: 0.8125rem;
   color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.sp-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border: 1.5px solid var(--secondary-color, #4ecdc4);
+  border-radius: 8px;
+  background: white;
+  color: #0d9488;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  min-height: 34px;
+}
+
+.sp-contact-btn:hover {
+  background: var(--secondary-color, #4ecdc4);
+  color: white;
+}
   display: flex;
   align-items: center;
   gap: 0.375rem;

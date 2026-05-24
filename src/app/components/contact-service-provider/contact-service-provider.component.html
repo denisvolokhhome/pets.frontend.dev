@@ -1,0 +1,124 @@
+<div class="modal-overlay" *ngIf="visible" [class.closing]="isClosing" (click)="close()">
+  <div class="modal-dialog"
+       [class.closing]="isClosing"
+       [class.dragging]="dragOffsetY > 0"
+       [style.transform]="dragOffsetY > 0 ? 'translateY(' + dragOffsetY + 'px)' : ''"
+       (click)="$event.stopPropagation()"
+       (touchstart)="onDragStart($event)"
+       (touchmove)="onDragMove($event)"
+       (touchend)="onDragEnd()">
+
+    <!-- ── Not logged in ── -->
+    <ng-container *ngIf="!isLoggedIn">
+      <div class="modal-header">
+        <h2 class="modal-title">Contact {{ providerName }}</h2>
+        <button type="button" class="close-btn" (click)="close()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="auth-required">
+          <div class="auth-icon">
+            <i class="bi bi-lock-fill"></i>
+          </div>
+          <h3 class="auth-title">Sign in to send a message</h3>
+          <p class="auth-desc">
+            To contact <strong>{{ providerName }}</strong> you need a Breedly account.
+            This keeps your conversations organised and lets you receive replies.
+          </p>
+          <div class="auth-actions">
+            <button type="button" class="btn btn-primary" (click)="goToLogin()">
+              <i class="bi bi-box-arrow-in-right mr-2"></i>Sign In
+            </button>
+            <button type="button" class="btn btn-outline" (click)="goToRegister()">
+              <i class="bi bi-person-plus mr-2"></i>Create Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ── Logged in — message sent ── -->
+    <ng-container *ngIf="isLoggedIn && sent">
+      <div class="modal-header">
+        <h2 class="modal-title">Message Sent!</h2>
+        <button type="button" class="close-btn" (click)="close()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="success-state">
+          <div class="success-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <h3 class="success-title">Your message has been sent</h3>
+          <p class="success-desc">
+            {{ providerName }} will receive your message and can reply through Breedly.
+            You can track the conversation in your Messages.
+          </p>
+          <div class="success-actions">
+            <button type="button" class="btn btn-primary" (click)="goToMessages()">
+              <i class="bi bi-chat-dots mr-2"></i>View Messages
+            </button>
+            <button type="button" class="btn btn-outline" (click)="close()">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ── Logged in — compose form ── -->
+    <ng-container *ngIf="isLoggedIn && !sent">
+      <div class="modal-header">
+        <h2 class="modal-title">Contact {{ providerName }}</h2>
+        <button type="button" class="close-btn" (click)="close()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <p class="modal-desc">
+            Send a message to <strong>{{ providerName }}</strong>. They will be able to reply through Breedly.
+          </p>
+
+          <div class="form-group">
+            <label for="sp-message" class="form-label">
+              Message <span class="required">*</span>
+            </label>
+            <textarea
+              id="sp-message"
+              formControlName="message"
+              class="form-control"
+              [class.is-invalid]="messageCtrl?.invalid && messageCtrl?.touched"
+              placeholder="Describe what you're looking for, your pet's details, preferred schedule..."
+              rows="5"
+              maxlength="2000"
+            ></textarea>
+            <div class="char-count">{{ messageCtrl?.value?.length || 0 }} / 2000</div>
+            <div class="invalid-feedback" *ngIf="messageCtrl?.invalid && messageCtrl?.touched">
+              <span *ngIf="messageCtrl?.errors?.['required']">Please enter a message</span>
+              <span *ngIf="messageCtrl?.errors?.['minlength']">Message must be at least 10 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="close()" [disabled]="isSubmitting">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">
+              <i class="bi bi-send mr-2"></i>Send Message
+            </span>
+            <span *ngIf="isSubmitting">
+              <span class="spinner"></span> Sending...
+            </span>
+          </button>
+        </div>
+      </form>
+    </ng-container>
+
+  </div>
+</div>
