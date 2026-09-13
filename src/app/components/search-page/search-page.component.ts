@@ -6,14 +6,15 @@ import { ServiceProviderService } from '../../services/service-provider.service'
 import { ToastService } from '../../services/toast.service';
 import { MapComponent } from '../map/map.component';
 import { IPetType, PET_TYPES } from '../../models/pet-type';
-import { 
-  Coordinates, 
-  Breed, 
-  BreederSearchResult, 
+import {
+  Coordinates,
+  Breed,
+  BreederSearchResult,
   BreederMarker,
   toBreederMarkers,
   SearchValidators
 } from '../../models/search';
+import { environment } from 'src/environments/environment';
 
 export type SearchMode = 'breeders' | 'services' | 'both';
 
@@ -41,8 +42,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   serviceResults: any[] = [];
   highlightedBreederId: string | null = null;
 
+  // Service providers are hidden pre-launch behind this flag.
+  readonly serviceProvidersEnabled = environment.enableServiceProviders;
+
   // Search mode: breeders only, services only, or both
-  searchMode: SearchMode = 'both';
+  searchMode: SearchMode = this.serviceProvidersEnabled ? 'both' : 'breeders';
 
   // Contact service provider modal
   showContactServiceProvider = false;
@@ -267,7 +271,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         ).pipe(catchError(() => of([])))
       : of([]);
 
-    const services$ = (this.searchMode === 'services' || this.searchMode === 'both')
+    const services$ = (this.serviceProvidersEnabled && (this.searchMode === 'services' || this.searchMode === 'both'))
       ? this.serviceProviderService.searchServices({
           latitude: coordinates.latitude,
           longitude: coordinates.longitude,
@@ -337,6 +341,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   setSearchMode(mode: SearchMode): void {
+    if (!this.serviceProvidersEnabled && mode !== 'breeders') {
+      return;
+    }
     this.searchMode = mode;
     if (this.hasSearched && this.zipCode) {
       this.onSearch();
@@ -344,6 +351,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   openContactServiceProvider(sp: any): void {
+    if (!this.serviceProvidersEnabled) {
+      return;
+    }
     this.selectedServiceProvider = sp;
     this.showContactServiceProvider = true;
   }
@@ -546,10 +556,10 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.selectedBreed = state.selectedBreed ?? null;
       this.selectedAnimalKind = state.selectedAnimalKind ?? '';
       this.radius = state.radius ?? 40;
-      this.searchMode = state.searchMode ?? 'both';
+      this.searchMode = this.serviceProvidersEnabled ? (state.searchMode ?? 'both') : 'breeders';
       this.mapCenter = state.mapCenter ?? { latitude: 39.8283, longitude: -98.5795 };
       this.searchResults = state.searchResults ?? [];
-      this.serviceResults = state.serviceResults ?? [];
+      this.serviceResults = this.serviceProvidersEnabled ? (state.serviceResults ?? []) : [];
       this.breederMarkers = state.breederMarkers ?? [];
       this.hasSearched = state.hasSearched ?? false;
       this.mobileActiveTab = state.mobileActiveTab ?? 'list';

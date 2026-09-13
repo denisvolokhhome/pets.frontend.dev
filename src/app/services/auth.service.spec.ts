@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { AuthService } from './auth.service';
 import { IUser } from '../models/user';
+import { environment } from 'src/environments/environment';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -77,11 +78,27 @@ describe('AuthService — account type getters', () => {
   });
 
   // ── isServiceProvider ─────────────────────────────────────────────────────
+  // Service providers are hidden behind the enableServiceProviders feature
+  // flag pre-launch — isServiceProvider must report false regardless of
+  // account_type while the flag is off, and only reflect account_type once
+  // the flag is on.
 
   describe('isServiceProvider', () => {
-    it('returns true when account_type is service', () => {
+    afterEach(() => {
+      // Restore the flag to its default (off) so other tests aren't affected.
+      (environment as any).enableServiceProviders = false;
+    });
+
+    it('returns true when account_type is service and the feature flag is enabled', () => {
+      (environment as any).enableServiceProviders = true;
       (service as any).currentUserSubject.next(makeUser({ is_breeder: false, account_type: 'service' }));
       expect(service.isServiceProvider).toBeTrue();
+    });
+
+    it('returns false when account_type is service but the feature flag is disabled', () => {
+      (environment as any).enableServiceProviders = false;
+      (service as any).currentUserSubject.next(makeUser({ is_breeder: false, account_type: 'service' }));
+      expect(service.isServiceProvider).toBeFalse();
     });
 
     it('returns false when account_type is breeder', () => {
@@ -122,11 +139,13 @@ describe('AuthService — account type getters', () => {
       expect(service.isServiceProvider).toBeFalse();
     });
 
-    it('a service provider is not a breeder and not a pet seeker', () => {
+    it('a service provider is not a breeder and not a pet seeker (feature flag enabled)', () => {
+      (environment as any).enableServiceProviders = true;
       (service as any).currentUserSubject.next(makeUser({ is_breeder: false, account_type: 'service' }));
       expect(service.isBreeder).toBeFalse();
       expect(service.isPetSeeker).toBeFalse();
       expect(service.isServiceProvider).toBeTrue();
+      (environment as any).enableServiceProviders = false;
     });
   });
 });

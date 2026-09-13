@@ -61,8 +61,9 @@
               aria-label="Register as a pet seeker">
               <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>Register as Pet Seeker
             </button>
-            <button 
-              class="cta-service-provider" 
+            <button
+              *ngIf="serviceProvidersEnabled"
+              class="cta-service-provider"
               (click)="navigateToServiceProviderRegister()"
               aria-label="Register as a service provider">
               <i class="bi bi-briefcase mr-2" aria-hidden="true"></i>Register as Service Provider
@@ -131,8 +132,9 @@
             id="petSeeker-tab">
             <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>For Pet Seekers
           </button>
-          <button 
-            class="px-4 py-2 rounded-lg transition-colors flow-toggle-btn" 
+          <button
+            *ngIf="serviceProvidersEnabled"
+            class="px-4 py-2 rounded-lg transition-colors flow-toggle-btn"
             [class.active]="selectedFlow === 'serviceProvider'"
             (click)="selectFlow('serviceProvider')"
             role="tab"
@@ -209,8 +211,9 @@
             aria-label="Sign up as a pet seeker">
             <i class="bi bi-search-heart mr-2" aria-hidden="true"></i>Register as Pet Seeker
           </button>
-          <button 
-            class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button" 
+          <button
+            *ngIf="serviceProvidersEnabled"
+            class="px-6 py-3 text-lg bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors cta-footer-button"
             (click)="navigateToServiceProviderRegister()"
             aria-label="Sign up as a service provider">
             <i class="bi bi-briefcase mr-2" aria-hidden="true"></i>Register as Service Provider

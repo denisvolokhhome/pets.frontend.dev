@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface Feature {
   icon: string;
@@ -98,6 +99,9 @@ export class HomeComponent {
     }
   ];
 
+  // Service provider accounts are hidden pre-launch behind this flag.
+  readonly serviceProvidersEnabled = environment.enableServiceProviders;
+
   selectedFlow: 'breeder' | 'petSeeker' | 'serviceProvider' = 'breeder';
 
   serviceProviderSteps: Step[] = [
@@ -130,6 +134,9 @@ export class HomeComponent {
   constructor(private router: Router) {}
 
   selectFlow(flow: 'breeder' | 'petSeeker' | 'serviceProvider'): void {
+    if (flow === 'serviceProvider' && !this.serviceProvidersEnabled) {
+      return;
+    }
     this.selectedFlow = flow;
   }
 
@@ -148,6 +155,9 @@ export class HomeComponent {
   }
 
   navigateToServiceProviderRegister(): void {
+    if (!this.serviceProvidersEnabled) {
+      return;
+    }
     this.router.navigate(['/register'], { queryParams: { type: 'service' } });
   }
 

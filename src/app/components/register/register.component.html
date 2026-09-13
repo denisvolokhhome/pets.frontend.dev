@@ -61,6 +61,7 @@
           </button>
 
           <button
+            *ngIf="serviceProvidersEnabled"
             type="button"
             class="account-type-card"
             [class.selected]="selectedAccountType === 'service'"
@@ -75,7 +76,7 @@
         </div>
 
         <!-- Service provider hint -->
-        <div *ngIf="selectedAccountType === 'service'" class="sp-hint">
+        <div *ngIf="serviceProvidersEnabled && selectedAccountType === 'service'" class="sp-hint">
           <i class="bi bi-info-circle"></i>
           You can add your service categories after registration from your Settings.
         </div>

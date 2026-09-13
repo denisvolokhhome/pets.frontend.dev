@@ -4,11 +4,21 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { HomeComponent } from './home.component';
+import { environment } from 'src/environments/environment';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let router: Router;
+
+  // component.serviceProvidersEnabled is captured from `environment` at
+  // construction time, so tests that need the flag on must set it BEFORE
+  // calling this and get a fresh instance.
+  function createComponent(): void {
+    fixture = TestBed.createComponent(HomeComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,10 +26,13 @@ describe('HomeComponent', () => {
       imports: [RouterTestingModule, CommonModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomeComponent);
-    component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    fixture.detectChanges();
+    createComponent();
+  });
+
+  afterEach(() => {
+    // Restore the feature flag to its default (off) so other tests aren't affected.
+    (environment as any).enableServiceProviders = false;
   });
 
   it('should create', () => {
@@ -48,12 +61,21 @@ describe('HomeComponent', () => {
     expect(component.selectedFlow).toBe('petSeeker');
   });
 
-  it('selectFlow("serviceProvider") switches to service provider flow', () => {
+  it('selectFlow("serviceProvider") switches to service provider flow when the feature flag is enabled', () => {
+    (environment as any).enableServiceProviders = true;
+    createComponent();
     component.selectFlow('serviceProvider');
     expect(component.selectedFlow).toBe('serviceProvider');
   });
 
+  it('selectFlow("serviceProvider") is a no-op when the feature flag is disabled (default)', () => {
+    component.selectFlow('serviceProvider');
+    expect(component.selectedFlow).toBe('breeder');
+  });
+
   it('selectFlow("breeder") switches back to breeder flow', () => {
+    (environment as any).enableServiceProviders = true;
+    createComponent();
     component.selectFlow('serviceProvider');
     component.selectFlow('breeder');
     expect(component.selectedFlow).toBe('breeder');
@@ -71,7 +93,9 @@ describe('HomeComponent', () => {
     expect(component.currentSteps).toBe(component.petSeekerSteps);
   });
 
-  it('currentSteps returns serviceProviderSteps when flow is serviceProvider', () => {
+  it('currentSteps returns serviceProviderSteps when flow is serviceProvider (feature flag enabled)', () => {
+    (environment as any).enableServiceProviders = true;
+    createComponent();
     component.selectFlow('serviceProvider');
     expect(component.currentSteps).toBe(component.serviceProviderSteps);
   });
@@ -107,10 +131,18 @@ describe('HomeComponent', () => {
     expect(spy).toHaveBeenCalledWith(['/register/pet-seeker']);
   });
 
-  it('navigateToServiceProviderRegister navigates to /register/service-provider', () => {
+  it('navigateToServiceProviderRegister navigates to /register?type=service when the feature flag is enabled', () => {
+    (environment as any).enableServiceProviders = true;
+    createComponent();
     const spy = spyOn(router, 'navigate');
     component.navigateToServiceProviderRegister();
-    expect(spy).toHaveBeenCalledWith(['/register/service-provider']);
+    expect(spy).toHaveBeenCalledWith(['/register'], { queryParams: { type: 'service' } });
+  });
+
+  it('navigateToServiceProviderRegister is a no-op when the feature flag is disabled (default)', () => {
+    const spy = spyOn(router, 'navigate');
+    component.navigateToServiceProviderRegister();
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('navigateToSearchPets navigates to /search-pets', () => {

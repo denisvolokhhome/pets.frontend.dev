@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from '../services/toast.service';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,12 @@ export class ServiceProviderGuard {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
+    // Service providers are hidden pre-launch — the route doesn't exist for anyone.
+    if (!environment.enableServiceProviders) {
+      this.router.navigate(['dashboard']);
+      return false;
+    }
+
     return this.authService.IsLoggedIn().pipe(
       map((user) => {
         if (!user) {

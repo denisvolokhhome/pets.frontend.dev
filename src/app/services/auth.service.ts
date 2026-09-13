@@ -163,9 +163,13 @@ export class AuthService {
     return user.account_type === 'pet_seeker' || (!user.account_type && !user.is_breeder);
   }
 
-  // Computed property: Check if current user is a service provider
+  // Computed property: Check if current user is a service provider.
+  // Gated by the feature flag: service providers are hidden pre-launch, so
+  // this reports false even for an actual 'service' account_type while the
+  // flag is off — that keeps all service-provider nav/UI hidden everywhere
+  // that delegates to this getter (left menu, settings, dashboard, guard).
   get isServiceProvider(): boolean {
-    return this.currentUserSubject.value?.account_type === 'service';
+    return environment.enableServiceProviders && this.currentUserSubject.value?.account_type === 'service';
   }
 
   /**

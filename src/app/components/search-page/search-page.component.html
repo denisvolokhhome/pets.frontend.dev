@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo">🐾 Find Breeders & Services</h1>
+      <h1 class="search-logo">🐾 Find Breeders{{ serviceProvidersEnabled ? ' & Services' : '' }}</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -18,7 +18,7 @@
   </div>
 
   <!-- ===== Search Mode Toggle ===== -->
-  <div class="search-mode-bar">
+  <div class="search-mode-bar" *ngIf="serviceProvidersEnabled">
     <div class="search-mode-toggle" role="group" aria-label="What to search for">
       <button
         class="mode-btn"

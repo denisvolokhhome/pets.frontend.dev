@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -19,6 +20,9 @@ export class RegisterComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  // Service provider account type is hidden pre-launch behind this flag.
+  readonly serviceProvidersEnabled = environment.enableServiceProviders;
+
   ngOnInit(): void {
     this.service.IsLoggedIn().subscribe((res) => {
       if (res) {
@@ -27,7 +31,7 @@ export class RegisterComponent implements OnInit {
     });
     // Pre-select account type from query param (e.g. ?type=service from home page CTA)
     this.route.queryParams.subscribe(params => {
-      if (params['type'] === 'service') {
+      if (params['type'] === 'service' && this.serviceProvidersEnabled) {
         this.selectAccountType('service');
         this.currentStep = 1;
       }
@@ -52,6 +56,9 @@ export class RegisterComponent implements OnInit {
   selectedAccountType: 'breeder' | 'pet_seeker' | 'service' | null = null;
 
   selectAccountType(type: 'breeder' | 'pet_seeker' | 'service'): void {
+    if (type === 'service' && !this.serviceProvidersEnabled) {
+      return;
+    }
     this.selectedAccountType = type;
     if (type !== 'service') {
       this.selectedCategoryIds = [];
