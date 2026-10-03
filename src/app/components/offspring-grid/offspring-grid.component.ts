@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
+import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -51,9 +51,9 @@ export class OffspringGridComponent implements OnInit {
     private router: Router,
     private location: Location,
     private offspringService: OffspringService,
+    private dataService: DataService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef,
-    private http: HttpClient
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -265,7 +265,7 @@ export class OffspringGridComponent implements OnInit {
 
   private loadBreederInfo(): void {
     if (!this.breederId) return;
-    this.http.get<any>(`${environment.API_URL}/users/breeder/${this.breederId}/public`).subscribe({
+    this.dataService.getPublicBreederProfile(this.breederId).subscribe({
       next: (info) => { this.breederInfo = info; this.cdr.detectChanges(); },
       error: () => {}
     });

@@ -1,3 +1,5 @@
+import { IServiceCategory } from './service-category';
+
 export interface IUser {
   id: string;
   email: string;
@@ -15,6 +17,7 @@ export interface IUser {
   is_verified?: boolean;
   is_breeder: boolean;
   account_type?: 'breeder' | 'pet_seeker' | 'service';
+  service_categories?: IServiceCategory[];
 }
 
 export interface IProfileImageResponse {

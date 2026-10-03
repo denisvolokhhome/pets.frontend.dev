@@ -45,7 +45,10 @@ describe('SubscriptionSettingsComponent', () => {
     current_period_start: '2024-01-01T00:00:00Z',
     current_period_end: '2024-02-01T00:00:00Z',
     stripe_customer_id: null,
-    stripe_subscription_id: null
+    stripe_subscription_id: null,
+    pending_plan_id: null,
+    pending_plan_effective_date: null,
+    pending_plan: null
   };
 
   beforeEach(async () => {

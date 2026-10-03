@@ -9,7 +9,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  /* Modal overlays must sit above the navbar (1200) per
+     .kiro/steering/mobile-design.md — 1300 matches the app's other modals. */
+  z-index: 1300;
   padding: 1rem;
   animation: fadeIn 0.2s ease-out;
 }

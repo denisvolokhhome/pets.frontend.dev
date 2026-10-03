@@ -562,4 +562,9 @@ export class DataService {
       .pipe(catchError(this.handleError));
   }
 
+  getPublicBreederProfile(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiurl}/users/breeder/${userId}/public`)
+      .pipe(catchError(this.handleError));
+  }
+
 }

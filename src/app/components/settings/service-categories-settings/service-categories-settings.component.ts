@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToastService } from 'src/app/services/toast.service';
 import { ServiceProviderService } from 'src/app/services/service-provider.service';
+import { DataService } from 'src/app/services/data.service';
 import { IServiceCategory } from 'src/app/models/service-category';
-import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -18,11 +17,9 @@ export class ServiceCategoriesSettingsComponent implements OnInit {
   isSaving = false;
   loadError: string | null = null;
 
-  private apiUrl = environment.API_URL;
-
   constructor(
     private serviceProviderService: ServiceProviderService,
-    private http: HttpClient,
+    private dataService: DataService,
     private toast: ToastService
   ) {}
 
@@ -30,15 +27,11 @@ export class ServiceCategoriesSettingsComponent implements OnInit {
     this.loadData();
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
-  }
-
   private loadData(): void {
     this.isLoading = true;
     this.loadError = null;
 
-    // Load all available categories and current user's categories in parallel
+    // Load all available categories, then the current user's selected ones.
     this.serviceProviderService.getCategories().subscribe({
       next: (cats) => {
         this.allCategories = cats;
@@ -52,11 +45,10 @@ export class ServiceCategoriesSettingsComponent implements OnInit {
   }
 
   private loadCurrentCategories(): void {
-    this.http.get<any>(this.apiUrl + '/auth/users/me', { headers: this.getAuthHeaders() }).subscribe({
+    this.dataService.getCurrentUserProfile().subscribe({
       next: (user) => {
-        // The user object has service_categories from the selectin relationship
-        const userCats: any[] = user.service_categories || [];
-        this.selectedIds = new Set(userCats.map((c: any) => c.id));
+        const userCats = user.service_categories || [];
+        this.selectedIds = new Set(userCats.map((c) => c.id));
         this.isLoading = false;
       },
       error: () => {
@@ -108,32 +100,7 @@ export class ServiceCategoriesSettingsComponent implements OnInit {
     if (this.isSaving) return;
     this.isSaving = true;
 
-    const payload = { category_ids: Array.from(this.selectedIds) };
-
-    this.http.patch<any>(
-      this.apiUrl + '/auth/users/me',
-      payload,
-      { headers: this.getAuthHeaders() }
-    ).subscribe({
-      next: () => {
-        this.isSaving = false;
-        this.toast.success('Service categories updated successfully.');
-      },
-      error: (err) => {
-        this.isSaving = false;
-        // PATCH /users/me may not support category_ids — use a dedicated endpoint
-        this.updateCategoriesViaAuthEndpoint(payload.category_ids);
-      },
-    });
-  }
-
-  private updateCategoriesViaAuthEndpoint(categoryIds: number[]): void {
-    // Use the dedicated service provider categories update endpoint
-    this.http.put<any>(
-      this.apiUrl + '/service-providers/me/categories',
-      { category_ids: categoryIds },
-      { headers: this.getAuthHeaders() }
-    ).subscribe({
+    this.serviceProviderService.updateMyCategories(Array.from(this.selectedIds)).subscribe({
       next: () => {
         this.isSaving = false;
         this.toast.success('Service categories updated successfully.');

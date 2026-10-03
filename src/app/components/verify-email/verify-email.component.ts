@@ -1,9 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -24,7 +22,6 @@ export class VerifyEmailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
     private authService: AuthService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef
@@ -45,10 +42,7 @@ export class VerifyEmailComponent implements OnInit {
 
   verifyToken(token: string): void {
     this.mode = 'verifying';
-    this.http.post<{ access_token: string; token_type: string; user: any }>(
-      `${environment.API_URL}/auth/verify`,
-      { token }
-    ).subscribe({
+    this.authService.verifyEmail(token).subscribe({
       next: (response) => {
         // Store the JWT and update auth state so the user is logged in immediately
         localStorage.setItem('id_token', response.access_token);
@@ -85,10 +79,7 @@ export class VerifyEmailComponent implements OnInit {
     if (this.isResending || this.resendCooldown > 0 || !this.email) return;
     this.isResending = true;
 
-    this.http.post(
-      `${environment.API_URL}/auth/request-verify-token`,
-      { email: this.email }
-    ).subscribe({
+    this.authService.requestVerifyToken(this.email).subscribe({
       next: () => {
         this.isResending = false;
         this.toastr.success('Verification email sent!', 'Email Sent');

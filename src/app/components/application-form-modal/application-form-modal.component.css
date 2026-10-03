@@ -1,6 +1,8 @@
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center; z-index: 1100;
+  /* Modal overlays must sit above the navbar (1200) per
+     .kiro/steering/mobile-design.md — 1300 matches the app's other modals. */
+  display: flex; align-items: center; justify-content: center; z-index: 1300;
 }
 .form-modal {
   background: white; border-radius: 10px; width: 100%; max-width: 560px;

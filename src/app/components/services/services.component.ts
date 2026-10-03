@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ServiceProviderService } from 'src/app/services/service-provider.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IService, IServiceCreate, IServiceUpdate } from 'src/app/models/service';
 import { IServiceCategory } from 'src/app/models/service-category';
-import { environment } from 'src/environments/environment';
 import { PageHeaderConfig } from '../page-header/page-header.component';
 
 @Component({
@@ -59,14 +58,12 @@ export class ServicesComponent implements OnInit {
   // Edit form state (copy of service being edited)
   editForm: IServiceUpdate = {};
 
-  private apiUrl = environment.API_URL;
-
   constructor(
     private serviceProviderService: ServiceProviderService,
     private authService: AuthService,
     private router: Router,
     private toast: ToastService,
-    private http: HttpClient
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
@@ -104,11 +101,7 @@ export class ServicesComponent implements OnInit {
   }
 
   loadLocations(): void {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('id_token')
-    );
-    this.http.get<any[]>(`${this.apiUrl}/locations/`, { headers }).subscribe({
+    this.dataService.getLocations().subscribe({
       next: (locs) => {
         this.locations = locs;
       },

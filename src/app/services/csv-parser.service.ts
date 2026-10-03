@@ -39,7 +39,7 @@ export class CsvParserService {
    */
   generateTemplate(breeds: IBreed[], locations: ILocation[]): string {
     const headers = CSV_HEADERS.join(',');
-    const exampleRow = 'Max,Golden Retriever,Male,2023-01-15,25.5,Friendly dog,Main Kennel,123456789012345,Up to date,Valid,Completed,Available';
+    const exampleRow = 'Max,Golden Retriever,Male,2023-01-15,25.5,Friendly dog,Main Location,123456789012345,Up to date,Valid,Completed,Available';
 
     const breedNames = breeds.map(b => b.name).join(', ');
     const locationNames = locations.map(l => l.name).join(', ');

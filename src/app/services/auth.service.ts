@@ -156,11 +156,15 @@ export class AuthService {
   }
 
   // Computed property: Check if current user is a pet seeker
-  // Service providers are NOT pet seekers even though is_breeder=false
+  // Service providers are NOT pet seekers even though is_breeder=false.
+  // is_breeder is authoritative here (not account_type) — account_type can
+  // lag or be missing for accounts created before it existed, and trusting
+  // it alone previously left non-breeder, non-service accounts matching
+  // neither isBreeder nor isPetSeeker, hiding the "Convert to Breeder" UI.
   get isPetSeeker(): boolean {
     const user = this.currentUserSubject.value;
     if (!user) return false;
-    return user.account_type === 'pet_seeker' || (!user.account_type && !user.is_breeder);
+    return !user.is_breeder && user.account_type !== 'service';
   }
 
   // Computed property: Check if current user is a service provider.
@@ -230,5 +234,22 @@ export class AuthService {
    */
   resetPassword(token: string, password: string): Observable<any> {
     return this.http.post(this.apiurl + '/auth/reset-password', { token, password }, { responseType: 'text' });
+  }
+
+  /**
+   * Verify an email address using the token from the verification email.
+   */
+  verifyEmail(token: string): Observable<{ access_token: string; token_type: string; user: any }> {
+    return this.http.post<{ access_token: string; token_type: string; user: any }>(
+      this.apiurl + '/auth/verify',
+      { token }
+    );
+  }
+
+  /**
+   * Request a new email-verification token be sent to the given address.
+   */
+  requestVerifyToken(email: string): Observable<any> {
+    return this.http.post(this.apiurl + '/auth/request-verify-token', { email });
   }
 }

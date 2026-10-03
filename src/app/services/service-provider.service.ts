@@ -116,6 +116,20 @@ export class ServiceProviderService {
   }
 
   /**
+   * Replace the authenticated provider's selected service categories.
+   */
+  updateMyCategories(categoryIds: number[]): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .put<any>(
+        `${this.apiUrl}/service-providers/me/categories`,
+        { category_ids: categoryIds },
+        { headers }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Get authorization headers with JWT token
    */
   private getAuthHeaders(): HttpHeaders {

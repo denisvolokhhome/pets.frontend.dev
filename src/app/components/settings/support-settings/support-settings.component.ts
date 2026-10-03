@@ -1,14 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { ToastService } from '../../../services/toast.service';
-import { environment } from 'src/environments/environment';
+import { SupportService, ISupportCategory } from '../../../services/support.service';
 
-interface Category {
-  value: string;
-  label: string;
-}
+type Category = ISupportCategory;
 
 @Component({
   standalone: false,
@@ -24,7 +20,7 @@ export class SupportSettingsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private supportService: SupportService,
     public authService: AuthService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef
@@ -40,18 +36,8 @@ export class SupportSettingsComponent implements OnInit {
     this.loadCategories();
   }
 
-  private getAuthHeaders(): HttpHeaders {
-    return new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('id_token')
-    );
-  }
-
   loadCategories(): void {
-    this.http.get<Category[]>(
-      environment.API_URL + '/support/categories',
-      { headers: this.getAuthHeaders() }
-    ).subscribe({
+    this.supportService.getCategories().subscribe({
       next: (cats) => {
         this.categories = cats;
         this.cdr.detectChanges();
@@ -85,11 +71,7 @@ export class SupportSettingsComponent implements OnInit {
     this.isSubmitting = true;
     this.lastRequestNumber = null;
 
-    this.http.post<{ request_number: string; message: string }>(
-      environment.API_URL + '/support/request',
-      this.supportForm.value,
-      { headers: this.getAuthHeaders() }
-    ).subscribe({
+    this.supportService.submitRequest(this.supportForm.value).subscribe({
       next: (response) => {
         this.lastRequestNumber = response.request_number;
         this.toastr.success(

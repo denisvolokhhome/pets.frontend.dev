@@ -75,6 +75,14 @@ describe('AuthService — account type getters', () => {
       (service as any).currentUserSubject.next(null);
       expect(service.isPetSeeker).toBeFalse();
     });
+
+    it('returns true when is_breeder=false but account_type is stuck at the breeder default (regression)', () => {
+      // Backend registration bug: is_breeder=False accounts could be left with
+      // account_type='breeder' (the DB default). is_breeder must win so the
+      // "Convert to Breeder" option isn't hidden for these accounts.
+      (service as any).currentUserSubject.next(makeUser({ is_breeder: false, account_type: 'breeder' }));
+      expect(service.isPetSeeker).toBeTrue();
+    });
   });
 
   // ── isServiceProvider ─────────────────────────────────────────────────────

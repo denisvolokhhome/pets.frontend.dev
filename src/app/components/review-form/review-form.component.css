@@ -9,7 +9,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1050;
+  /* Modal overlays must sit above the navbar (1200) and filter drawer (1300)
+     per .kiro/steering/mobile-design.md — never Bootstrap's default 1050. */
+  z-index: 1300;
   padding: 1rem;
 }
 

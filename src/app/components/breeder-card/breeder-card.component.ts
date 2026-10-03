@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { BreederSearchResult } from 'src/app/models/search';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 import { ReviewService } from 'src/app/services/review.service';
 import { ReviewSummary, ReviewRead } from 'src/app/models/review.model';
 import { environment } from 'src/environments/environment';
@@ -46,7 +46,7 @@ export class BreederCardComponent {
   constructor(
     private router: Router,
     public authService: AuthService,
-    private http: HttpClient,
+    private dataService: DataService,
     private cdr: ChangeDetectorRef,
     private reviewService: ReviewService
   ) {}
@@ -107,7 +107,7 @@ export class BreederCardComponent {
     this.reviewTotal = 0;
     this.topTags = [];
 
-    this.http.get<any>(`${environment.API_URL}/users/breeder/${this.breeder.user_id}/public`).subscribe({
+    this.dataService.getPublicBreederProfile(this.breeder.user_id).subscribe({
       next: (profile) => {
         this.breederProfile = profile;
         this.isLoadingProfile = false;
