@@ -184,7 +184,8 @@ export class DataService {
   }
 
   getBreeds(kind?: string): Observable<IBreed[]> {
-    const params: any = kind ? { kind } : {};
+    // The API paginates (default limit 100) but there are ~600 breeds; load them all.
+    const params: any = kind ? { kind, limit: 1000 } : { limit: 1000 };
     return this.http
       .get<IBreed[]>(this.apiurl + '/breeds', { params })
       .pipe(tap((breeds: IBreed[]) => (this.breeds = breeds)));

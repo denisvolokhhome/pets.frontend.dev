@@ -13,7 +13,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { UserComponent } from './components/user/user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutComponent } from './components/logout/logout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -227,6 +228,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptorsFromDi()),
+    // Attaches the JWT and signs the user out when the API answers 401
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     MessageService,
     // Sentry: replace the default Angular ErrorHandler so uncaught errors are reported
     {

@@ -132,11 +132,11 @@ export class AuthService {
   }
 
   // Method to handle session expiration
-  handleSessionExpired() {
+  handleSessionExpired(): Promise<boolean> {
     localStorage.removeItem('id_token');
     this.isLoggedInSubject.next(false);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/']);
+    return this.router.navigate(['/login']);
   }
 
   // Check if user has a valid token
