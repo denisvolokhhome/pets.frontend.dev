@@ -1,8 +1,8 @@
 <div class="breeding-locations-container">
   <div class="header">
     <h2>Breeding Locations</h2>
-    <button 
-      class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" 
+    <button type="button" 
+      class="ui-btn ui-btn--primary" 
       (click)="showAddForm()"
       *ngIf="!showForm">
       Add Location
@@ -71,18 +71,18 @@
         </div>
       </div>
       <div class="location-actions">
-        <button 
+        <button type="button" 
           *ngIf="!location.is_default"
-          class="px-3 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors text-sm"
+          class="ui-btn ui-btn--secondary ui-btn--sm"
           (click)="setDefaultLocation(location, $event)"
           title="Set as default location for new pets">
-          <i class="bi bi-star"></i> Set Default
+          <i class="bi bi-star"></i> Make default
         </button>
-        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="editLocation(location)">
-          Edit
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="editLocation(location)">
+          <i class="bi bi-pencil"></i> Edit
         </button>
-        <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" (click)="confirmDelete(location)">
-          Delete
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" (click)="confirmDelete(location)">
+          <i class="bi bi-trash"></i> Delete
         </button>
       </div>
     </div>
@@ -191,10 +191,10 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" [disabled]="isLoading">
+        <button type="submit" class="ui-btn ui-btn--primary" [disabled]="isLoading">
           {{ isLoading ? 'Saving...' : 'Save Location' }}
         </button>
-        <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="cancelForm()" [disabled]="isLoading">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelForm()" [disabled]="isLoading">
           Cancel
         </button>
       </div>
@@ -227,14 +227,14 @@
       </div>
       
       <div class="modal-actions">
-        <button 
+        <button type="button" 
           *ngIf="deleteErrorPets.length === 0"
-          class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" 
+          class="ui-btn ui-btn--danger-solid" 
           (click)="deleteLocation()" 
           [disabled]="isLoading">
           {{ isLoading ? 'Deleting...' : 'Delete' }}
         </button>
-        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors" (click)="cancelDelete()" [disabled]="isLoading">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelDelete()" [disabled]="isLoading">
           {{ deleteErrorPets.length > 0 ? 'Close' : 'Cancel' }}
         </button>
       </div>

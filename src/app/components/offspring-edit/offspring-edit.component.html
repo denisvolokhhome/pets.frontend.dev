@@ -10,7 +10,7 @@
     <div class="offspring-form-header">
       <div class="header-content">
         <h2 class="offspring-form-title">{{ getTitle() }}</h2>
-        <button type="button" class="close-button" (click)="modalClose()" aria-label="Close">
+        <button type="button" class="ui-icon-btn" (click)="modalClose()" aria-label="Close">
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -301,8 +301,8 @@
   </div>
 
   <div class="modal-footer-modern">
-    <button type="button" class="btn-secondary-modern" (click)="modalClose()">Cancel</button>
-    <button type="submit" class="btn-primary-modern" [disabled]="!form.valid || isSaving">
+    <button type="button" class="ui-btn ui-btn--secondary" (click)="modalClose()">Cancel</button>
+    <button type="submit" class="ui-btn ui-btn--primary" [disabled]="!form.valid || isSaving">
       {{ isSaving ? 'Saving...' : 'Save' }}
     </button>
   </div>

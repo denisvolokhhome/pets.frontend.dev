@@ -7,6 +7,7 @@ import { MessageService } from 'src/app/services/message.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: true,
@@ -220,11 +221,11 @@ export class OffspringCardComponent implements OnInit {
     if (!this.offspring) return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
     
     if (this.offspring.primary_image) {
-      return `http://breedly.com:8000${this.offspring.primary_image.image_url}`;
+      return `${environment.API_HOST}${this.offspring.primary_image.image_url}`;
     }
     
     if (this.offspring.images && this.offspring.images.length > 0) {
-      return `http://breedly.com:8000${this.offspring.images[0].image_url}`;
+      return `${environment.API_HOST}${this.offspring.images[0].image_url}`;
     }
     
     return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';

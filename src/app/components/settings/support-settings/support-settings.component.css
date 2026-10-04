@@ -86,25 +86,12 @@
   display: flex; justify-content: flex-start;
   margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #f3f4f6;
 }
-.btn-submit {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.75rem 2rem; background: var(--primary-color); color: white;
-  border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600;
-  cursor: pointer; transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-}
-.btn-submit:hover:not(:disabled) {
-  background: #ff5252; transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
-}
-.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.btn-submit i { font-size: 1rem; }
 
 /* Responsive */
 @media (max-width: 768px) {
   .settings-header h2 { font-size: 1.5rem; }
   .form-section { padding: 1.25rem; }
-  .btn-submit { width: 100%; justify-content: center; }
+  .form-actions .ui-btn { width: 100%; }
 }
 @media (max-width: 480px) {
   .settings-header h2 { font-size: 1.25rem; }

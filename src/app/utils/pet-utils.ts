@@ -1,6 +1,7 @@
 /**
  * Utility functions for pet-related operations
  */
+import { parseApiDate } from './format-utils';
 
 /**
  * Calculate the age of a pet from their date of birth
@@ -10,11 +11,11 @@
 export function calculatePetAge(dateOfBirth: string): string {
   if (!dateOfBirth) return 'Unknown';
   
-  const birthDate = new Date(dateOfBirth);
+  const birthDate = parseApiDate(dateOfBirth);
   const today = new Date();
   
   // Check if date is valid
-  if (isNaN(birthDate.getTime())) {
+  if (!birthDate) {
     return 'Invalid date';
   }
   

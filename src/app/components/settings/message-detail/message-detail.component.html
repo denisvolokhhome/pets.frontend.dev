@@ -9,7 +9,7 @@
   <div *ngIf="!isLoading && message" class="message-content">
     <!-- Header with Back Button -->
     <div class="message-header">
-      <button class="btn-back" (click)="goBack()" aria-label="Back to messages">
+      <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="goBack()" aria-label="Back to messages">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
@@ -70,8 +70,9 @@
         <p>{{ message.response_text }}</p>
       </div>
       <button 
+        type="button"
         *ngIf="!showResponseForm && isBreeder"
-        class="btn-secondary"
+        class="ui-btn ui-btn--secondary ui-btn--sm"
         (click)="toggleResponseForm()">
         Edit Response
       </button>
@@ -113,14 +114,14 @@
         <div class="form-actions">
           <button
             type="button"
-            class="btn-secondary"
+            class="ui-btn ui-btn--secondary"
             (click)="toggleResponseForm()"
             [disabled]="isSubmitting">
             Cancel
           </button>
           <button
             type="submit"
-            class="btn-primary"
+            class="ui-btn ui-btn--primary"
             [disabled]="responseForm.invalid || isSubmitting">
             <span *ngIf="!isSubmitting">Send Response</span>
             <span *ngIf="isSubmitting">
@@ -133,7 +134,7 @@
 
     <!-- Show Response Button (if not responded yet and form is hidden) - Breeder Only -->
     <div *ngIf="!hasResponse() && !showResponseForm && isBreeder" class="action-section">
-      <button class="btn-primary btn-large" (click)="toggleResponseForm()">
+      <button type="button" class="ui-btn ui-btn--primary" (click)="toggleResponseForm()">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
@@ -153,7 +154,7 @@
 
     <!-- Pet Seeker Reply Button (if breeder has responded) -->
     <div *ngIf="isPetSeeker && hasResponse()" class="action-section">
-      <button class="btn-primary btn-large" (click)="continueConversation()">
+      <button type="button" class="ui-btn ui-btn--primary" (click)="continueConversation()">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>

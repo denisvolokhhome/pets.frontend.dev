@@ -7,6 +7,7 @@ import { ModalService } from 'src/app/services/modal.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
+import { formatDisplayDate } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: false,
@@ -15,6 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./breeding-modal.component.css']
 })
 export class BreedingModalComponent implements OnInit, OnChanges {
+  readonly formatDate = (value: string) => formatDisplayDate(value);
   @Input() mode: 'create' | 'update' | 'view' = 'create';
   @Input() breeding: IBreeding | null = null;
   @Output() breedingSaved = new EventEmitter<IBreeding>();

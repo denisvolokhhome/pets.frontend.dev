@@ -139,7 +139,7 @@
       <button
         type="submit"
         [disabled]="isLoading || profileForm.invalid"
-        class="btn-save"
+        class="ui-btn ui-btn--primary"
       >
         <i class="bi bi-check-lg"></i>
         {{ isLoading ? 'Saving...' : 'Save Changes' }}
@@ -158,7 +158,7 @@
       <p class="convert-description">
         Want to list your animals and manage breedings? You can convert your pet seeker account to a breeder account.
       </p>
-      <button type="button" class="btn-convert" (click)="openConvertConfirm()">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="openConvertConfirm()">
         <i class="bi bi-shop"></i>
         Become a Breeder
       </button>
@@ -186,7 +186,7 @@
       <div class="convert-actions">
         <button
           type="button"
-          class="btn-confirm-convert"
+          class="ui-btn ui-btn--primary"
           [disabled]="isConverting"
           (click)="confirmConvertToBreeder()"
         >
@@ -195,7 +195,7 @@
         </button>
         <button
           type="button"
-          class="btn-cancel-convert"
+          class="ui-btn ui-btn--secondary"
           [disabled]="isConverting"
           (click)="cancelConvert()"
         >

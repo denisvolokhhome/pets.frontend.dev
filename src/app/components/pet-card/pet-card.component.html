@@ -1,112 +1,69 @@
-<div class="group card relative z-10 bg-white rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:-translate-y-2 shadow-md hover:shadow-xl">
-  <div class="actions absolute top-3 left-3 flex flex-col gap-2 z-10 opacity-0 -translate-x-2.5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
-    <button
-      class="edit w-10 h-10 rounded-full border-0 bg-gradient-to-br from-yellow-300 to-yellow-400 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"
-      (click)="editPet($event)"
-      [attr.data-pet-id]="pet.pet_id"
-      aria-label="Edit pet"
-    >
-      <i class="bi bi-pencil text-xl text-gray-800"></i>
-    </button>
-
-    <button
-      class="use-for-litter w-10 h-10 rounded-full border-0 bg-gradient-to-br from-teal-300 to-teal-400 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"
-      (click)="openQuickBreeding($event)"
-      [attr.data-pet-id]="pet.pet_id"
-      title="Quick Breeding"
-      aria-label="Quick Breeding"
-    >
-      <i class="bi bi-hearts text-xl text-gray-800"></i>
-    </button>
-    <button
-      class="documents w-10 h-10 rounded-full border-0 bg-gradient-to-br from-blue-300 to-blue-400 cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-lg hover:scale-110 hover:shadow-xl active:scale-95"
-      (click)="onOpenDocuments($event)"
-      [attr.data-pet-id]="pet.pet_id"
-      title="Documents"
-      aria-label="Documents"
-    >
-      <i class="bi bi-file-earmark-text text-xl text-white"></i>
-    </button>
-  </div>
-  <!-- Remove button - top right, slides in from right -->
-  <button
-    class="remove-btn absolute top-3 right-3 z-10 w-9 h-9 rounded-full border-0 bg-white/80 backdrop-blur-sm cursor-pointer flex items-center justify-center transition-all duration-300 ease-out shadow-md opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hover:bg-red-50 hover:scale-110 active:scale-95"
-    (click)="deletePet($event)"
-    [attr.data-pet-id]="pet.pet_id"
-    title="Remove Pet"
-    aria-label="Remove Pet"
-  >
-    <i class="bi bi-x-circle text-lg text-gray-400 transition-colors duration-200 hover:text-red-400"></i>
-  </button>
-  <div
-    *ngIf="pet.image_path || pet.image_url"
-    class="w-full h-[200px] bg-cover bg-center bg-no-repeat relative"
-    [style.background-image]="'url(' + getPetImageUrl() + ')'"
-    role="img"
-    [attr.aria-label]="pet.name + ' photo'"
-  ></div>
-  <div *ngIf="!pet.image_path && !pet.image_url" class="w-full h-[200px] bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">
-    <i class="bi bi-card-image text-6xl" aria-hidden="true"></i>
-  </div>
-
-  <div class="p-6 relative pt-10">
+<div class="pet-card group">
+  <!-- Photo -->
+  <div class="pet-card__media">
     <div
-      class="pet-gender absolute -top-6 right-4 w-[50px] h-[50px] bg-white rounded-full flex items-center justify-center shadow-lg z-[5]"
-    >
+      *ngIf="pet.image_path || pet.image_url; else noPhoto"
+      class="pet-card__photo"
+      [style.background-image]="'url(' + getPetImageUrl() + ')'"
+      role="img"
+      [attr.aria-label]="pet.name + ' photo'"
+    ></div>
+    <ng-template #noPhoto>
+      <div class="pet-card__photo pet-card__photo--empty">
+        <i class="bi bi-image" aria-hidden="true"></i>
+      </div>
+    </ng-template>
+
+    <span *ngIf="pet.is_puppy === 1" class="ui-badge ui-badge--warning pet-card__flag" title="Young animal">
+      <i class="bi bi-heart-fill" aria-hidden="true"></i> Young
+    </span>
+
+    <!-- Actions: same set and order as the table view -->
+    <div class="pet-card__actions">
+      <button type="button" class="ui-icon-btn" (click)="editPet($event)" title="Edit" aria-label="Edit pet">
+        <i class="bi bi-pencil"></i>
+      </button>
+      <button type="button" class="ui-icon-btn" (click)="openQuickBreeding($event)" title="Quick breeding" aria-label="Quick breeding">
+        <i class="bi bi-hearts"></i>
+      </button>
+      <button type="button" class="ui-icon-btn" (click)="onOpenDocuments($event)" title="Documents" aria-label="Documents">
+        <i class="bi bi-file-earmark-text"></i>
+      </button>
+      <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="deletePet($event)" title="Remove" aria-label="Remove pet">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="pet-card__body">
+    <div class="pet-card__title-row">
+      <h4 class="pet-card__name" [title]="pet.name">{{ pet.name }}</h4>
       <i
-        class="bi text-3xl font-bold"
-        [ngClass]="{
-          'bi-gender-male text-blue-400': pet.gender === 'Male',
-          'bi-gender-female text-pink-400': pet.gender === 'Female'
-        }"
+        class="bi pet-card__gender"
+        [ngClass]="pet.gender === 'Male' ? 'bi-gender-male text-blue-500' : 'bi-gender-female text-pink-500'"
+        [attr.aria-label]="pet.gender"
+        [title]="pet.gender"
       ></i>
     </div>
-    <div
-      *ngIf="pet.is_puppy === 1"
-      class="pet-age-badge absolute -top-6 right-[76px] w-[50px] h-[50px] bg-gradient-to-br from-yellow-300 to-yellow-400 rounded-full flex items-center justify-center shadow-lg z-[5] animate-pulse"
-      title="Young Animal"
-    >
-      <i class="bi bi-heart-fill text-xl text-gray-800"></i>
-    </div>
-    <div
-      class="pet-name absolute -top-6 left-4 h-[50px] bg-white px-6 rounded-[25px] flex items-center shadow-lg z-[5]"
-    >
-      <h4 class="text-lg font-semibold text-gray-800 capitalize m-0">{{ pet.name }}</h4>
-    </div>
-    <h5 class="mt-2 text-[0.9375rem] font-semibold text-primary mb-2">{{ pet.breed_name }}</h5>
-    <time datetime="" class="block text-sm text-gray-600 mb-3">{{ pet.date_of_birth }}</time>
-    
-    <!-- Location Info -->
-    <div class="flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-red-50 to-red-25 border border-red-200 rounded-lg mb-3 text-[0.8125rem] font-medium text-primary transition-all duration-200 hover:from-red-100 hover:to-red-50 hover:border-red-300 hover:-translate-y-0.5" *ngIf="pet.location_name">
-      <i class="bi bi-geo-alt-fill text-[0.9375rem] text-primary"></i>
-      <span class="leading-snug">{{ pet.location_name }}</span>
-    </div>
-    
-    <!-- Description - only show if exists -->
-    <p class="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-2" *ngIf="pet.description">{{ pet.description }}</p>
-    
-    <!-- Health Records - only show if at least one exists -->
-    <div class="flex flex-wrap gap-2 my-4 py-3 border-t border-b border-gray-200" *ngIf="hasHealthRecords()">
-      <div class="health-icon flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-br from-teal-100 to-teal-50 border border-teal-300 rounded-md text-xs font-semibold text-teal-700 transition-all duration-200 hover:from-teal-150 hover:to-teal-75 hover:border-teal-500 hover:-translate-y-0.5" *ngIf="pet.has_vaccination" title="Vaccinated">
-        <i class="bi bi-shield-fill-check text-sm"></i>
-        <span class="leading-none">Vacc</span>
-      </div>
-      <div class="health-icon flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-br from-teal-100 to-teal-50 border border-teal-300 rounded-md text-xs font-semibold text-teal-700 transition-all duration-200 hover:from-teal-150 hover:to-teal-75 hover:border-teal-500 hover:-translate-y-0.5" *ngIf="pet.has_microchip" title="Microchipped">
-        <i class="bi bi-cpu text-sm"></i>
-        <span class="leading-none">Chip</span>
-      </div>
-      <div class="health-icon flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-br from-teal-100 to-teal-50 border border-teal-300 rounded-md text-xs font-semibold text-teal-700 transition-all duration-200 hover:from-teal-150 hover:to-teal-75 hover:border-teal-500 hover:-translate-y-0.5" *ngIf="pet.has_healthcertificate" title="Health Certificate">
-        <i class="bi bi-file-medical text-sm"></i>
-        <span class="leading-none">Health</span>
-      </div>
-      <div class="health-icon flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-br from-teal-100 to-teal-50 border border-teal-300 rounded-md text-xs font-semibold text-teal-700 transition-all duration-200 hover:from-teal-150 hover:to-teal-75 hover:border-teal-500 hover:-translate-y-0.5" *ngIf="pet.has_dewormed" title="Dewormed">
-        <i class="bi bi-capsule text-sm"></i>
-        <span class="leading-none">Deworm</span>
-      </div>
-      <div class="health-icon flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-br from-teal-100 to-teal-50 border border-teal-300 rounded-md text-xs font-semibold text-teal-700 transition-all duration-200 hover:from-teal-150 hover:to-teal-75 hover:border-teal-500 hover:-translate-y-0.5" *ngIf="pet.has_birthcertificate" title="Birth Certificate">
-        <i class="bi bi-file-earmark-text text-sm"></i>
-        <span class="leading-none">Birth</span>
-      </div>
+    <p class="pet-card__meta">{{ breedName || 'Breed not set' }}</p>
+    <p *ngIf="pet.date_of_birth" class="pet-card__meta">
+      <time [attr.datetime]="pet.date_of_birth">{{ formatDate(pet.date_of_birth) }}</time>
+      <span class="ui-muted"> · {{ getAge(pet.date_of_birth) }}</span>
+    </p>
+    <p *ngIf="pet.location_name" class="pet-card__meta pet-card__location" [title]="pet.location_name">
+      <i class="bi bi-geo-alt" aria-hidden="true"></i>
+      <span>{{ pet.location_name }}</span>
+    </p>
+
+    <p *ngIf="pet.description" class="pet-card__description">{{ pet.description }}</p>
+
+    <div *ngIf="hasHealthRecords()" class="pet-card__health">
+      <span *ngIf="pet.has_vaccination" class="ui-badge ui-badge--success" title="Vaccinated"><i class="bi bi-shield-fill-check"></i> Vacc</span>
+      <span *ngIf="pet.has_microchip" class="ui-badge ui-badge--success" title="Microchipped"><i class="bi bi-cpu"></i> Chip</span>
+      <span *ngIf="pet.has_healthcertificate" class="ui-badge ui-badge--success" title="Health Certificate"><i class="bi bi-file-medical"></i> Health</span>
+      <span *ngIf="pet.has_dewormed" class="ui-badge ui-badge--success" title="Dewormed"><i class="bi bi-capsule"></i> Deworm</span>
+      <span *ngIf="pet.has_birthcertificate" class="ui-badge ui-badge--success" title="Birth Certificate"><i class="bi bi-file-earmark-text"></i> Birth</span>
     </div>
   </div>
 </div>

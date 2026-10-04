@@ -2,7 +2,7 @@
   <div class="form-modal" (click)="$event.stopPropagation()">
     <div class="form-modal-header">
       <h3>Apply for {{ offspringName }}</h3>
-      <button class="close-btn" (click)="onCancel()">&#x2715;</button>
+      <button type="button" class="ui-icon-btn" (click)="onCancel()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     </div>
 
     <div class="form-modal-body">
@@ -43,8 +43,8 @@
     </div>
 
     <div class="form-modal-footer">
-      <button class="btn-cancel" (click)="onCancel()">Cancel</button>
-      <button class="btn-submit" (click)="onSubmit()" [disabled]="isLoading || isSubmitting">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="onSubmit()" [disabled]="isLoading || isSubmitting">
         {{ isSubmitting ? 'Submitting...' : 'Submit & Message Breeder' }}
       </button>
     </div>

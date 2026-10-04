@@ -1,4 +1,5 @@
-<aside class="filters-sidebar">
+<div class="filters-backdrop" [class.open]="open" (click)="close()" aria-hidden="true"></div>
+<aside class="filters-sidebar" [class.open]="open" aria-label="Filters">
   <div class="filters-header">
     <h3 class="filters-title">
       <i class="bi bi-funnel-fill"></i>
@@ -12,6 +13,9 @@
       title="Clear all filters"
       aria-label="Clear all filters">
       <i class="bi bi-x-circle-fill"></i>
+    </button>
+    <button type="button" class="ui-icon-btn filters-close" (click)="close()" aria-label="Close filters" title="Close">
+      <i class="bi bi-x-lg"></i>
     </button>
   </div>
 

@@ -4,10 +4,10 @@
     <div class="flex justify-between items-center mb-4">
       <div class="flex items-center gap-4">
         <button 
-          class="btn btn-secondary"
+          class="ui-btn ui-btn--secondary"
           (click)="goBack()"
           type="button">
-          <i class="pi pi-arrow-left mr-2"></i>
+          <i class="pi pi-arrow-left"></i>
           Back
         </button>
         <h2 class="text-2xl font-bold">{{ offspring?.name || 'Unnamed Offspring' }}</h2>
@@ -16,37 +16,35 @@
       <!-- Breeder Actions -->
       <div class="flex gap-2" *ngIf="isBreederView()">
         <button 
-          class="btn"
-          [class.btn-publish]="!offspring?.is_published"
-          [class.btn-unpublish]="offspring?.is_published"
+          class="ui-btn ui-btn--secondary"
           (click)="togglePublish()"
           [disabled]="isTogglingPublish"
           type="button"
           [title]="offspring?.is_published ? 'Click to hide from pet seekers' : 'Click to make visible to pet seekers'">
-          <i [class]="offspring?.is_published ? 'pi pi-eye-slash mr-2' : 'pi pi-eye mr-2'"></i>
+          <i [class]="offspring?.is_published ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
           {{ isTogglingPublish ? 'Updating...' : (offspring?.is_published ? 'Unpublish' : 'Publish') }}
         </button>
         <button 
-          class="btn btn-primary"
+          class="ui-btn ui-btn--primary"
           (click)="editOffspring()"
           type="button">
-          <i class="pi pi-pencil mr-2"></i>
+          <i class="pi pi-pencil"></i>
           Edit
         </button>
         <button 
           *ngIf="canConvertToPet()"
-          class="btn btn-convert-pet"
+          class="ui-btn ui-btn--secondary"
           (click)="openConvertConfirm()"
           type="button">
-          <i class="pi pi-arrow-up mr-2"></i>
+          <i class="pi pi-arrow-up"></i>
           Convert to Pet
         </button>
         <button 
-          class="btn btn-danger"
+          class="ui-btn ui-btn--danger"
           (click)="deleteOffspring()"
           [disabled]="isDeleting"
           type="button">
-          <i class="pi pi-trash mr-2"></i>
+          <i class="pi pi-trash"></i>
           Delete
         </button>
       </div>
@@ -65,10 +63,10 @@
           {{ isFavorited() ? 'Favorited' : 'Add to Favorites' }}
         </button>
         <button 
-          class="btn btn-primary"
+          class="ui-btn ui-btn--primary"
           (click)="contactBreeder()"
           type="button">
-          <i class="pi pi-envelope mr-2"></i>
+          <i class="pi pi-envelope"></i>
           {{ hasApplicationForm() ? 'Apply for Offspring' : 'Contact Breeder' }}
         </button>
       </div>
@@ -96,10 +94,10 @@
               (click)="openGallery(0)">
             <div class="mt-2 text-center">
               <button 
-                class="btn btn-sm btn-secondary"
+                class="ui-btn ui-btn--secondary ui-btn--sm"
                 (click)="imageClick(0)"
                 type="button">
-                <i class="pi pi-images mr-2"></i>
+                <i class="pi pi-images"></i>
                 View Gallery ({{ offspring.images.length }})
               </button>
             </div>
@@ -107,10 +105,9 @@
 
           <!-- No Images -->
           <div class="no-image-container" *ngIf="!hasImages()">
-            <img 
-              src="assets/images/no-image.png" 
-              alt="No image"
-              class="w-full h-64 object-cover rounded opacity-50">
+            <div class="no-image-placeholder" aria-hidden="true">
+              <i class="bi bi-image"></i>
+            </div>
             <p class="text-center text-gray-500 mt-2">No images uploaded</p>
           </div>
 
@@ -121,7 +118,7 @@
                 *ngFor="let image of offspring.images.slice(0, 6); let i = index"
                 class="thumbnail-item">
                 <img 
-                  [src]="'http://breedly.com:8000' + image.image_url" 
+                  [src]="apiHost + image.image_url" 
                   alt="Thumbnail"
                   class="w-full h-20 object-cover rounded cursor-pointer"
                   (click)="imageClick(i)"
@@ -155,13 +152,15 @@
               </div>
             </div>
           </div>
-          <button 
-            class="btn btn-primary w-full mt-4"
-            (click)="viewMessages()"
-            type="button">
-            <i class="pi pi-envelope mr-2"></i>
-            View Messages
-          </button>
+          <div class="mt-4">
+            <button 
+              class="ui-btn ui-btn--primary w-full"
+              (click)="viewMessages()"
+              type="button">
+              <i class="pi pi-envelope"></i>
+              View Messages
+            </button>
+          </div>
         </div>
 
         <!-- Documents Card (Breeder View) -->
@@ -183,10 +182,10 @@
               <p class="text-sm text-gray-600 mb-2">Listed by</p>
               <p class="text-lg font-semibold text-gray-900 mb-3">Breeder</p>
               <button 
-                class="btn btn-secondary w-full"
+                class="ui-btn ui-btn--secondary w-full"
                 (click)="viewBreederProfile()"
                 type="button">
-                <i class="pi pi-user mr-2"></i>
+                <i class="pi pi-user"></i>
                 View Profile
               </button>
             </div>
@@ -203,7 +202,7 @@
           <div class="info-grid">
             <div class="info-item">
               <label class="info-label">Status</label>
-              <span [class]="'badge ' + getStatusClass(offspring.status)">
+              <span [class]="statusBadgeClass(offspring.status)">
                 {{ getStatusLabel(offspring.status) }}
               </span>
             </div>
@@ -238,7 +237,7 @@
 
             <div class="info-item" *ngIf="offspring.price">
               <label class="info-label">Price</label>
-              <p class="info-value">${{ offspring.price }}</p>
+              <p class="info-value">{{ offspring.price | currency:'USD':'symbol':'1.0-0' }}</p>
             </div>
 
             <div class="info-item" *ngIf="offspring.color_markings">
@@ -400,7 +399,7 @@
     <div class="convert-modal-header">
       <i class="pi pi-arrow-up" style="color: #8b5cf6;"></i>
       <h3>Convert to Pet</h3>
-      <button class="convert-modal-close" (click)="cancelConvert()"><i class="pi pi-times"></i></button>
+      <button type="button" class="ui-icon-btn" (click)="cancelConvert()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     </div>
     <div class="convert-modal-body">
       <p>You are about to convert <strong>{{ offspring?.name || 'this offspring' }}</strong> into a full Pet record.</p>
@@ -420,9 +419,9 @@
       </div>
     </div>
     <div class="convert-modal-footer">
-      <button class="btn btn-secondary" (click)="cancelConvert()" [disabled]="isConverting">Cancel</button>
-      <button class="btn btn-convert-confirm" (click)="confirmConvertToPet()" [disabled]="isConverting">
-        <i class="pi pi-check mr-2"></i>
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelConvert()" [disabled]="isConverting">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="confirmConvertToPet()" [disabled]="isConverting">
+        <i class="pi pi-check"></i>
         {{ isConverting ? 'Converting...' : 'Convert to Pet' }}
       </button>
     </div>

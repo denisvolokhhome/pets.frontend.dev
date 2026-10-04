@@ -11,7 +11,7 @@
           <p class="modal-subtitle">Create a new breeding record</p>
         </div>
       </div>
-      <button type="button" class="close-button" (click)="close()" aria-label="Close">
+      <button type="button" class="ui-icon-btn" (click)="close()" aria-label="Close">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
@@ -176,7 +176,7 @@
   <div class="modal-footer-modern">
     <button 
       type="button" 
-      class="btn-secondary-modern" 
+      class="ui-btn ui-btn--secondary" 
       (click)="currentStep === 1 ? close() : previousStep()"
     >
       <i class="bi" [ngClass]="currentStep === 1 ? 'bi-x-lg' : 'bi-arrow-left'"></i>
@@ -185,7 +185,7 @@
     
     <button 
       type="button" 
-      class="btn-primary-modern" 
+      class="ui-btn ui-btn--primary" 
       *ngIf="currentStep === 1"
       [disabled]="!selectedPartnerPet"
       (click)="nextStep()"
@@ -196,7 +196,7 @@
     
     <button 
       type="button" 
-      class="btn-primary-modern" 
+      class="ui-btn ui-btn--primary" 
       *ngIf="currentStep === 2"
       [disabled]="isSaving"
       (click)="createBreeding()"

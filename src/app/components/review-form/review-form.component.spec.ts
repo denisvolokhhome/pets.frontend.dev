@@ -163,7 +163,7 @@ describe('ReviewFormComponent', () => {
 
   it('should display submit button disabled state in DOM', () => {
     fixture.detectChanges();
-    const submitBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.submit-button');
+    const submitBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.review-footer button');
     expect(submitBtn.disabled).toBeTrue();
 
     component.selectStar(2);

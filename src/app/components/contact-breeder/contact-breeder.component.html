@@ -12,8 +12,8 @@
     <div *ngIf="!showAccountPrompt">
       <div class="modal-header">
         <h2 class="modal-title">Contact {{ breederName }}</h2>
-        <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="ui-icon-btn" (click)="closeDialog()" aria-label="Close">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -89,7 +89,7 @@
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="ui-btn ui-btn--secondary"
             (click)="onCancel()"
             [disabled]="isSubmitting"
           >
@@ -97,7 +97,7 @@
           </button>
           <button
             type="submit"
-            class="btn btn-primary"
+            class="ui-btn ui-btn--primary"
             [disabled]="contactForm.invalid || isSubmitting"
           >
             <span *ngIf="!isSubmitting">Send Message</span>
@@ -113,8 +113,8 @@
     <div *ngIf="showAccountPrompt">
       <div class="modal-header">
         <h2 class="modal-title">Create an Account?</h2>
-        <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="ui-icon-btn" (click)="closeDialog()" aria-label="Close">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -149,14 +149,14 @@
       <div class="modal-footer">
         <button
           type="button"
-          class="btn btn-secondary"
+          class="ui-btn ui-btn--secondary"
           (click)="onSkipAccountCreation()"
         >
           Maybe Later
         </button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="ui-btn ui-btn--primary"
           (click)="onCreateAccount()"
         >
           Create Account

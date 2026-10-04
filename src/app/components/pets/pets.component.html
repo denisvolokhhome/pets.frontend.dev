@@ -11,16 +11,16 @@
     <!-- Split Button projected into header-right -->
     <div class="split-btn-group">
       <button
-        class="split-btn-main w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="split-btn-main ui-btn ui-btn--primary"
         [disabled]="isImportCsvDisabled"
         [title]="isImportCsvDisabled ? 'Complete setup guide first' : 'Add Pet'"
         (click)="openAddPetModal()"
         type="button">
-        <i class="bi bi-plus-heart"></i>
+        <i class="bi bi-plus-lg"></i>
         <span>Add Pet</span>
       </button>
       <button
-        class="split-btn-toggle w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="split-btn-toggle ui-btn ui-btn--primary"
         [disabled]="isImportCsvDisabled"
         (click)="isDropdownOpen = !isDropdownOpen"
         type="button"
@@ -134,6 +134,8 @@
 
   <!-- Filters Sidebar - Using Filter Widget -->
   <app-filter-widget
+      #filterWidget
+      [(open)]="filtersOpen"
     [config]="filterConfig"
     [locations]="locations"
     [breeds]="breeds"
@@ -145,6 +147,15 @@
 
   <!-- Main Content -->
   <main class="pets-content">
+      <div class="list-toolbar">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="filtersOpen = true"
+                [attr.aria-expanded]="filtersOpen" aria-haspopup="dialog">
+          <i class="bi bi-funnel"></i>
+          Filters
+          <span *ngIf="filterWidget.activeCount" class="filters-trigger__count">{{ filterWidget.activeCount }}</span>
+        </button>
+      </div>
+
     <div *ngIf="view == 'cards'">
       <div *ngIf="filteredPets && filteredPets.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <div
@@ -155,6 +166,7 @@
           (openDocuments)="openPetDocuments($event)"
           *ngFor="let pet of filteredPets | searchPets : term; let i = index"
           [pet]="pet"
+          [breedName]="getBreedName(pet)"
         ></div>
       </div>
 
@@ -176,7 +188,7 @@
           <h3>No pets found</h3>
           <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
           <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-          <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+          <button *ngIf="hasActiveFilters()" class="ui-btn ui-btn--secondary" (click)="onClearFilters()">
             Clear Filters
           </button>
         </div>
@@ -207,71 +219,49 @@
           scrollHeight="600px"
           styleClass="p-datatable-sm p-datatable-striped"
           responsiveLayout="scroll"
+          paginatorDropdownAppendTo="body"
           *ngIf="!isLoading && filteredPets && filteredPets.length > 0">
           
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 60px"></th>
-              <th pSortableColumn="name">
-                Name <p-sortIcon field="name"></p-sortIcon>
-              </th>
-              <th pSortableColumn="breed_name">
-                Breed <p-sortIcon field="breed_name"></p-sortIcon>
-              </th>
-              <th pSortableColumn="gender">
-                Gender <p-sortIcon field="gender"></p-sortIcon>
-              </th>
-              <th pSortableColumn="date_of_birth">
-                Date of Birth <p-sortIcon field="date_of_birth"></p-sortIcon>
-              </th>
-              <th pSortableColumn="weight">
-                Weight <p-sortIcon field="weight"></p-sortIcon>
-              </th>
-              <th pSortableColumn="location_name">
-                Location <p-sortIcon field="location_name"></p-sortIcon>
-              </th>
+              <th style="width: 4.5rem"><span class="sr-only">Photo</span></th>
+              <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="date_of_birth">Born <p-sortIcon field="date_of_birth"></p-sortIcon></th>
+              <th pSortableColumn="weight">Weight <p-sortIcon field="weight"></p-sortIcon></th>
+              <th pSortableColumn="location_name">Location <p-sortIcon field="location_name"></p-sortIcon></th>
               <th>Health</th>
-              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 160px; text-align: center">Actions</th>
+              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 10rem; text-align: right">Actions</th>
             </tr>
           </ng-template>
-          
           <ng-template pTemplate="body" let-pet>
             <tr>
-              <!-- Thumbnail -->
               <td>
-                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                  <img *ngIf="pet.image_url || pet.image_path"
-                       [src]="getPetImageUrl(pet)"
-                       [alt]="pet.name"
-                       class="w-full h-full object-cover" />
-                  <div *ngIf="!pet.image_url && !pet.image_path" class="w-full h-full flex items-center justify-center text-gray-300">
-                    <i class="bi bi-card-image"></i>
-                  </div>
+                <div class="ui-thumb">
+                  <img *ngIf="pet.image_url || pet.image_path; else noPhoto" [src]="getPetImageUrl(pet)" [alt]="pet.name">
+                  <ng-template #noPhoto><i class="bi bi-image" aria-hidden="true"></i></ng-template>
                 </div>
               </td>
-              <!-- Name -->
-              <td class="font-medium">{{ pet.name }}</td>
-              <!-- Breed -->
-              <td>{{ pet.breed_name }}</td>
-              <!-- Gender -->
               <td>
-                <span class="inline-flex items-center gap-1 text-sm">
-                  <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male text-blue-400' : 'bi-gender-female text-pink-400'"></i>
-                  {{ pet.gender }}
+                <button type="button" class="ui-link ui-truncate" [title]="pet.name" (click)="editPet(pet)">{{ pet.name }}</button>
+                <span class="ui-cell-sub ui-truncate">
+                  <i class="bi" [ngClass]="pet.gender === 'Male' ? 'bi-gender-male text-blue-500' : 'bi-gender-female text-pink-500'" aria-hidden="true"></i>
+                  {{ pet.gender }}<ng-container *ngIf="getBreedName(pet) as breed"> · {{ breed }}</ng-container>
                 </span>
               </td>
-              <!-- DOB -->
-              <td>{{ pet.date_of_birth }}</td>
-              <!-- Weight -->
-              <td>{{ pet.weight }}</td>
-              <!-- Location -->
+              <td class="whitespace-nowrap">
+                <ng-container *ngIf="pet.date_of_birth; else noValue">
+                  <span class="block">{{ formatDate(pet.date_of_birth) }}</span>
+                  <span class="ui-cell-sub">{{ getAge(pet.date_of_birth) }}</span>
+                </ng-container>
+              </td>
+              <td class="whitespace-nowrap">
+                <span *ngIf="pet.weight; else noValue">{{ pet.weight }} kg</span>
+              </td>
               <td>
-                <span *ngIf="pet.location_name" class="inline-flex items-center gap-1 text-sm text-gray-600">
-                  <i class="bi bi-geo-alt-fill text-xs text-primary"></i>
-                  {{ pet.location_name }}
+                <span *ngIf="pet.location_name; else noValue" class="ui-truncate" [title]="pet.location_name">
+                  <i class="bi bi-geo-alt text-gray-400 mr-1" aria-hidden="true"></i>{{ pet.location_name }}
                 </span>
               </td>
-              <!-- Health badges -->
               <td>
                 <div class="flex flex-wrap gap-1">
                   <span *ngIf="pet.has_vaccination" class="health-badge" title="Vaccinated" aria-label="Vaccinated"><i class="bi bi-shield-fill-check"></i></span>
@@ -279,27 +269,28 @@
                   <span *ngIf="pet.has_healthcertificate" class="health-badge" title="Health Certificate" aria-label="Health Certificate"><i class="bi bi-file-medical"></i></span>
                   <span *ngIf="pet.has_dewormed" class="health-badge" title="Dewormed" aria-label="Dewormed"><i class="bi bi-capsule"></i></span>
                   <span *ngIf="pet.has_birthcertificate" class="health-badge" title="Birth Certificate" aria-label="Birth Certificate"><i class="bi bi-file-earmark-text"></i></span>
+                  <span *ngIf="!pet.has_vaccination && !pet.has_microchip && !pet.has_healthcertificate && !pet.has_dewormed && !pet.has_birthcertificate" class="ui-muted">—</span>
                 </div>
               </td>
-              <!-- Actions -->
-              <td pFrozenColumn [frozen]="true" alignFrozen="right">
-                <div class="flex items-center justify-center gap-1.5">
-                  <button class="table-action-btn btn-edit" title="Edit" aria-label="Edit" (click)="editPet(pet)">
+              <td pFrozenColumn [frozen]="true" alignFrozen="right" style="text-align: right">
+                <div class="ui-row-actions">
+                  <button type="button" class="ui-icon-btn" title="Edit" aria-label="Edit" (click)="editPet(pet)">
                     <i class="bi bi-pencil"></i>
                   </button>
-                  <button class="table-action-btn btn-breeding" title="Quick Breeding" aria-label="Quick Breeding" (click)="openQuickBreeding(pet)">
+                  <button type="button" class="ui-icon-btn" title="Quick breeding" aria-label="Quick breeding" (click)="openQuickBreeding(pet)">
                     <i class="bi bi-hearts"></i>
                   </button>
-                  <button class="table-action-btn btn-docs" title="Documents" aria-label="Documents" (click)="openPetDocuments(pet)">
+                  <button type="button" class="ui-icon-btn" title="Documents" aria-label="Documents" (click)="openPetDocuments(pet)">
                     <i class="bi bi-file-earmark-text"></i>
                   </button>
-                  <button class="table-action-btn btn-remove" title="Remove" aria-label="Remove" (click)="deletePet(pet.id)">
-                    <i class="bi bi-x-circle"></i>
+                  <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Remove" aria-label="Remove" (click)="deletePet(pet.id)">
+                    <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </td>
             </tr>
           </ng-template>
+          <ng-template #noValue><span class="ui-muted">—</span></ng-template>
           
           <ng-template pTemplate="emptymessage">
             <tr>
@@ -314,7 +305,7 @@
           <h3>No pets found</h3>
           <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
           <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
-          <button *ngIf="hasActiveFilters()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-red-500 transition-colors" (click)="onClearFilters()">
+          <button *ngIf="hasActiveFilters()" class="ui-btn ui-btn--secondary" (click)="onClearFilters()">
             Clear Filters
           </button>
         </div>

@@ -12,6 +12,8 @@ import { OffspringEditComponent } from '../offspring-edit/offspring-edit.compone
 import { OffspringDocumentsComponent } from '../offspring-documents/offspring-documents.component';
 import { GenealogyService } from 'src/app/services/genealogy.service';
 import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../application-form-modal/application-form-modal.component';
+import { environment } from 'src/environments/environment';
+import { formatDisplayDate, statusBadgeClass } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: true,
@@ -21,6 +23,7 @@ import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../app
   imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent]
 })
 export class OffspringDetailComponent implements OnInit {
+  readonly apiHost = environment.API_HOST;
   offspringId: string = '';
   offspring: OffspringRead | null = null;
   isLoading: boolean = true;
@@ -132,8 +135,8 @@ export class OffspringDetailComponent implements OnInit {
     const sortedImages = [...this.offspring.images].sort((a, b) => a.display_order - b.display_order);
     
     this.images = sortedImages.map(image => ({
-      itemImageSrc: `http://breedly.com:8000${image.image_url}`,
-      thumbnailImageSrc: `http://breedly.com:8000${image.image_url}`,
+      itemImageSrc: `${environment.API_HOST}${image.image_url}`,
+      thumbnailImageSrc: `${environment.API_HOST}${image.image_url}`,
       alt: this.offspring?.name || 'Offspring',
       title: image.is_primary ? 'Primary Image' : ''
     }));
@@ -201,14 +204,10 @@ export class OffspringDetailComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
+    return formatDisplayDate(dateString, 'N/A');
   }
+
+  readonly statusBadgeClass = statusBadgeClass;
 
   getStatusClass(status: string): string {
     switch (status) {
@@ -233,11 +232,11 @@ export class OffspringDetailComponent implements OnInit {
     if (!this.offspring) return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
     
     if (this.offspring.primary_image) {
-      return `http://breedly.com:8000${this.offspring.primary_image.image_url}`;
+      return `${environment.API_HOST}${this.offspring.primary_image.image_url}`;
     }
     
     if (this.offspring.images && this.offspring.images.length > 0) {
-      return `http://breedly.com:8000${this.offspring.images[0].image_url}`;
+      return `${environment.API_HOST}${this.offspring.images[0].image_url}`;
     }
     
     return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';

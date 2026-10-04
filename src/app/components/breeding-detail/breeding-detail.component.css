@@ -10,34 +10,6 @@
   margin-bottom: 2rem;
 }
 
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background-color: white;
-  border: 2px solid var(--secondary-color);
-  color: var(--secondary-color);
-  border-radius: var(--border-radius);
-  font-family: var(--font-primary);
-  font-weight: 500;
-  font-size: 0.9375rem;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-bottom: 1rem;
-  min-height: 44px;
-}
-
-.back-button:hover {
-  background-color: var(--secondary-color);
-  color: white;
-  transform: translateX(-4px);
-}
-
-.back-button i {
-  font-size: 1.125rem;
-}
-
 .page-title {
   font-family: var(--font-primary);
   font-size: 2rem;
@@ -175,37 +147,6 @@
   margin: 0;
 }
 
-/* Status Badges */
-.status-badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: capitalize;
-}
-
-.status-started {
-  background-color: #E0F2FE;
-  color: #0369A1;
-}
-
-.status-inprocess {
-  background-color: #FEF3C7;
-  color: #92400E;
-}
-
-.status-done {
-  background-color: #D1FAE5;
-  color: #065F46;
-}
-
-.status-voided {
-  background-color: #FEE2E2;
-  color: #991B1B;
-}
-
 /* Section Card */
 .section-card {
   background: white;
@@ -214,14 +155,6 @@
   box-shadow: var(--box-shadow);
   margin-bottom: 2rem;
   overflow: hidden;
-}
-
-/* Table container bleeds to card edges */
-.table-container {
-  margin: 1.5rem -2rem -2rem -2rem;
-  border-top: 1px solid #f1f5f9;
-  overflow: hidden;
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 .section-header {
@@ -237,64 +170,6 @@
   font-weight: 600;
   color: var(--dark-color);
   margin: 0;
-}
-
-/* Parent pets styles now live in .parent-pets-panel / .parent-pet-chip above */
-
-/* Add Offspring Button */
-.add-offspring-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.9375rem;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-  min-height: 44px;
-}
-
-.add-offspring-button:hover {
-  background-color: #ff5252;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
-}
-
-.add-offspring-button i {
-  font-size: 1.125rem;
-}
-
-/* Table Container */
-.table-container {
-  margin-top: 1.5rem;
-}
-
-/* Gender Badge */
-.gender-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 0.375rem;
-  font-family: var(--font-primary);
-  font-weight: 500;
-  font-size: 0.8125rem;
-}
-
-.male-badge {
-  background-color: #DBEAFE;
-  color: #1E40AF;
-}
-
-.female-badge {
-  background-color: #FCE7F3;
-  color: #BE185D;
 }
 
 /* Empty Message */
@@ -352,10 +227,6 @@
     padding: 1.5rem;
   }
 
-  .table-container {
-    margin: 1rem -1.5rem -1.5rem -1.5rem;
-  }
-
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -380,199 +251,10 @@
     align-items: flex-start;
     gap: 1rem;
   }
-
-  .add-offspring-button {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* ── Offspring Table ────────────────────────────────────────────── */
-
-/* Remove fixed layout — let Name column expand, others stay content-sized */
-::ng-deep .breeding-detail-container .offspring-table,
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-/* Column widths: Name gets the bulk, others are fixed */
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(1),
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(1) {
-  width: auto !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(2),
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(2) {
-  width: 140px !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(3),
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(3) {
-  width: 160px !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th:nth-child(4),
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td:nth-child(4) {
-  width: 160px !important;
-}
-
-/* Header */
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th {
-  background: #f8fafc;
-  color: #64748b;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 0.75rem 1.25rem;
-  border: none;
-  border-bottom: 1px solid #e2e8f0;
-  white-space: nowrap;
-}
-
-/* Rows */
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr {
-  background: white;
-  transition: background 0.1s;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr:hover {
-  background: #f8fafc;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td {
-  padding: 0.875rem 1.25rem;
-  border: none;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.9rem;
-  color: #1e293b;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr:last-child > td {
-  border-bottom: none;
-}
-
-/* Sort */
-::ng-deep .breeding-detail-container .offspring-table .p-sortable-column { cursor: pointer; user-select: none; }
-::ng-deep .breeding-detail-container .offspring-table .p-sortable-column:hover { background: #f1f5f9 !important; }
-::ng-deep .breeding-detail-container .offspring-table .p-sortable-column.p-highlight { background: #eff6ff !important; color: #2563eb !important; }
-::ng-deep .breeding-detail-container .offspring-table .p-sortable-column.p-highlight .p-sortable-column-icon { color: #2563eb !important; }
-::ng-deep .breeding-detail-container .offspring-table .p-sortable-column-icon { font-size: 0.65rem; margin-left: 0.3rem; color: #94a3b8; }
-
-/* Microchip — muted */
-.microchip-cell { color: #94a3b8 !important; }
-
-/* ── Paginator ── */
-::ng-deep .breeding-detail-container .offspring-table .p-paginator {
-  background: #f8fafc !important;
-  border: none !important;
-  border-top: 1px solid #e2e8f0 !important;
-  padding: 0.625rem 1.25rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 0.375rem !important;
-  flex-wrap: wrap !important;
-}
-
-/* "Showing X to Y" — push to left */
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-current {
-  font-size: 0.8rem !important;
-  color: #94a3b8 !important;
-  margin-right: auto !important;
-  padding: 0 !important;
-  white-space: nowrap !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Nav buttons */
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-first,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-prev,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-next,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-last {
-  width: 2rem !important; height: 2rem !important;
-  min-width: unset !important;
-  border-radius: 6px !important; border: none !important;
-  background: transparent !important; color: #475569 !important;
-  display: flex !important; align-items: center !important; justify-content: center !important;
-  transition: background 0.1s !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-first:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-prev:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-next:not(.p-disabled):hover,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-last:not(.p-disabled):hover {
-  background: #e2e8f0 !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-disabled {
-  opacity: 0.3 !important; cursor: not-allowed !important;
-}
-
-/* Page number buttons */
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages {
-  display: flex !important; align-items: center !important; gap: 0.125rem !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page {
-  width: 2rem !important; height: 2rem !important;
-  min-width: unset !important;
-  border-radius: 6px !important; border: none !important;
-  background: transparent !important; color: #475569 !important;
-  font-size: 0.8125rem !important; font-weight: 500 !important;
-  transition: background 0.1s !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page:hover {
-  background: #e2e8f0 !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: #2563eb !important; color: white !important;
-}
-
-/* Rows-per-page dropdown (p-dropdown v17 / p-select v18) */
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select {
-  height: 2rem !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 6px !important;
-  background: white !important;
-  margin-left: 0.5rem !important;
-  align-items: center !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown .p-dropdown-label,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select .p-select-label {
-  padding: 0 0.5rem !important;
-  font-size: 0.8rem !important;
-  line-height: 2rem !important;
-  color: #475569 !important;
-}
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-dropdown .p-dropdown-trigger,
-::ng-deep .breeding-detail-container .offspring-table .p-paginator .p-select .p-select-dropdown {
-  width: 1.5rem !important; color: #94a3b8 !important;
-}
-
-/* Empty message */
-::ng-deep .breeding-detail-container .offspring-table .p-datatable-emptymessage > td {
-  text-align: center !important;
-  padding: 3rem !important;
-  color: #94a3b8 !important;
-  font-size: 0.875rem !important;
-  font-style: italic !important;
-}
-
-@media (max-width: 768px) {
-  ::ng-deep .breeding-detail-container .offspring-table .p-datatable-thead > tr > th,
-  ::ng-deep .breeding-detail-container .offspring-table .p-datatable-tbody > tr > td {
-    padding: 0.75rem 0.875rem;
-  }
-  ::ng-deep .breeding-detail-container .offspring-table .p-paginator {
-    justify-content: center !important;
-  }
 }
 
 /* Application Form */
 .form-actions { display: flex; gap: 0.5rem; align-items: center; }
-
-.btn-remove-form {
-  padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #fca5a5;
-  background: #fff; color: #dc2626; cursor: pointer; font-size: 0.875rem;
-  display: inline-flex; align-items: center; gap: 0.375rem;
-}
-.btn-remove-form:hover:not(:disabled) { background: #fee2e2; }
-.btn-remove-form:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .form-preview { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem; }
 .form-preview-hint { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; }
@@ -641,13 +323,6 @@
 .form-builder-subtitle {
   margin: 0; font-size: 0.8rem; color: #94a3b8; line-height: 1;
 }
-.close-btn {
-  background: none; border: none; cursor: pointer;
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: #94a3b8; font-size: 0.875rem; transition: all 0.15s;
-}
-.close-btn:hover { background: #f1f5f9; color: #0f172a; }
 
 /* Body */
 .form-builder-body {
@@ -735,17 +410,6 @@
 .field-actions {
   display: flex; flex-direction: row; gap: 0.25rem; flex-shrink: 0;
 }
-.icon-btn {
-  width: 28px; height: 28px; border-radius: 7px;
-  border: 1px solid #e2e8f0; background: white;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #64748b; font-size: 0.75rem;
-  transition: all 0.15s;
-}
-.icon-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
-.icon-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-.icon-btn.danger { border-color: #fecaca; color: #ef4444; }
-.icon-btn.danger:hover { background: #fef2f2; border-color: #fca5a5; }
 
 /* Empty state */
 .empty-state {
@@ -760,19 +424,6 @@
 
 /* Add field buttons */
 .add-field-row { display: flex; gap: 0.625rem; }
-.add-field-btn {
-  flex: 1; padding: 0.625rem 0.75rem;
-  border: 1.5px dashed #bfdbfe; border-radius: 10px;
-  background: #f0f7ff; color: #2563eb;
-  cursor: pointer; font-size: 0.8125rem; font-weight: 600;
-  display: flex; align-items: center; justify-content: center; gap: 0.375rem;
-  transition: all 0.15s;
-}
-.add-field-btn i { font-size: 1rem; }
-.add-field-btn:hover {
-  background: #dbeafe; border-color: #93c5fd;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
-}
 
 /* Footer */
 .form-builder-footer {
@@ -785,24 +436,8 @@
   font-size: 0.8rem; color: #94a3b8; font-weight: 500;
 }
 .footer-actions { display: flex; gap: 0.625rem; margin-left: auto; }
-.btn-cancel {
-  padding: 0.5rem 1.125rem; border-radius: 8px;
-  border: 1px solid #e2e8f0; background: white;
-  color: #475569; cursor: pointer; font-size: 0.875rem; font-weight: 500;
-  transition: all 0.15s;
+
+/* Back link above the page title (ghost button; offset aligns the arrow with the title) */
+.ui-btn.back-button[class] {
+  margin: 0 0 1rem -0.75rem;
 }
-.btn-cancel:hover { background: #f8fafc; border-color: #cbd5e1; }
-.btn-save {
-  padding: 0.5rem 1.25rem; border-radius: 8px; border: none;
-  background: #2563eb; color: white;
-  cursor: pointer; font-size: 0.875rem; font-weight: 600;
-  display: flex; align-items: center; gap: 0.375rem;
-  transition: all 0.15s;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
-}
-.btn-save:hover:not(:disabled) {
-  background: #1d4ed8;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-  transform: translateY(-1px);
-}
-.btn-save:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }

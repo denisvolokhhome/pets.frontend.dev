@@ -19,10 +19,10 @@
       </div>
       <button 
         type="button" 
-        class="close-button"
+        class="ui-icon-btn"
         (click)="close()"
         aria-label="Close">
-        &times;
+        <i class="bi bi-x-lg"></i>
       </button>
     </div>
 
@@ -195,22 +195,22 @@
         <!-- Puppies Section -->
         <div class="puppies" *ngIf="breeding.puppies && breeding.puppies.length > 0">
           <h3 class="text-lg font-semibold text-gray-800 mb-3">Puppies</h3>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-              <thead class="bg-gray-50">
+          <div class="ui-table-container">
+            <table class="ui-table">
+              <thead>
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Gender</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Birth Date</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Microchip</th>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th>Birth Date</th>
+                  <th>Microchip</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr *ngFor="let puppy of breeding.puppies" class="hover:bg-gray-50">
-                  <td class="px-4 py-3 text-sm text-gray-900">{{ puppy.name }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.gender }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.date_of_birth | date:'shortDate' }}</td>
-                  <td class="px-4 py-3 text-sm text-gray-600">{{ puppy.has_microchip ? 'Yes' : 'No' }}</td>
+              <tbody>
+                <tr *ngFor="let puppy of breeding.puppies">
+                  <td>{{ puppy.name }}</td>
+                  <td>{{ puppy.gender }}</td>
+                  <td>{{ formatDate(puppy.date_of_birth) }}</td>
+                  <td>{{ puppy.has_microchip ? 'Yes' : 'No' }}</td>
                 </tr>
               </tbody>
             </table>

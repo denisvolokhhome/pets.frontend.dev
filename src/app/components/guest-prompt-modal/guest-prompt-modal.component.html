@@ -1,6 +1,6 @@
 <div class="modal-backdrop" *ngIf="visible" (click)="closeModal()">
   <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="guest-modal-title" (click)="$event.stopPropagation()">
-    <button class="close-btn" (click)="closeModal()" aria-label="Close dialog"><i class="bi bi-x-lg"></i></button>
+    <button type="button" class="ui-icon-btn gpm-close" (click)="closeModal()" aria-label="Close dialog"><i class="bi bi-x-lg"></i></button>
 
     <!-- Header -->
     <div class="auth-header">

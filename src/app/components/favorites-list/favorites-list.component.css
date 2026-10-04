@@ -228,34 +228,6 @@
   color: #6b7280;
 }
 
-/* Button Styles */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #ff5252;
-}
-
-.btn-lg {
-  padding: 14px 28px;
-  font-size: 16px;
-}
-
 /* Responsive Design */
 @media (max-width: 1024px) {
   .offspring-grid {

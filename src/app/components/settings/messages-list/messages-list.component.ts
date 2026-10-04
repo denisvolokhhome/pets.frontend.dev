@@ -381,7 +381,7 @@ export class MessagesListComponent implements OnInit {
    */
   getSubtitle(): string {
     if (this.isBreeder) {
-      return 'Manage inquiries from potential customers';
+      return 'Manage inquiries from pet seekers';
     } else {
       return 'View your conversations with breeders';
     }
@@ -393,7 +393,7 @@ export class MessagesListComponent implements OnInit {
   getEmptyStateMessage(): string {
     if (this.statusFilter === 'all') {
       return this.isBreeder 
-        ? "You haven't received any messages from potential customers."
+        ? "Messages from pet seekers will appear here."
         : "You haven't sent any messages to breeders yet.";
     } else if (this.statusFilter === 'unread') {
       return this.isBreeder

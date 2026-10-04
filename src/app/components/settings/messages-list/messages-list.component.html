@@ -5,7 +5,7 @@
     [config]="headerConfig"
     [searchTerm]="searchTerm"
     (searchChange)="onSearchTermChange($event)">
-    <button class="header-action-btn" (click)="onRefreshClick()" type="button">
+    <button class="ui-btn ui-btn--secondary" (click)="onRefreshClick()" type="button">
       <i class="bi bi-arrow-clockwise"></i>
       <span>Refresh</span>
     </button>
@@ -109,14 +109,16 @@
           </div>
           <div class="pagination-controls">
             <button
-              class="btn-pagination"
+              type="button"
+              class="ui-btn ui-btn--secondary ui-btn--sm"
               (click)="previousPage()"
               [disabled]="!hasPreviousPage()">
               <i class="bi bi-chevron-left"></i>
               Previous
             </button>
             <button
-              class="btn-pagination"
+              type="button"
+              class="ui-btn ui-btn--secondary ui-btn--sm"
               (click)="nextPage()"
               [disabled]="!hasNextPage()">
               Next
@@ -131,7 +133,7 @@
         <i class="bi bi-inbox"></i>
         <h3>No conversations yet</h3>
         <p>{{ getEmptyStateMessage() }}</p>
-        <button *ngIf="statusFilter !== 'all'" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onWidgetClearFilters()">
+        <button type="button" *ngIf="statusFilter !== 'all'" class="ui-btn ui-btn--secondary" (click)="onWidgetClearFilters()">
           Clear Filters
         </button>
       </div>

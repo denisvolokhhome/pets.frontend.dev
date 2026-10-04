@@ -1,7 +1,7 @@
 <div class="breeding-detail-container" *ngIf="!isLoading && breeding">
   <!-- Header with Back Button -->
   <div class="detail-header">
-    <button (click)="goBack()" class="back-button">
+    <button type="button" (click)="goBack()" class="ui-btn ui-btn--ghost ui-btn--sm back-button">
       <i class="bi bi-arrow-left"></i>
       Back to Breedings
     </button>
@@ -21,7 +21,7 @@
 
         <div class="info-item">
           <label class="info-label">Status</label>
-          <span class="status-badge" [ngClass]="getStatusClass(breeding.status)">
+          <span [class]="statusBadgeClass(breeding.status)">
             {{ getStatusLabel(breeding.status) }}
           </span>
         </div>
@@ -73,10 +73,11 @@
       <h2 class="section-title">Offspring</h2>
       <button 
         (click)="openOffspringModal()" 
-        class="add-offspring-button"
+        type="button"
+        class="ui-btn ui-btn--primary"
         *ngIf="breeding.status !== 'Voided' && breeding.parent_pets && breeding.parent_pets.length > 0"
       >
-        <i class="bi bi-plus-circle"></i>
+        <i class="bi bi-plus-lg"></i>
         Add Offspring
       </button>
     </div>
@@ -90,27 +91,31 @@
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} offspring"
         [rowsPerPageOptions]="[10, 25, 50]"
-        styleClass="p-datatable-sm offspring-table"
+        styleClass="p-datatable-sm"
+        paginatorDropdownAppendTo="body"
       >
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="gender">Gender <p-sortIcon field="gender"></p-sortIcon></th>
-            <th pSortableColumn="birth_date">Birth Date <p-sortIcon field="birth_date"></p-sortIcon></th>
+            <th pSortableColumn="birth_date">Born <p-sortIcon field="birth_date"></p-sortIcon></th>
             <th>Microchip</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-offspring>
           <tr>
-            <td>{{ offspring.name }}</td>
+            <td><span class="ui-cell-title" [class.ui-muted]="isAutoNamedOffspring(offspring.name)">{{ offspringDisplayName(offspring.name) }}</span></td>
             <td>
-              <span class="gender-badge" [ngClass]="offspring.gender === 'Male' ? 'male-badge' : 'female-badge'">
-                <i class="bi" [ngClass]="offspring.gender === 'Male' ? 'bi-gender-male' : 'bi-gender-female'"></i>
-                {{ offspring.gender === 'Male' ? 'Male' : 'Female' }}
+              <span class="inline-flex items-center gap-1">
+                <i class="bi" [ngClass]="offspring.gender === 'Male' ? 'bi-gender-male text-blue-500' : 'bi-gender-female text-pink-500'" aria-hidden="true"></i>
+                {{ offspring.gender }}
               </span>
             </td>
-            <td>{{ formatDate(offspring.birth_date) }}</td>
-            <td class="microchip-cell">{{ offspring.microchip || 'N/A' }}</td>
+            <td class="whitespace-nowrap">{{ formatDate(offspring.birth_date) }}</td>
+            <td>
+              <span *ngIf="offspring.microchip; else noChip" class="font-mono text-xs">{{ offspring.microchip }}</span>
+              <ng-template #noChip><span class="ui-muted">—</span></ng-template>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -131,16 +136,16 @@
     <div class="section-header">
       <h2 class="section-title">Application Form</h2>
       <div class="form-actions">
-        <button class="add-offspring-button" (click)="openFormBuilder()" *ngIf="!hasApplicationForm">
-          <i class="bi bi-plus-circle"></i>
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="openFormBuilder()" *ngIf="!hasApplicationForm">
+          <i class="bi bi-plus-lg"></i>
           Add Application Form
         </button>
         <ng-container *ngIf="hasApplicationForm">
-          <button class="add-offspring-button" (click)="openFormBuilder()">
+          <button type="button" class="ui-btn ui-btn--secondary" (click)="openFormBuilder()">
             <i class="bi bi-pencil"></i>
             Edit Form
           </button>
-          <button class="btn-remove-form" (click)="deleteForm()" [disabled]="isDeletingForm">
+          <button type="button" class="ui-btn ui-btn--danger" (click)="deleteForm()" [disabled]="isDeletingForm">
             <i class="bi bi-trash"></i>
             {{ isDeletingForm ? 'Removing...' : 'Remove Form' }}
           </button>
@@ -195,7 +200,7 @@
           <p class="form-builder-subtitle">Customize what pet seekers must fill out</p>
         </div>
       </div>
-      <button class="close-btn" (click)="closeFormBuilder()" aria-label="Close">
+      <button type="button" class="ui-icon-btn" (click)="closeFormBuilder()" aria-label="Close">
         <i class="bi bi-x-lg"></i>
       </button>
     </div>
@@ -228,13 +233,13 @@
           </label>
 
           <div class="field-actions">
-            <button class="icon-btn" (click)="moveField(i, -1)" [disabled]="i === 0" title="Move up">
+            <button type="button" class="ui-icon-btn" (click)="moveField(i, -1)" [disabled]="i === 0" title="Move up">
               <i class="bi bi-chevron-up"></i>
             </button>
-            <button class="icon-btn" (click)="moveField(i, 1)" [disabled]="i === formFields.length - 1" title="Move down">
+            <button type="button" class="ui-icon-btn" (click)="moveField(i, 1)" [disabled]="i === formFields.length - 1" title="Move down">
               <i class="bi bi-chevron-down"></i>
             </button>
-            <button class="icon-btn danger" (click)="removeField(i)" title="Remove field">
+            <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="removeField(i)" title="Remove field">
               <i class="bi bi-trash3"></i>
             </button>
           </div>
@@ -248,11 +253,11 @@
       </div>
 
       <div class="add-field-row">
-        <button class="add-field-btn" (click)="addField('text')">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="addField('text')">
           <i class="bi bi-plus"></i>
           Short text
         </button>
-        <button class="add-field-btn" (click)="addField('textarea')">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="addField('textarea')">
           <i class="bi bi-plus"></i>
           Long text
         </button>
@@ -264,8 +269,8 @@
         {{ formFields.length }} field{{ formFields.length !== 1 ? 's' : '' }}
       </span>
       <div class="footer-actions">
-        <button class="btn-cancel" (click)="closeFormBuilder()">Cancel</button>
-        <button class="btn-save" (click)="saveForm()" [disabled]="isSavingForm">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="closeFormBuilder()">Cancel</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="saveForm()" [disabled]="isSavingForm">
           <i class="bi" [class.bi-check2]="!isSavingForm" [class.bi-hourglass-split]="isSavingForm"></i>
           {{ isSavingForm ? 'Saving...' : 'Save Form' }}
         </button>

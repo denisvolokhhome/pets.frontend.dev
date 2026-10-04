@@ -14,6 +14,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #f0f0f0;
@@ -260,9 +261,55 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+.filters-backdrop,
+.filters-close {
+  display: none;
+}
+
+/* Laptop widths: a 280px sidebar leaves list tables too narrow, so the
+   filters become a slide-in panel opened from the page's "Filters" button. */
+@media (min-width: 769px) and (max-width: 1799px) {
   .filters-sidebar {
-    width: 240px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1260;
+    width: 320px;
+    max-width: 85vw;
+    height: auto;
+    overflow-y: auto;
+    border-radius: 0 12px 12px 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+    transform: translateX(-105%);
+    visibility: hidden;
+    transition: transform 0.25s ease, visibility 0.25s;
+  }
+
+  .filters-sidebar.open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .filters-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1250;
+    background: rgba(17, 24, 39, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .filters-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .filters-close {
+    display: inline-flex;
+    margin-left: auto;
   }
 }
 

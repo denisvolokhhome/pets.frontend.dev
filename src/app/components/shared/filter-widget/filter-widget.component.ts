@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
 import { IPetType, PET_TYPES } from 'src/app/models/pet-type';
@@ -45,6 +45,9 @@ export class FilterWidgetComponent implements OnInit {
   @Input() filteredCount: number = 0;
   @Input() isLoading: boolean = false;
 
+  /** Slide-in panel state on laptop widths, where the sidebar would squeeze the table. */
+  @Input() open: boolean = false;
+  @Output() openChange = new EventEmitter<boolean>();
   @Output() filterChange = new EventEmitter<FilterValues>();
   @Output() clearFilters = new EventEmitter<void>();
 
@@ -137,6 +140,24 @@ export class FilterWidgetComponent implements OnInit {
       }
     };
     this.clearFilters.emit();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.open) this.close();
+  }
+
+  close(): void {
+    this.open = false;
+    this.openChange.emit(false);
+  }
+
+  /** Number of filters currently applied — shown on the page's "Filters" button. */
+  get activeCount(): number {
+    const v = this.filterValues;
+    const simple = [v.location, v.gender, v.petType, v.status, v.breed].filter(Boolean).length;
+    const health = v.healthFilters ? Object.values(v.healthFilters).filter(Boolean).length : 0;
+    return simple + health;
   }
 
   hasActiveFilters(): boolean {

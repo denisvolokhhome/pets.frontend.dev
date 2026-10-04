@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
+import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
 
 export interface ApplicationFormField {
   id: string;
@@ -129,14 +130,12 @@ export class BreedingDetailComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
+    return formatDisplayDate(dateString, 'N/A');
   }
+
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly isAutoNamedOffspring = isAutoNamedOffspring;
+  readonly offspringDisplayName = offspringDisplayName;
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {

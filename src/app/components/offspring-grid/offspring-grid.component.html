@@ -150,9 +150,11 @@
             <option value="Sold">Sold</option>
           </select>
         </div>
-        <button *ngIf="hasActiveFilters()" class="btn-clear-filters" (click)="clearFilters()">
-          <i class="bi bi-x-lg"></i> Clear Filters
-        </button>
+        <div *ngIf="hasActiveFilters()" class="mt-2">
+          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm w-full" (click)="clearFilters()">
+            <i class="bi bi-x-lg"></i> Clear Filters
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -170,7 +172,7 @@
           <span *ngIf="hasActiveFilters()">No offsprings match your filters.</span>
           <span *ngIf="!hasActiveFilters()">This breeder doesn't have any available offsprings at the moment.</span>
         </p>
-        <button *ngIf="hasActiveFilters()" class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+        <button *ngIf="hasActiveFilters()" type="button" class="ui-btn ui-btn--secondary" (click)="clearFilters()">Clear Filters</button>
       </div>
 
       <div class="offspring-grid" *ngIf="!isLoading && hasOffsprings()">

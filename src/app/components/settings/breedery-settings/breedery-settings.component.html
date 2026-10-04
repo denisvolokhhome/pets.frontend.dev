@@ -106,7 +106,7 @@
           (keyup.enter)="addTag()"
           placeholder="Type a tag and press Enter"
         />
-        <button type="button" (click)="addTag()" class="btn-add-tag">
+        <button type="button" (click)="addTag()" class="ui-btn ui-btn--secondary">
           <i class="bi bi-plus-lg"></i>
           Add
         </button>
@@ -132,7 +132,7 @@
       <button
         type="submit"
         [disabled]="isLoading || profileForm.invalid"
-        class="btn-save"
+        class="ui-btn ui-btn--primary"
       >
         <i class="bi bi-check-lg"></i>
         {{ isLoading ? 'Saving...' : 'Save Changes' }}

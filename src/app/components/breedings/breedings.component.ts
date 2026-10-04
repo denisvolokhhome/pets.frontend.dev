@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
+import { formatDisplayDate, statusBadgeClass, statusLabel } from 'src/app/utils/format-utils';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
 import { DataService } from 'src/app/services/data.service';
@@ -16,6 +17,8 @@ import { PageHeaderConfig } from '../page-header/page-header.component';
   styleUrls: ['./breedings.component.css']
 })
 export class BreedingsComponent implements OnInit, AfterViewInit {
+  /** Filter panel visibility on laptop widths (see shared filter widget). */
+  filtersOpen = false;
   @ViewChild('tableContainer') tableContainer?: ElementRef;
   
   headerConfig: PageHeaderConfig = {
@@ -368,10 +371,11 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
+    return formatDisplayDate(dateString);
   }
+
+  readonly statusBadgeClass = statusBadgeClass;
+  readonly statusLabel = statusLabel;
 
   getStatusBadgeClass(status: BreedingStatus): string {
     switch (status) {

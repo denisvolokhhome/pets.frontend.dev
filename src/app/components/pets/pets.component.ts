@@ -11,6 +11,8 @@ import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widge
 import { PageHeaderConfig } from '../page-header/page-header.component';
 import { environment } from 'src/environments/environment';
 import { ImportWizardComponent, IMPORT_WIZARD_MODAL_ID } from '../import-wizard/import-wizard.component';
+import { formatDisplayDate } from 'src/app/utils/format-utils';
+import { calculatePetAge } from 'src/app/utils/pet-utils';
 
 @Component({
   standalone: false,
@@ -19,6 +21,8 @@ import { ImportWizardComponent, IMPORT_WIZARD_MODAL_ID } from '../import-wizard/
   styleUrls: ['./pets.component.css']
 })
 export class PetsComponent implements OnInit {
+  /** Filter panel visibility on laptop widths (see shared filter widget). */
+  filtersOpen = false;
   
   headerConfig: PageHeaderConfig = {
     title: 'Pets Management',
@@ -295,6 +299,18 @@ export class PetsComponent implements OnInit {
   onPetUpdated(): void {
     // Reload pets list after update
     this.loadPets();
+  }
+
+  getBreedName(pet: IPet): string {
+    return this.breeds.find(b => b.id === pet.breed_id)?.name ?? '';
+  }
+
+  formatDate(value: string): string {
+    return formatDisplayDate(value);
+  }
+
+  getAge(dateOfBirth: string): string {
+    return calculatePetAge(dateOfBirth);
   }
 
   getPetImageUrl(pet: IPet): string {

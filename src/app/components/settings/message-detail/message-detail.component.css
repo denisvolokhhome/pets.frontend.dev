@@ -51,31 +51,6 @@
   margin-bottom: 0.5rem;
 }
 
-.btn-back {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-  background-color: transparent;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-back:hover {
-  color: #111827;
-  background-color: #f9fafb;
-  border-color: #d1d5db;
-}
-
-.btn-back svg {
-  flex-shrink: 0;
-}
-
 .header-actions {
   display: flex;
   gap: 0.75rem;
@@ -224,7 +199,7 @@
   color: #6b7280;
 }
 
-.response-card .btn-secondary {
+.response-card .ui-btn[class] {
   margin-top: 1rem;
 }
 
@@ -311,57 +286,6 @@ textarea.form-control {
   margin-top: 1.5rem;
 }
 
-/* Buttons */
-.btn-primary,
-.btn-secondary {
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #ff5252;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: #e5e7eb;
-}
-
-.btn-secondary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-large {
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-}
-
 /* Spinner */
 .spinner {
   display: inline-block;
@@ -437,8 +361,7 @@ textarea.form-control {
     flex-direction: column-reverse;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .form-actions .ui-btn {
     width: 100%;
   }
 
@@ -447,14 +370,6 @@ textarea.form-control {
     align-items: flex-start;
     gap: 0.5rem;
   }
-}
-
-/* Accessibility */
-.btn-back:focus-visible,
-.btn-primary:focus-visible,
-.btn-secondary:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
 }
 
 .form-control:focus-visible {

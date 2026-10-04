@@ -5,8 +5,8 @@
     [config]="headerConfig"
     [searchTerm]="searchTerm"
     (searchChange)="onSearchTermChange($event)">
-    <button class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer" (click)="onActionButtonClick()" type="button">
-      <i class="bi bi-plus-circle"></i>
+    <button class="ui-btn ui-btn--primary" (click)="onActionButtonClick()" type="button">
+      <i class="bi bi-plus-lg"></i>
       <span>Add Offspring</span>
     </button>
   </app-page-header>
@@ -74,6 +74,8 @@
   <div class="offspring-layout">
     <!-- Filters Sidebar - Using Filter Widget -->
     <app-filter-widget
+      #filterWidget
+      [(open)]="filtersOpen"
       [config]="filterConfig"
       [locations]="[]"
       [breeds]="breeds"
@@ -85,6 +87,15 @@
 
     <!-- Main Content -->
     <main class="offspring-content">
+      <div class="list-toolbar">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="filtersOpen = true"
+                [attr.aria-expanded]="filtersOpen" aria-haspopup="dialog">
+          <i class="bi bi-funnel"></i>
+          Filters
+          <span *ngIf="filterWidget.activeCount" class="filters-trigger__count">{{ filterWidget.activeCount }}</span>
+        </button>
+      </div>
+
     <!-- Table Container -->
     <div class="table-container">
       <!-- Loading State -->
@@ -108,129 +119,83 @@
         scrollHeight="600px"
         styleClass="p-datatable-sm p-datatable-striped"
         responsiveLayout="scroll"
+        paginatorDropdownAppendTo="body"
         *ngIf="!isLoading && filteredOffsprings && filteredOffsprings.length > 0">
         
         <ng-template pTemplate="header">
           <tr>
-            <th style="width: 80px">Photo</th>
+            <th style="width: 4.5rem"><span class="sr-only">Photo</span></th>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-            <th pSortableColumn="gender">Gender <p-sortIcon field="gender"></p-sortIcon></th>
-            <th pSortableColumn="date_of_birth">DOB <p-sortIcon field="date_of_birth"></p-sortIcon></th>
-            <th>Age</th>
-            <th>Breed</th>
-            <th>Color</th>
+            <th pSortableColumn="date_of_birth">Born <p-sortIcon field="date_of_birth"></p-sortIcon></th>
             <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-            <th>Breeding</th>
-            <th>Father</th>
-            <th>Mother</th>
-            <th style="width: 80px">Favorites</th>
-            <th style="width: 80px">Messages</th>
-            <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 150px">Actions</th>
+            <th>Parents</th>
+            <th>Activity</th>
+            <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 8rem; text-align: right">Actions</th>
           </tr>
         </ng-template>
-
         <ng-template pTemplate="body" let-offspring>
-          <tr (dblclick)="viewOffspring(offspring)" style="cursor: pointer;" title="Double-click to view details">
+          <tr (dblclick)="viewOffspring(offspring)" title="Double-click to view details">
             <td>
-              <img 
-                [src]="getThumbnailUrl(offspring)" 
-                alt="Offspring photo"
-                class="w-16 h-16 object-cover rounded cursor-pointer"
-                (click)="viewOffspring(offspring)">
-            </td>
-            <td>
-              <span class="cursor-pointer text-blue-600 hover:underline" (click)="viewOffspring(offspring)">
-                {{ offspring.name || 'Unnamed' }}
-              </span>
+              <div class="ui-thumb">
+                <img *ngIf="getThumbnailUrl(offspring) as url; else noPhoto" [src]="url" [alt]="displayName(offspring)">
+                <ng-template #noPhoto><i class="bi bi-image" aria-hidden="true"></i></ng-template>
+              </div>
             </td>
             <td>
-              <span [class]="'status-badge ' + getStatusBadgeClass(offspring.status)">
-                {{ offspring.status }}
-              </span>
-            </td>
-            <td>{{ offspring.gender }}</td>
-            <td>{{ formatDate(offspring.date_of_birth) }}</td>
-            <td>{{ offspring.age }}</td>
-            <td>{{ getBreedName(offspring) }}</td>
-            <td>{{ offspring.color_markings || '-' }}</td>
-            <td>{{ offspring.price ? ('$' + offspring.price) : '-' }}</td>
-            <td>
-              <span 
-                *ngIf="offspring.breeding_id"
-                class="cursor-pointer text-blue-600 hover:underline"
-                (click)="navigateToBreeding(offspring)">
-                #{{ offspring.breeding_id }}
-              </span>
-              <span *ngIf="!offspring.breeding_id">-</span>
-            </td>
-            <td>
-              <span 
-                *ngIf="offspring.father"
-                class="cursor-pointer text-blue-600 hover:underline"
-                (click)="navigateToPet(offspring.father.id)">
-                {{ getFatherName(offspring) }}
-              </span>
-              <span *ngIf="!offspring.father">-</span>
-            </td>
-            <td>
-              <span 
-                *ngIf="offspring.mother"
-                class="cursor-pointer text-blue-600 hover:underline"
-                (click)="navigateToPet(offspring.mother.id)">
-                {{ getMotherName(offspring) }}
-              </span>
-              <span *ngIf="!offspring.mother">-</span>
-            </td>
-            <td class="text-center">
-              <span class="puppies-count">
-                <i class="pi pi-heart mr-1"></i>
-                {{ offspring.favorites_count }}
-              </span>
-            </td>
-            <td class="text-center">
-              <span 
-                class="puppies-count cursor-pointer hover:bg-teal-600"
-                (click)="viewMessages(offspring)"
-                title="View conversation threads">
-                <i class="pi pi-envelope mr-1"></i>
-                {{ offspring.thread_count || 0 }}
-              </span>
-            </td>
-            <td class="actions-cell" pFrozenColumn [frozen]="true" alignFrozen="right">
-              <button 
-                class="btn-action btn-view"
-                (click)="viewOffspring(offspring)"
-                type="button"
-                title="View"
-                aria-label="View">
-                <i class="bi bi-eye-fill"></i>
+              <button type="button" class="ui-link" [class.ui-muted]="isAutoNamed(offspring)" (click)="viewOffspring(offspring)">
+                {{ displayName(offspring) }}
               </button>
-              <button 
-                class="btn-action btn-edit"
-                (click)="editOffspring(offspring)"
-                type="button"
-                title="Edit"
-                aria-label="Edit">
-                <i class="bi bi-pencil-fill"></i>
+              <span class="ui-cell-sub ui-truncate" [title]="offspring.gender + ' · ' + getBreedName(offspring) + (offspring.color_markings ? ' · ' + offspring.color_markings : '')">
+                <i class="bi" [ngClass]="offspring.gender === 'Male' ? 'bi-gender-male text-blue-500' : 'bi-gender-female text-pink-500'" aria-hidden="true"></i>
+                {{ offspring.gender }} · {{ getBreedName(offspring) }}<ng-container *ngIf="offspring.color_markings"> · {{ offspring.color_markings }}</ng-container>
+              </span>
+            </td>
+            <td>
+              <span [class]="statusBadgeClass(offspring.status)">{{ offspring.status }}</span>
+            </td>
+            <td class="whitespace-nowrap">
+              <span class="block">{{ formatDate(offspring.date_of_birth) }}</span>
+              <span *ngIf="offspring.age" class="ui-cell-sub">{{ offspring.age }}</span>
+            </td>
+            <td class="whitespace-nowrap">
+              <span *ngIf="offspring.price != null; else noPrice">{{ offspring.price | currency:'USD':'symbol':'1.0-0' }}</span>
+              <ng-template #noPrice><span class="ui-muted">—</span></ng-template>
+            </td>
+            <td>
+              <ng-container *ngIf="offspring.mother || offspring.father; else noParents">
+                <span class="ui-truncate ui-truncate--sm" [title]="getMotherName(offspring) + ' × ' + getFatherName(offspring)">
+                  <button *ngIf="offspring.mother" type="button" class="ui-link font-medium" (click)="navigateToPet(offspring.mother.id)">{{ getMotherName(offspring) }}</button>
+                  <span *ngIf="offspring.mother && offspring.father" class="ui-muted"> × </span>
+                  <button *ngIf="offspring.father" type="button" class="ui-link font-medium" (click)="navigateToPet(offspring.father.id)">{{ getFatherName(offspring) }}</button>
+                </span>
+              </ng-container>
+              <ng-template #noParents><span class="ui-muted">—</span></ng-template>
+              <button *ngIf="offspring.breeding_id" type="button" class="ui-cell-sub hover:underline" (click)="navigateToBreeding(offspring)">
+                Breeding #{{ offspring.breeding_id }}
               </button>
-              <button 
-                class="btn-action btn-docs"
-                (click)="openDocuments(offspring)"
-                type="button"
-                title="Documents"
-                aria-label="Documents">
-                <i class="bi bi-file-earmark-text"></i>
-              </button>
-              <button 
-                class="btn-action btn-void"
-                (click)="deleteOffspring(offspring)"
-                [disabled]="isDeleting[offspring.id]"
-                type="button"
-                title="Remove"
-                aria-label="Remove">
-                <i class="bi bi-x-circle"></i>
-              </button>
+            </td>
+            <td>
+              <span class="inline-flex items-center gap-3 text-gray-500 whitespace-nowrap">
+                <span title="Favorites"><i class="bi bi-heart mr-1" aria-hidden="true"></i>{{ offspring.favorites_count || 0 }}<span class="sr-only"> favorites</span></span>
+                <button type="button" class="hover:text-gray-900" title="View conversation threads" (click)="viewMessages(offspring)">
+                  <i class="bi bi-chat mr-1" aria-hidden="true"></i>{{ offspring.thread_count || 0 }}<span class="sr-only"> conversations</span>
+                </button>
+              </span>
+            </td>
+            <td pFrozenColumn [frozen]="true" alignFrozen="right" style="text-align: right">
+              <div class="ui-row-actions">
+                <button type="button" class="ui-icon-btn" (click)="editOffspring(offspring)" title="Edit" aria-label="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button type="button" class="ui-icon-btn" (click)="openDocuments(offspring)" title="Documents" aria-label="Documents">
+                  <i class="bi bi-file-earmark-text"></i>
+                </button>
+                <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="deleteOffspring(offspring)"
+                        [disabled]="isDeleting[offspring.id]" title="Remove" aria-label="Remove">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -248,7 +213,7 @@
         <h3>{{ searchTerm || hasActiveFilters() ? 'No matching offsprings found' : 'No offsprings found' }}</h3>
         <p *ngIf="!searchTerm && !hasActiveFilters()">Offsprings are created from the Breedings menu</p>
         <p *ngIf="searchTerm || hasActiveFilters()">Try adjusting your search terms or filters</p>
-        <button *ngIf="hasActiveFilters()" class="inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-medium text-white bg-indigo-600 border-0 rounded-lg transition-all duration-200 hover:bg-indigo-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0" (click)="onClearFilters()">
+        <button *ngIf="hasActiveFilters()" class="ui-btn ui-btn--secondary" (click)="onClearFilters()">
           Clear Filters
         </button>
       </div>
@@ -272,7 +237,7 @@
 <!-- Documents Modal -->
 <div *ngIf="showDocumentsModal && documentsOffspring" class="modal-overlay" (click)="closeDocuments()" role="dialog" aria-modal="true" aria-label="Offspring documents">
   <div class="modal-container modal-docs" (click)="$event.stopPropagation()">
-    <button type="button" class="modal-close-btn" (click)="closeDocuments()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    <button type="button" class="ui-icon-btn docs-close" (click)="closeDocuments()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     <app-offspring-documents
       [offspringId]="documentsOffspring.id"
       [offspringName]="documentsOffspring.name">

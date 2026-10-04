@@ -95,31 +95,6 @@
   margin: 0;
 }
 
-.close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid #E5E7EB;
-  border-radius: 8px;
-  background: white;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
-  flex-shrink: 0;
-}
-
-.close-button:hover {
-  border-color: #ec4899;
-  background: #fdf2f8;
-  color: #ec4899;
-}
-
-.close-button i {
-  font-size: 0.875rem;
-}
-
 /* 2-Column Grid Layout */
 .offspring-form-columns {
   display: grid;
@@ -453,47 +428,6 @@ textarea.form-control-modern {
   flex-shrink: 0;
 }
 
-.btn-secondary-modern,
-.btn-primary-modern {
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-secondary-modern {
-  background-color: #E5E7EB;
-  color: var(--dark-color);
-}
-
-.btn-secondary-modern:hover {
-  background-color: #D1D5DB;
-}
-
-.btn-primary-modern {
-  background-color: #ec4899;
-  color: white;
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.25);
-}
-
-.btn-primary-modern:hover:not(:disabled) {
-  background-color: #db2777;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
-}
-
-.btn-primary-modern:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Responsive */
 @media (max-width: 991px) {
   .offspring-form-columns {
@@ -558,13 +492,7 @@ textarea.form-control-modern {
     font-size: 1.125rem;
   }
 
-  .close-button {
-    width: 32px;
-    height: 32px;
-  }
-
-  .btn-secondary-modern,
-  .btn-primary-modern {
+  .modal-footer-modern .ui-btn {
     width: 100%;
   }
 }

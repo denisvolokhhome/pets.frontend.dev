@@ -57,9 +57,9 @@
                 [disabled]="puppies.length === 1 || isLoading"
                 title="Remove puppy"
                 [attr.aria-label]="'Remove puppy ' + (i + 1)"
-                class="px-3 py-1.5 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                class="ui-icon-btn ui-icon-btn--danger"
               >
-                Remove
+                <i class="bi bi-trash"></i>
               </button>
             </td>
           </tr>
@@ -91,7 +91,7 @@
       <button
         (click)="savePuppies()"
         [disabled]="!isValid() || isLoading"
-        class="save-button w-full sm:w-auto px-6 py-2 bg-primary text-white rounded-md hover:shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all inline-flex items-center justify-center gap-2"
+        class="ui-btn ui-btn--primary"
       >
         <span *ngIf="!isLoading">Save Puppies</span>
         <span *ngIf="isLoading" class="flex items-center gap-2">

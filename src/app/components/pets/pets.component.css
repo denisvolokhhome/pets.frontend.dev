@@ -322,55 +322,6 @@
   min-width: 0;
 }
 
-/* Table Container */
-.table-container {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
-}
-
-/* Pets Table - using same styles as litters-table */
-.pets-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.pets-table thead {
-  background: #f9fafb;
-  border-bottom: 2px solid #e5e7eb;
-}
-
-.pets-table th {
-  padding: 1rem;
-  text-align: left;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.pets-table tbody tr {
-  border-bottom: 1px solid #e5e7eb;
-  transition: background-color 0.2s;
-}
-
-.pets-table tbody tr:hover {
-  background: #f9fafb;
-}
-
-.pets-table tbody tr:last-child {
-  border-bottom: none;
-}
-
-.pets-table td {
-  padding: 1rem;
-  font-size: 0.875rem;
-  color: #1f2937;
-}
-
 /* Empty State */
 .empty-state {
   text-align: center;
@@ -519,123 +470,6 @@
   }
 }
 
-/* ============================================
-   PRIMENG TABLE OVERRIDES - CLEAN TAILWIND STYLE
-   ============================================ */
-
-::ng-deep .p-datatable {
-  background: white !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 0.5rem !important;
-  overflow: hidden !important;
-}
-
-::ng-deep .p-datatable .p-datatable-wrapper {
-  overflow-x: auto !important;
-}
-
-::ng-deep .p-datatable table {
-  width: 100% !important;
-  border-collapse: collapse !important;
-}
-
-/* Table header - clean gray background */
-::ng-deep .p-datatable thead tr th {
-  background: #f9fafb !important;
-  padding: 0.75rem 1.5rem !important;
-  text-align: left !important;
-  font-size: 0.75rem !important;
-  font-weight: 500 !important;
-  color: #6b7280 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  border: none !important;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-/* Table body rows */
-::ng-deep .p-datatable tbody tr {
-  background: white !important;
-  border-bottom: 1px solid #e5e7eb !important;
-}
-
-::ng-deep .p-datatable tbody tr:hover {
-  background: #f9fafb !important;
-}
-
-::ng-deep .p-datatable tbody tr:last-child {
-  border-bottom: none !important;
-}
-
-/* Table cells */
-::ng-deep .p-datatable tbody tr td {
-  padding: 1rem 1.5rem !important;
-  font-size: 0.875rem !important;
-  color: #111827 !important;
-  border: none !important;
-}
-
-/* Sortable columns */
-::ng-deep .p-datatable .p-sortable-column:hover {
-  background: #f3f4f6 !important;
-}
-
-::ng-deep .p-datatable .p-sortable-column.p-highlight {
-  color: #111827 !important;
-}
-
-::ng-deep .p-datatable .p-sortable-column-icon {
-  color: #9ca3af !important;
-  font-size: 0.875rem !important;
-  margin-left: 0.5rem !important;
-}
-
-/* Pagination */
-::ng-deep .p-paginator {
-  background: white !important;
-  border-top: 1px solid #e5e7eb !important;
-  padding: 0.75rem 1rem !important;
-  border: none !important;
-}
-
-::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
-  min-width: 2.5rem !important;
-  height: 2.5rem !important;
-  color: #374151 !important;
-  border-radius: 0.375rem !important;
-  margin: 0 0.125rem !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
-  background: #111827 !important;
-  color: white !important;
-}
-
-::ng-deep .p-paginator .p-paginator-pages .p-paginator-page:hover:not(.p-highlight) {
-  background: #f3f4f6 !important;
-}
-
-::ng-deep .p-paginator .p-paginator-first,
-::ng-deep .p-paginator .p-paginator-prev,
-::ng-deep .p-paginator .p-paginator-next,
-::ng-deep .p-paginator .p-paginator-last {
-  color: #374151 !important;
-  min-width: 2.5rem !important;
-  height: 2.5rem !important;
-  border-radius: 0.375rem !important;
-  border: none !important;
-  background: transparent !important;
-}
-
-::ng-deep .p-paginator .p-paginator-first:hover:not(.p-disabled),
-::ng-deep .p-paginator .p-paginator-prev:hover:not(.p-disabled),
-::ng-deep .p-paginator .p-paginator-next:hover:not(.p-disabled),
-::ng-deep .p-paginator .p-paginator-last:hover:not(.p-disabled) {
-  background: #f3f4f6 !important;
-}
-
 /* State Container (for loading and empty states) */
 .state-container {
   background: white;
@@ -727,56 +561,6 @@
   color: #78350f;
 }
 
-/* Table Action Buttons */
-.table-action-btn {
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  font-size: 0.9375rem;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.table-action-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-}
-
-.table-action-btn:active {
-  transform: scale(0.95);
-}
-
-.table-action-btn.btn-edit {
-  background: linear-gradient(135deg, #FFE66D, #FFDB4D);
-  color: #2C3E50;
-}
-
-.table-action-btn.btn-breeding {
-  background: linear-gradient(135deg, #95E1D3, #7FD4C4);
-  color: #2C3E50;
-}
-
-.table-action-btn.btn-docs {
-  background: linear-gradient(135deg, #93C5FD, #60A5FA);
-}
-
-.table-action-btn.btn-remove {
-  background: rgba(255, 255, 255, 0.85);
-  color: #9ca3af;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.table-action-btn.btn-remove:hover {
-  background: #fee2e2;
-  color: #f87171;
-}
-
 /* Health Badges in Table */
 .health-badge {
   display: inline-flex;
@@ -807,70 +591,18 @@
   border-radius: 8px;
 }
 
-/* Main "Add Pet" button */
-.split-btn-main {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1.125rem;
-  border: 2px solid var(--primary-color);
-  border-right: none;
-  margin: 0;
-  background: white;
-  color: var(--primary-color);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  border-radius: 8px 0 0 8px;
-  white-space: nowrap;
-  line-height: 1;
-  height: 48px;
+/* Split "Add Pet" button — colors/size come from .ui-btn--primary;
+   only the joined corners and the divider are specific to the split. */
+.split-btn-main.ui-btn[class] {
+  border-radius: var(--ui-radius) 0 0 var(--ui-radius);
 }
 
-.split-btn-main:hover:not(:disabled) {
-  background: var(--primary-color);
-  color: white;
-}
-
-.split-btn-main:active:not(:disabled) {
-  filter: brightness(0.9);
-}
-
-.split-btn-main:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Chevron toggle */
-.split-btn-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 48px;
-  border: 2px solid var(--primary-color);
-  border-left: 1px solid var(--primary-color);
-  margin: 0;
+.split-btn-toggle.ui-btn[class] {
+  width: 2.25rem;
   padding: 0;
-  background: white;
-  color: var(--primary-color);
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0 var(--ui-radius) var(--ui-radius) 0;
   font-size: 0.75rem;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-  border-radius: 0 8px 8px 0;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.split-btn-toggle:hover:not(:disabled) {
-  background: var(--primary-color);
-  color: white;
-}
-
-.split-btn-toggle:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 /* Dropdown menu */

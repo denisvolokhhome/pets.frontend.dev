@@ -22,15 +22,6 @@
   justify-content: center;
 }
 
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #ff5252;
-}
-
 .btn-secondary {
   background-color: #6b7280;
   color: white;
@@ -38,25 +29,6 @@
 
 .btn-secondary:hover {
   background-color: #4b5563;
-}
-
-.btn-danger {
-  background-color: #ef4444;
-  color: white;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background-color: #dc2626;
-}
-
-.btn-danger:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.btn-sm {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
 }
 
 .badge {
@@ -353,15 +325,6 @@
   }
 }
 
-/* Convert to Pet button */
-.btn-convert-pet {
-  background-color: #8b5cf6;
-  color: white;
-}
-.btn-convert-pet:hover {
-  background-color: #7c3aed;
-}
-
 /* Convert confirmation modal */
 .convert-modal {
   background: white; border-radius: 14px; max-width: 440px; width: 95%;
@@ -377,10 +340,6 @@
   padding: 1rem 1.25rem; border-bottom: 1px solid #e5e7eb;
 }
 .convert-modal-header h3 { flex: 1; margin: 0; font-size: 1.0625rem; font-weight: 600; }
-.convert-modal-close {
-  background: none; border: none; cursor: pointer; color: #9ca3af; padding: 4px; border-radius: 4px;
-}
-.convert-modal-close:hover { color: #374151; }
 .convert-modal-body { padding: 1.25rem; }
 .convert-modal-body p { margin: 0 0 1rem; font-size: 0.9375rem; line-height: 1.6; color: #374151; }
 .convert-warn-list { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -393,24 +352,6 @@
   display: flex; justify-content: flex-end; gap: 0.75rem;
   padding: 0.75rem 1.25rem; border-top: 1px solid #e5e7eb; background: #f9fafb;
 }
-.btn-convert-confirm {
-  background-color: #8b5cf6; color: white;
-}
-.btn-convert-confirm:hover:not(:disabled) { background-color: #7c3aed; }
-.btn-convert-confirm:disabled, .btn-convert-pet:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* Publish / Unpublish button */
-.btn-publish {
-  background-color: #16a34a;
-  color: white;
-}
-.btn-publish:hover:not(:disabled) { background-color: #15803d; }
-
-.btn-unpublish {
-  background-color: #6b7280;
-  color: white;
-}
-.btn-unpublish:hover:not(:disabled) { background-color: #4b5563; }
 
 /* Visibility badges */
 .badge-published {
@@ -432,4 +373,16 @@
   font-weight: 600;
   display: inline-flex;
   align-items: center;
+}
+
+/* Placeholder when the offspring has no photos */
+.no-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16rem;
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface-hover);
+  color: var(--ui-text-subtle);
+  font-size: 3rem;
 }

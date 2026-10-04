@@ -43,27 +43,6 @@
   margin: 0;
 }
 
-.close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1.5px solid #E5E7EB;
-  border-radius: 8px;
-  background: white;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
-  flex-shrink: 0;
-}
-
-.close-button:hover {
-  border-color: var(--primary-color);
-  background: #FEF2F2;
-  color: var(--primary-color);
-}
-
 /* ── 3-Column Grid ──────────────────────────────────────── */
 
 .pet-form-columns {
@@ -503,44 +482,6 @@ textarea.form-control-modern {
   border-top: 1px solid #E5E7EB;
   background: #F9FAFB;
   flex-shrink: 0;
-}
-
-.btn-secondary-modern,
-.btn-primary-modern {
-  font-family: var(--font-primary);
-  font-weight: 600;
-  font-size: 0.9375rem;
-  padding: 0.625rem 1.375rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.btn-secondary-modern {
-  background: #E5E7EB;
-  color: var(--dark-color);
-}
-
-.btn-secondary-modern:hover {
-  background: #D1D5DB;
-}
-
-.btn-primary-modern {
-  background: var(--primary-color);
-  color: white;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-}
-
-.btn-primary-modern:hover:not(:disabled) {
-  background: #FF5252;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
-}
-
-.btn-primary-modern:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* ── Responsive ─────────────────────────────────────────── */

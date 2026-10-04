@@ -5,6 +5,8 @@ import { ToastService } from 'src/app/services/toast.service';
 import { PageHeaderConfig } from '../page-header/page-header.component';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 import { IBreed } from 'src/app/models/breed';
+import { environment } from 'src/environments/environment';
+import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: false,
@@ -13,6 +15,8 @@ import { IBreed } from 'src/app/models/breed';
   styleUrls: ['./offspring-list.component.css']
 })
 export class OffspringListComponent implements OnInit {
+  /** Filter panel visibility on laptop widths (see shared filter widget). */
+  filtersOpen = false;
   headerConfig: PageHeaderConfig = {
     title: 'My Offsprings',
     icon: 'bi bi-heart-fill',
@@ -293,9 +297,17 @@ export class OffspringListComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
+    return formatDisplayDate(dateString);
+  }
+
+  readonly statusBadgeClass = statusBadgeClass;
+
+  isAutoNamed(offspring: OffspringRead): boolean {
+    return isAutoNamedOffspring(offspring.name);
+  }
+
+  displayName(offspring: OffspringRead): string {
+    return offspringDisplayName(offspring.name);
   }
 
   getStatusBadgeClass(status: string): string {
@@ -313,15 +325,9 @@ export class OffspringListComponent implements OnInit {
     }
   }
 
-  getThumbnailUrl(offspring: OffspringRead): string {
-    if (offspring.primary_image) {
-      return `http://breedly.com:8000${offspring.primary_image.image_url}`;
-    }
-    if (offspring.images && offspring.images.length > 0) {
-      return `http://breedly.com:8000${offspring.images[0].image_url}`;
-    }
-    // Return a data URL for a simple gray placeholder instead of trying to load a file
-    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2UwZTBlMCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
+  getThumbnailUrl(offspring: OffspringRead): string | null {
+    const image = offspring.primary_image ?? offspring.images?.[0];
+    return image ? `${environment.API_HOST}${image.image_url}` : null;
   }
 
   getBreedName(offspring: OffspringRead): string {

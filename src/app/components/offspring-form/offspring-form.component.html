@@ -3,10 +3,10 @@
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-2xl font-bold">{{ getTitle() }}</h2>
       <button 
-        class="btn btn-secondary"
+        class="ui-btn ui-btn--secondary"
         (click)="cancel()"
         type="button">
-        <i class="pi pi-times mr-2"></i>
+        <i class="pi pi-times"></i>
         Cancel
       </button>
     </div>
@@ -269,15 +269,15 @@
         <div class="form-actions">
           <button 
             type="button"
-            class="btn btn-secondary"
+            class="ui-btn ui-btn--secondary"
             (click)="cancel()">
             Cancel
           </button>
           <button 
             type="submit"
-            class="btn btn-primary"
+            class="ui-btn ui-btn--primary"
             [disabled]="offspringForm.invalid || isSaving">
-            <i class="pi pi-check mr-2"></i>
+            <i class="pi pi-check"></i>
             {{ mode === 'create' ? 'Create' : 'Update' }} Offspring
           </button>
         </div>

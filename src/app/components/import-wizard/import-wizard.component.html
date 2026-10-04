@@ -12,7 +12,7 @@
           <p class="modal-subtitle">Step {{ currentStep }} of 3</p>
         </div>
       </div>
-      <button type="button" class="close-button" (click)="close()" aria-label="Close">&times;</button>
+      <button type="button" class="ui-icon-btn" (click)="close()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     </div>
 
     <!-- Step Indicator -->
@@ -48,7 +48,7 @@
           </ol>
         </div>
 
-        <button type="button" class="btn-download" (click)="downloadTemplate()">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="downloadTemplate()">
           <i class="bi bi-download"></i> Download Template
         </button>
 
@@ -137,7 +137,7 @@
         <div *ngIf="parsedRows.length > 0" class="preview-section">
           <h4>Preview ({{ parsedRows.length }} rows)</h4>
           <div class="table-wrapper">
-            <table class="preview-table">
+            <table class="ui-table preview-table">
               <thead>
                 <tr>
                   <th>Row</th>
@@ -219,7 +219,7 @@
 
         <!-- Error list -->
         <div *ngIf="importResult.errors.length > 0" class="error-list-section">
-          <button type="button" class="btn-toggle-errors" (click)="toggleErrorList()">
+          <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="toggleErrorList()">
             <i class="bi" [ngClass]="showErrorList ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
             {{ importResult.errors.length }} row{{ importResult.errors.length === 1 ? '' : 's' }} with errors
           </button>
@@ -237,20 +237,20 @@
     <div class="modal-footer">
       <!-- Step 1 -->
       <ng-container *ngIf="currentStep === 1">
-        <button type="button" class="btn-secondary" (click)="close()">Cancel</button>
-        <button type="button" class="btn-primary" (click)="goToStep(2)">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="close()">Cancel</button>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="goToStep(2)">
           Next <i class="bi bi-arrow-right"></i>
         </button>
       </ng-container>
 
       <!-- Step 2 -->
       <ng-container *ngIf="currentStep === 2">
-        <button type="button" class="btn-secondary" (click)="goToStep(1)">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="goToStep(1)">
           <i class="bi bi-arrow-left"></i> Back
         </button>
         <button
           type="button"
-          class="btn-primary"
+          class="ui-btn ui-btn--primary"
           [disabled]="!canImport"
           (click)="startImport()"
         >
@@ -261,7 +261,7 @@
 
       <!-- Step 3 -->
       <ng-container *ngIf="currentStep === 3">
-        <button type="button" class="btn-primary" (click)="close()">
+        <button type="button" class="ui-btn ui-btn--primary" (click)="close()">
           Close
         </button>
       </ng-container>

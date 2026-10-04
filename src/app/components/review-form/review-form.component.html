@@ -3,8 +3,8 @@
     <!-- Header -->
     <div class="review-header">
       <h2 id="review-title" class="review-title">Rate Breeder</h2>
-      <button type="button" class="close-button" (click)="onClose()" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" class="ui-icon-btn" (click)="onClose()" aria-label="Close">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -73,7 +73,7 @@
     <div class="review-footer">
       <button
         type="button"
-        class="btn btn-primary submit-button"
+        class="ui-btn ui-btn--primary w-full"
         [disabled]="isSubmitDisabled"
         (click)="onSubmit()">
         <span *ngIf="!submitting">Submit</span>

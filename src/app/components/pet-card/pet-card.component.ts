@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IPet } from 'src/app/models/pet';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
+import { formatDisplayDate } from 'src/app/utils/format-utils';
+import { calculatePetAge } from 'src/app/utils/pet-utils';
 
 
 @Component({
@@ -15,6 +17,8 @@ export class PetCardComponent {
   constructor(private dataService: DataService){}
 
   @Input() pet: IPet;
+  /** Resolved by the parent from the breed list — the pet API only returns breed_id. */
+  @Input() breedName = '';
   @Output() deletingPet = new EventEmitter();
   @Output() editingPet = new EventEmitter();
   @Output() quickBreeding = new EventEmitter();
@@ -62,6 +66,14 @@ export class PetCardComponent {
   onOpenDocuments(event: any): void {
     event.stopPropagation();
     this.openDocuments.emit(this.pet);
+  }
+
+  formatDate(value: string): string {
+    return formatDisplayDate(value);
+  }
+
+  getAge(dateOfBirth: string): string {
+    return calculatePetAge(dateOfBirth);
   }
 
   hasHealthRecords(): boolean {
