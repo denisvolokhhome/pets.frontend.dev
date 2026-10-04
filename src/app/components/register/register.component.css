@@ -176,7 +176,9 @@
 
 .account-type-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* One equal column per visible card (Service Provider is feature-flagged) */
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
   gap: 0.75rem;
 }
 
@@ -530,7 +532,7 @@
   .auth-logo { width: 60px; height: 60px; }
   .auth-logo i { font-size: 30px; }
 
-  .account-type-cards { grid-template-columns: 1fr; }
+  .account-type-cards { grid-auto-flow: row; grid-template-columns: 1fr; }
   .account-type-card { flex-direction: row; text-align: left; gap: 0.75rem; padding: 0.875rem 1rem; }
   .account-type-icon { font-size: 1.5rem; flex-shrink: 0; }
 

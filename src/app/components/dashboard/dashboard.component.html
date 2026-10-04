@@ -77,8 +77,8 @@
       <div class="stat-card stat-card--purple">
         <div class="stat-card__inner">
           <div>
-            <p class="stat-card__label">Messages Sent</p>
-            <p class="stat-card__value">-</p>
+            <p class="stat-card__label">Unread Messages</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : unreadMessages }}</p>
           </div>
           <i class="bi bi-envelope stat-card__icon text-purple-500"></i>
         </div>
@@ -88,7 +88,7 @@
         <div class="stat-card__inner">
           <div>
             <p class="stat-card__label">Favorites</p>
-            <p class="stat-card__value">-</p>
+            <p class="stat-card__value">{{ isLoading ? '-' : favoritesCount }}</p>
           </div>
           <i class="bi bi-heart stat-card__icon text-red-500"></i>
         </div>

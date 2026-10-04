@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { Subscription, filter } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -16,6 +17,8 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   isMobileMenuOpen: boolean = false;
   showGetStartedDropdown: boolean = false;
+  readonly serviceProvidersEnabled = environment.enableServiceProviders;
+  @ViewChild('getStartedDropdown') getStartedDropdown?: ElementRef<HTMLElement>;
   private authSubscription?: Subscription;
   private routerSubscription?: Subscription;
 
@@ -68,5 +71,15 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     this.showGetStartedDropdown = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (
+      this.showGetStartedDropdown &&
+      !this.getStartedDropdown?.nativeElement.contains(event.target as Node)
+    ) {
+      this.showGetStartedDropdown = false;
+    }
   }
 }

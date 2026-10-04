@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { DataService } from 'src/app/services/data.service';
+import { MessageService } from 'src/app/services/message.service';
+import { FavoriteService } from 'src/app/services/favorite.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,6 +17,7 @@ export class DashboardComponent implements OnInit {
   totalPets: number = 0;
   activeBreedings: number = 0;
   unreadMessages: number = 0;
+  favoritesCount: number = 0;
   isLoading: boolean = true;
   showWelcomeModal: boolean = false;
   
@@ -22,6 +25,8 @@ export class DashboardComponent implements OnInit {
     public authService: AuthService,
     private modalService: ModalService,
     private dataService: DataService,
+    private messageService: MessageService,
+    private favoriteService: FavoriteService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -73,6 +78,33 @@ export class DashboardComponent implements OnInit {
     const userId = this.authService.currentUser.id;
     console.log('Loading dashboard data for user:', userId);
 
+    if (this.isBreeder) {
+      this.loadBreederStats(userId);
+    }
+
+    if (this.isPetSeeker) {
+      this.favoriteService.getFavorites(0, 1000).subscribe({
+        next: (favorites) => {
+          this.favoritesCount = favorites.length;
+          this.cdr.detectChanges();
+        },
+        error: (error) => console.error('Error loading favorites:', error)
+      });
+    }
+
+    this.messageService.getUnreadCount().subscribe({
+      next: (res) => {
+        this.unreadMessages = res.unread_count;
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.error('Error loading unread count:', error)
+    });
+
+    this.isLoading = false;
+    this.cdr.detectChanges();
+  }
+
+  private loadBreederStats(userId: string): void {
     // Load pets count - filter out puppies (is_puppy = 1 or true)
     this.dataService.getPetsByBreeder(userId).subscribe({
       next: (pets) => {
@@ -105,11 +137,6 @@ export class DashboardComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
-
-    // For now, set messages to 0 until we implement the messages API
-    this.unreadMessages = 0;
-    this.isLoading = false;
-    this.cdr.detectChanges();
   }
 
   get isBreeder(): boolean {

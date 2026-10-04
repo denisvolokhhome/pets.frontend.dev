@@ -6,6 +6,7 @@ interface Feature {
   icon: string;
   title: string;
   description: string;
+  serviceProvidersOnly?: boolean;
 }
 
 interface Step {
@@ -22,7 +23,7 @@ interface Step {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  features: Feature[] = [
+  features: Feature[] = ([
     {
       icon: 'pets',
       title: 'Manage Your Pets',
@@ -41,9 +42,10 @@ export class HomeComponent {
     {
       icon: 'content_cut',
       title: 'Pet Services',
-      description: 'Find trusted groomers, dog walkers, pet sitters, trainers, and more — all in one place, searchable by location.'
+      description: 'Find trusted groomers, dog walkers, pet sitters, trainers, and more — all in one place, searchable by location.',
+      serviceProvidersOnly: true
     }
-  ];
+  ] as Feature[]).filter(f => !f.serviceProvidersOnly || environment.enableServiceProviders);
 
   breederSteps: Step[] = [
     {

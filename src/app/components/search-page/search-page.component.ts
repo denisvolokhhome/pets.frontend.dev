@@ -320,7 +320,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
         const total = this.searchResults.length + this.serviceResults.length;
         if (total > 0) {
-          this.toastService.success(`Found ${this.searchResults.length} breeder${this.searchResults.length !== 1 ? 's' : ''} and ${this.serviceResults.length} service provider${this.serviceResults.length !== 1 ? 's' : ''}`);
+          const breederMsg = `${this.searchResults.length} breeder${this.searchResults.length !== 1 ? 's' : ''}`;
+          const serviceMsg = this.serviceProvidersEnabled
+            ? ` and ${this.serviceResults.length} service provider${this.serviceResults.length !== 1 ? 's' : ''}`
+            : '';
+          this.toastService.success(`Found ${breederMsg}${serviceMsg}`);
           if (window.innerWidth <= 768) this.mobileActiveTab = 'list';
         }
 

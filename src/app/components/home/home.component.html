@@ -35,7 +35,7 @@
       <div class="flex flex-wrap justify-center">
         <div class="w-full lg:w-10/12 text-center">
           <h1 id="hero-heading" class="hero-title">Find Your Perfect Companion with Breedly</h1>
-          <p class="hero-subtitle">Connecting responsible breeders, pet seekers, and pet service professionals</p>
+          <p class="hero-subtitle">Connecting responsible breeders{{ serviceProvidersEnabled ? ', pet seekers, and pet service professionals' : ' and pet seekers' }}</p>
           
           <!-- Main Search Button -->
           <div class="hero-main-cta" role="group" aria-label="Search for pets">
@@ -185,7 +185,7 @@
     <div class="flex flex-wrap justify-center">
       <div class="w-full lg:w-8/12 text-center">
         <h2 id="cta-footer-heading" class="cta-footer-title">Ready to Get Started?</h2>
-        <p class="cta-footer-subtitle">Join Breedly today — whether you're a breeder, a pet seeker, or a pet service professional</p>
+        <p class="cta-footer-subtitle">Join Breedly today — whether you're a breeder{{ serviceProvidersEnabled ? ', a pet seeker, or a pet service professional' : ' or a pet seeker' }}</p>
         
         <!-- Main Search Button -->
         <div class="mb-4">

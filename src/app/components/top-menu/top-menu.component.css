@@ -67,8 +67,19 @@ app-profile-menu {
   transition: transform 0.2s ease;
 }
 
-.get-started-dropdown:hover button svg {
+.get-started-dropdown button[aria-expanded="true"] svg {
   transform: rotate(180deg);
+}
+
+/* Invisible bridge over the gap between button and menu so the
+   cursor doesn't "leave" the dropdown while moving down to it */
+.get-started-dropdown::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 0.5rem;
 }
 
 
