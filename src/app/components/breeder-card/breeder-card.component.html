@@ -125,7 +125,7 @@
         <div class="profile-section" *ngIf="breederProfile.animal_kinds?.length">
           <p class="profile-section-label">Animals</p>
           <div class="profile-kinds">
-            <span class="profile-kind" *ngFor="let kind of breederProfile.animal_kinds">{{ kind }}</span>
+            <span class="profile-kind" *ngFor="let kind of breederProfile.animal_kinds">{{ kind | titlecase }}s</span>
           </div>
         </div>
         <div class="profile-section" *ngIf="breederProfile.breeds?.length">

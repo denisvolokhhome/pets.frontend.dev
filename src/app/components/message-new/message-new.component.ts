@@ -59,7 +59,16 @@ export class MessageNewComponent implements OnInit {
       this.breederId = params['breederId'];
       this.offspringId = params['offspringId'];
       this.threadId = params['threadId'];
-      this.initialMessage = params['initialMessage'];
+      // Only take it when present: removing it from the URL below re-emits params without it
+      if (params['initialMessage']) {
+        this.initialMessage = params['initialMessage'];
+        // Keep the prefill out of the URL so a refresh can't prefill (and resend) it again
+        this.router.navigate([], {
+          queryParams: { initialMessage: null },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        });
+      }
 
       if (!this.breederId && !this.threadId) {
         // No specific thread selected, just show threads list
@@ -81,6 +90,12 @@ export class MessageNewComponent implements OnInit {
   /**
    * Load all message threads for sidebar
    */
+  /** A message was sent from the open thread — show the (possibly new) conversation in the list. */
+  onMessageSent(threadId: string): void {
+    this.threadId = threadId;
+    this.loadThreads();
+  }
+
   private loadThreads(): void {
     this.isLoadingThreads = true;
     
@@ -157,6 +172,12 @@ export class MessageNewComponent implements OnInit {
     this.threads = Array.from(threadMap.values()).sort((a, b) => {
       return new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime();
     });
+
+    // Opened via a link (not by clicking the sidebar): take the partner's name from the list
+    const open = this.threads.find(t => t.thread_id === this.threadId);
+    if (open && this.breederName === 'Breeder') {
+      this.breederName = open.participant_name;
+    }
   }
 
   /**

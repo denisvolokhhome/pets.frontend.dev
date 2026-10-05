@@ -1584,6 +1584,25 @@ button.ui-cell-sub {
   }
 }
 
+/* ----- Headings vs Material typography ---------------------------------
+   <body class="mat-typography"> applies Material's `font` shorthand to h1-h6,
+   which out-ranks Tailwind utilities — so a heading written as
+   class="text-2xl font-bold" rendered at 20px/500 in Roboto. Let explicit
+   Tailwind type utilities on headings win, using the app font. */
+.mat-typography :is(h1, h2, h3, h4, h5, h6):is(.text-sm, .text-base, .text-lg, .text-xl, .text-2xl, .text-3xl, .font-medium, .font-semibold, .font-bold) {
+  font-family: var(--font-primary);
+  line-height: 1.3;
+}
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-sm { font-size: 0.875rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-base { font-size: 1rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-lg { font-size: 1.125rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-xl { font-size: 1.25rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-2xl { font-size: 1.5rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).text-3xl { font-size: 1.875rem; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).font-medium { font-weight: 500; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).font-semibold { font-weight: 600; }
+.mat-typography :is(h1, h2, h3, h4, h5, h6).font-bold { font-weight: 700; }
+
 /* ----- Native tables -------------------------------------------------- */
 /* .ui-table is the native-<table> twin of the p-table look above.
    .table-unified is kept as an alias for existing markup. */

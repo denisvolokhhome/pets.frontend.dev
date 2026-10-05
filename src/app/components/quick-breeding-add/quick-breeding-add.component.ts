@@ -17,6 +17,10 @@ import { environment } from 'src/environments/environment';
 })
 export class QuickBreedingAddComponent implements OnInit, OnChanges {
   @Input() selectedPet: IPet | null = null;
+  /** When opened without a pet (Breedings page "Add Breeding"), let the user pick the first parent. */
+  @Input() allowParentPick = false;
+  parentCandidates: IPet[] = [];
+  isLoadingParents = false;
 
   // Stepper
   currentStep: number = 1;
@@ -50,7 +54,42 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
+  getBreedName(pet: IPet): string {
+    return this.breeds.find(b => b.id === pet.breed_id)?.name ?? pet.breed_name ?? '';
+  }
+
+  /** Load the breeder's pets for the "select the first parent" step. */
+  loadParentCandidates(): void {
+    this.isLoadingParents = true;
+    this.dataService.getBreeds().subscribe(breeds => (this.breeds = breeds));
+    this.authService.IsLoggedIn().subscribe(user => {
+      if (!user?.id) {
+        this.isLoadingParents = false;
+        return;
+      }
+      this.dataService.getPetsByBreeder(user.id).subscribe({
+        next: pets => {
+          this.parentCandidates = [...pets].sort((a, b) => a.name.localeCompare(b.name));
+          this.isLoadingParents = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.isLoadingParents = false;
+          this.toastr.error('Could not load your pets. Please try again.');
+        }
+      });
+    });
+  }
+
+  chooseFirstParent(pet: IPet): void {
+    this.selectedPet = pet;
+    this.loadAvailablePets();
+  }
+
   ngOnInit(): void {
+    if (this.allowParentPick) {
+      this.loadParentCandidates();
+    }
     console.log('QuickBreedingAddComponent initialized');
     console.log('Selected pet on init:', this.selectedPet);
     // Don't load pets on init - wait for modal to open and selectedPet to be set
@@ -311,6 +350,9 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   }
 
   resetForm(): void {
+    if (this.allowParentPick) {
+      this.selectedPet = null;
+    }
     this.currentStep = 1;
     this.selectedPartnerPet = null;
     this.description = '';

@@ -23,6 +23,15 @@ export interface ISubscription {
   pending_plan_id: string | null;
   pending_plan_effective_date: string | null;
   pending_plan: IPlan | null;
+  /** Current usage of the plan-limited resources. */
+  usage?: IPlanUsage | null;
+}
+
+export interface IPlanUsage {
+  pets: number;
+  published_locations: number;
+  /** Available + Reserved offsprings — the ones counted against the plan. */
+  offsprings: number;
 }
 
 export interface IInvoice {

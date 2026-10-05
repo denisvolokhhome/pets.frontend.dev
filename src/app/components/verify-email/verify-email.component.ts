@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { takePostSignupRedirect } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: false,
@@ -52,9 +53,11 @@ export class VerifyEmailComponent implements OnInit {
         this.mode = 'success';
         this.toastr.success('Your email has been verified!', 'Verified');
 
-        // Redirect to dashboard after a short delay so the user sees the success message
+        // Redirect after a short delay so the user sees the success message —
+        // back to the page they signed up from (e.g. a listing), else the dashboard
+        const returnTo = takePostSignupRedirect();
         setTimeout(() => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigateByUrl(returnTo || '/dashboard');
         }, 2000);
       },
       error: (err) => {

@@ -10,7 +10,10 @@ import { Router } from '@angular/router';
 })
 export class LogoutComponent {
   constructor(private service: AuthService, private router: Router) {
+    // Clear the user's data but keep the device-level cookie consent
+    const cookieConsent = localStorage.getItem('cookies_accepted');
     localStorage.clear();
+    if (cookieConsent) localStorage.setItem('cookies_accepted', cookieConsent);
     this.service.LogoutUser(); //specify user to logout!!! pass the token!!!
     this.router.navigate(['login']);
   }

@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { ToastService } from 'src/app/services/toast.service';
 import { ModalService } from './../../services/modal.service';
 import { DataService } from './../../services/data.service';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
@@ -38,9 +39,16 @@ export class PetAddComponent implements OnInit {
 
   @ViewChild('addPet') public addPetForm: NgForm;
 
+  /** Emitted after a pet (and its photos) is saved so the host can refresh. */
+  @Output() petAdded = new EventEmitter<void>();
+
+  private savedPetName = '';
+  private failedImageUploads = 0;
+
   constructor(
     private DataService: DataService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toastService: ToastService
   ) {
     this.maxDate = new Date();
   }
@@ -56,14 +64,17 @@ export class PetAddComponent implements OnInit {
 
     this.DataService.getLocations(localStorage.getItem('id')).subscribe(locations => {
       this.locations = locations;
-      // Auto-select: default location, or the only location if there's just one
-      const defaultLocation = locations.find(l => l.is_default);
-      if (defaultLocation) {
-        this.location_name.setValue(defaultLocation.name);
-      } else if (locations.length === 1) {
-        this.location_name.setValue(locations[0].name);
-      }
+      this.applyDefaultLocation();
     });
+  }
+
+  /** Preselect the default location, or the only location if there's just one. */
+  private applyDefaultLocation(): void {
+    const defaultLocation = this.locations.find(l => l.is_default)
+      ?? (this.locations.length === 1 ? this.locations[0] : undefined);
+    if (defaultLocation) {
+      this.location_name.setValue(defaultLocation.name);
+    }
   }
 
   // ── Pet type selection ──────────────────────────────────────────────────────
@@ -180,6 +191,8 @@ export class PetAddComponent implements OnInit {
       id:                   localStorage.getItem('id')
     }).subscribe({
       next: (createdPet) => {
+        this.savedPetName = createdPet.name;
+        this.failedImageUploads = 0;
         if (this.imageFiles.length > 0) {
           // Upload images sequentially, then reset
           this.uploadImagesSequentially(createdPet.id, 0);
@@ -189,7 +202,7 @@ export class PetAddComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating pet:', error);
-        alert('Failed to create pet. Please try again.');
+        this.toastService.error(error.message || 'Failed to create pet. Please try again.', 'Could not add pet');
       }
     });
   }
@@ -204,6 +217,7 @@ export class PetAddComponent implements OnInit {
       next: () => this.uploadImagesSequentially(petId, index + 1),
       error: (error) => {
         console.error(`Error uploading image ${index + 1}:`, error);
+        this.failedImageUploads++;
         // Continue uploading remaining images even if one fails
         this.uploadImagesSequentially(petId, index + 1);
       }
@@ -213,20 +227,30 @@ export class PetAddComponent implements OnInit {
   // ── Reset ────────────────────────────────────────────────────────────────────
 
   resetForm(): void {
-    this.addPetForm.form.reset();
+    // reset() keeps validators, so required fields stay invalid until filled again
+    this.addPetForm.resetForm();
+    this.form.reset();
 
     // Clean up blob URLs
     this.imagePreviews.forEach(url => window.URL.revokeObjectURL(url));
     this.imagePreviews = [];
     this.imageFiles = [];
     this.selectedPetType = '';
-
-    Object.keys(this.addPetForm.form.controls).forEach(key => {
-      this.addPetForm.form.controls[key].setErrors(null);
-    });
+    this.applyDefaultLocation();
 
     this.modalService.close('addPetModal');
-    window.location.reload();
+
+    if (this.savedPetName) {
+      this.toastService.success(`${this.savedPetName} was added to your pets`, 'Pet added');
+      if (this.failedImageUploads > 0) {
+        this.toastService.warning(
+          `${this.failedImageUploads} photo(s) could not be uploaded. You can add them from Edit.`,
+          'Some photos failed'
+        );
+      }
+      this.savedPetName = '';
+      this.petAdded.emit();
+    }
   }
 
   modalClose(): void {

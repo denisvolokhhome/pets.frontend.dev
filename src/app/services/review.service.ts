@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import {
   ReviewCreate,
@@ -61,9 +61,14 @@ export class ReviewService {
       .set('limit', '10')
       .set('offset', (page * 10).toString());
 
+    // The API returns a plain page of reviews (limit/offset); the overall
+    // total comes from the review summary. Normalise to PaginatedReviews.
     return this.http
-      .get<PaginatedReviews>(`${this.apiUrl}/reviews/breeder/${breederId}`, { params })
-      .pipe(catchError(this.handleError));
+      .get<ReviewRead[] | PaginatedReviews>(`${this.apiUrl}/reviews/breeder/${breederId}`, { params })
+      .pipe(
+        map(res => Array.isArray(res) ? { items: res, total: res.length } : res),
+        catchError(this.handleError)
+      );
   }
 
   /**

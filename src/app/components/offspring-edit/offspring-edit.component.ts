@@ -5,6 +5,7 @@ import { OffspringService, OffspringRead, OffspringCreate, OffspringUpdate, Offs
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IBreeding } from 'src/app/models/breeding';
+import { ConfirmService } from 'src/app/services/confirm.service';
 declare var window: any;
 
 @Component({
@@ -17,6 +18,7 @@ declare var window: any;
 export class OffspringEditComponent implements OnInit, OnChanges {
 
   constructor(
+    private confirmService: ConfirmService,
     private offspringService: OffspringService,
     private dataService: DataService,
     private toastr: ToastService,
@@ -164,10 +166,10 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     this.imageFiles.splice(index, 1);
   }
 
-  removeExistingImage(imageId: string): void {
+  async removeExistingImage(imageId: string): Promise<void> {
     if (!this.offspring) return;
     
-    if (confirm('Are you sure you want to delete this image?')) {
+    if (await this.confirmService.confirm({ title: 'Delete photo?', message: 'This photo will be permanently removed.', confirmText: 'Delete', danger: true })) {
       this.offspringService.deleteOffspringImage(this.offspring.id, imageId).subscribe({
         next: () => {
           this.existingImages = this.existingImages.filter(img => img.id !== imageId);

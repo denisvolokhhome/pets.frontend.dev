@@ -61,18 +61,38 @@
             {{ getStatusLabel(subscription.status) }}
           </span>
         </div>
-        <div class="plan-detail">
-          <span class="plan-detail-label">Max Pets</span>
-          <span class="plan-detail-value">{{ subscription.plan.max_pets }}</span>
+        <ng-container *ngIf="!subscription.usage">
+          <div class="plan-detail">
+            <span class="plan-detail-label">Max Pets</span>
+            <span class="plan-detail-value">{{ subscription.plan.max_pets }}</span>
+          </div>
+          <div class="plan-detail">
+            <span class="plan-detail-label">Max Published Locations</span>
+            <span class="plan-detail-value">{{ subscription.plan.max_published_locations }}</span>
+          </div>
+          <div class="plan-detail">
+            <span class="plan-detail-label">Max Simultaneous Offsprings</span>
+            <span class="plan-detail-value">{{ subscription.plan.max_simultaneous_offsprings }}</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="plan-usage" *ngIf="usageRows.length">
+        <h4 class="plan-usage-title">Plan usage</h4>
+        <div class="usage-row" *ngFor="let row of usageRows" [ngClass]="'usage-' + row.level">
+          <div class="usage-row-head">
+            <span class="usage-label">{{ row.label }}</span>
+            <span class="usage-count">{{ row.used }} of {{ row.limit }}</span>
+          </div>
+          <div class="usage-bar" role="progressbar" [attr.aria-label]="row.label"
+               [attr.aria-valuenow]="row.used" aria-valuemin="0" [attr.aria-valuemax]="row.limit">
+            <div class="usage-bar-fill" [style.width.%]="row.percent"></div>
+          </div>
+          <span class="usage-hint" *ngIf="row.level === 'full'">
+            Limit reached — upgrade your plan to add more.
+          </span>
         </div>
-        <div class="plan-detail">
-          <span class="plan-detail-label">Max Published Locations</span>
-          <span class="plan-detail-value">{{ subscription.plan.max_published_locations }}</span>
-        </div>
-        <div class="plan-detail">
-          <span class="plan-detail-label">Max Simultaneous Offsprings</span>
-          <span class="plan-detail-value">{{ subscription.plan.max_simultaneous_offsprings }}</span>
-        </div>
+        <p class="usage-note">Offsprings count while they are Available or Reserved; Sold and Archived ones don't.</p>
       </div>
 
       <!-- View Invoices button — shown whenever user has a Stripe customer ID -->

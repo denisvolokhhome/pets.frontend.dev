@@ -8,6 +8,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
 import { environment } from 'src/environments/environment';
+import { formatPrice } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: true,
@@ -267,7 +268,7 @@ export class OffspringCardComponent implements OnInit {
    * Check if price should be displayed
    */
   shouldShowPrice(): boolean {
-    return !!(this.offspring?.price && this.offspring.price > 0);
+    return !!(this.offspring?.price && Number(this.offspring.price) > 0);
   }
 
   /**
@@ -275,6 +276,6 @@ export class OffspringCardComponent implements OnInit {
    */
   formatPrice(): string {
     if (!this.offspring?.price) return '';
-    return `$${this.offspring.price.toLocaleString()}`;
+    return formatPrice(this.offspring.price);
   }
 }

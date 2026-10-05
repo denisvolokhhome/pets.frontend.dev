@@ -55,10 +55,17 @@
         <!-- Breed / Location reference -->
         <div class="reference-section" *ngIf="breeds.length > 0 || locations.length > 0">
           <div class="reference-block" *ngIf="breeds.length > 0">
-            <h4><i class="bi bi-tags"></i> Available Breeds</h4>
+            <h4><i class="bi bi-tags"></i> Available Breeds ({{ breeds.length }})</h4>
+            <input type="search" class="breed-search" [(ngModel)]="breedSearch" placeholder="Search breeds, e.g. Labrador"
+                   aria-label="Search breeds" />
             <div class="tag-list">
-              <span class="tag" *ngFor="let breed of breeds">{{ breed.name }}</span>
+              <span class="tag" *ngFor="let breed of (breedSearch || showAllBreeds ? filteredReferenceBreeds : filteredReferenceBreeds.slice(0, 24))">{{ breed.name }}</span>
+              <span *ngIf="breedSearch && filteredReferenceBreeds.length === 0" class="ui-muted">No breeds match "{{ breedSearch }}"</span>
             </div>
+            <button *ngIf="!breedSearch && breeds.length > 24" type="button" class="ui-btn ui-btn--ghost ui-btn--sm mt-2"
+                    (click)="showAllBreeds = !showAllBreeds">
+              {{ showAllBreeds ? 'Show fewer' : 'Show all ' + breeds.length + ' breeds' }}
+            </button>
           </div>
           <div class="reference-block" *ngIf="locations.length > 0">
             <h4><i class="bi bi-geo-alt"></i> Your Locations</h4>
@@ -182,7 +189,6 @@
           <!-- Row error details -->
           <div *ngFor="let row of parsedRows">
             <div *ngIf="!row.isValid" class="row-error-detail">
-              <strong>Row {{ row.rowNumber }}:</strong>
               <span *ngFor="let e of row.errors; let last = last">{{ e }}{{ last ? '' : '; ' }}</span>
             </div>
           </div>
@@ -196,16 +202,21 @@
             <i class="bi bi-check-circle-fill"></i>
             <div>
               <span class="result-count">{{ importResult.created_count }}</span>
-              <span class="result-label">Pets Created</span>
+              <span class="result-label">{{ importResult.created_count === 1 ? 'Pet created' : 'Pets created' }}</span>
             </div>
           </div>
           <div class="result-card result-skipped">
             <i class="bi bi-skip-forward-fill"></i>
             <div>
-              <span class="result-count">{{ importResult.skipped_count }}</span>
-              <span class="result-label">Rows Skipped</span>
+              <span class="result-count">{{ notImportedCount }}</span>
+              <span class="result-label">{{ notImportedCount === 1 ? 'Row not imported' : 'Rows not imported' }}</span>
             </div>
           </div>
+        </div>
+
+        <div *ngIf="overLimitCount > 0 && !importResult.plan_limit_applied" class="warning-banner">
+          <i class="bi bi-exclamation-circle"></i>
+          <p>{{ overLimitCount }} valid {{ overLimitCount === 1 ? 'row was' : 'rows were' }} not imported because your plan's pet limit was reached. Upgrade your plan to import more pets.</p>
         </div>
 
         <!-- Plan limit notice -->
@@ -255,7 +266,7 @@
           (click)="startImport()"
         >
           <i class="bi" [ngClass]="isImporting ? 'bi-hourglass-split' : 'bi-upload'"></i>
-          {{ isImporting ? 'Importing...' : 'Import ' + importableRowCount + ' Pets' }}
+          {{ isImporting ? 'Importing...' : 'Import ' + importableRowCount + (importableRowCount === 1 ? ' pet' : ' pets') }}
         </button>
       </ng-container>
 

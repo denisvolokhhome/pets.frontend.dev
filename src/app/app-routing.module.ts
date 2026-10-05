@@ -17,7 +17,6 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
-import { PetSeekerRegistrationComponent } from './components/pet-seeker-registration/pet-seeker-registration.component';
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
@@ -63,7 +62,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'register', component: RegisterComponent },
-  { path: 'register/pet-seeker', component: PetSeekerRegistrationComponent },
+  // One sign-up flow for everyone (with terms acceptance + password confirmation)
+  { path: 'register/pet-seeker', redirectTo: '/register?type=pet_seeker', pathMatch: 'full' },
   { path: 'register/from-message', component: GuestToAccountComponent },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },

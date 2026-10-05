@@ -103,7 +103,7 @@
           type="text"
           [(ngModel)]="tagInput"
           [ngModelOptions]="{standalone: true}"
-          (keyup.enter)="addTag()"
+          (keydown.enter)="$event.preventDefault(); addTag()"
           placeholder="Type a tag and press Enter"
         />
         <button type="button" (click)="addTag()" class="ui-btn ui-btn--secondary">

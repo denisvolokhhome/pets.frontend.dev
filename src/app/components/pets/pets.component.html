@@ -146,7 +146,7 @@
   </app-filter-widget>
 
   <!-- Main Content -->
-  <main class="pets-content">
+  <section class="pets-content">
       <div class="list-toolbar">
         <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="filtersOpen = true"
                 [attr.aria-expanded]="filtersOpen" aria-haspopup="dialog">
@@ -311,7 +311,7 @@
         </div>
       </div>
     </div>
-  </main>
+  </section>
   </div>
 </div>
 
@@ -326,7 +326,7 @@
   [hideHeader]="true"
   aria-labelledby="PetAddModal"
 >
-  <app-pet-add></app-pet-add>
+  <app-pet-add (petAdded)="loadPets()"></app-pet-add>
 </div>
 <div
   app-modal

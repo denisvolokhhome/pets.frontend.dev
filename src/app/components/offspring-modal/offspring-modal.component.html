@@ -131,6 +131,27 @@
               placeholder="Tell us about this offspring's personality, habits, or any special notes..."
             ></textarea>
           </div>
+
+          <!-- Photos -->
+          <div class="form-group full-width">
+            <span class="form-label">Photos <span class="form-hint">(up to {{ MAX_PHOTOS }}, the first one is the main photo)</span></span>
+            <div class="photo-grid">
+              <div class="photo-tile" *ngFor="let preview of imagePreviews; let i = index">
+                <img [src]="preview" alt="New photo {{ i + 1 }}" />
+                <span class="photo-badge" *ngIf="i === 0">Main</span>
+                <button type="button" class="photo-remove" (click)="removePhoto(i)"
+                        [disabled]="isSubmitting" aria-label="Remove photo {{ i + 1 }}">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              </div>
+              <label class="photo-add" *ngIf="imageFiles.length < MAX_PHOTOS" [class.disabled]="isSubmitting">
+                <input type="file" accept="image/*" multiple (change)="onPhotosSelected($event)"
+                       [disabled]="isSubmitting" />
+                <i class="bi bi-camera"></i>
+                <span>Add photos</span>
+              </label>
+            </div>
+          </div>
         </div>
 
         <!-- Modal Footer -->
@@ -150,7 +171,7 @@
             [disabled]="offspringForm.invalid || isSubmitting"
           >
             <i class="bi bi-check-circle"></i>
-            {{ isSubmitting ? 'Saving...' : 'Save Offspring' }}
+            {{ isSubmitting ? (imageFiles.length ? 'Saving & uploading photos...' : 'Saving...') : 'Save Offspring' }}
           </button>
         </div>
       </form>

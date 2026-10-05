@@ -2,6 +2,8 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef }
 import { CommonModule } from '@angular/common';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
+import { ConfirmService } from 'src/app/services/confirm.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 export interface PetDocument {
   id: number;
@@ -28,7 +30,9 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
   isUploading = false;
   apiHost = environment.API_HOST;
 
-  constructor(private dataService: DataService, private cdr: ChangeDetectorRef) {}
+  constructor(private toastService: ToastService,
+    private confirmService: ConfirmService,
+    private dataService: DataService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.petId) this.loadDocuments();
@@ -56,12 +60,12 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
     const file = input.files[0];
     const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowed.includes(file.type)) {
-      alert('Only PDF and image files are allowed.');
+      this.toastService.error('Only PDF and image files are allowed.');
       input.value = '';
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      alert('File size must be under 10MB.');
+      this.toastService.error('File size must be under 10MB.');
       input.value = '';
       return;
     }
@@ -82,8 +86,8 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
     });
   }
 
-  deleteDocument(doc: PetDocument): void {
-    if (!this.petId || !confirm(`Delete "${doc.file_name}"?`)) return;
+  async deleteDocument(doc: PetDocument): Promise<void> {
+    if (!this.petId || !(await this.confirmService.confirm({ title: 'Delete document?', message: `"${doc.file_name}" will be permanently removed.`, confirmText: 'Delete', danger: true }))) return;
     this.dataService.deletePetDocument(this.petId, doc.id).subscribe({
       next: () => { this.documents = this.documents.filter(d => d.id !== doc.id); this.cdr.detectChanges(); },
       error: () => {}

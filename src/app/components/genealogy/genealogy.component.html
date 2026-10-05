@@ -36,7 +36,7 @@
           <!-- Parents row -->
           <div class="parents-row">
             <div class="pet-card father" *ngIf="edge.father" [style.border-color]="genderColor(edge.father.gender)">
-              <div class="pet-avatar" [style.background-image]="edge.father.image_url ? 'url(' + edge.father.image_url + ')' : ''">
+              <div class="pet-avatar" [style.background-image]="edge.father.image_url ? 'url(' + imageUrl(edge.father.image_url) + ')' : ''">
                 <i *ngIf="!edge.father.image_url" class="bi bi-gender-male"></i>
               </div>
               <div class="pet-info">
@@ -52,7 +52,7 @@
             <div class="connector-h"></div>
 
             <div class="pet-card mother" *ngIf="edge.mother" [style.border-color]="genderColor(edge.mother.gender)">
-              <div class="pet-avatar" [style.background-image]="edge.mother.image_url ? 'url(' + edge.mother.image_url + ')' : ''">
+              <div class="pet-avatar" [style.background-image]="edge.mother.image_url ? 'url(' + imageUrl(edge.mother.image_url) + ')' : ''">
                 <i *ngIf="!edge.mother.image_url" class="bi bi-gender-female"></i>
               </div>
               <div class="pet-info">
@@ -85,7 +85,7 @@
             <div *ngFor="let cp of edge.converted_pets"
                  class="pet-card converted" [style.border-color]="genderColor(cp.gender)">
               <div class="converted-badge"><i class="bi bi-arrow-up-circle-fill"></i></div>
-              <div class="pet-avatar" [style.background-image]="cp.image_url ? 'url(' + cp.image_url + ')' : ''">
+              <div class="pet-avatar" [style.background-image]="cp.image_url ? 'url(' + imageUrl(cp.image_url) + ')' : ''">
                 <i *ngIf="!cp.image_url" [class]="'bi ' + genderIcon(cp.gender)"></i>
               </div>
               <div class="pet-info">
@@ -118,7 +118,7 @@
       </div>
       <div class="offspring-grid">
         <div *ngFor="let o of selectedGroup.offspring_group.offsprings" class="offspring-mini-card" [style.border-color]="genderColor(o.gender)">
-          <div class="mini-avatar" [style.background-image]="o.image_url ? 'url(' + o.image_url + ')' : ''">
+          <div class="mini-avatar" [style.background-image]="o.image_url ? 'url(' + imageUrl(o.image_url) + ')' : ''">
             <i *ngIf="!o.image_url" [class]="'bi ' + genderIcon(o.gender)"></i>
           </div>
           <div class="mini-info">

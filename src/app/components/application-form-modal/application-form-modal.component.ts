@@ -73,7 +73,8 @@ export class ApplicationFormModalComponent implements OnInit {
     // Build a formatted message from the answers
     const lines = this.fields
       .filter(f => this.answers[f.id]?.trim())
-      .map(f => `**${f.label}**\n${this.answers[f.id].trim()}`);
+      // Plain text: messages are shown verbatim, so no markdown markers
+      .map(f => `${f.label}\n${this.answers[f.id].trim()}`);
 
     const formattedMessage = `Application for ${this.offspringName}:\n\n${lines.join('\n\n')}`;
 

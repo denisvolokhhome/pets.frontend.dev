@@ -67,7 +67,7 @@
     <!-- Offspring Grid -->
     <div class="offspring-grid">
       <app-offspring-card
-        *ngFor="let offspring of offsprings"
+        *ngFor="let offspring of visibleOffsprings"
         [offspring]="offspring"
         [showFavorite]="true"
         (favoriteToggled)="onFavoriteToggled($event)">

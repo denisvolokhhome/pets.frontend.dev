@@ -95,57 +95,91 @@ export class GeneralSettingsComponent implements OnInit {
     });
   }
 
-  async saveProfile(): Promise<void> {
-    if (this.profileForm.invalid) {
-      this.toastr.warning('Please fill in all required fields', 'Validation Error');
+  /** Inline errors for the password section (keyed by form control). */
+  passwordErrors: { current_password?: string; new_password?: string; confirm_password?: string } = {};
+
+  private get wantsPasswordChange(): boolean {
+    const v = this.profileForm.value;
+    return !!(v.current_password || v.new_password || v.confirm_password);
+  }
+
+  private validatePasswordFields(): boolean {
+    const { current_password, new_password, confirm_password } = this.profileForm.value;
+    const errors: typeof this.passwordErrors = {};
+    if (this.hasPassword && !current_password) {
+      errors.current_password = 'Enter your current password';
+    }
+    if (!new_password) {
+      errors.new_password = 'Enter a new password';
+    } else if (new_password.length < 8 || !/[a-zA-Z]/.test(new_password) || !/\d/.test(new_password)) {
+      errors.new_password = 'Use at least 8 characters with a letter and a number';
+    }
+    if (new_password && confirm_password !== new_password) {
+      errors.confirm_password = "Passwords don't match";
+    }
+    this.passwordErrors = errors;
+    return Object.keys(errors).length === 0;
+  }
+
+  private resetPasswordFields(): void {
+    this.profileForm.patchValue({ current_password: '', new_password: '', confirm_password: '' });
+    this.passwordErrors = {};
+  }
+
+  saveProfile(): void {
+    this.passwordErrors = {};
+    const changingPassword = this.wantsPasswordChange;
+    if (changingPassword && !this.validatePasswordFields()) {
+      this.cdr.detectChanges();
       return;
     }
 
     this.isLoading = true;
     this.saveSuccess = false;
     this.saveError = null;
+    const { name, phone_number, current_password, new_password } = this.profileForm.value;
 
-    try {
-      // Prepare profile data
-      const profileData: any = {
-        name: this.profileForm.value.name,
-        phone_number: this.profileForm.value.phone_number
-      };
-      
-      // Add password if provided
-      if (this.profileForm.value.new_password) {
-        if (this.profileForm.value.new_password !== this.profileForm.value.confirm_password) {
-          this.toastr.error('Passwords do not match', 'Validation Error');
-          this.isLoading = false;
+    const finish = (message: string) => {
+      this.saveSuccess = true;
+      this.isLoading = false;
+      this.toastr.success(message, 'Success');
+      this.cdr.detectChanges();
+      setTimeout(() => {
+        this.saveSuccess = false;
+        this.cdr.detectChanges();
+      }, 3000);
+    };
+
+    const fail = (error: any) => {
+      this.isLoading = false;
+      const detail = error.error?.detail;
+      if (detail === 'CURRENT_PASSWORD_INCORRECT') {
+        this.passwordErrors = { current_password: 'Current password is incorrect' };
+      } else if (changingPassword && error.status === 400 && typeof detail === 'string') {
+        this.passwordErrors = { new_password: detail };
+      } else {
+        this.saveError = typeof detail === 'string' ? detail : 'Failed to save profile';
+        this.toastr.error(this.saveError!, 'Error');
+      }
+      this.cdr.detectChanges();
+    };
+
+    this.dataService.updateUserProfile({ name, phone_number }).subscribe({
+      next: () => {
+        if (!changingPassword) {
+          finish('Profile updated successfully');
           return;
         }
-        profileData.password = this.profileForm.value.new_password;
-      }
-
-      this.dataService.updateUserProfile(profileData).subscribe({
-        next: (response) => {
-          this.saveSuccess = true;
-          this.isLoading = false;
-          this.toastr.success('Profile updated successfully', 'Success');
-          this.cdr.detectChanges();
-          setTimeout(() => {
-            this.saveSuccess = false;
-            this.cdr.detectChanges();
-          }, 3000);
-        },
-        error: (error) => {
-          console.error('Error saving profile:', error);
-          this.saveError = error.error?.detail || 'Failed to save profile';
-          const errorMessage = error.error?.detail || 'Failed to save profile';
-          this.toastr.error(errorMessage, 'Error');
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      });
-    } catch (error) {
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    }
+        this.dataService.changePassword(this.hasPassword ? current_password : null, new_password).subscribe({
+          next: () => {
+            this.resetPasswordFields();
+            finish('Profile saved and password changed');
+          },
+          error: fail,
+        });
+      },
+      error: fail,
+    });
   }
 
   sendPasswordReset(): void {

@@ -144,10 +144,12 @@ export class BreederySettingsComponent implements OnInit {
 
   addTag(): void {
     const tag = this.tagInput.trim();
-    if (tag && !this.tags.includes(tag)) {
+    if (!tag) return;
+    // Case-insensitive duplicate check ("Labrador" == "labrador")
+    if (!this.tags.some(t => t.toLowerCase() === tag.toLowerCase())) {
       this.tags.push(tag);
-      this.tagInput = '';
     }
+    this.tagInput = '';
   }
 
   removeTag(index: number): void {

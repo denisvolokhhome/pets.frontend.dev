@@ -1,0 +1,4 @@
+name,breed,gender,date_of_birth,weight,description,location,microchip,vaccination,health_certificate,deworming,birth_certificate
+Daisy,Beagle,Female,2022-05-10,11.2,Gentle and great with kids,Sunny Meadow Farm,985112000000101,Up to date,Valid,Completed,Available
+Rocky,Beagle,Male,2021-11-02,12.8,Champion bloodline,Sunny Meadow Farm,985112000000102,Up to date,Valid,Completed,Available
+Luna,Labrador Retriever,Female,2023-02-18,26.0,Calm temperament,Sunny Meadow Farm,,Up to date,,Completed,

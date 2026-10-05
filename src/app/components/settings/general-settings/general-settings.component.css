@@ -683,3 +683,17 @@
     width: 100%;
   }
 }
+
+/* Inline password errors */
+.form-group input.is-invalid {
+  border-color: #f87171;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.375rem;
+  color: #dc2626;
+  font-size: 0.8125rem;
+}

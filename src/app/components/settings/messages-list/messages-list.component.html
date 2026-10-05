@@ -46,7 +46,7 @@
     </app-filter-widget>
 
     <!-- Main Content -->
-    <main class="messages-content">
+    <section class="messages-content">
       <!-- Loading State -->
       <div *ngIf="isLoading" class="loading-state">
         <div class="spinner-container">
@@ -107,7 +107,8 @@
           <div class="pagination-info">
             {{ threads.length }} conversation{{ threads.length !== 1 ? 's' : '' }}
           </div>
-          <div class="pagination-controls">
+          <!-- Only when there is more than one page -->
+          <div class="pagination-controls" *ngIf="hasPreviousPage() || hasNextPage()">
             <button
               type="button"
               class="ui-btn ui-btn--secondary ui-btn--sm"
@@ -137,6 +138,6 @@
           Clear Filters
         </button>
       </div>
-    </main>
+    </section>
   </div>
 </div>

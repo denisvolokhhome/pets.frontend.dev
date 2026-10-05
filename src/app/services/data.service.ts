@@ -226,6 +226,13 @@ export class DataService {
       );
   }
 
+  changePassword(currentPassword: string | null, newPassword: string): Observable<void> {
+    return this.http.post<void>(this.apiurl + '/users/me/change-password', {
+      current_password: currentPassword,
+      new_password: newPassword,
+    });
+  }
+
   uploadProfileImage(file: File): Observable<IProfileImageResponse> {
     const formData = new FormData();
     formData.append('file', file);
@@ -455,7 +462,8 @@ export class DataService {
       if (error.status === 401) {
         errorMessage = 'Unauthorized. Please log in again.';
       } else if (error.status === 403) {
-        errorMessage = 'Access forbidden.';
+        // Plan limits (USAGE_LIMIT_EXCEEDED) and similar return a readable detail
+        errorMessage = typeof error.error?.detail === 'string' ? error.error.detail : 'Access forbidden.';
       } else if (error.status === 404) {
         errorMessage = 'Resource not found.';
       } else if (error.status === 409) {

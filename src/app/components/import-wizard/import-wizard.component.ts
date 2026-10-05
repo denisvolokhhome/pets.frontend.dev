@@ -170,6 +170,7 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
       this.isParsing = false;
       this.parseErrors = result.errors;
       this.parsedRows = result.rows;
+      this.applyReferenceChecks();
 
       if (this.parsedRows.length > 0 && this.parseErrors.length === 0) {
         this.loadBillingInfo();
@@ -177,6 +178,46 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  /** Rows in the file that didn't become pets (invalid, over the plan limit, or rejected). */
+  get notImportedCount(): number {
+    return Math.max(0, this.parsedRows.length - (this.importResult?.created_count ?? 0));
+  }
+
+  /** Valid rows left out because of the plan limit. */
+  get overLimitCount(): number {
+    return this.parsedRows.filter(r => r.isValid && !r.willBeImported).length;
+  }
+
+  /** Breed filter for the reference list on step 1. */
+  breedSearch = '';
+  showAllBreeds = false;
+
+  get filteredReferenceBreeds() {
+    const q = this.breedSearch.trim().toLowerCase();
+    return q ? this.breeds.filter(b => b.name.toLowerCase().includes(q)) : this.breeds;
+  }
+
+  /**
+   * Checks that need app data the CSV parser doesn't have: the breed must
+   * exist, and birth dates can't be in the future.
+   */
+  private applyReferenceChecks(): void {
+    const breedNames = new Set(this.breeds.map(b => b.name.toLowerCase()));
+    const today = new Date().toISOString().slice(0, 10);
+    for (const row of this.parsedRows) {
+      if (row.breed && breedNames.size > 0 && !breedNames.has(row.breed.toLowerCase())) {
+        row.errors.push(`Row ${row.rowNumber}: Unknown breed "${row.breed}" — use a name from the breed list`);
+      }
+      if (row.dateOfBirth && row.dateOfBirth > today) {
+        row.errors.push(`Row ${row.rowNumber}: Date of birth can't be in the future`);
+      }
+      if (row.errors.length > 0) {
+        row.isValid = false;
+        row.willBeImported = false;
+      }
+    }
   }
 
   private loadBillingInfo(): void {

@@ -71,6 +71,7 @@ import { PricingSectionComponent } from './components/pricing-section/pricing-se
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
 import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
+import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
 import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
@@ -170,6 +171,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     SupportSettingsComponent,
     QuickBreedingAddComponent,
     FilterWidgetComponent,
+    ConfirmDialogComponent,
     OffspringListComponent,
     OffspringFormComponent,
     OffspringGridComponent,

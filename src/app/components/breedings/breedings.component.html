@@ -115,7 +115,7 @@
     </app-filter-widget>
 
     <!-- Main Content -->
-    <main class="breedings-content">
+    <section class="breedings-content">
       <div class="list-toolbar">
         <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="filtersOpen = true"
                 [attr.aria-expanded]="filtersOpen" aria-haspopup="dialog">
@@ -228,7 +228,7 @@
         </button>
       </div>
       </div>
-    </main>
+    </section>
   </div>
 </div>
 
@@ -238,3 +238,15 @@
   [breeding]="selectedBreeding"
   (breedingSaved)="onBreedingSaved($event)">
 </app-breeding-modal>
+
+<!-- "Add Breeding": quick breeding flow, starting with picking the first parent -->
+<div
+  app-modal
+  title="Quick Breeding"
+  modalSize="xlarge"
+  modalId="quickBreedingModal"
+  [hideHeader]="true"
+  aria-labelledby="QuickBreedingModal"
+>
+  <app-quick-breeding-add [allowParentPick]="true"></app-quick-breeding-add>
+</div>

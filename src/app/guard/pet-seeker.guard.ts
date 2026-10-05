@@ -27,7 +27,7 @@ export class PetSeekerGuard {
       map((user) => {
         if (!user) {
           this.toastr.error('Please log in to access this page', 'Authentication Required');
-          this.router.navigate(['login']);
+          this.router.navigate(['login'], { queryParams: { returnUrl: state.url } });
           return false;
         }
 

@@ -58,3 +58,47 @@ export function isAutoNamedOffspring(name: string | null | undefined): boolean {
 export function offspringDisplayName(name: string | null | undefined): string {
   return isAutoNamedOffspring(name) ? 'Unnamed' : name!;
 }
+
+/** "$2,500" (cents only when present). The API sends Decimal prices as strings, e.g. "2500.00". */
+export function formatPrice(value: number | string | null | undefined): string {
+  const amount = typeof value === 'string' ? parseFloat(value) : value;
+  if (amount == null || isNaN(amount)) return '';
+  return amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+const POST_SIGNUP_KEY = 'post_signup_redirect';
+const POST_SIGNUP_TTL_MS = 24 * 60 * 60 * 1000;
+
+/** In-app path only (blocks //evil.com and absolute URLs). */
+export function isSafeInAppPath(url: string | null | undefined): url is string {
+  return !!url && url.startsWith('/') && !url.startsWith('//');
+}
+
+/**
+ * Remember where a visitor was when they chose to sign up, so email verification
+ * (usually opened in a new tab from the email) can bring them back there.
+ */
+export function rememberPostSignupRedirect(url: string): void {
+  if (!isSafeInAppPath(url)) return;
+  try {
+    localStorage.setItem(POST_SIGNUP_KEY, JSON.stringify({ url, ts: Date.now() }));
+  } catch { /* storage unavailable — fall back to the dashboard */ }
+}
+
+/** Read and clear the remembered page (if recent and safe). */
+export function takePostSignupRedirect(): string | null {
+  try {
+    const raw = localStorage.getItem(POST_SIGNUP_KEY);
+    localStorage.removeItem(POST_SIGNUP_KEY);
+    if (!raw) return null;
+    const { url, ts } = JSON.parse(raw);
+    return isSafeInAppPath(url) && Date.now() - ts < POST_SIGNUP_TTL_MS ? url : null;
+  } catch {
+    return null;
+  }
+}

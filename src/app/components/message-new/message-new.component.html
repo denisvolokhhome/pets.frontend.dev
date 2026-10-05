@@ -67,7 +67,8 @@
       [breederName]="breederName"
       [threadId]="threadId"
       [offspringContext]="offspringContext"
-      [initialMessage]="initialMessage">
+      [initialMessage]="initialMessage"
+      (messageSent)="onMessageSent($event)">
     </app-message-thread>
   </div>
 </div>

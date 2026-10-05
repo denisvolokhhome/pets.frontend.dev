@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BillingService } from '../../../services/billing.service';
 import { IPlan, ISubscription } from '../../../models/billing.model';
+
+export interface UsageRow {
+  label: string;
+  used: number;
+  limit: number;
+  percent: number;
+  level: 'ok' | 'near' | 'full';
+}
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
@@ -97,6 +105,25 @@ export class SubscriptionSettingsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  /** Usage vs. limit for each plan-limited resource (empty until the API reports usage). */
+  get usageRows(): UsageRow[] {
+    const usage = this.subscription?.usage;
+    const plan = this.subscription?.plan;
+    if (!usage || !plan) {
+      return [];
+    }
+    const row = (label: string, used: number, limit: number): UsageRow => {
+      const percent = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 100;
+      const level = used >= limit ? 'full' : percent >= 80 ? 'near' : 'ok';
+      return { label, used, limit, percent, level };
+    };
+    return [
+      row('Pets', usage.pets, plan.max_pets),
+      row('Published locations', usage.published_locations, plan.max_published_locations),
+      row('Offsprings', usage.offsprings, plan.max_simultaneous_offsprings),
+    ];
   }
 
   isCurrentPlan(plan: IPlan): boolean {

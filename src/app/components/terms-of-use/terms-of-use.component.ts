@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./terms-of-use.component.css']
 })
 export class TermsOfUseComponent {
-  lastUpdated = 'May 22, 2026';
+  lastUpdated = 'October 4, 2026';
 
   downloadTerms(): void {
     const content = this.getTermsText();
@@ -22,8 +22,8 @@ export class TermsOfUseComponent {
 
   private getTermsText(): string {
     return `BREEDLY TERMS OF USE
-Last Updated: May 22, 2026
-Effective Date: May 22, 2026
+Last Updated: October 4, 2026
+Effective Date: October 4, 2026
 
 ================================================================================
 
@@ -51,10 +51,6 @@ Breedly is intended for use within the United States only.
 3.1 Account Types
 - Breeder accounts: For individuals or businesses that breed and list animals.
 - Pet Seeker accounts: For individuals looking to acquire an offspring.
-- Service Provider accounts: For individuals or businesses offering pet-related
-  services (grooming, dog walking, cat sitting, pet sitting, pet training, pet
-  boarding, veterinary services, pet photography, pet transport, pet daycare, and
-  similar). Service Providers must select at least one service category at registration.
 - Guest access: Limited browsing and messaging without a registered account.
   Guests who send a message are automatically registered as Pet Seeker accounts.
 
@@ -64,7 +60,21 @@ Breedly is intended for use within the United States only.
 - You must provide accurate and truthful information when registering.
 - Notify us immediately of any unauthorized use at legal@breedly.us.
 
-3.3 Account Termination
+3.3 Third-Party Sign-In
+You may create an account or sign in using your Google account. Your use of a
+third-party sign-in provider is also subject to that provider's own terms and
+privacy policy. If you sign up with Google, you can set a Breedly password later
+in Settings.
+
+3.4 Communications
+By creating an account, you consent to receive transactional emails from Breedly,
+including account verification, password reset, welcome, and activity notification
+emails (for example, when you receive a new message or, for breeders, when a pet
+seeker adds one of your offspring to Favorites). You can manage activity
+notification preferences in your account settings; account verification, password,
+and security emails cannot be turned off.
+
+3.5 Account Termination
 We reserve the right to suspend or permanently ban accounts that violate these Terms.
 
 ================================================================================
@@ -98,30 +108,7 @@ by 0.5-1.5 miles to protect your exact address privacy.
 
 ================================================================================
 
-6. SERVICE PROVIDER RESPONSIBILITIES
-
-6.1 Accurate Service Listings
-Provide truthful, accurate, and complete information about all services offered.
-Only list services you are genuinely able to provide. Keep service status current.
-
-6.2 Licensing and Compliance
-Comply with all applicable laws and regulations governing the services you offer.
-Maintain any required professional licenses, certifications, or permits.
-
-6.3 Honest Communication
-Respond to messages in good faith. Honor commitments to clients.
-Do not engage in deceptive pricing or misrepresentation.
-
-6.4 Location Accuracy
-Provide accurate location information for the areas where you offer services.
-
-6.5 Contact Information
-Contact information you provide will be displayed publicly on your Service Provider
-profile. You are responsible for ensuring it is accurate and up to date.
-
-================================================================================
-
-7. PROHIBITED CONDUCT
+6. PROHIBITED CONDUCT
 
 You may not use Breedly to:
 
@@ -141,88 +128,81 @@ You may not use Breedly to:
 
 ================================================================================
 
-8. CONTENT AND INTELLECTUAL PROPERTY
+7. CONTENT AND INTELLECTUAL PROPERTY
 
-8.1 Your Content
+7.1 Your Content
 You retain ownership of content you submit. By submitting, you grant Breedly a
 non-exclusive, royalty-free license to display and store it to operate the Service.
 
-8.2 Content Standards
+7.2 Content Standards
 All content must be accurate, not infringe third-party rights, and not contain
 offensive or illegal material.
 
-8.3 Breedly's Intellectual Property
+7.3 Breedly's Intellectual Property
 The Breedly name, logo, and software are owned by Breedly. No copying without
 written permission.
 
 ================================================================================
 
-9. PAYMENTS AND SUBSCRIPTIONS
+8. PAYMENTS AND SUBSCRIPTIONS
 
-9.1 Subscription Plans
-Certain features require a paid subscription. Service Provider accounts are
-currently free; paid plans may be introduced in the future.
+8.1 Subscription Plans
+Certain features require a paid subscription. Details and pricing are described
+on the pricing page.
 
-9.2 Payment Processing
+8.2 Payment Processing
 All payments are processed by Stripe (https://stripe.com/legal).
 Breedly does not store raw payment card details.
 
-9.3 Cancellation and Refunds
+8.3 Cancellation and Refunds
 You may cancel at any time through account settings. Cancellation takes effect
 at the end of the current billing period. No refunds for partial periods.
 
 ================================================================================
 
-10. DISCLAIMERS
+9. DISCLAIMERS
 
-10.1 Platform Role
-Breedly connects breeders, pet seekers, and service providers. We do not breed,
-sell, or take custody of animals, and do not provide pet services directly.
-We are not a party to any transaction or service arrangement between users.
+9.1 Platform Role
+Breedly connects breeders and pet seekers. We do not breed, sell, or take custody
+of animals. We are not a party to any transaction between users.
 
-10.2 No Warranty
+9.2 No Warranty
 THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND.
 
-10.3 Animal Transactions
+9.3 Animal Transactions
 Breedly does not guarantee the health or suitability of any animal listed.
 Pet seekers are solely responsible for their own due diligence.
 
-10.4 Pet Services
-Breedly does not verify credentials, licenses, or quality of service providers.
-Pet owners are solely responsible for their own due diligence before engaging
-any service provider. Breedly is not liable for harm arising from services
-arranged through the platform.
-
 ================================================================================
 
-11. LIMITATION OF LIABILITY
+10. LIMITATION OF LIABILITY
 
 TO THE MAXIMUM EXTENT PERMITTED BY LAW, BREEDLY SHALL NOT BE LIABLE FOR ANY
 INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING
-DISPUTES BETWEEN USERS, ANIMAL HEALTH ISSUES, HARM FROM PET SERVICES, OR
-UNAUTHORIZED ACCOUNT ACCESS.
+DISPUTES BETWEEN USERS, ANIMAL HEALTH ISSUES, OR UNAUTHORIZED ACCOUNT ACCESS.
 
 OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID TO BREEDLY IN THE
 12 MONTHS PRECEDING THE CLAIM, OR $100, WHICHEVER IS GREATER.
 
 ================================================================================
 
-12. INDEMNIFICATION
+11. INDEMNIFICATION
 
 You agree to indemnify Breedly from claims arising from your use of the Service,
 violation of these Terms, or content you submit.
 
 ================================================================================
 
-13. THIRD-PARTY SERVICES
+12. THIRD-PARTY SERVICES
 
 - Stripe (payment): https://stripe.com/legal
 - Google (authentication): https://policies.google.com/terms
+- Email delivery (SMTP) provider (transactional email)
 - OpenStreetMap / Nominatim (geocoding): https://www.openstreetmap.org/copyright
 
 ================================================================================
 
-14. MODIFICATIONS TO THE SERVICE AND TERMS
+13. MODIFICATIONS TO THE SERVICE AND TERMS
 
 We may update these Terms at any time. Material changes will be posted with a
 new "Last Updated" date and emailed to registered users. Continued use constitutes
@@ -230,14 +210,14 @@ acceptance.
 
 ================================================================================
 
-15. GOVERNING LAW AND DISPUTES
+14. GOVERNING LAW AND DISPUTES
 
 These Terms are governed by the laws of the State of Maryland, United States.
 Disputes shall be resolved in the courts of Maryland.
 
 ================================================================================
 
-16. CONTACT US
+15. CONTACT US
 
 Email:   legal@breedly.us
 Phone:   (240) 242-9483

@@ -7,6 +7,8 @@ import { getPetTypeLabel, getPetTypeIcon } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { DatePipe } from '@angular/common';
+import { ConfirmService } from 'src/app/services/confirm.service';
+import { ToastService } from 'src/app/services/toast.service';
 declare var window: any;
 
 @Component({
@@ -18,6 +20,8 @@ declare var window: any;
 export class PetEditComponent implements OnInit, OnChanges {
 
   constructor(
+    private toastService: ToastService,
+    private confirmService: ConfirmService,
     private DataService: DataService,
     private modalService: ModalService,
     private cdr: ChangeDetectorRef
@@ -73,8 +77,8 @@ export class PetEditComponent implements OnInit, OnChanges {
     this.imageFiles.splice(index, 1);
   }
 
-  removeExistingImage(imageId: number): void {
-    if (confirm('Are you sure you want to delete this image?')) {
+  async removeExistingImage(imageId: number): Promise<void> {
+    if (await this.confirmService.confirm({ title: 'Delete photo?', message: 'This photo will be permanently removed.', confirmText: 'Delete', danger: true })) {
       this.DataService.deletePetImage(this.pet.id, imageId).subscribe({
         next: () => {
           // Remove from local array
@@ -85,7 +89,7 @@ export class PetEditComponent implements OnInit, OnChanges {
         },
         error: (error) => {
           console.error('Error deleting image:', error);
-          alert('Failed to delete image. Please try again.');
+          this.toastService.error('Failed to delete image. Please try again.');
         }
       });
     }
@@ -105,7 +109,7 @@ export class PetEditComponent implements OnInit, OnChanges {
       },
       error: (error: any) => {
         console.error('Error setting primary image:', error);
-        alert('Failed to set primary image. Please try again.');
+        this.toastService.error('Failed to set primary image. Please try again.');
       }
     });
   }
@@ -144,7 +148,7 @@ export class PetEditComponent implements OnInit, OnChanges {
       },
       error: (error: any) => {
         console.error('Error reordering images:', error);
-        alert('Failed to reorder images. Please try again.');
+        this.toastService.error('Failed to reorder images. Please try again.');
       }
     });
   }
@@ -387,22 +391,32 @@ export class PetEditComponent implements OnInit, OnChanges {
           if (this.imageFiles.length > 0) {
             this.uploadImagesSequentially(0);
           } else {
-            this.modalService.close('editPetModal');
-            this.petUpdated.emit();
+            this.finishSave();
           }
         },
         error: (error) => {
           console.error('Error updating pet:', error);
-          alert('Failed to update pet. Please try again.');
+          this.toastService.error('Failed to update pet. Please try again.');
         }
       });
     }
 
+    private failedImageUploads = 0;
+
+    /** Close the modal, confirm the save and let the host refresh. */
+    private finishSave(): void {
+      this.modalService.close('editPetModal');
+      this.toastService.success(`${this.form.value.name} was updated`, 'Changes saved');
+      if (this.failedImageUploads > 0) {
+        this.toastService.warning(`${this.failedImageUploads} photo(s) could not be uploaded.`, 'Some photos failed');
+        this.failedImageUploads = 0;
+      }
+      this.petUpdated.emit();
+    }
+
     private uploadImagesSequentially(index: number): void {
       if (index >= this.imageFiles.length) {
-        // All images uploaded - close modal and emit event
-        this.modalService.close('editPetModal');
-        this.petUpdated.emit();
+        this.finishSave();
         return;
       }
 
@@ -413,6 +427,7 @@ export class PetEditComponent implements OnInit, OnChanges {
         },
         error: (error) => {
           console.error(`Error uploading image ${index + 1}:`, error);
+          this.failedImageUploads++;
           // Continue with next image even if one fails
           this.uploadImagesSequentially(index + 1);
         }

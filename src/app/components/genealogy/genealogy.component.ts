@@ -6,6 +6,7 @@ import {
 } from '../../services/genealogy.service';
 import { ToastService } from '../../services/toast.service';
 import { PageHeaderConfig } from '../page-header/page-header.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -14,6 +15,11 @@ import { PageHeaderConfig } from '../page-header/page-header.component';
   styleUrls: ['./genealogy.component.css']
 })
 export class GenealogyComponent implements OnInit {
+  /** API image paths are server-relative ("/storage/app/…"); serve them from the API host. */
+  imageUrl(path: string): string {
+    return /^https?:\/\//.test(path) ? path : `${environment.API_HOST}${path}`;
+  }
+
   tree: GenealogyTree | null = null;
   isLoading = true;
   error: string | null = null;

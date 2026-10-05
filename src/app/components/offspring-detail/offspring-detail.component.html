@@ -1,8 +1,8 @@
 <div class="offspring-detail-container p-4">
   <div class="max-w-6xl mx-auto">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex items-center gap-4">
+    <div class="detail-header mb-4">
+      <div class="flex items-center gap-4 min-w-0">
         <button 
           class="ui-btn ui-btn--secondary"
           (click)="goBack()"
@@ -14,7 +14,7 @@
       </div>
       
       <!-- Breeder Actions -->
-      <div class="flex gap-2" *ngIf="isBreederView()">
+      <div class="detail-actions" *ngIf="isBreederView()">
         <button 
           class="ui-btn ui-btn--secondary"
           (click)="togglePublish()"
@@ -50,16 +50,15 @@
       </div>
       
       <!-- Pet Seeker Actions -->
-      <div class="flex gap-2" *ngIf="isPublicView()">
+      <div class="detail-actions" *ngIf="isPublicView()">
         <button 
-          class="btn btn-secondary"
-          [class.btn-favorited]="isFavorited()"
-          [class.btn-disabled]="!isAuthenticated()"
+          class="ui-btn ui-btn--secondary favorite-btn"
+          [class.is-favorited]="isFavorited()"
           (click)="toggleFavorite()"
           [disabled]="isTogglingFavorite"
           [title]="!isAuthenticated() ? 'Login to save favorites' : ''"
           type="button">
-          <i [class]="isFavorited() ? 'pi pi-heart-fill mr-2' : 'pi pi-heart mr-2'"></i>
+          <i [class]="isFavorited() ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
           {{ isFavorited() ? 'Favorited' : 'Add to Favorites' }}
         </button>
         <button 
@@ -140,15 +139,15 @@
             <div class="stat-item">
               <i class="pi pi-heart text-2xl text-red-500"></i>
               <div class="ml-3">
-                <p class="text-2xl font-bold">{{ offspring.favorites_count }}</p>
+                <p class="text-2xl font-bold">{{ offspring.favorites_count || 0 }}</p>
                 <p class="text-sm text-gray-600">Favorites</p>
               </div>
             </div>
             <div class="stat-item mt-4">
               <i class="pi pi-envelope text-2xl text-blue-500"></i>
               <div class="ml-3">
-                <p class="text-2xl font-bold">{{ offspring.messages_count }}</p>
-                <p class="text-sm text-gray-600">Messages</p>
+                <p class="text-2xl font-bold">{{ offspring.thread_count || 0 }}</p>
+                <p class="text-sm text-gray-600">Conversations</p>
               </div>
             </div>
           </div>
@@ -176,11 +175,13 @@
           <h3 class="text-lg font-semibold mb-4">Breeder Information</h3>
           <div class="breeder-info-content">
             <div class="breeder-avatar">
-              <i class="pi pi-user text-3xl text-blue-500"></i>
+              <img *ngIf="breederSummary?.imageUrl; else noLogo" [src]="breederSummary!.imageUrl" [alt]="breederSummary!.name"
+                   class="w-full h-full object-cover rounded-full" />
+              <ng-template #noLogo><i class="pi pi-user text-3xl text-blue-500"></i></ng-template>
             </div>
             <div class="breeder-details">
               <p class="text-sm text-gray-600 mb-2">Listed by</p>
-              <p class="text-lg font-semibold text-gray-900 mb-3">Breeder</p>
+              <p class="text-lg font-semibold text-gray-900 mb-3">{{ breederSummary?.name || 'Breeder' }}</p>
               <button 
                 class="ui-btn ui-btn--secondary w-full"
                 (click)="viewBreederProfile()"
@@ -209,7 +210,7 @@
 
             <div class="info-item" *ngIf="isBreederView()">
               <label class="info-label">Visibility</label>
-              <span [class]="offspring.is_published ? 'badge badge-published' : 'badge badge-unpublished'">
+              <span [class]="offspring.is_published ? 'ui-badge ui-badge--success' : 'ui-badge ui-badge--neutral'">
                 <i [class]="offspring.is_published ? 'pi pi-eye mr-1' : 'pi pi-eye-slash mr-1'"></i>
                 {{ offspring.is_published ? 'Published' : 'Unpublished' }}
               </span>
@@ -319,7 +320,8 @@
               <p class="info-value">{{ formatDate(offspring.updated_at) }}</p>
             </div>
 
-            <div class="info-item">
+            <!-- Internal ID: useful for the breeder (support), noise for pet seekers -->
+            <div class="info-item" *ngIf="isBreederView()">
               <label class="info-label">Offspring ID</label>
               <p class="info-value font-mono text-sm">{{ offspring.id }}</p>
             </div>

@@ -31,11 +31,10 @@
     <!-- Section 2 -->
     <section class="policy-section" aria-labelledby="who-heading">
       <h2 id="who-heading" class="section-title">2. Who This Policy Covers</h2>
-      <p>Breedly serves four types of users:</p>
+      <p>Breedly serves three types of users:</p>
       <ul class="policy-list">
         <li><strong>Breeders</strong> — Users who manage pets, litters, and individual offspring listings.</li>
         <li><strong>Pet Seekers</strong> — Users who browse, favorite, and contact breeders about available offspring.</li>
-        <li><strong>Service Providers</strong> — Users who offer pet-related services (grooming, dog walking, pet sitting, training, boarding, and similar). Service Providers create a Service Account and list their services on the platform.</li>
         <li><strong>Guests</strong> — Unauthenticated visitors who may browse listings and initiate contact with breeders.
           Guests who send a message are automatically registered as Pet Seeker accounts.</li>
       </ul>
@@ -49,11 +48,10 @@
       <p><strong>Account Registration:</strong></p>
       <ul class="policy-list">
         <li>Email address (required, unique identifier)</li>
-        <li>Password (stored as a secure hash — never in plain text)</li>
+        <li>Password (stored as a secure hash — never in plain text). If you sign up with Google, you do not need a password; you can set one later in Settings.</li>
         <li>Full name (optional)</li>
         <li>Phone number (optional)</li>
-        <li>User type: Breeder, Pet Seeker, or Service Provider</li>
-        <li>Service categories selected at registration (Service Providers only)</li>
+        <li>User type: Breeder or Pet Seeker</li>
       </ul>
 
       <p><strong>Breeder Profile Information:</strong></p>
@@ -63,27 +61,10 @@
         <li>Website URL</li>
       </ul>
 
-      <p><strong>Service Provider Profile Information:</strong></p>
-      <ul class="policy-list">
-        <li>Business or display name</li>
-        <li>Service description and profile image</li>
-        <li>Contact information: phone number(s), contact email, website URL, Facebook URL</li>
-        <li>Service categories (e.g., Grooming, Dog Walking, Pet Sitting, Pet Training)</li>
-      </ul>
-
-      <p><strong>Location Information (Breeders and Service Providers):</strong></p>
+      <p><strong>Location Information (Breeders):</strong></p>
       <ul class="policy-list">
         <li>Physical address (street, city, state, country, postcode)</li>
         <li>Geographic coordinates derived from your address via geocoding</li>
-        <li>Service Providers may add up to 10 service locations representing the areas where they offer services</li>
-      </ul>
-
-      <p><strong>Service Listings (Service Providers):</strong></p>
-      <ul class="policy-list">
-        <li>Service title, description, and category</li>
-        <li>Pricing information (price range and unit)</li>
-        <li>Service locations (linked from your registered locations)</li>
-        <li>Images uploaded for service listings</li>
       </ul>
 
       <p><strong>Pet and Offspring Listings:</strong></p>
@@ -111,19 +92,25 @@
 
       <h3 class="subsection-title">3.2 Information Collected Automatically</h3>
       <ul class="policy-list">
-        <li>IP address (logged in billing audit records for security purposes)</li>
+        <li>IP address (logged in billing audit records and used to rate-limit sign-in, registration, and messaging for security purposes — see Section 10)</li>
         <li>Browser type and version, device type and operating system</li>
         <li>Pages visited, features used, and session duration</li>
         <li>Cookie data (see Section 9)</li>
       </ul>
 
       <h3 class="subsection-title">3.3 Information from Third Parties</h3>
-      <p><strong>Google OAuth</strong> (if you sign in with Google):</p>
+      <p><strong>Google Sign-In</strong> (if you create an account or sign in with your Google account):</p>
       <ul class="policy-list">
-        <li>Email address and Google account identifier</li>
+        <li>Your name, email address, and Google account identifier</li>
+        <li>Confirmation from Google that your email address is verified</li>
         <li>We do not receive your Google password</li>
-        <li>We store only the OAuth provider name and a provider-specific identifier</li>
+        <li>We store the OAuth provider name and your Google account identifier to link your Google account to your Breedly account</li>
+        <li>If you sign up with Google, you can set a Breedly password later in Settings</li>
       </ul>
+      <p>
+        Google's processing of your information is governed by the
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">Google Privacy Policy</a>.
+      </p>
     </section>
 
     <!-- Section 4 -->
@@ -133,22 +120,34 @@
       <ul class="policy-list">
         <li>Create and manage your account</li>
         <li>Display your breeder profile and listings to pet seekers</li>
-        <li>Display your service provider profile and service listings to pet owners and breeders</li>
-        <li>Enable messaging between breeders, pet seekers, and service providers</li>
+        <li>Enable messaging between breeders and pet seekers</li>
         <li>Process subscription payments via Stripe</li>
         <li>Send in-app notifications (new messages, favorites added)</li>
-        <li>Enable location-based search for nearby breeders, offspring, and service providers</li>
+        <li>Enable location-based search for nearby breeders and offspring</li>
       </ul>
+      <p><strong>Email Communications:</strong></p>
+      <p>
+        We send transactional emails through an email delivery (SMTP) provider, including:
+      </p>
+      <ul class="policy-list">
+        <li>Account verification and password reset emails</li>
+        <li>A welcome email when you create an account</li>
+        <li>Activity notifications when you receive a new message and, for breeders, when a pet seeker adds one of your offspring to Favorites</li>
+      </ul>
+      <p>
+        You can manage activity notification preferences in your account settings. Account verification,
+        password reset, and other security-related emails are required to operate your account and cannot be turned off.
+      </p>
       <p><strong>Security and Fraud Prevention:</strong></p>
       <ul class="policy-list">
         <li>Verify account identity and detect fraudulent activity</li>
+        <li>Rate-limit sign-in attempts, registration, and messaging to protect accounts from brute-force attacks and spam</li>
         <li>Maintain billing audit logs (IP address, operation type, outcome)</li>
         <li>Encrypt sensitive billing identifiers at rest using AES-256-GCM</li>
       </ul>
       <p><strong>Privacy-Protective Measures:</strong></p>
       <ul class="policy-list">
         <li>Breeder location coordinates are offset by 0.5–1.5 miles on public maps to protect exact address privacy while enabling proximity search.</li>
-        <li>Service Provider contact information (phone, email, website) is only displayed on their public profile and is provided voluntarily by the Service Provider.</li>
       </ul>
     </section>
 
@@ -181,13 +180,14 @@
           <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">Stripe Privacy Policy</a>
         </li>
         <li>
-          <strong>Google</strong> (Authentication) — If you use "Sign in with Google," Google processes your authentication.
+          <strong>Google</strong> (Authentication) — If you create an account or sign in with Google, Google processes your authentication and shares your name, email address, and Google account identifier with us.
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="policy-link">Google Privacy Policy</a>
         </li>
         <li>
           <strong>Nominatim / OpenStreetMap</strong> (Geocoding) — Address data is sent to resolve coordinates for map search.
           <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer" class="policy-link">OpenStreetMap Privacy Policy</a>
         </li>
+        <li><strong>Email Delivery Provider</strong> (Transactional Email) — Your email address and the content of transactional emails (such as verification, password reset, and activity notifications) are processed by our email delivery (SMTP) provider to deliver those emails.</li>
         <li><strong>Hosting and Infrastructure</strong> — Our platform runs on cloud infrastructure where your data is stored.</li>
       </ul>
       <p class="policy-highlight">
@@ -210,7 +210,7 @@
         in your country.
       </p>
       <p>
-        Our infrastructure, databases, and third-party service providers (including Stripe and Google) operate
+        Our infrastructure, databases, and third-party vendors (including Stripe and Google) operate
         primarily within the United States.
       </p>
     </section>
@@ -224,6 +224,7 @@
         <li><strong>Messages</strong> — Soft-deleted messages are permanently removed after 90 days.</li>
         <li><strong>Billing records</strong> — Retained for 7 years for legal and tax compliance.</li>
         <li><strong>Audit logs</strong> — Retained for 12 months for security monitoring.</li>
+        <li><strong>Rate-limiting data</strong> — IP addresses used to rate-limit sign-in, registration, and messaging are kept only briefly.</li>
         <li><strong>Geocoding cache</strong> — Address-to-coordinate mappings cached for up to 24 hours.</li>
       </ul>
     </section>
@@ -253,10 +254,15 @@
         <li>Bcrypt hashing for passwords (never stored in plain text)</li>
         <li>AES-256-GCM encryption for sensitive billing identifiers (Stripe IDs)</li>
         <li>JWT-based authentication with configurable token expiry</li>
-        <li>Role-based access controls (Breeder, Pet Seeker, Service Provider, Admin)</li>
+        <li>Role-based access controls (Breeder, Pet Seeker, Admin)</li>
         <li>Billing audit logs for security-relevant operations</li>
         <li>Admin access protected by API key, separate from user authentication</li>
       </ul>
+      <p>
+        To protect accounts from brute-force attacks and the platform from spam, we process IP addresses to
+        rate-limit sign-in attempts, registration, and messaging. IP address data used for rate limiting is
+        kept only briefly.
+      </p>
       <p>No system is 100% secure. In the event of a data breach, we will notify affected users as required by applicable law.</p>
     </section>
 

@@ -227,7 +227,8 @@ export class BreederCardComponent {
     this.reviewService.getBreederReviews(this.breeder.user_id, page).subscribe({
       next: (result) => {
         this.reviews = result.items;
-        this.reviewTotal = result.total;
+        // Overall count comes from the review summary when available
+        this.reviewTotal = this.reviewSummary?.review_count ?? result.total;
         this.reviewPage = page;
         this.isLoadingReviews = false;
         this.cdr.detectChanges();

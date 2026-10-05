@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 export interface ApplicationFormField {
   id: string;
@@ -30,6 +31,7 @@ export class BreedingDetailComponent implements OnInit {
   isDeletingForm: boolean = false;
 
   constructor(
+    private confirmService: ConfirmService,
     private route: ActivatedRoute,
     private router: Router,
     private dataService: DataService,
@@ -227,8 +229,8 @@ export class BreedingDetailComponent implements OnInit {
     });
   }
 
-  deleteForm(): void {
-    if (!confirm('Remove the application form from this breeding?')) return;
+  async deleteForm(): Promise<void> {
+    if (!(await this.confirmService.confirm({ title: 'Remove application form?', message: 'Pet seekers will no longer be asked to fill it in for this breeding.', confirmText: 'Remove', danger: true }))) return;
     this.isDeletingForm = true;
     this.dataService.deleteApplicationForm(Number(this.breedingId)).subscribe({
       next: () => {

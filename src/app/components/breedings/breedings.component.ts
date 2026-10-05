@@ -9,6 +9,7 @@ import { ModalService } from 'src/app/services/modal.service';
 import { ToastService } from '../../services/toast.service';
 import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widget.component';
 import { PageHeaderConfig } from '../page-header/page-header.component';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   standalone: false,
@@ -34,6 +35,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
+    private confirmService: ConfirmService,
     public dataService: DataService,
     public modalService: ModalService,
     private toastr: ToastService,
@@ -257,7 +259,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   }
   
   onAddBreedingClick(): void {
-    this.modalService.open('addBreedingModal');
+    this.modalService.open('quickBreedingModal');
   }
 
   getLocationName(breeding: IBreeding): string {
@@ -341,8 +343,8 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     this.modalService.open();
   }
 
-  voidBreeding(breeding: IBreeding): void {
-    if (confirm('Are you sure you want to void this breeding? This action cannot be undone.')) {
+  async voidBreeding(breeding: IBreeding): Promise<void> {
+    if (await this.confirmService.confirm({ title: 'Void breeding?', message: 'The breeding will be marked as voided. This can\'t be undone.', confirmText: 'Void breeding', danger: true })) {
       this.isVoiding[breeding.id] = true;
       this.dataService.voidLitter(breeding.id).subscribe({
         next: () => {

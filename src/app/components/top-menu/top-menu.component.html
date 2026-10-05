@@ -37,9 +37,9 @@
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && this.route !== '/register' && this.route !== '/register/pet-seeker'">/</span>
+              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && !isOnRegister">/</span>
               <!-- Show Get Started dropdown when NOT on register pages -->
-              <li *ngIf="this.route !== '/register' && this.route !== '/register/pet-seeker'" class="relative get-started-dropdown"
+              <li *ngIf="!isOnRegister" class="relative get-started-dropdown"
                 #getStartedDropdown
                 (mouseenter)="showGetStartedDropdown = true"
                 (mouseleave)="showGetStartedDropdown = false">
@@ -63,7 +63,7 @@
                   <a href="/register" class="dropdown-item" role="menuitem">
                     <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                   </a>
-                  <a href="/register/pet-seeker" class="dropdown-item" role="menuitem">
+                  <a href="/register?type=pet_seeker" class="dropdown-item" role="menuitem">
                     <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
                   </a>
                   <a *ngIf="serviceProvidersEnabled" href="/register?type=service" class="dropdown-item" role="menuitem">
@@ -110,12 +110,12 @@
                 <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
               </li>
               <!-- Show Get Started options when NOT on register pages -->
-              <li *ngIf="this.route !== '/register' && this.route !== '/register/pet-seeker'">
+              <li *ngIf="!isOnRegister">
                 <div class="px-3 py-2 text-white/70 text-sm font-semibold">Get Started</div>
                 <a href="/register" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                   <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                 </a>
-                <a href="/register/pet-seeker" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/register?type=pet_seeker" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                   <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
                 </a>
                 <a *ngIf="serviceProvidersEnabled" href="/register?type=service" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">

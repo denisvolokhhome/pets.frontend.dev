@@ -31,3 +31,11 @@
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Message composer: auto-growing textarea, up to ~6 lines */
+.message-composer {
+  max-height: 9rem;
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.4;
+}

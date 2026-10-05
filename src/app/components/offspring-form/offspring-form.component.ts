@@ -5,6 +5,7 @@ import { OffspringService, OffspringRead, OffspringCreate, OffspringUpdate, Offs
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IBreeding } from 'src/app/models/breeding';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   standalone: false,
@@ -41,6 +42,7 @@ export class OffspringFormComponent implements OnInit {
   ];
 
   constructor(
+    private confirmService: ConfirmService,
     private fb: FormBuilder,
     private offspringService: OffspringService,
     private dataService: DataService,
@@ -173,10 +175,10 @@ export class OffspringFormComponent implements OnInit {
     });
   }
 
-  deleteImage(image: OffspringImage): void {
+  async deleteImage(image: OffspringImage): Promise<void> {
     if (!this.offspringId) return;
 
-    if (confirm('Are you sure you want to delete this image?')) {
+    if (await this.confirmService.confirm({ title: 'Delete photo?', message: 'This photo will be permanently removed.', confirmText: 'Delete', danger: true })) {
       this.offspringService.deleteOffspringImage(this.offspringId, image.id).subscribe({
         next: () => {
           this.uploadedImages = this.uploadedImages.filter(img => img.id !== image.id);

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+import { rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 
 @Component({
   standalone: false,
@@ -31,9 +32,17 @@ export class RegisterComponent implements OnInit {
     });
     // Pre-select account type from query param (e.g. ?type=service from home page CTA)
     this.route.queryParams.subscribe(params => {
+      if (params['returnUrl']) {
+        // e.g. the listing a visitor was enquiring about — verification brings them back
+        rememberPostSignupRedirect(params['returnUrl']);
+      }
       if (params['type'] === 'service' && this.serviceProvidersEnabled) {
         this.selectAccountType('service');
         this.currentStep = 1;
+      } else if (params['type'] === 'breeder' || params['type'] === 'pet_seeker') {
+        // The user already chose on the previous page — go straight to the form
+        this.selectAccountType(params['type']);
+        this.currentStep = 2;
       }
     });
   }
@@ -101,7 +110,34 @@ export class RegisterComponent implements OnInit {
 
   passwordErrors: string[] = [];
   emailExistsError: string | null = null;
+  /** Server-side rejection of the email address (e.g. reserved domains in production). */
+  emailServerError: string | null = null;
   isSubmitting = false;
+  /** Set on the first submit attempt so every invalid field shows its error. */
+  submitAttempted = false;
+
+  /** Show a field's error once the user has left it or tried to submit. */
+  showError(field: string): boolean {
+    const control = this.registerForm.get(field);
+    return !!control && control.invalid && (control.touched || this.submitAttempted);
+  }
+
+  get passwordsMismatch(): boolean {
+    const { password, password_confirmation } = this.registerForm.value;
+    return !!password_confirmation && password !== password_confirmation;
+  }
+
+  get showMismatch(): boolean {
+    const confirm = this.registerForm.get('password_confirmation');
+    return this.passwordsMismatch && (!!confirm?.touched || this.submitAttempted);
+  }
+
+  /** Live password-rule feedback once the user has started typing a password. */
+  onPasswordInput(): void {
+    if (this.registerForm.value.password || this.submitAttempted) {
+      this.validatePassword();
+    }
+  }
 
   validatePassword(): boolean {
     this.passwordErrors = [];
@@ -127,14 +163,24 @@ export class RegisterComponent implements OnInit {
     return this.passwordErrors.length === 0;
   }
 
+  /** Google sign-in creates a pet seeker account. */
+  signUpWithGoogle(): void {
+    this.service.signInWithGoogle();
+  }
+
   proceedRegistration(): void {
     this.emailExistsError = null;
+    this.emailServerError = null;
 
-    if (!this.registerForm.valid) {
-      this.toastr.warning('Please fill in all required fields');
+    this.submitAttempted = true;
+    this.registerForm.markAllAsTouched();
+    const passwordOk = this.validatePassword();
+
+    if (!this.registerForm.valid || !passwordOk || this.passwordsMismatch) {
+      // Inline messages explain each problem; move focus to the first one.
+      setTimeout(() => (document.querySelector('.auth-form .is-invalid') as HTMLElement | null)?.focus());
       return;
     }
-    if (!this.validatePassword()) return;
     if (this.isSubmitting) return;
     this.isSubmitting = true;
 
@@ -162,6 +208,9 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['login'], { queryParams: { hint: 'sso' } });
       } else if (error.error?.detail === 'REGISTER_USER_ALREADY_EXISTS' || (error.status === 400 && error.error?.detail?.includes('already exists'))) {
         this.emailExistsError = 'An account with this email already exists.';
+      } else if (error.status === 422 && this.isEmailValidationError(error)) {
+        this.emailServerError = 'Please enter a valid email address.';
+        setTimeout(() => document.getElementById('email')?.focus());
       } else if (error.status === 0) {
         this.toastr.error('Unable to connect to the server. Please check your connection.', 'Connection Error');
       } else {
@@ -177,5 +226,10 @@ export class RegisterComponent implements OnInit {
     } else {
       this.service.RegisterPetSeeker(formValue).subscribe({ next: handleSuccess, error: handleError });
     }
+  }
+
+  private isEmailValidationError(error: any): boolean {
+    const detail = error.error?.detail;
+    return Array.isArray(detail) && detail.some((d: any) => Array.isArray(d?.loc) && d.loc.includes('email'));
   }
 }

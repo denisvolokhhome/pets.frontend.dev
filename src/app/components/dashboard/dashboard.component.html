@@ -190,7 +190,7 @@
   [hideHeader]="true"
   aria-labelledby="PetAddModal"
 >
-  <app-pet-add></app-pet-add>
+  <app-pet-add (petAdded)="loadDashboardData()"></app-pet-add>
 </div>
 
 <!-- Welcome Modal for New Breeders -->

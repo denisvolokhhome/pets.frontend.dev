@@ -187,6 +187,100 @@
 }
 
 /* Modal Footer */
+/* Photos */
+.form-hint {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.75rem;
+}
+
+.photo-tile,
+.photo-add {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photo-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-badge {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.75);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.photo-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.photo-remove:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.photo-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: 2px dashed #d1d5db;
+  color: #6b7280;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.photo-add i {
+  font-size: 1.5rem;
+}
+
+.photo-add:hover,
+.photo-add:focus-within {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.photo-add.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.photo-add input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;

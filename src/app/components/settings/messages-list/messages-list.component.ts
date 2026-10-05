@@ -84,7 +84,30 @@ export class MessagesListComponent implements OnInit {
       { value: 'read', label: this.isBreeder ? 'Read' : 'Responded' }
     ];
     
+    // Arriving from a notification (/messages?messageId=…): open that conversation directly
+    const messageId = this.router.parseUrl(this.router.url).queryParams['messageId'];
+    if (messageId) {
+      this.openConversationForMessage(messageId);
+      return;
+    }
+
     this.loadMessages();
+  }
+
+  private openConversationForMessage(messageId: string): void {
+    const me = this.authService.currentUser?.id;
+    this.messageService.getMessage(messageId).subscribe({
+      next: (message: any) => {
+        const otherParty = message.sender_id === me ? message.receiver_id : message.sender_id;
+        const queryParams: any = { breederId: otherParty };
+        if (message.thread_id) queryParams.threadId = message.thread_id;
+        const offspringId = message.offspring_id ?? (message.context_type === 'offspring' ? message.context_id : undefined);
+        if (offspringId) queryParams.offspringId = offspringId;
+        this.router.navigate(['/messages/new'], { queryParams, replaceUrl: true });
+      },
+      // Message gone or not accessible: just show the list
+      error: () => this.loadMessages(),
+    });
   }
 
   /**
@@ -123,6 +146,10 @@ export class MessagesListComponent implements OnInit {
    */
   private groupMessagesIntoThreads(): void {
     const threadMap = new Map<string, MessageThread>();
+    const me = this.authService.currentUser?.id;
+    // The conversation partner is whoever isn't me; only messages sent TO me can be "new"
+    const partnerName = (m: any) => (m.sender_id === me ? m.receiver_name : m.sender_name) || m.sender_name;
+    const isUnreadForMe = (m: any) => !m.is_read && m.receiver_id === me;
 
     for (const message of this.messages) {
       // Use thread_id if available, otherwise create unique key per conversation
@@ -133,11 +160,11 @@ export class MessagesListComponent implements OnInit {
         threadMap.set(threadKey, {
           thread_id: message.thread_id || null,
           latest_message: message,
-          participant_name: message.sender_name,
-          participant_email: message.sender_email || '',
+          participant_name: partnerName(message),
+          participant_email: message.sender_id === me ? '' : (message.sender_email || ''),
           offspring_id: message.context_type === 'offspring' ? message.context_id : undefined,
           message_count: 1,
-          unread_count: !message.is_read ? 1 : 0,
+          unread_count: isUnreadForMe(message) ? 1 : 0,
           last_activity: message.created_at
         });
       } else {
@@ -145,8 +172,12 @@ export class MessagesListComponent implements OnInit {
         const thread = threadMap.get(threadKey)!;
         thread.message_count++;
         
-        if (!message.is_read) {
+        if (isUnreadForMe(message)) {
           thread.unread_count++;
+        }
+        // A message I received names the partner reliably
+        if (message.sender_id !== me) {
+          thread.participant_name = message.sender_name;
         }
 
         // Update latest message if this one is newer

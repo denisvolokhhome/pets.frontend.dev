@@ -19,6 +19,17 @@ export class LoginComponent {
     else if (this.showForgotPassword) this.showForgotPassword = false;
   }
 
+  /**
+   * Where to go after signing in: the page the user was sent here from
+   * (guards pass ?returnUrl=), limited to in-app paths to avoid open redirects.
+   */
+  get postLoginUrl(): string {
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    return returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//') && !returnUrl.startsWith('/login')
+      ? returnUrl
+      : '/dashboard';
+  }
+
   constructor(
     private builder: FormBuilder,
     private toastr: ToastService,
@@ -98,7 +109,7 @@ export class LoginComponent {
         if (user && user.id) {
           // User is authenticated
           console.log('User is authenticated');
-          this.router.navigate(['dashboard']);
+          this.router.navigateByUrl(this.postLoginUrl);
         } else {
           // User is not authenticated
           console.log('User is not authenticated');
@@ -133,7 +144,7 @@ export class LoginComponent {
                     timeOut: 3000,
                     progressBar: true
                   });
-                  this.router.navigate(['dashboard']);
+                  this.router.navigateByUrl(this.postLoginUrl);
                 }
               },
               error: (err: HttpErrorResponse) => {
@@ -181,6 +192,13 @@ export class LoginComponent {
                   tapToDismiss: true
                 }
               );
+            } else if (err.status === 429) {
+              this.loginError = err.error?.detail || 'Too many sign-in attempts. Please wait 15 minutes and try again.';
+              this.toastr.error(this.loginError!, 'Sign-In Paused', {
+                timeOut: 8000,
+                progressBar: true,
+                closeButton: true
+              });
             } else if (err.status === 0) {
               // Network error
               this.loginError = 'Cannot connect to server. Please check your connection.';
@@ -227,10 +245,15 @@ export class LoginComponent {
         this.forgotPasswordLoading = false;
         this.cdr.detectChanges();
       },
-      error: () => {
-        // Always show success to prevent email enumeration
-        this.forgotPasswordSent = true;
+      error: (err) => {
         this.forgotPasswordLoading = false;
+        if (err?.status === 422) {
+          // Malformed address — say so instead of pretending an email was sent
+          this.forgotPasswordError = 'Please enter a valid email address.';
+        } else {
+          // Anything else: same neutral confirmation as success (no account enumeration)
+          this.forgotPasswordSent = true;
+        }
         this.cdr.detectChanges();
       }
     });

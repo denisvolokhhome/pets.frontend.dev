@@ -13,7 +13,9 @@ import { OffspringDocumentsComponent } from '../offspring-documents/offspring-do
 import { GenealogyService } from 'src/app/services/genealogy.service';
 import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../application-form-modal/application-form-modal.component';
 import { environment } from 'src/environments/environment';
+import { DataService } from 'src/app/services/data.service';
 import { formatDisplayDate, statusBadgeClass } from 'src/app/utils/format-utils';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   standalone: true,
@@ -55,6 +57,7 @@ export class OffspringDetailComponent implements OnInit {
   showApplicationForm: boolean = false;
 
   constructor(
+    private confirmService: ConfirmService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
@@ -64,17 +67,17 @@ export class OffspringDetailComponent implements OnInit {
     private toastr: ToastService,
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
-    private genealogyService: GenealogyService
+    private genealogyService: GenealogyService,
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.offspringId = params['id'];
       
-      // Determine view mode based on route
-      const url = this.router.url;
-      // If URL starts with /offspring/ (not /offsprings/), it's public view
-      this.viewMode = url.startsWith('/offspring/') ? 'public' : 'breeder';
+      // Public listing route is 'offspring/:id'; breeder management is 'offsprings/:id'.
+      // Use the matched route config — router.url can still hold the previous URL here.
+      this.viewMode = this.route.snapshot.routeConfig?.path === 'offspring/:id' ? 'public' : 'breeder';
       
       this.loadOffspringDetails();
     });
@@ -104,6 +107,7 @@ export class OffspringDetailComponent implements OnInit {
         // Load related offsprings for public view
         if (this.viewMode === 'public' && this.offspring?.user_id) {
           this.loadRelatedOffsprings();
+          this.loadBreederSummary(this.offspring.user_id);
         }
         
         this.isLoading = false;
@@ -161,10 +165,10 @@ export class OffspringDetailComponent implements OnInit {
     this.showEditModal = false;
   }
 
-  deleteOffspring(): void {
+  async deleteOffspring(): Promise<void> {
     if (!this.offspring) return;
 
-    if (confirm(`Are you sure you want to delete offspring "${this.offspring.name || 'Unnamed'}"? This action cannot be undone.`)) {
+    if (await this.confirmService.confirm({ title: 'Delete offspring?', message: `"${this.offspring.name || 'Unnamed'}" will be permanently deleted. This can't be undone.`, confirmText: 'Delete', danger: true })) {
       this.isDeleting = true;
       this.offspringService.deleteOffspring(this.offspringId).subscribe({
         next: () => {
@@ -502,6 +506,22 @@ export class OffspringDetailComponent implements OnInit {
   /**
    * Check if current user is the breeder (owner)
    */
+  /** Breedery name + logo for the "Listed by" card on the public page. */
+  breederSummary: { name: string; imageUrl: string | null } | null = null;
+
+  private loadBreederSummary(breederId: string): void {
+    this.dataService.getPublicBreederProfile(breederId).subscribe({
+      next: profile => {
+        this.breederSummary = {
+          name: profile.breedery_name || profile.name || 'Breeder',
+          imageUrl: profile.profile_image_url ? `${environment.API_HOST}${profile.profile_image_url}` : null,
+        };
+        this.cdr.detectChanges();
+      },
+      error: () => (this.breederSummary = null),
+    });
+  }
+
   isBreederView(): boolean {
     return this.viewMode === 'breeder';
   }

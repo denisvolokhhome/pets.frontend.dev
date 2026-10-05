@@ -24,7 +24,7 @@
         {{ isLoggingIn ? 'Signing in...' : 'Sign In' }}
       </button>
       <div class="auth-footer">
-        <p class="auth-footer-text">Don't have an account? <a class="auth-link" (click)="closeModal(); router.navigate(['/register/pet-seeker'])">Register here</a></p>
+        <p class="auth-footer-text">Don't have an account? <a class="auth-link" (click)="closeModal(); router.navigate(['/register'], { queryParams: { type: 'pet_seeker', returnUrl: router.url } })">Register here</a></p>
       </div>
     </form>
 

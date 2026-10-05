@@ -4,6 +4,7 @@ import { FavoriteService, OffspringFavorite } from 'src/app/services/favorite.se
 import { OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { PageHeaderConfig } from '../page-header/page-header.component';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   standalone: false,
@@ -37,7 +38,8 @@ export class FavoritesListComponent implements OnInit {
     private router: Router,
     private favoriteService: FavoriteService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dataService: DataService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,7 @@ export class FavoritesListComponent implements OnInit {
             offspring.is_favorited = true;
             return offspring;
           });
+        this.loadBreederNames();
         
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -139,7 +142,7 @@ export class FavoritesListComponent implements OnInit {
         } else {
           breederMap.set(breederId, {
             id: breederId,
-            name: 'Breeder', // We don't have breeder name in offspring data
+            name: this.breederNames.get(breederId) || 'Breeder',
             count: 1
           });
         }
@@ -151,7 +154,32 @@ export class FavoritesListComponent implements OnInit {
   
   onSearchTermChange(term: string): void {
     this.searchTerm = term;
-    // Note: Search functionality would need to be implemented in the backend
-    // For now, this just updates the search term
+  }
+
+  /** Favorites filtered by the search box (name, breed, color, breedery). */
+  get visibleOffsprings(): OffspringRead[] {
+    const q = (this.searchTerm || '').trim().toLowerCase();
+    if (!q) return this.offsprings;
+    return this.offsprings.filter(o =>
+      [o.name, o.breed?.name, o.color_markings, this.breederNames.get(o.user_id)]
+        .some(v => (v || '').toLowerCase().includes(q))
+    );
+  }
+
+  /** Breedery names for "Breeders You're Following" (looked up once per breeder). */
+  breederNames = new Map<string, string>();
+
+  private loadBreederNames(): void {
+    const ids = [...new Set(this.offsprings.map(o => o.user_id).filter(Boolean))]
+      .filter(id => !this.breederNames.has(id));
+    for (const id of ids) {
+      this.dataService.getPublicBreederProfile(id).subscribe({
+        next: profile => {
+          this.breederNames.set(id, profile.breedery_name || profile.name || 'Breeder');
+          this.cdr.detectChanges();
+        },
+        error: () => {},
+      });
+    }
   }
 }

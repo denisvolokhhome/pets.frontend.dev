@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectorRef, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +14,7 @@ import { DataService } from '../../services/data.service';
 import { ReviewPromptComponent } from '../review-prompt/review-prompt.component';
 import { Subject, takeUntil, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { formatPrice } from 'src/app/utils/format-utils';
 
 export interface ThreadMessage {
   id: string;
@@ -72,6 +73,10 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   @Input() breederId!: string;
   @Input() breederName: string = 'Breeder';
   @Input() initialMessage?: string;
+  /** Emits the thread id after a message is sent (lets the conversation list refresh). */
+  @Output() messageSent = new EventEmitter<string>();
+  readonly formatPrice = formatPrice;
+  @ViewChild('composer') composer?: ElementRef<HTMLTextAreaElement>;
 
   messages: ThreadMessage[] = [];
   replyForm: FormGroup;
@@ -113,9 +118,11 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     // Pre-fill message from application form response
     if (this.initialMessage) {
       this.replyForm.patchValue({ message: this.initialMessage });
+      // Size the composer to the prefilled text once it's rendered
+      setTimeout(() => this.composer && this.autoGrow(this.composer.nativeElement));
     }
-    // Check if offspring has documents (for Share Documents button)
-    if (this.offspringContext?.id) {
+    // Share Documents is breeder-only (the documents endpoint is too)
+    if (this.offspringContext?.id && this.authService.isBreeder) {
       this.checkOffspringDocuments();
     }
     this.cdr.detectChanges();
@@ -222,7 +229,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          this.toastService.success('Message sent successfully', 'Success');
+          // No success toast: the message appearing in the thread is the confirmation
           this.replyForm.reset();
           this.isSubmitting = false;
           
@@ -248,6 +255,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           this.messages.push(newMessage);
           this.cdr.detectChanges();
           this.scrollToBottom();
+          if (this.threadId) {
+            this.messageSent.emit(this.threadId);
+          }
         },
         error: (error) => {
           console.error('Error sending message:', error);
@@ -258,6 +268,12 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           this.isSubmitting = false;
         }
       });
+  }
+
+  /** Grow the composer with its content (capped by CSS max-height). */
+  autoGrow(el: HTMLTextAreaElement): void {
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
   }
 
   onEnterPress(event: KeyboardEvent): void {

@@ -27,7 +27,7 @@
         
         <p class="text-xs text-gray-600">
           {{ offspringContext.breed_name }} • {{ offspringContext.gender }} • {{ offspringContext.age }}
-          <span *ngIf="offspringContext.price"> • ${{ offspringContext.price | number:'1.0-0' }}</span>
+          <span *ngIf="offspringContext.price"> • {{ formatPrice(offspringContext.price) }}</span>
         </p>
       </div>
     </div>
@@ -205,16 +205,21 @@
       </div>
 
       <form [formGroup]="replyForm" (ngSubmit)="onSubmit()">
-        <div class="flex items-center border border-gray-300 rounded-full bg-white hover:border-gray-400 focus-within:border-gray-500 transition-colors overflow-hidden">
-          <input
-            type="text"
+        <div class="flex items-end border border-gray-300 rounded-2xl bg-white hover:border-gray-400 focus-within:border-gray-500 transition-colors overflow-hidden">
+          <!-- Textarea so multi-line messages (e.g. application answers) keep their line breaks.
+               Enter sends, Shift+Enter adds a new line. -->
+          <textarea
+            #composer
+            rows="1"
             formControlName="message"
             placeholder="Type a message"
-            class="flex-1 text-sm border-0 focus:outline-none focus:ring-0 px-4 py-3"
+            aria-label="Message"
+            class="message-composer flex-1 text-sm border-0 focus:outline-none focus:ring-0 px-4 py-3"
             style="box-shadow: none !important;"
             [class.ng-invalid]="replyForm.get('message')?.invalid && replyForm.get('message')?.touched"
+            (input)="autoGrow(composer)"
             (keydown.enter)="onEnterPress($event)"
-          />
+          ></textarea>
           
           <button
             type="submit"
@@ -288,7 +293,7 @@
           
           <div *ngIf="offspringContext.price" class="flex justify-between text-sm pt-2 border-t border-gray-200">
             <span class="text-gray-600">Price</span>
-            <span class="font-semibold text-gray-900">${{ offspringContext.price | number:'1.2-2' }}</span>
+            <span class="font-semibold text-gray-900">{{ formatPrice(offspringContext.price) }}</span>
           </div>
         </div>
       </div>

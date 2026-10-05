@@ -18,6 +18,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   isMobileMenuOpen: boolean = false;
   showGetStartedDropdown: boolean = false;
   readonly serviceProvidersEnabled = environment.enableServiceProviders;
+
+  /** Sign-up pages (path may carry ?type=…) hide the Get Started menu. */
+  get isOnRegister(): boolean {
+    return (this.route || '').split('?')[0].startsWith('/register');
+  }
   @ViewChild('getStartedDropdown') getStartedDropdown?: ElementRef<HTMLElement>;
   private authSubscription?: Subscription;
   private routerSubscription?: Subscription;

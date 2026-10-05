@@ -544,3 +544,14 @@
     width: 30px;
   }
 }
+
+.breed-search {
+  width: 100%;
+  max-width: 22rem;
+  height: 2.25rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius);
+  font-size: 0.875rem;
+}

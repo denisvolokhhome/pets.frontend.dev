@@ -7,6 +7,7 @@ import { FilterConfig, FilterValues } from '../shared/filter-widget/filter-widge
 import { IBreed } from 'src/app/models/breed';
 import { environment } from 'src/environments/environment';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
+import { ConfirmService } from 'src/app/services/confirm.service';
 
 @Component({
   standalone: false,
@@ -81,6 +82,7 @@ export class OffspringListComponent implements OnInit {
   ];
 
   constructor(
+    private confirmService: ConfirmService,
     private offspringService: OffspringService,
     private toastr: ToastService,
     private router: Router,
@@ -254,8 +256,8 @@ export class OffspringListComponent implements OnInit {
     this.addOffspring();
   }
 
-  deleteOffspring(offspring: OffspringRead): void {
-    if (confirm(`Are you sure you want to delete offspring "${offspring.name || 'Unnamed'}"? This action cannot be undone.`)) {
+  async deleteOffspring(offspring: OffspringRead): Promise<void> {
+    if (await this.confirmService.confirm({ title: 'Delete offspring?', message: `"${this.displayName(offspring)}" will be permanently deleted. This can't be undone.`, confirmText: 'Delete', danger: true })) {
       this.isDeleting[offspring.id] = true;
       this.offspringService.deleteOffspring(offspring.id).subscribe({
         next: () => {

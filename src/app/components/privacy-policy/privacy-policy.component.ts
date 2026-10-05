@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./privacy-policy.component.css']
 })
 export class PrivacyPolicyComponent {
-  lastUpdated = 'May 22, 2026';
+  lastUpdated = 'October 4, 2026';
 
   downloadPolicy(): void {
     const content = this.getPolicyText();
@@ -22,8 +22,8 @@ export class PrivacyPolicyComponent {
 
   private getPolicyText(): string {
     return `BREEDLY PRIVACY POLICY
-Last Updated: May 22, 2026
-Effective Date: May 22, 2026
+Last Updated: October 4, 2026
+Effective Date: October 4, 2026
 
 ================================================================================
 
@@ -44,12 +44,9 @@ Contact us with privacy questions at: privacy@breedly.us | (240) 242-9483
 
 2. WHO WE ARE AND WHO THIS POLICY COVERS
 
-Breedly serves four types of users:
+Breedly serves three types of users:
 - Breeders: Users who manage pets, litters (breedings), and individual offspring listings.
 - Pet Seekers: Users who browse, favorite, and contact breeders about available offspring.
-- Service Providers: Users who offer pet-related services (grooming, dog walking, pet
-  sitting, training, boarding, and similar). Service Providers create a Service Account
-  and list their services on the platform.
 - Guests: Unauthenticated visitors who may browse listings and initiate contact with
   breeders. Guests who send a message are automatically registered as Pet Seeker accounts.
 
@@ -61,38 +58,24 @@ Breedly serves four types of users:
 
 Account Registration:
 - Email address (required, unique identifier)
-- Password (stored as a secure hash — never in plain text)
+- Password (stored as a secure hash — never in plain text). If you sign up with
+  Google, you do not need a password; you can set one later in Settings.
 - Full name (optional)
 - Phone number (optional)
-- User type: Breeder, Pet Seeker, or Service Provider
-- Service categories selected at registration (Service Providers only)
+- User type: Breeder or Pet Seeker
 
 Breeder Profile Information:
-- Breedery name (your kennel or cattery name)
+- Breedery name
 - Breedery description
 - Profile image
 - Search tags
 - Social media links (Facebook, YouTube, Twitter, LinkedIn)
 - Website URL
 
-Service Provider Profile Information:
-- Business or display name
-- Service description and profile image
-- Contact information: phone number(s), contact email, website URL, Facebook URL
-- Service categories (e.g., Grooming, Dog Walking, Pet Sitting, Pet Training)
-
-Location Information (Breeders and Service Providers):
+Location Information (Breeders):
 - Physical address (street, city, state, country, postcode)
-- Location type (business or service-specific location)
+- Location type
 - Geographic coordinates (latitude/longitude) derived from your address
-- Service Providers may add up to 10 service locations representing the areas
-  where they offer services
-
-Service Listings (Service Providers):
-- Service title, description, and category
-- Pricing information (price range and unit)
-- Service locations (linked from your registered locations)
-- Images uploaded for service listings
 
 Pet and Offspring Listings (Breeders):
 - Pet names, dates of birth, gender, weight, breed, description
@@ -103,7 +86,7 @@ Pet and Offspring Listings (Breeders):
 - Images uploaded for pets and offspring
 
 Messages:
-- Message content between pet seekers, breeders, and service providers
+- Message content between pet seekers and breeders
 - Thread identifiers for conversation grouping
 - Context linking to specific offspring listings
 
@@ -116,7 +99,8 @@ Billing Information (Breeders on paid plans):
 3.2 Information Collected Automatically
 
 When you use Breedly, we automatically collect:
-- IP address (logged in billing audit records for security purposes)
+- IP address (logged in billing audit records and used to rate-limit sign-in,
+  registration, and messaging for security purposes — see Section 10)
 - Browser type and version
 - Device type and operating system
 - Pages visited and features used
@@ -125,13 +109,16 @@ When you use Breedly, we automatically collect:
 
 3.3 Information from Third Parties
 
-Google OAuth (if you sign in with Google):
-- Email address
-- Google account identifier
+Google Sign-In (if you create an account or sign in with your Google account):
+- Your name, email address, and Google account identifier
+- Confirmation from Google that your email address is verified
 - OAuth provider name
 
-We do not receive your Google password. We store only the OAuth provider name
-and a provider-specific identifier to link your account.
+We do not receive your Google password. We store the OAuth provider name and
+your Google account identifier to link your Google account to your Breedly
+account. If you sign up with Google, you can set a Breedly password later in
+Settings. Google's processing of your information is governed by the Google
+Privacy Policy: https://policies.google.com/privacy
 
 ================================================================================
 
@@ -142,15 +129,26 @@ We use your information to:
 Service Delivery:
 - Create and manage your account
 - Display your breeder profile and listings to pet seekers
-- Display your service provider profile and service listings to pet owners and breeders
-- Enable messaging between breeders, pet seekers, and service providers
+- Enable messaging between breeders and pet seekers
 - Process subscription payments via Stripe
 - Send in-app notifications (new messages, favorites added)
-- Enable location-based search for nearby breeders, offspring, and service providers
+- Enable location-based search for nearby breeders and offspring
+
+Email Communications:
+We send transactional emails through an email delivery (SMTP) provider, including:
+- Account verification and password reset emails
+- A welcome email when you create an account
+- Activity notifications when you receive a new message and, for breeders, when
+  a pet seeker adds one of your offspring to Favorites
+You can manage activity notification preferences in your account settings.
+Account verification, password reset, and other security-related emails are
+required to operate your account and cannot be turned off.
 
 Security and Fraud Prevention:
 - Verify account identity
 - Detect and prevent fraudulent activity
+- Rate-limit sign-in attempts, registration, and messaging to protect accounts
+  from brute-force attacks and spam
 - Maintain billing audit logs (IP address, operation type, outcome)
 - Encrypt sensitive billing identifiers at rest using AES-256-GCM
 
@@ -165,8 +163,6 @@ Legal Compliance:
 Privacy-Protective Measures:
 - Breeder location coordinates are offset by 0.5-1.5 miles on public maps
   to protect exact address privacy while enabling proximity search.
-- Service Provider contact information (phone, email, website) is only displayed
-  on their public profile and is provided voluntarily by the Service Provider.
 
 ================================================================================
 
@@ -193,6 +189,8 @@ We share your data with:
 
 Stripe (Payment Processing): https://stripe.com/privacy
 Google (Authentication): https://policies.google.com/privacy
+Email Delivery Provider (Transactional Email): processes your email address and
+  the content of transactional emails to deliver them.
 Nominatim / OpenStreetMap (Geocoding): https://wiki.osmfoundation.org/wiki/Privacy_Policy
 Hosting and Infrastructure: Cloud servers located in the United States.
 
@@ -212,10 +210,11 @@ Breedly is intended exclusively for use within the United States.
 
 - Account data: Removed within 30 days of account deletion.
 - Pet and offspring listings: Soft-deleted while account is active.
-- Service listings (Service Providers): Soft-deleted when removed.
 - Messages: Permanently removed after 90 days of soft-deletion.
 - Billing records: Retained for 7 years for legal compliance.
 - Audit logs: Retained for 12 months.
+- Rate-limiting data: IP addresses used to rate-limit sign-in, registration,
+  and messaging are kept only briefly.
 - Geocoding cache: Cached for up to 24 hours.
 
 ================================================================================
@@ -231,7 +230,11 @@ improve platform performance. You can manage cookies through your browser settin
 
 We protect your data using HTTPS, bcrypt password hashing, AES-256-GCM encryption
 for billing identifiers, JWT authentication, and role-based access controls
-(Breeder, Pet Seeker, Service Provider, Admin).
+(Breeder, Pet Seeker, Admin).
+
+To protect accounts from brute-force attacks and the platform from spam, we
+process IP addresses to rate-limit sign-in attempts, registration, and messaging.
+IP address data used for rate limiting is kept only briefly.
 
 ================================================================================
 

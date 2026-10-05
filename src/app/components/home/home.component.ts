@@ -149,11 +149,11 @@ export class HomeComponent {
   }
 
   navigateToBreederRegister(): void {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/register'], { queryParams: { type: 'breeder' } });
   }
 
   navigateToPetSeekerRegister(): void {
-    this.router.navigate(['/register/pet-seeker']);
+    this.router.navigate(['/register'], { queryParams: { type: 'pet_seeker' } });
   }
 
   navigateToServiceProviderRegister(): void {

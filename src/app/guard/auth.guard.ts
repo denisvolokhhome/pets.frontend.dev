@@ -26,7 +26,7 @@ export class AuthGuard  {
     return this.service.IsLoggedIn().pipe(
       map((res) => {
         if (!res) {
-          this.router.navigate(['login']);
+          this.router.navigate(['login'], { queryParams: { returnUrl: state.url } });
           return false;
         }
         return true;

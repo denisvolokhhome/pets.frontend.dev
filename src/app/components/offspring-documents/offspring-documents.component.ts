@@ -2,6 +2,8 @@ import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef }
 import { CommonModule } from '@angular/common';
 import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
+import { ConfirmService } from 'src/app/services/confirm.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 export interface OffspringDocument {
   id: number;
@@ -28,7 +30,9 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
   isUploading = false;
   apiHost = environment.API_HOST;
 
-  constructor(private dataService: DataService, private cdr: ChangeDetectorRef) {}
+  constructor(private toastService: ToastService,
+    private confirmService: ConfirmService,
+    private dataService: DataService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { if (this.offspringId) this.loadDocuments(); }
   ngOnChanges(changes: SimpleChanges): void {
@@ -49,8 +53,8 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
     if (!input.files?.length || !this.offspringId) return;
     const file = input.files[0];
     const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowed.includes(file.type)) { alert('Only PDF and image files are allowed.'); input.value = ''; return; }
-    if (file.size > 10 * 1024 * 1024) { alert('File size must be under 10MB.'); input.value = ''; return; }
+    if (!allowed.includes(file.type)) { this.toastService.error('Only PDF and image files are allowed.'); input.value = ''; return; }
+    if (file.size > 10 * 1024 * 1024) { this.toastService.error('File size must be under 10MB.'); input.value = ''; return; }
 
     this.isUploading = true;
     this.dataService.uploadOffspringDocument(this.offspringId, file).subscribe({
@@ -59,8 +63,8 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
     });
   }
 
-  deleteDocument(doc: OffspringDocument): void {
-    if (!this.offspringId || !confirm(`Delete "${doc.file_name}"?`)) return;
+  async deleteDocument(doc: OffspringDocument): Promise<void> {
+    if (!this.offspringId || !(await this.confirmService.confirm({ title: 'Delete document?', message: `"${doc.file_name}" will be permanently removed.`, confirmText: 'Delete', danger: true }))) return;
     this.dataService.deleteOffspringDocument(this.offspringId, doc.id).subscribe({
       next: () => { this.documents = this.documents.filter(d => d.id !== doc.id); this.cdr.detectChanges(); },
       error: () => {}
