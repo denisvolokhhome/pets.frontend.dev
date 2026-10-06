@@ -17,7 +17,7 @@
 
 .form-modal-body { padding: 1.25rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
 .form-intro { font-size: 0.875rem; color: #6b7280; margin: 0; }
-.loading-state { text-align: center; color: #9ca3af; padding: 2rem 0; }
+.loading-state { text-align: center; color: #6b7280; padding: 2rem 0; }
 
 .field-group { display: flex; flex-direction: column; gap: 0.375rem; }
 .field-label { font-size: 0.9375rem; font-weight: 500; color: #374151; }

@@ -37,7 +37,7 @@
       />
       <div class="breed-dropdown" *ngIf="showBreedDropdown" role="listbox">
         <div class="breed-option error-option" *ngIf="breedSearchError" role="option">
-          <span class="error-icon">⚠️</span>
+          <i class="bi bi-exclamation-triangle error-icon" aria-hidden="true"></i>
           {{ breedSearchError }}
         </div>
         <div
@@ -48,7 +48,7 @@
           {{ breed.name }}
         </div>
         <div class="breed-option no-results" *ngIf="!breedSearchError && breedSuggestions.length === 0 && breedSearchTerm.length >= 2" role="option">
-          🔍 No breeds found
+          <i class="bi bi-search" aria-hidden="true"></i> No breeds found
         </div>
       </div>
     </div>

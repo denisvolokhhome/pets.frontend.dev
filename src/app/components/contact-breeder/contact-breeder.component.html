@@ -73,7 +73,7 @@
               formControlName="message"
               class="form-control"
               [class.is-invalid]="message?.invalid && message?.touched"
-              placeholder="Tell the breeder about your interest..."
+              placeholder="Tell the breeder about your interest…"
               rows="5"
               maxlength="2000"
             ></textarea>
@@ -102,7 +102,7 @@
           >
             <span *ngIf="!isSubmitting">Send Message</span>
             <span *ngIf="isSubmitting">
-              <span class="spinner"></span> Sending...
+              <span class="spinner"></span> Sending…
             </span>
           </button>
         </div>

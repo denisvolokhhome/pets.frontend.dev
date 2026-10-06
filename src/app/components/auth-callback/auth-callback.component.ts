@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
           <div class="auth-logo">
             <i class="material-icons">hourglass_empty</i>
           </div>
-          <h1 class="auth-title">Completing Sign In...</h1>
+          <h1 class="auth-title">Completing Sign In…</h1>
           <p class="auth-subtitle">Please wait while we log you in</p>
         </div>
       </div>

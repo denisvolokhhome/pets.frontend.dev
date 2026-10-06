@@ -21,7 +21,7 @@
   left: -9999px;
   z-index: 999;
   padding: 1em;
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   color: white;
   text-decoration: none;
 }
@@ -64,7 +64,7 @@
 
 .cookie-icon {
   font-size: 1.25rem;
-  color: #4ecdc4;
+  color: var(--secondary-strong);
   flex-shrink: 0;
 }
 
@@ -84,7 +84,9 @@
   font-weight: 600;
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 .cookie-accept-btn:hover {

@@ -1,8 +1,10 @@
-<div class="messages-container">
-  <!-- Page Header Component (desktop) -->
-  <div class="desktop-page-header">
+<div class="messages-container" [class.messages-container--embedded]="embedded">
+  <!-- Page Header Component (desktop). Hidden when embedded: the host card
+       (e.g. dashboard "Recent Messages") supplies its own heading. -->
+  <div class="desktop-page-header" *ngIf="!embedded">
   <app-page-header
     [config]="headerConfig"
+    [headingLevel]="1"
     [searchTerm]="searchTerm"
     (searchChange)="onSearchTermChange($event)">
     <button class="ui-btn ui-btn--secondary" (click)="onRefreshClick()" type="button">
@@ -13,10 +15,10 @@
   </div>
 
   <!-- ===== MOBILE compact bar ===== -->
-  <div class="mobile-bar">
+  <div class="mobile-bar" *ngIf="!embedded">
     <div class="mobile-bar__search">
       <i class="bi bi-search mobile-bar__search-icon"></i>
-      <input type="text" class="mobile-bar__input" placeholder="Search messages..."
+      <input type="text" class="mobile-bar__input" placeholder="Search messages…"
         [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search messages"/>
     </div>
     <button class="mobile-icon-btn" (click)="onRefreshClick()" aria-label="Refresh messages">
@@ -25,7 +27,7 @@
   </div>
 
   <!-- ===== MOBILE status filter pills ===== -->
-  <div class="mobile-status-pills">
+  <div class="mobile-status-pills" *ngIf="!embedded">
     <button class="status-pill" [class.active]="statusFilter === 'all'" (click)="onFilterChange('all')">All</button>
     <button class="status-pill" [class.active]="statusFilter === 'unread'" (click)="onFilterChange('unread')">Unread</button>
     <button class="status-pill" [class.active]="statusFilter === 'read'" (click)="onFilterChange('read')">Read</button>
@@ -54,7 +56,7 @@
             <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
           </svg>
         </div>
-        <p>Loading messages...</p>
+        <p>Loading messages…</p>
       </div>
 
       <!-- Messages List -->
@@ -63,7 +65,12 @@
           *ngFor="let thread of threads"
           class="message-item"
           [class.unread]="thread.unread_count > 0"
-          (click)="viewThread(thread)">
+          role="link"
+          tabindex="0"
+          [attr.aria-label]="'Open conversation with ' + thread.participant_name"
+          (click)="viewThread(thread)"
+          (keydown.enter)="viewThread(thread)"
+          (keydown.space)="$event.preventDefault(); viewThread(thread)">
           
           <!-- Message Status Indicator -->
           <div class="message-indicator" [class]="getThreadStatusClass(thread)"></div>

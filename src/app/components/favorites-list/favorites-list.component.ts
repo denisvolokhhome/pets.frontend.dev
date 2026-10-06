@@ -20,7 +20,7 @@ export class FavoritesListComponent implements OnInit {
     iconColor: '#ec4899',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search favorites...',
+    searchPlaceholder: 'Search favorites…',
     showActionButton: false
   };
   

@@ -61,7 +61,7 @@
           class="comment-input"
           [(ngModel)]="comment"
           [maxlength]="maxCommentLength"
-          placeholder="Share more about your experience..."
+          placeholder="Share more about your experience…"
           rows="4"></textarea>
         <div class="char-counter" [class.char-warning]="remainingCharacters < 100">
           {{ characterCount }} / {{ maxCommentLength }}
@@ -78,7 +78,7 @@
         (click)="onSubmit()">
         <span *ngIf="!submitting">Submit</span>
         <span *ngIf="submitting">
-          <span class="spinner"></span> Submitting...
+          <span class="spinner"></span> Submitting…
         </span>
       </button>
     </div>

@@ -30,7 +30,7 @@ export class PetsComponent implements OnInit {
     iconColor: '#ec4899',
     showLayoutSwitcher: true,
     showSearch: true,
-    searchPlaceholder: 'Search pets...',
+    searchPlaceholder: 'Search pets…',
     showActionButton: false
   };
 

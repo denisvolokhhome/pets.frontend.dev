@@ -20,7 +20,9 @@
   border-right: 1px solid #e5e7eb;
   padding: 2.5rem 0;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
@@ -34,7 +36,7 @@
   background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
 }
 
-.settings-sidebar h2 {
+.settings-sidebar h1 {
   padding: 0 1.75rem;
   margin: 0 0 2rem 0;
   font-size: 1.5rem;
@@ -58,7 +60,9 @@
   font-size: 0.9375rem;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, padding-left, width;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 3px solid transparent;
   border-radius: 8px;
   font-weight: 500;
@@ -91,7 +95,7 @@
 
 .sidebar-nav-item.active {
   background: rgba(255, 107, 107, 0.12);
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-weight: 600;
   transform: translateX(4px);
   padding-left: 1.25rem;
@@ -132,7 +136,9 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 
               0 2px 8px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .section-content:hover {
@@ -186,7 +192,7 @@
   }
 
   /* Hide "Settings" title on mobile — saves vertical space */
-  .settings-sidebar h2 {
+  .settings-sidebar h1 {
     display: none;
   }
   
@@ -229,7 +235,7 @@
 
   .sidebar-nav-item:hover {
     background: rgba(255, 107, 107, 0.06);
-    color: var(--primary-color);
+    color: var(--primary-strong);
     padding-left: 1rem;
     transform: none !important;
   }
@@ -237,7 +243,7 @@
   .sidebar-nav-item.active {
     border-bottom: 3px solid var(--primary-color);
     background: rgba(255, 107, 107, 0.06);
-    color: var(--primary-color);
+    color: var(--primary-strong);
     font-weight: 600;
     padding-left: 1rem;
     box-shadow: none;

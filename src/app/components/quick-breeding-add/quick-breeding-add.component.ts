@@ -316,7 +316,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
             
             // Show success message
             this.toastr.success(
-              'Redirecting to breeding details...',
+              'Redirecting to breeding details…',
               'Breeding Created Successfully',
               { timeOut: 3000 }
             );

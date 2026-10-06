@@ -15,7 +15,7 @@
   font-size: 0.9375rem; color: #4b5563; line-height: 1.6; margin: 0 0 0.5rem;
 }
 .verify-hint {
-  font-size: 0.8125rem; color: #9ca3af; margin: 0 0 1.5rem;
+  font-size: 0.8125rem; color: #6b7280; margin: 0 0 1.5rem;
 }
 .verify-icon {
   width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1.5rem;
@@ -32,7 +32,8 @@
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.625rem 1.5rem; background: white; color: #374151;
   border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.875rem;
-  font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 1rem;
+  font-weight: 500; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s; margin-bottom: 1rem;
 }
 .btn-resend:hover:not(:disabled) { background: #f3f4f6; border-color: #9ca3af; }
 .btn-resend:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -41,24 +42,26 @@
   height: 1px; background: #e5e7eb; margin: 1.5rem 0;
 }
 .verify-footer-text {
-  font-size: 0.8125rem; color: #9ca3af; margin: 0 0 0.75rem;
+  font-size: 0.8125rem; color: #6b7280; margin: 0 0 0.75rem;
 }
 .btn-login {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.625rem 1.5rem; background: transparent; color: var(--primary-color, #ff6b6b);
+  padding: 0.625rem 1.5rem; background: transparent; color: var(--primary-strong);
   border: 1px solid var(--primary-color, #ff6b6b); border-radius: 8px;
-  font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-size: 0.875rem; font-weight: 600; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
 }
 .btn-login:hover { background: rgba(255,107,107,0.08); }
 
 .btn-primary-action {
   display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.75rem 2rem; background: var(--primary-color, #ff6b6b); color: white;
+  padding: 0.75rem 2rem; background: var(--primary-strong); color: white;
   border: none; border-radius: 8px; font-size: 0.9375rem; font-weight: 600;
-  cursor: pointer; transition: all 0.2s; margin-top: 1rem;
+  cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s; margin-top: 1rem;
   box-shadow: 0 4px 12px rgba(255,107,107,0.3);
 }
-.btn-primary-action:hover { background: #ff5252; transform: translateY(-2px); }
+.btn-primary-action:hover { background: var(--primary-strong-hover); transform: translateY(-2px); }
 
 .verify-redirecting {
   display: inline-flex; align-items: center; gap: 0.5rem;

@@ -9,15 +9,15 @@
     [class.opacity-50]="isUploading"
     [class.pointer-events-none]="isUploading">
     <i class="bi text-lg" [ngClass]="isUploading ? 'bi-arrow-repeat animate-spin' : 'bi-cloud-arrow-up text-blue-500'"></i>
-    <span class="text-sm text-gray-600">{{ isUploading ? 'Uploading...' : 'Upload PDF or Image (max 10MB)' }}</span>
+    <span class="text-sm text-gray-600">{{ isUploading ? 'Uploading…' : 'Upload PDF or Image (max 10MB)' }}</span>
     <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png,.gif,.webp" (change)="onFileSelect($event)" [disabled]="isUploading" />
   </label>
 
   <div *ngIf="isLoading" class="flex justify-center py-8">
-    <i class="bi bi-arrow-repeat animate-spin text-2xl text-gray-400"></i>
+    <i class="bi bi-arrow-repeat animate-spin text-2xl text-gray-500"></i>
   </div>
 
-  <div *ngIf="!isLoading && documents.length === 0" class="text-center py-8 text-gray-400">
+  <div *ngIf="!isLoading && documents.length === 0" class="text-center py-8 text-gray-500">
     <i class="bi bi-folder2-open text-4xl mb-2 block"></i>
     <p class="text-sm">No documents yet</p>
   </div>
@@ -34,7 +34,7 @@
            class="text-sm font-medium text-gray-800 hover:text-blue-600 truncate block no-underline">
           {{ doc.file_name }}
         </a>
-        <span class="text-xs text-gray-400">{{ formatSize(doc.file_size) }}</span>
+        <span class="text-xs text-gray-500">{{ formatSize(doc.file_size) }}</span>
       </div>
       <div class="flex-shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer"
@@ -52,5 +52,5 @@
       </div>
     </div>
   </div>
-  <p class="text-xs text-gray-400 mt-3">{{ documents.length }}/10 documents</p>
+  <p class="text-xs text-gray-500 mt-3">{{ documents.length }}/10 documents</p>
 </div>

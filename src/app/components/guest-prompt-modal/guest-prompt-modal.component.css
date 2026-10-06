@@ -58,7 +58,8 @@
   border: 2px solid var(--primary-color, #ff6b6b); background: transparent;
   color: var(--dark-color, #2C3E50); cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-  transition: all 0.2s; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.15);
   width: 100%;
 }
 .auth-submit-btn:hover:not(:disabled) {
@@ -71,8 +72,8 @@
 
 .auth-footer { text-align: center; padding-top: 1rem; border-top: 1px solid #E5E7EB; }
 .auth-footer-text { font-size: 0.875rem; color: var(--text-secondary, #6b7280); margin: 0; }
-.auth-link { color: var(--primary-color, #ff6b6b); font-weight: 600; cursor: pointer; text-decoration: none; }
-.auth-link:hover { color: var(--secondary-color, #4ecdc4); text-decoration: underline; }
+.auth-link { color: var(--primary-strong); font-weight: 600; cursor: pointer; text-decoration: none; }
+.auth-link:hover { color: var(--secondary-strong); text-decoration: underline; }
 
 .checkbox-row { display: flex; align-items: center; gap: 0.5rem; }
 .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-color, #ff6b6b); cursor: pointer; }

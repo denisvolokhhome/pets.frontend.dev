@@ -26,7 +26,7 @@
       <input
         type="text"
         class="mobile-bar__input"
-        placeholder="Search services..."
+        placeholder="Search services…"
         [(ngModel)]="searchTerm"
         aria-label="Search services"
       />
@@ -68,8 +68,8 @@
     </div>
     <div class="drawer-body">
       <div class="drawer-filter-group">
-        <label class="drawer-filter-label">Category</label>
-        <select class="drawer-filter-select" [(ngModel)]="mobileFilters.category" (change)="applyMobileFilters()">
+        <label class="drawer-filter-label" for="services-drawer-category">Category</label>
+        <select id="services-drawer-category" class="drawer-filter-select" [(ngModel)]="mobileFilters.category" (change)="applyMobileFilters()">
           <option value="">All Categories</option>
           <option *ngFor="let cat of categories" [value]="cat.slug">{{ cat.name }}</option>
         </select>
@@ -130,7 +130,7 @@
 
         <div class="form-group">
           <label class="form-label">Description</label>
-          <textarea class="form-textarea" [(ngModel)]="newService.description" rows="3" placeholder="Describe your service..."></textarea>
+          <textarea class="form-textarea" [(ngModel)]="newService.description" rows="3" placeholder="Describe your service…"></textarea>
         </div>
 
         <div class="form-row">
@@ -203,7 +203,7 @@
 
         <div class="form-group">
           <label class="form-label">Description</label>
-          <textarea class="form-textarea" [(ngModel)]="editForm.description" rows="3" placeholder="Describe your service..."></textarea>
+          <textarea class="form-textarea" [(ngModel)]="editForm.description" rows="3" placeholder="Describe your service…"></textarea>
         </div>
 
         <div class="form-row">
@@ -267,7 +267,7 @@
             <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
           </svg>
         </div>
-        <p>Loading services...</p>
+        <p>Loading services…</p>
       </div>
     </div>
 

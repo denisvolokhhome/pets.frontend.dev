@@ -69,6 +69,15 @@ export class OffspringCardComponent implements OnInit {
   /**
    * Navigate to offspring detail view
    */
+  /** Enter/Space opens the card — but not when the key came from an inner control (favorite button). */
+  onCardKeydown(event: KeyboardEvent): void {
+    if (event.target !== event.currentTarget) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.viewDetails();
+    }
+  }
+
   viewDetails(): void {
     if (this.offspring?.id) {
       // Navigate to public offspring detail view

@@ -22,7 +22,7 @@
   justify-content: center;
   align-items: center;
   padding: 3rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-size: 1rem;
   font-weight: 500;
 }
@@ -105,7 +105,9 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 .plan-card:hover {
@@ -138,7 +140,7 @@
 .plan-card-price {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   margin: 0 0 1.5rem 0;
 }
 
@@ -161,7 +163,7 @@
 }
 
 .plan-card-limits li i {
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
   font-size: 1rem;
   flex-shrink: 0;
 }
@@ -173,19 +175,21 @@
   justify-content: center;
   width: 100%;
   padding: 0.75rem 1.5rem;
-  background: var(--primary-color);
+  background: var(--primary-strong);
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
 .btn-get-started:hover {
-  background: #ff5252;
+  background: var(--primary-strong-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }

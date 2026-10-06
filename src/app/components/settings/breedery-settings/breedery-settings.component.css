@@ -38,7 +38,7 @@
   justify-content: center;
   align-items: center;
   padding: 3rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-size: 1rem;
   font-weight: 500;
 }
@@ -107,7 +107,9 @@
   border-radius: 12px;
   padding: 1.75rem;
   margin-bottom: 1.5rem;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 .form-section:hover {
@@ -125,7 +127,7 @@
 
 .section-header i {
   font-size: 1.25rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .section-header h3 {
@@ -164,11 +166,11 @@
 
 .form-group label i {
   font-size: 0.875rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .form-group:focus-within label {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .form-group input[type="text"],
@@ -178,7 +180,9 @@
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.9375rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
   color: var(--dark-color);
   font-family: inherit;
@@ -215,7 +219,9 @@
   border: 2px solid #e5e7eb;
   border-radius: 8px;
   font-size: 0.9375rem;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 .tag-input-group input:hover {
@@ -251,7 +257,9 @@
   font-weight: 500;
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
   animation: tagPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 @keyframes tagPop {
@@ -285,7 +293,9 @@
   border-radius: 50%;
   color: white;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 .tag-remove:hover {
@@ -313,7 +323,7 @@
 
 .empty-tags i {
   font-size: 2rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .empty-tags p {
@@ -386,7 +396,9 @@
   border-radius: 12px;
   overflow: hidden;
   border: 2px solid #e5e7eb;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -413,7 +425,7 @@
 
 .image-preview.no-image i {
   font-size: 2rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .image-preview.no-image span {
@@ -434,18 +446,20 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  background: var(--primary-color);
+  background: var(--primary-strong);
   color: white;
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
 .upload-label:hover {
-  background: #ff5252;
+  background: var(--primary-strong-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }

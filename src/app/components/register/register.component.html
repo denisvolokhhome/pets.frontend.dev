@@ -33,7 +33,7 @@
     <!-- ── STEP 1: Account Type ── -->
     <div *ngIf="currentStep === 1" class="step-panel" role="region" aria-label="Step 1: Choose account type">
       <div class="account-type-section">
-        <p class="account-type-label">I am joining as a...</p>
+        <p class="account-type-label">I am joining as a…</p>
         <div class="account-type-cards" role="radiogroup" aria-label="Account type">
 
           <button
@@ -192,7 +192,7 @@
           </button>
           <button type="submit" class="btn-step-next" [disabled]="isSubmitting">
             <i [class]="isSubmitting ? 'bi bi-arrow-repeat spin mr-2' : 'bi bi-person-plus mr-2'"></i>
-            {{ isSubmitting ? 'Creating...' : 'Create Account' }}
+            {{ isSubmitting ? 'Creating…' : 'Create Account' }}
           </button>
         </div>
 

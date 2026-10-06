@@ -26,6 +26,8 @@ export interface PageHeaderConfig {
 })
 export class PageHeaderComponent {
   @Input() config!: PageHeaderConfig;
+  /** Use 2 when the header is embedded in a page that already has its own h1. */
+  @Input() headingLevel: 1 | 2 = 1;
   @Input() currentLayout: 'table' | 'cards' = 'table';
   @Input() searchTerm: string = '';
   

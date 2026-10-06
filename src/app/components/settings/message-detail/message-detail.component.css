@@ -113,7 +113,7 @@
 .sender-email {
   display: inline-block;
   font-size: 0.9375rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   text-decoration: none;
   margin-bottom: 0.5rem;
   transition: color 0.2s;
@@ -177,7 +177,7 @@
 }
 
 .no-message {
-  color: #9ca3af;
+  color: #6b7280;
   font-style: italic;
 }
 

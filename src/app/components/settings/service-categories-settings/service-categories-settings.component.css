@@ -113,7 +113,7 @@
 
 .category-card__icon {
   font-size: 1.5rem;
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
   line-height: 1;
 }
 
@@ -129,7 +129,7 @@
   top: 0.5rem;
   right: 0.5rem;
   font-size: 1rem;
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
 }
 
 /* Save row */
@@ -161,7 +161,7 @@
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 10px;
-  background: var(--secondary-color);
+  background: var(--secondary-strong);
   color: white;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -170,7 +170,7 @@
   min-height: 44px;
 }
 
-.btn-save:hover:not(:disabled) { background: #3aafa9; }
+.btn-save:hover:not(:disabled) { background: var(--secondary-strong-hover); }
 .btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .spin { animation: spin 1s linear infinite; }

@@ -6,7 +6,7 @@
   </div>
 
   <div *ngIf="isLoading" class="loading-spinner">
-    <p>Loading...</p>
+    <p>Loading…</p>
   </div>
 
   <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" *ngIf="!isLoading">
@@ -133,7 +133,7 @@
         <p class="text-sm text-gray-500 mt-2">
           <i class="bi bi-envelope mr-1"></i>
           Forgot your password?
-          <a href="javascript:void(0)" (click)="sendPasswordReset()" class="text-primary hover:underline font-medium">
+          <a href="javascript:void(0)" (click)="sendPasswordReset()" class="text-primary-strong hover:underline font-medium">
             {{ resetEmailSent ? 'Email sent — check your inbox' : 'Send reset email' }}
           </a>
         </p>
@@ -148,7 +148,7 @@
         class="ui-btn ui-btn--primary"
       >
         <i class="bi bi-check-lg"></i>
-        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        {{ isLoading ? 'Saving…' : 'Save Changes' }}
       </button>
     </div>
   </form>
@@ -197,7 +197,7 @@
           (click)="confirmConvertToBreeder()"
         >
           <i class="bi bi-check-lg"></i>
-          {{ isConverting ? 'Converting...' : 'I understand, convert my account' }}
+          {{ isConverting ? 'Converting…' : 'I understand, convert my account' }}
         </button>
         <button
           type="button"

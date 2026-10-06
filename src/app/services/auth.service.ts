@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { OAuthService } from './oauth.service';
 })
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
+  public isLoggedIn$ = this.isLoggedInSubject.pipe(distinctUntilChanged());
   
   private currentUserSubject = new BehaviorSubject<IUser | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -86,12 +86,32 @@ export class AuthService {
     );
   }
 
+  // Guards, the top menu and page components all call IsLoggedIn() on the same
+  // navigation; share one in-flight /me request instead of firing one each.
+  private meRequest$: Observable<any> | null = null;
+  private meRequestToken: string | null = null;
+  private meRequestAt = 0;
+  private static readonly ME_DEDUPE_MS = 2000;
+
   IsLoggedIn(): Observable<any> {
-    let header = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('id_token')
-    );
-    return this.http
+    const token = localStorage.getItem('id_token');
+    if (!token) {
+      // No token: don't ask the API (it would only 401).
+      this.isLoggedInSubject.next(false);
+      this.currentUserSubject.next(null);
+      return of(null);
+    }
+    if (
+      this.meRequest$ &&
+      this.meRequestToken === token &&
+      Date.now() - this.meRequestAt < AuthService.ME_DEDUPE_MS
+    ) {
+      return this.meRequest$;
+    }
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    this.meRequestToken = token;
+    this.meRequestAt = Date.now();
+    this.meRequest$ = this.http
       .get<any>(this.apiurl + '/auth/users/me', {
         headers: header,
       })
@@ -106,8 +126,10 @@ export class AuthService {
           this.isLoggedInSubject.next(false);
           this.currentUserSubject.next(null);
           return of(null);
-        })
+        }),
+        shareReplay(1)
       );
+    return this.meRequest$;
   }
 
   LogoutUser() {

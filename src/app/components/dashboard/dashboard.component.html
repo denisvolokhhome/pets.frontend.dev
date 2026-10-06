@@ -61,7 +61,7 @@
     <!-- Messages Section -->
     <div class="dashboard-card">
       <h2 class="dashboard-card__title">Recent Messages</h2>
-      <app-messages-list></app-messages-list>
+      <app-messages-list [embedded]="true"></app-messages-list>
     </div>
   </div>
 
@@ -114,7 +114,7 @@
     <div class="dashboard-card">
       <h2 class="dashboard-card__title">Your Messages</h2>
       <p class="text-gray-600 mb-4">View your conversations with breeders</p>
-      <app-messages-list></app-messages-list>
+      <app-messages-list [embedded]="true"></app-messages-list>
     </div>
   </div>
 
@@ -170,14 +170,14 @@
     <!-- Messages Section -->
     <div class="dashboard-card">
       <h2 class="dashboard-card__title">Recent Messages</h2>
-      <app-messages-list></app-messages-list>
+      <app-messages-list [embedded]="true"></app-messages-list>
     </div>
   </div>
 
   <!-- Fallback for unauthenticated or loading state -->
   <div *ngIf="!isBreeder && !isPetSeeker && !isServiceProvider" class="text-center py-12" role="status" aria-live="polite">
-    <i class="bi bi-hourglass-split text-6xl text-gray-400 mb-4" aria-hidden="true"></i>
-    <p class="text-gray-600">Loading dashboard...</p>
+    <i class="bi bi-hourglass-split text-6xl text-gray-500 mb-4" aria-hidden="true"></i>
+    <p class="text-gray-600">Loading dashboard…</p>
   </div>
 </div>
 

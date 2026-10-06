@@ -24,7 +24,7 @@ export class OffspringListComponent implements OnInit {
     iconColor: '#ec4899',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search offsprings...',
+    searchPlaceholder: 'Search offsprings…',
     showActionButton: true,
     actionButtonTitle: 'Add Offspring',
     actionButtonColor: 'var(--primary-color)'

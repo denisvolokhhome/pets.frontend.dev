@@ -21,7 +21,7 @@
       </div>
       <button type="submit" class="auth-submit-btn" [disabled]="loginForm.invalid || isLoggingIn">
         <i [class]="isLoggingIn ? 'bi bi-arrow-repeat spin' : 'bi bi-box-arrow-in-right'"></i>
-        {{ isLoggingIn ? 'Signing in...' : 'Sign In' }}
+        {{ isLoggingIn ? 'Signing in…' : 'Sign In' }}
       </button>
       <div class="auth-footer">
         <p class="auth-footer-text">Don't have an account? <a class="auth-link" (click)="closeModal(); router.navigate(['/register'], { queryParams: { type: 'pet_seeker', returnUrl: router.url } })">Register here</a></p>
@@ -63,7 +63,7 @@
       </div>
       <button type="submit" class="auth-submit-btn" [disabled]="registerForm.invalid || isRegistering">
         <i [class]="isRegistering ? 'bi bi-arrow-repeat spin' : 'bi bi-person-plus'"></i>
-        {{ isRegistering ? 'Creating...' : 'Create Account' }}
+        {{ isRegistering ? 'Creating…' : 'Create Account' }}
       </button>
       <div class="auth-footer">
         <p class="auth-footer-text">Already have an account? <a class="auth-link" (click)="switchToLogin()">Sign in here</a></p>

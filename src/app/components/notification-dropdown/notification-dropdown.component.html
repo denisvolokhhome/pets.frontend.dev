@@ -9,7 +9,8 @@
       <i class="pi pi-bell text-xl"></i>
       @if (unreadCount > 0) {
         <span 
-          class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+          class="absolute top-2 right-1 inline-flex items-center justify-center min-w-[1.125rem] h-[1.125rem] px-1 text-[0.6875rem] font-bold leading-none text-white bg-red-600 rounded-full ring-2 ring-[#FF6B6B]"
+          aria-hidden="true">
           {{ getDisplayCount() }}
         </span>
       }
@@ -38,7 +39,7 @@
       <!-- Loading State -->
       @if (isLoading) {
         <div class="flex items-center justify-center py-8" aria-live="polite">
-          <i class="pi pi-spin pi-spinner text-2xl text-gray-400"></i>
+          <i class="pi pi-spin pi-spinner text-2xl text-gray-500"></i>
         </div>
       }
 

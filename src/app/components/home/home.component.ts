@@ -62,8 +62,8 @@ export class HomeComponent {
     },
     {
       number: 3,
-      title: 'List Pets',
-      description: 'Add your available puppies and adult dogs with detailed health records and photos.',
+      title: 'List Offspring',
+      description: 'Add your parent pets and available offspring with detailed health records and photos.',
       icon: 'pets'
     },
     {

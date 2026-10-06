@@ -80,7 +80,7 @@
 }
 
 .mobile-filter-btn:hover { background: #e5e7eb; }
-.mobile-filter-btn.has-filters { background: var(--primary-color); color: white; }
+.mobile-filter-btn.has-filters { background: var(--primary-strong); color: white; }
 
 .filter-dot {
   position: absolute;
@@ -94,11 +94,11 @@
 }
 
 .mobile-search-btn {
-  background: var(--secondary-color);
+  background: var(--secondary-strong);
   color: white;
 }
 
-.mobile-search-btn:hover { background: #4ab3a8; }
+.mobile-search-btn:hover { background: var(--secondary-strong-hover); }
 .mobile-search-btn:active { transform: scale(0.95); }
 
 /* ─── Filter Drawer ──────────────────────────────────────────────────────── */
@@ -211,12 +211,13 @@
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.15s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
   min-height: 38px;
 }
 
 .filter-pill:hover { border-color: var(--secondary-color); background: rgba(78, 205, 196, 0.05); }
-.filter-pill.active { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+.filter-pill.active { background: var(--secondary-strong); color: white; border-color: var(--secondary-color); }
 
 /* Drawer breed input */
 .drawer-breed-wrap {
@@ -248,7 +249,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 0.875rem;
   padding: 4px;
   line-height: 1;
@@ -307,7 +308,7 @@
   padding: 0.6875rem 1rem;
   border: none;
   border-radius: 10px;
-  background: var(--secondary-color);
+  background: var(--secondary-strong);
   color: white;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -320,7 +321,7 @@
   min-height: 46px;
 }
 
-.filter-apply-btn:hover { background: #4ab3a8; }
+.filter-apply-btn:hover { background: var(--secondary-strong-hover); }
 
 .search-header-left {
   flex-shrink: 0;
@@ -363,7 +364,7 @@
   margin: 0 auto;
 }
 
-.error-icon { font-size: 18px; flex-shrink: 0; }
+.error-icon { font-size: 18px; flex-shrink: 0; color: #dc2626; }
 .error-message { flex: 1; font-size: 13px; color: #333; }
 
 .dismiss-button,
@@ -487,7 +488,7 @@
   text-align: center;
 }
 
-.no-results-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.no-results-icon { font-size: 48px; display: block; margin-bottom: 12px; color: #9ca3af; }
 .no-results-content h3 { font-size: 18px; font-weight: 600; color: #333; margin: 0 0 8px; }
 .no-results-content p { font-size: 13px; color: #666; margin: 0; }
 
@@ -522,10 +523,10 @@
   gap: 0.5rem;
 }
 
-.results-title i { color: var(--primary-color); }
+.results-title i { color: var(--primary-strong); }
 
 .results-badge {
-  background: var(--primary-color);
+  background: var(--primary-strong);
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
@@ -557,12 +558,13 @@
   cursor: pointer;
   font-size: 0.8125rem;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   min-height: 36px;
 }
 
 .kind-pill:hover { border-color: var(--secondary-color); background: rgba(78, 205, 196, 0.05); }
-.kind-pill.active { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+.kind-pill.active { background: var(--secondary-strong); color: white; border-color: var(--secondary-color); }
 .kind-icon { font-size: 1rem; }
 .kind-label { font-weight: 500; }
 
@@ -646,7 +648,7 @@
   }
 
   .mobile-tab.active {
-    color: var(--primary-color);
+    color: var(--primary-strong);
     border-bottom-color: var(--primary-color);
   }
 
@@ -655,7 +657,7 @@
   }
 
   .mobile-tab-badge {
-    background: var(--primary-color);
+    background: var(--primary-strong);
     color: white;
     font-size: 0.6875rem;
     font-weight: 600;
@@ -733,7 +735,9 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
   white-space: nowrap;
 }
 
@@ -741,7 +745,7 @@
 
 .mode-btn--active {
   background: white;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
@@ -765,7 +769,7 @@
 
 .count-badge--breeder {
   background: rgba(255, 107, 107, 0.1);
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .count-badge--service {
@@ -781,7 +785,7 @@
   padding: 0.75rem 1rem 0.5rem;
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   border-bottom: 1px solid #f3f4f6;
   margin-bottom: 0.25rem;
 }
@@ -791,7 +795,7 @@
 .results-badge {
   margin-left: auto;
   background: rgba(255, 107, 107, 0.12);
-  color: var(--primary-color);
+  color: var(--primary-strong);
   padding: 0.125rem 0.5rem;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -933,7 +937,7 @@
 }
 
 .sp-contact-btn:hover {
-  background: var(--secondary-color, #4ecdc4);
+  background: var(--secondary-strong);
   color: white;
 }
 
@@ -957,7 +961,7 @@
 .sp-empty {
   text-align: center;
   padding: 2rem 1rem;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .sp-empty i { font-size: 2rem; display: block; margin-bottom: 0.5rem; }

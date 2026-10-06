@@ -1,6 +1,6 @@
 
 <nav aria-label="Sidebar navigation">
-<div [ngClass]="isCollapsed ? 'w-[80px]' : 'w-[280px]'" class="left-menu-sidebar flex flex-col shrink-0 p-3 h-full transition-all duration-300">
+<div [ngClass]="isCollapsed ? 'w-[80px]' : 'w-[280px]'" class="left-menu-sidebar flex flex-col shrink-0 p-3 h-full transition-[width] duration-300">
   <!-- Toggle Button -->
   <button 
     (click)="toggleMenu()"
@@ -15,11 +15,11 @@
     <li class="mb-2">
       <a 
         [routerLink]="['/dashboard']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaDashboard="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaDashboard.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Dashboard' : ''">
         <i class="bi bi-speedometer2 text-xl"></i>
         <span *ngIf="!isCollapsed">Dashboard</span>
@@ -30,11 +30,11 @@
     <li class="mb-2" *ngIf="isServiceProvider">
       <a 
         [routerLink]="['/services']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaServices="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaServices.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Services' : ''">
         <i class="bi bi-briefcase text-xl"></i>
         <span *ngIf="!isCollapsed">Services</span>
@@ -45,11 +45,11 @@
     <li class="mb-2" *ngIf="isBreeder">
       <a 
         [routerLink]="['/pets']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaPets="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaPets.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Pets' : ''">
         <i class="bi bi-card-list text-xl"></i>
         <span *ngIf="!isCollapsed">Pets</span>
@@ -58,11 +58,11 @@
     <li class="mb-2" *ngIf="isBreeder">
       <a 
         [routerLink]="['/breedings']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaBreedings="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaBreedings.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Breedings' : ''">
         <i class="bi bi-water text-xl"></i>
         <span *ngIf="!isCollapsed">Breedings</span>
@@ -71,11 +71,11 @@
     <li class="mb-2" *ngIf="isBreeder">
       <a 
         [routerLink]="['/offsprings']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaOffsprings="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaOffsprings.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Offsprings' : ''">
         <i class="bi bi-grid-3x3 text-xl"></i>
         <span *ngIf="!isCollapsed">Offsprings</span>
@@ -84,11 +84,11 @@
     <li class="mb-2" *ngIf="isBreeder">
       <a 
         [routerLink]="['/genealogy']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaGenealogy="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaGenealogy.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Genealogy' : ''">
         <i class="bi bi-diagram-3 text-xl"></i>
         <span *ngIf="!isCollapsed">Genealogy</span>
@@ -99,11 +99,11 @@
     <li class="mb-2" *ngIf="isAuthenticated">
       <a 
         [routerLink]="['/messages']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaMessages="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaMessages.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Messages' : ''">
         <i class="bi bi-envelope text-xl"></i>
         <span *ngIf="!isCollapsed">Messages</span>
@@ -114,11 +114,11 @@
     <li class="mb-2" *ngIf="isPetSeeker">
       <a 
         [routerLink]="['/favorites/offsprings']"
-        routerLinkActive="bg-primary text-white"
+        routerLinkActive="bg-primary-strong text-white"
         #rlaFavorites="routerLinkActive"
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaFavorites.isActive ? 'page' : null"
-        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+        class="w-full px-4 py-2 rounded-lg font-medium transition shadow-md flex items-center gap-2 border-2 border-primary text-primary-strong hover:bg-primary-strong hover:text-white cursor-pointer"
         [title]="isCollapsed ? 'Favorites' : ''">
         <i class="bi bi-heart text-xl"></i>
         <span *ngIf="!isCollapsed">Favorites</span>

@@ -1,10 +1,12 @@
 <header class="page-header">
   <!-- Left: Title -->
   <div class="header-left">
-    <h1 class="page-title">
-      <i [class]="config.icon" [style.color]="config.iconColor || '#ec4899'"></i>
+    <ng-template #titleContent>
+      <i [class]="config.icon" [style.color]="config.iconColor || '#ec4899'" aria-hidden="true"></i>
       {{ config.title }}
-    </h1>
+    </ng-template>
+    <h1 *ngIf="headingLevel === 1" class="page-title"><ng-container *ngTemplateOutlet="titleContent"></ng-container></h1>
+    <h2 *ngIf="headingLevel === 2" class="page-title page-title--section"><ng-container *ngTemplateOutlet="titleContent"></ng-container></h2>
   </div>
 
   <!-- Center: Search -->
@@ -13,7 +15,7 @@
       <input
         type="text"
         class="search-input"
-        [placeholder]="config.searchPlaceholder || 'Search...'"
+        [placeholder]="config.searchPlaceholder || 'Search…'"
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchChange($event)"
         [attr.aria-label]="config.searchPlaceholder || 'Search'"

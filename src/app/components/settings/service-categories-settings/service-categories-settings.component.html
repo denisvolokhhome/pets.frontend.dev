@@ -7,7 +7,7 @@
   <!-- Loading -->
   <div *ngIf="isLoading" class="state-loading" aria-live="polite">
     <div class="spinner"></div>
-    <span>Loading categories...</span>
+    <span>Loading categories…</span>
   </div>
 
   <!-- Error -->
@@ -37,7 +37,7 @@
 
     <div class="save-row">
       <span class="selected-count">
-        <i class="bi bi-briefcase-check"></i>
+        <i class="bi bi-briefcase" aria-hidden="true"></i>
         {{ selectedCount }} categor{{ selectedCount === 1 ? 'y' : 'ies' }} selected
       </span>
       <button
@@ -47,7 +47,7 @@
         [disabled]="isSaving || selectedCount === 0"
       >
         <i [class]="isSaving ? 'bi bi-arrow-repeat spin' : 'bi bi-check-lg'" aria-hidden="true"></i>
-        {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        {{ isSaving ? 'Saving…' : 'Save Changes' }}
       </button>
     </div>
   </div>

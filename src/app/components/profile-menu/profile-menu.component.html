@@ -1,13 +1,13 @@
 <div class="relative inline-block profile-menu-container">
   <!-- Profile Button -->
   <button 
-    class="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center transition-all duration-300 ease-in-out relative hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:rounded-full" 
+    class="bg-transparent border-none cursor-pointer p-0 flex items-center justify-center transition duration-300 ease-in-out relative hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:rounded-full" 
     (click)="toggleMenu()"
     aria-label="User profile menu"
     [attr.aria-expanded]="isOpen"
     aria-haspopup="true">
     <div 
-      class="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-cyan-500 flex items-center justify-center text-white shadow-md transition-all duration-300 ease-in-out relative overflow-hidden bg-cover bg-center bg-no-repeat hover:scale-110 hover:shadow-lg"
+      class="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-cyan-500 flex items-center justify-center text-white shadow-md transition duration-300 ease-in-out relative overflow-hidden bg-cover bg-center bg-no-repeat hover:scale-110 hover:shadow-lg"
       [class.bg-none]="user?.profile_image_path"
       [style.background-image]="getProfileImageStyle()">
       <svg 
@@ -24,7 +24,7 @@
 
   <!-- Dropdown Menu -->
   <div 
-    class="absolute top-[calc(100%+12px)] right-0 bg-white rounded-xl shadow-2xl min-w-[260px] z-[1000] overflow-hidden backdrop-blur-sm transition-all duration-250 ease-in-out"
+    class="absolute top-[calc(100%+12px)] right-0 bg-white rounded-xl shadow-2xl min-w-[260px] z-[1000] overflow-hidden backdrop-blur-sm transition-[opacity,transform,visibility] duration-250 ease-in-out"
     [class.opacity-0]="!isOpen"
     [class.invisible]="!isOpen"
     [class.-translate-y-3]="!isOpen"
@@ -45,7 +45,7 @@
     </div>
     <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     <button 
-      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm text-gray-700 transition-all duration-200 ease-in-out text-left relative overflow-hidden hover:bg-gray-50 hover:pl-6 hover:text-gray-900 active:bg-gray-100 active:scale-[0.98] focus:outline-none focus:bg-gray-100 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-secondary before:to-cyan-500 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
+      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm text-gray-700 transition duration-200 ease-in-out text-left relative overflow-hidden hover:bg-gray-50 hover:pl-6 hover:text-gray-900 active:bg-gray-100 active:scale-[0.98] focus:outline-none focus:bg-gray-100 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-secondary before:to-cyan-500 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
       (click)="navigateToSettings()"
       role="menuitem">
       <svg class="w-5 h-5 shrink-0 transition-transform duration-200 hover:scale-110 hover:rotate-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -55,7 +55,7 @@
       <span class="flex-1 font-medium">Settings</span>
     </button>
     <button 
-      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm transition-all duration-200 ease-in-out text-left relative overflow-hidden border-t border-gray-100 mt-1 text-red-600 hover:bg-red-50 hover:pl-6 hover:text-red-700 active:bg-red-100 active:scale-[0.98] focus:outline-none focus:bg-red-50 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-red-600 before:to-red-700 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
+      class="w-full py-3.5 px-5 border-none bg-transparent cursor-pointer flex items-center gap-3.5 text-sm transition duration-200 ease-in-out text-left relative overflow-hidden border-t border-gray-100 mt-1 text-red-600 hover:bg-red-50 hover:pl-6 hover:text-red-700 active:bg-red-100 active:scale-[0.98] focus:outline-none focus:bg-red-50 focus:shadow-inner before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-gradient-to-b before:from-red-600 before:to-red-700 before:-translate-x-0.5 before:transition-transform before:duration-200 hover:before:translate-x-0"
       (click)="logout()"
       role="menuitem">
       <svg class="w-5 h-5 shrink-0 transition-transform duration-200 hover:scale-110 hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

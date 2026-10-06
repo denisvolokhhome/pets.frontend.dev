@@ -28,7 +28,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     iconColor: '#ec4899',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search breedings...',
+    searchPlaceholder: 'Search breedings…',
     showActionButton: true,
     actionButtonIcon: 'bi bi-plus-circle',
     actionButtonTitle: 'Add Breeding'

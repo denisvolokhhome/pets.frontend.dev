@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService, MessageListItem } from '../../../services/message.service';
 import { AuthService } from '../../../services/auth.service';
@@ -24,6 +24,8 @@ interface MessageThread {
   styleUrls: ['./messages-list.component.css']
 })
 export class MessagesListComponent implements OnInit {
+  /** True when shown inside the dashboard, which already has the page h1. */
+  @Input() embedded = false;
   
   headerConfig: PageHeaderConfig = {
     title: 'Messages',
@@ -31,7 +33,7 @@ export class MessagesListComponent implements OnInit {
     iconColor: '#6366f1',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search messages...',
+    searchPlaceholder: 'Search messages…',
     showActionButton: true,
     actionButtonIcon: 'bi bi-arrow-clockwise',
     actionButtonColor: 'var(--primary-color)',

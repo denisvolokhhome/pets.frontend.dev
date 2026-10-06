@@ -96,7 +96,7 @@
 }
 
 .column-heading--orange i { color: #F97316; }
-.column-heading--red    i { color: var(--primary-color); }
+.column-heading--red    i { color: var(--primary-strong); }
 
 /* ── Form Groups ────────────────────────────────────────── */
 
@@ -121,6 +121,7 @@
   border-radius: 8px;
   font-size: 0.875rem;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   background-color: #F9FAFB;
   color: var(--dark-color);
   box-sizing: border-box;
@@ -180,6 +181,7 @@ textarea.form-control-modern {
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   user-select: none;
 }
 
@@ -227,6 +229,7 @@ textarea.form-control-modern {
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .gender-option:hover {
@@ -243,10 +246,11 @@ textarea.form-control-modern {
   font-size: 1.375rem;
   color: var(--text-secondary);
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .gender-option.selected i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .gender-option span {
@@ -278,6 +282,7 @@ textarea.form-control-modern {
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   color: var(--text-secondary);
 }
 
@@ -292,7 +297,7 @@ textarea.form-control-modern {
 
 .photo-upload-tile:hover {
   border-color: var(--primary-color);
-  color: var(--primary-color);
+  color: var(--primary-strong);
   background: #FEF2F2;
 }
 
@@ -364,6 +369,7 @@ textarea.form-control-modern {
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
 }
 
@@ -385,6 +391,7 @@ textarea.form-control-modern {
   border-radius: 4px;
   background: white;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
   flex-shrink: 0;
 }
@@ -457,7 +464,7 @@ textarea.form-control-modern {
 
 .autocomplete-item:hover {
   background: #FEF2F2;
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .autocomplete-item.no-results {

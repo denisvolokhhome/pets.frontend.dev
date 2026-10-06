@@ -12,7 +12,7 @@
   <div class="mobile-bar">
     <div class="mobile-bar__search">
       <i class="bi bi-search mobile-bar__search-icon"></i>
-      <input type="text" class="mobile-bar__input" placeholder="Search favorites..."
+      <input type="text" class="mobile-bar__input" placeholder="Search favorites…"
         [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search favorites"/>
     </div>
   </div>
@@ -25,7 +25,7 @@
   <!-- Loading State -->
   <div class="loading-container" *ngIf="isLoading">
     <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
-    <p class="loading-text">Loading your favorites...</p>
+    <p class="loading-text">Loading your favorites…</p>
   </div>
 
   <!-- Empty State -->

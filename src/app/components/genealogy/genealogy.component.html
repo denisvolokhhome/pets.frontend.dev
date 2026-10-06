@@ -12,7 +12,7 @@
     </div>
   </app-page-header>
 
-  <div *ngIf="isLoading" class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading tree...</div>
+  <div *ngIf="isLoading" class="loading"><i class="bi bi-arrow-repeat spin"></i> Loading tree…</div>
   <div *ngIf="error" class="error-msg"><i class="bi bi-exclamation-triangle"></i> {{ error }}</div>
 
   <div *ngIf="tree && !isLoading"
@@ -72,7 +72,9 @@
           <!-- Offspring group + converted pets row -->
           <div class="children-row">
             <!-- Offspring group card (clickable) -->
-            <div class="offspring-group-card" (click)="openGroup(edge)" *ngIf="edge.offspring_group.count > 0">
+            <div class="offspring-group-card" role="button" tabindex="0" (click)="openGroup(edge)"
+                 (keydown.enter)="openGroup(edge)" (keydown.space)="$event.preventDefault(); openGroup(edge)"
+                 *ngIf="edge.offspring_group.count > 0">
               <div class="group-icon"><i class="bi bi-collection"></i></div>
               <div class="group-info">
                 <span class="group-count">{{ edge.offspring_group.count }} offspring{{ edge.offspring_group.count > 1 ? 's' : '' }}</span>
@@ -151,7 +153,7 @@
     <div class="modal-footer">
       <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelConvert()" [disabled]="isConverting">Cancel</button>
       <button type="button" class="ui-btn ui-btn--primary" (click)="confirmConvert()" [disabled]="isConverting">
-        <i class="bi bi-check-lg"></i> {{ isConverting ? 'Converting...' : 'Convert to Pet' }}
+        <i class="bi bi-check-lg"></i> {{ isConverting ? 'Converting…' : 'Convert to Pet' }}
       </button>
     </div>
   </div>

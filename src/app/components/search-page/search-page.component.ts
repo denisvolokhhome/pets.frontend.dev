@@ -174,11 +174,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           const message = 'Could not detect your location automatically. Please enter your ZIP code to search.';
           this.geolocationError = message;
           // No toast — the inline banner is sufficient
-          // Auto-populate ZIP from last successful search if available
-          const lastZip = localStorage.getItem('last_zip_code');
-          if (lastZip && !this.zipCode) {
-            this.zipCode = lastZip;
-          }
+          this.searchLastZipCode();
           this.cdr.detectChanges();
         }
       });
@@ -208,12 +204,20 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     // Show inline banner only — no toast for geolocation errors (banner is sufficient)
     this.geolocationError = errorMessage;
 
-    // Auto-populate ZIP from last successful search if available
+    this.searchLastZipCode();
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Geolocation fallback: re-run the search for the last ZIP the user searched,
+   * so a denied/timed-out location prompt doesn't leave the page empty.
+   */
+  private searchLastZipCode(): void {
     const lastZip = localStorage.getItem('last_zip_code');
-    if (lastZip && !this.zipCode) {
-      this.zipCode = lastZip;
-      this.cdr.detectChanges();
-    }
+    if (!lastZip || this.zipCode || !SearchValidators.isValidZipCode(lastZip)) return;
+    this.zipCode = lastZip;
+    this.geolocationError = null;
+    this.onSearch();
   }
 
   /**
@@ -431,7 +435,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
    */
   retrySearch(): void {
     this.error = null;
-    this.toastService.info('Retrying search...');
+    this.toastService.info('Retrying search…');
     this.onSearch();
   }
 

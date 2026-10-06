@@ -285,6 +285,6 @@ export class BreederCardComponent {
     if (description.length <= maxLength) {
       return description;
     }
-    return description.substring(0, maxLength) + '...';
+    return description.substring(0, maxLength) + '…';
   }
 }

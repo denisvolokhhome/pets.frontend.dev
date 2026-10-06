@@ -7,7 +7,7 @@
 
     <div class="form-modal-body">
       <div *ngIf="isLoading" class="loading-state">
-        <span>Loading form...</span>
+        <span>Loading form…</span>
       </div>
 
       <ng-container *ngIf="!isLoading">
@@ -25,7 +25,7 @@
             class="field-input"
             [class.field-error]="validationErrors[field.id]"
             [(ngModel)]="answers[field.id]"
-            [placeholder]="'Your answer...'"
+            [placeholder]="'Your answer…'"
           />
 
           <textarea
@@ -34,7 +34,7 @@
             [class.field-error]="validationErrors[field.id]"
             [(ngModel)]="answers[field.id]"
             rows="4"
-            [placeholder]="'Your answer...'"
+            [placeholder]="'Your answer…'"
           ></textarea>
 
           <span class="error-msg" *ngIf="validationErrors[field.id]">{{ validationErrors[field.id] }}</span>
@@ -45,7 +45,7 @@
     <div class="form-modal-footer">
       <button type="button" class="ui-btn ui-btn--secondary" (click)="onCancel()">Cancel</button>
       <button type="button" class="ui-btn ui-btn--primary" (click)="onSubmit()" [disabled]="isLoading || isSubmitting">
-        {{ isSubmitting ? 'Submitting...' : 'Submit & Message Breeder' }}
+        {{ isSubmitting ? 'Submitting…' : 'Submit & Message Breeder' }}
       </button>
     </div>
   </div>

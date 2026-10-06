@@ -11,6 +11,8 @@ export class BreederCardListComponent implements OnChanges, AfterViewInit {
   @Input() breeders: BreederSearchResult[] = [];
   @Input() highlightedId: string | null = null;
   @Input() isLoading: boolean = false;
+  /** False until the first search runs — shows a prompt instead of "No breeders found". */
+  @Input() hasSearched: boolean = true;
 
   @Output() cardClick = new EventEmitter<string>();
   @Output() cardHover = new EventEmitter<string>();

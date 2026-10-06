@@ -27,7 +27,9 @@
 /* Form section — matches general-settings */
 .form-section {
   background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-  padding: 1.75rem; margin-bottom: 1.5rem; transition: all 0.3s ease;
+  padding: 1.75rem; margin-bottom: 1.5rem; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 .form-section:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
 
@@ -35,7 +37,7 @@
   display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #f3f4f6;
 }
-.section-header i { font-size: 1.25rem; color: var(--primary-color); }
+.section-header i { font-size: 1.25rem; color: var(--primary-strong); }
 .section-header h3 { font-size: 1.125rem; font-weight: 600; color: var(--dark-color); margin: 0; }
 
 /* Form groups */
@@ -46,8 +48,8 @@
   display: flex; align-items: center; gap: 0.5rem;
   font-weight: 600; color: var(--dark-color); font-size: 0.875rem; margin-bottom: 0.5rem;
 }
-.form-group label i { font-size: 0.875rem; color: var(--primary-color); }
-.form-group:focus-within label { color: var(--primary-color); }
+.form-group label i { font-size: 0.875rem; color: var(--primary-strong); }
+.form-group:focus-within label { color: var(--primary-strong); }
 
 .form-group input[type="text"],
 .form-group textarea,
@@ -55,7 +57,9 @@
   width: 100%; padding: 0.625rem 0.875rem;
   border: 2px solid #e5e7eb; border-radius: 8px;
   font-size: 0.9375rem; background: white; color: var(--dark-color);
-  font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 .form-group input[type="text"]:hover,
 .form-group textarea:hover,
@@ -77,7 +81,7 @@
 
 /* Field meta & errors */
 .field-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 0.375rem; }
-.char-count { font-size: 0.8125rem; color: #9ca3af; margin-left: auto; }
+.char-count { font-size: 0.8125rem; color: #6b7280; margin-left: auto; }
 .field-error { font-size: 0.8125rem; color: #dc2626; margin-top: 0.375rem; }
 .field-error.inline { margin-top: 0; }
 

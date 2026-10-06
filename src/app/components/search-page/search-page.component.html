@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo">🐾 Find Breeders{{ serviceProvidersEnabled ? ' & Services' : '' }}</h1>
+      <h1 class="search-logo"><span aria-hidden="true">🐾</span> Find Breeders{{ serviceProvidersEnabled ? ' & Services' : '' }}</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -108,7 +108,7 @@
             class="filter-pill"
             [class.active]="selectedAnimalKind === pt.value"
             (click)="onAnimalKindChange(pt.value)">
-            <span>{{ pt.icon }}</span>
+            <span aria-hidden="true">{{ pt.icon }}</span>
             <span>{{ pt.label }}</span>
           </button>
         </div>
@@ -116,9 +116,10 @@
 
       <!-- Breed -->
       <div class="filter-section">
-        <label class="filter-label">Breed</label>
+        <label class="filter-label" for="search-drawer-breed">Breed</label>
         <div class="drawer-breed-wrap">
           <input
+            id="search-drawer-breed"
             type="text"
             class="drawer-input"
             [value]="drawerBreedTerm"
@@ -128,7 +129,7 @@
             placeholder="Search breed (optional)"
             autocomplete="off"
           />
-          <button *ngIf="drawerBreedTerm" class="drawer-input-clear" (click)="clearDrawerBreed()" aria-label="Clear breed">✕</button>
+          <button *ngIf="drawerBreedTerm" class="drawer-input-clear" (click)="clearDrawerBreed()" aria-label="Clear breed"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
           <div class="drawer-breed-dropdown" *ngIf="drawerBreedOpen && drawerBreedSuggestions.length > 0">
             <div
               class="drawer-breed-option"
@@ -169,14 +170,14 @@
     <div class="error-content">
       <span class="error-icon">ℹ️</span>
       <span class="error-message">{{ geolocationError }}</span>
-      <button class="dismiss-button" (click)="dismissGeolocationError()" aria-label="Dismiss">✕</button>
+      <button class="dismiss-button" (click)="dismissGeolocationError()" aria-label="Dismiss"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
     </div>
   </div>
 
   <!-- Error Banner -->
   <div class="error-banner" *ngIf="error">
     <div class="error-content">
-      <span class="error-icon">⚠️</span>
+      <i class="bi bi-exclamation-triangle error-icon" aria-hidden="true"></i>
       <span class="error-message">{{ error }}</span>
       <button class="retry-button" (click)="retrySearch()">Retry</button>
     </div>
@@ -230,13 +231,13 @@
       <!-- Loading Overlay -->
       <div class="map-loading-overlay" *ngIf="isLoading">
         <div class="spinner"></div>
-        <p>Searching for breeders...</p>
+        <p>Searching for breeders…</p>
       </div>
 
       <!-- No Results Overlay -->
       <div class="no-results-overlay" *ngIf="hasNoResults()">
         <div class="no-results-content">
-          <span class="no-results-icon">🔍</span>
+          <i class="bi bi-search no-results-icon" aria-hidden="true"></i>
           <h3>No breeders found</h3>
           <p>Try increasing the radius, removing filters, or searching a different area.</p>
         </div>
@@ -261,7 +262,7 @@
           class="kind-pill"
           [class.active]="selectedAnimalKind === pt.value"
           (click)="onAnimalKindChange(pt.value)">
-          <span class="kind-icon">{{ pt.icon }}</span>
+          <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
           <span class="kind-label">{{ pt.label }}</span>
         </button>
       </div>
@@ -279,6 +280,7 @@
             [breeders]="searchResults"
             [highlightedId]="highlightedBreederId"
             [isLoading]="isLoading && searchMode !== 'services'"
+            [hasSearched]="hasSearched"
             (cardClick)="onCardClick($event)"
             (cardHover)="onCardHover($event)">
           </app-breeder-card-list>
@@ -301,7 +303,10 @@
             <p>No service providers found in this area.</p>
           </div>
 
-          <div class="sp-card" *ngFor="let sp of serviceResults" (click)="onCardClick(sp.user_id)">
+          <div class="sp-card" *ngFor="let sp of serviceResults" role="button" tabindex="0"
+               [attr.aria-label]="'Show ' + sp.provider_name + ' on map'"
+               (click)="onCardClick(sp.user_id)"
+               (keydown.enter)="$event.target === $event.currentTarget && onCardClick(sp.user_id)">
             <div class="sp-card__header">
               <div class="sp-card__avatar">
                 <img *ngIf="sp.profile_image_url" [src]="sp.profile_image_url" [alt]="sp.provider_name" />

@@ -19,7 +19,7 @@
       <input
         type="text"
         class="mobile-bar__input"
-        placeholder="Search breedings..."
+        placeholder="Search breedings…"
         [(ngModel)]="searchTerm"
         (ngModelChange)="onSearchTermChange($event)"
         aria-label="Search breedings"
@@ -63,8 +63,8 @@
     <div class="drawer-body">
       <!-- Location -->
       <div class="drawer-filter-group">
-        <label class="drawer-filter-label">Location</label>
-        <select class="drawer-filter-select" [(ngModel)]="mobileFilters.location" (change)="applyMobileFilters()">
+        <label class="drawer-filter-label" for="breedings-drawer-location">Location</label>
+        <select id="breedings-drawer-location" class="drawer-filter-select" [(ngModel)]="mobileFilters.location" (change)="applyMobileFilters()">
           <option value="">All Locations</option>
           <option *ngFor="let loc of locations" [value]="loc.id || loc.name">{{ loc.name }}</option>
         </select>
@@ -85,8 +85,8 @@
         <label class="drawer-filter-label">Animal Type</label>
         <div class="drawer-pills">
           <button class="drawer-pill" [class.active]="!mobileFilters.petType" (click)="mobileFilters.petType = ''; applyMobileFilters()">All</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()">🐕 Dog</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()">🐈 Cat</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()"><span aria-hidden="true">🐕</span> Dog</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()"><span aria-hidden="true">🐈</span> Cat</button>
         </div>
       </div>
     </div>
@@ -134,7 +134,7 @@
               <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
             </svg>
           </div>
-          <p>Loading breedings...</p>
+          <p>Loading breedings…</p>
         </div>
 
         <p-table 
@@ -168,14 +168,14 @@
               (dblclick)="onRowDoubleClick(breeding)"
               title="Double-click to view details">
               <td>
-                <button type="button" class="ui-link ui-truncate" [title]="breeding.description || 'Untitled breeding'" (click)="viewBreeding(breeding)">
+                <button type="button" class="ui-link ui-truncate ui-truncate--lg" [title]="breeding.description || 'Untitled breeding'" (click)="viewBreeding(breeding)">
                   {{ breeding.description || 'Untitled breeding' }}
                 </button>
-                <span class="ui-cell-sub ui-truncate">{{ getBreedDisplay(breeding) }}</span>
+                <span class="ui-cell-sub ui-truncate ui-truncate--lg">{{ getBreedDisplay(breeding) }}</span>
               </td>
               <td>
                 <span class="ui-truncate" [title]="getLocationName(breeding)">
-                  <i class="bi bi-geo-alt text-gray-400 mr-1" aria-hidden="true"></i>{{ getLocationName(breeding) }}
+                  <i class="bi bi-geo-alt text-gray-500 mr-1" aria-hidden="true"></i>{{ getLocationName(breeding) }}
                 </span>
               </td>
               <td>{{ getPuppiesCount(breeding) }}</td>

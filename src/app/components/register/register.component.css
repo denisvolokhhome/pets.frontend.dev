@@ -108,32 +108,34 @@
   justify-content: center;
   font-size: 0.875rem;
   font-weight: 700;
-  color: #9CA3AF;
-  transition: all 0.25s ease;
+  color: #6b7280;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
 }
 
 .stepper-item--active .stepper-circle {
   border-color: var(--primary-color);
-  background: var(--primary-color);
+  background: var(--primary-strong);
   color: white;
   box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15);
 }
 
 .stepper-item--done .stepper-circle {
   border-color: var(--secondary-color);
-  background: var(--secondary-color);
+  background: var(--secondary-strong);
   color: white;
 }
 
 .stepper-label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #9CA3AF;
+  color: #6b7280;
   white-space: nowrap;
 }
 
-.stepper-item--active .stepper-label { color: var(--primary-color); font-weight: 600; }
-.stepper-item--done .stepper-label   { color: var(--secondary-color); }
+.stepper-item--active .stepper-label { color: var(--primary-strong); font-weight: 600; }
+.stepper-item--done .stepper-label   { color: var(--secondary-strong); }
 
 /* ── Step panel ── */
 .step-panel {
@@ -193,6 +195,7 @@
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   text-align: center;
   font-family: var(--font-secondary);
 }
@@ -208,9 +211,9 @@
   box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
 }
 
-.account-type-icon { font-size: 1.75rem; color: var(--primary-color); line-height: 1; }
+.account-type-icon { font-size: 1.75rem; color: var(--primary-strong); line-height: 1; }
 .account-type-name { font-family: var(--font-primary); font-weight: 700; font-size: 0.875rem; color: var(--dark-color); }
-.account-type-desc { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.3; }
+.account-type-desc { font-size: 0.75rem; color: #4b5563; line-height: 1.3; }
 
 /* ── Category grid ── */
 .categories-loading {
@@ -297,7 +300,7 @@
 
 .category-card__icon {
   font-size: 1.375rem;
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
   line-height: 1;
 }
 
@@ -313,7 +316,7 @@
   top: 0.375rem;
   right: 0.375rem;
   font-size: 0.875rem;
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
 }
 
 .category-validation-error {
@@ -391,6 +394,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   white-space: nowrap;
 }
 
@@ -404,13 +408,14 @@
   padding: 0.875rem 1.5rem;
   border: none;
   border-radius: calc(var(--border-radius) * 0.75);
-  background: var(--primary-color);
+  background: var(--primary-strong);
   color: white;
   font-family: var(--font-primary);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
@@ -444,6 +449,7 @@
   border-radius: calc(var(--border-radius) * 0.75);
   font-size: 1rem;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   background-color: #F9FAFB;
 }
 
@@ -499,8 +505,8 @@
 }
 
 .terms-checkbox { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; accent-color: var(--primary-color); cursor: pointer; }
-.terms-link { color: var(--primary-color); font-weight: 600; text-decoration: none; }
-.terms-link:hover { color: var(--secondary-color); text-decoration: underline; }
+.terms-link { color: var(--primary-strong); font-weight: 600; text-decoration: none; }
+.terms-link:hover { color: var(--secondary-strong); text-decoration: underline; }
 
 /* ── Footer ── */
 .auth-footer {
@@ -511,8 +517,8 @@
 }
 
 .auth-footer-text { font-family: var(--font-secondary); font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
-.auth-link { color: var(--primary-color); font-weight: 600; text-decoration: none; }
-.auth-link:hover { color: var(--secondary-color); text-decoration: underline; }
+.auth-link { color: var(--primary-strong); font-weight: 600; text-decoration: none; }
+.auth-link:hover { color: var(--secondary-strong); text-decoration: underline; }
 
 /* ── Helpers ── */
 .w-full { width: 100%; }

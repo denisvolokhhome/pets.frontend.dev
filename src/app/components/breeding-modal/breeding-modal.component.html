@@ -40,7 +40,7 @@
             id="description"
             [(ngModel)]="formData.description"
             rows="4"
-            placeholder="Enter breeding description or notes...">
+            placeholder="Enter breeding description or notes…">
           </textarea>
         </div>
 
@@ -55,7 +55,7 @@
           <!-- Loading State -->
           <div *ngIf="isLoadingPets" class="text-center py-4">
             <i class="bi bi-hourglass-split animate-spin text-2xl text-teal-500"></i>
-            <p class="text-gray-600 mt-2">Loading available pets...</p>
+            <p class="text-gray-600 mt-2">Loading available pets…</p>
           </div>
 
           <!-- Pet Selection Form -->
@@ -235,7 +235,7 @@
         [disabled]="!canSave()"
         (click)="save()">
         <i class="bi" [ngClass]="isSaving ? 'bi-hourglass-split' : 'bi-check-circle'"></i>
-        {{ isSaving ? 'Saving...' : 'Save' }}
+        {{ isSaving ? 'Saving…' : 'Save' }}
       </button>
       <button 
         type="button"

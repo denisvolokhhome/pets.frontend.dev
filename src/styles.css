@@ -5,29 +5,30 @@
 
 :root{
   /* Breedly Color Palette */
-  --primary-color: #FF6B6B;      /* Coral Red - WCAG AA compliant when used with white text */
-  --secondary-color: #4ECDC4;    /* Turquoise - WCAG AA compliant when used with white text */
+  --primary-color: #FF6B6B;      /* Coral Red - brand surfaces, borders, icons, decoration */
+  --secondary-color: #4ECDC4;    /* Turquoise - brand surfaces, borders, icons, decoration */
+  /* Text-safe brand variants: use for coral/teal TEXT and for fills that carry white text
+   * (buttons, active pills, badges). The base colors are too light for that (WCAG AA). */
+  --primary-strong: #D93A3A;     /* 4.55:1 with white */
+  --primary-strong-hover: #C02E2E;
+  --secondary-strong: #247F79;   /* 4.79:1 with white */
+  --secondary-strong-hover: #1C6B66;
   --accent-color: #FFE66D;       /* Sunny Yellow - Use with dark text for accessibility */
   --success-color: #95E1D3;      /* Mint Green - Use with dark text for accessibility */
   --dark-color: #2C3E50;         /* Navy - WCAG AAA compliant with white text */
   --light-color: #F8F9FA;        /* Off-white - Use with dark text */
   --text-primary: #2C3E50;       /* Navy - WCAG AAA compliant on white background (12.63:1) */
   --text-secondary: #6C757D;     /* Gray - WCAG AA compliant on white background (4.54:1) */
-  
-  /* Color Contrast Ratios (WCAG 2.1 Standards):
-   * Normal text: Minimum 4.5:1 (AA), 7:1 (AAA)
-   * Large text (18pt+/14pt+ bold): Minimum 3:1 (AA), 4.5:1 (AAA)
-   * 
-   * Verified Combinations:
-   * - White (#FFFFFF) on Primary (#FF6B6B): 3.94:1 - Passes AA for large text
-   * - White (#FFFFFF) on Secondary (#4ECDC4): 3.02:1 - Passes AA for large text
-   * - White (#FFFFFF) on Dark (#2C3E50): 12.63:1 - Passes AAA for all text
-   * - Text Primary (#2C3E50) on White: 12.63:1 - Passes AAA for all text
-   * - Text Secondary (#6C757D) on White: 4.54:1 - Passes AA for normal text
-   * - Dark (#2C3E50) on Success (#95E1D3): 7.89:1 - Passes AAA for all text
-   * - Dark (#2C3E50) on Accent (#FFE66D): 8.35:1 - Passes AAA for all text
+
+  /* Color Contrast Ratios (WCAG 2.1 AA: normal text 4.5:1, large text 3:1):
+   * - White on Primary (#FF6B6B): 2.78:1 - FAILS even for large text; never put text on it
+   * - White on Secondary (#4ECDC4): 1.93:1 - FAILS; never put text on it
+   * - White on Primary Strong (#D93A3A): 4.55:1 - AA
+   * - White on Secondary Strong (#247F79): 4.79:1 - AA
+   * - Text Primary (#2C3E50) on White: 12.63:1 - AAA
+   * - Text Secondary (#6C757D) on White: 4.54:1 - AA
    */
-  
+
   /* Legacy color mappings for backward compatibility */
   --first-color: #FF6B6B;
   --second-color: #F5F5F5;
@@ -45,7 +46,8 @@
   /* Design System */
   --border-radius: 12px;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
+  /* Timing only — each rule using it sets its own transition-property. */
+  --transition: 0.3s ease;
 }
 
 .mat-mdc-radio-button.mat-accent{
@@ -172,11 +174,11 @@ p {
 
 /* Text Color Utilities */
 .text-primary-color {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .text-secondary-color {
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
 }
 
 .text-accent-color {
@@ -205,10 +207,12 @@ p {
 }
 /* ===== Layout Styles ===== */
 
+/* `clip`, not `hidden`: hidden on both html and body turns <body> into its own
+   scroll container, so window.scrollTo() and router scroll restoration stop working. */
 html, body {
   height: 100%;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -269,7 +273,7 @@ textarea:focus,
   position: absolute;
   top: -100px;
   left: 0;
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   color: white;
   padding: 0.75rem 1.5rem;
   text-decoration: none;
@@ -292,6 +296,7 @@ textarea:focus,
   background-color: var(--primary-color);
   box-shadow: var(--box-shadow);
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   border-radius: var(--border-radius);
   position: relative;
   z-index: 1200;
@@ -322,6 +327,7 @@ textarea:focus,
   font-family: var(--font-secondary);
   font-size: 1rem;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   color: var(--text-primary);
   min-height: 44px;
 }
@@ -350,6 +356,7 @@ textarea:focus,
   border-radius: 0.25rem;
   border: 2px solid #e0e0e0;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   min-width: 20px;
   min-height: 20px;
   width: 20px;
@@ -430,12 +437,13 @@ textarea:focus,
 /* Primary Button */
 .btn-primary {
   color: #fff;
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   border-color: var(--primary-color);
   border-radius: var(--border-radius);
   font-family: var(--font-primary);
   font-weight: 500;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   padding: 0.625rem 1.5rem;
   min-height: 44px;
   border: 1px solid transparent;
@@ -445,7 +453,7 @@ textarea:focus,
 }
 
 .btn-primary:hover {
-  background-color: #ff5252;
+  background-color: var(--primary-strong-hover);
   border-color: #ff5252;
   color: #fff;
 }
@@ -456,20 +464,21 @@ textarea:focus,
 }
 
 .btn-primary:active {
-  background-color: #ff5252;
+  background-color: var(--primary-strong-hover);
   border-color: #ff5252;
   transform: scale(0.98);
 }
 
 /* Outline Primary Button */
 .btn-outline-primary {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   background-color: transparent;
   border: 1px solid var(--primary-color);
   border-radius: var(--border-radius);
   font-family: var(--font-primary);
   font-weight: 500;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   padding: 0.625rem 1.5rem;
   min-height: 44px;
   display: inline-block;
@@ -478,7 +487,7 @@ textarea:focus,
 }
 
 .btn-outline-primary:hover {
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   border-color: var(--primary-color);
   color: #fff;
 }
@@ -497,12 +506,13 @@ textarea:focus,
 /* Secondary Button */
 .btn-secondary {
   color: #fff;
-  background-color: var(--secondary-color);
+  background-color: var(--secondary-strong);
   border-color: var(--secondary-color);
   border-radius: var(--border-radius);
   font-family: var(--font-primary);
   font-weight: 500;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   padding: 0.625rem 1.5rem;
   min-height: 44px;
   border: 1px solid transparent;
@@ -512,7 +522,7 @@ textarea:focus,
 }
 
 .btn-secondary:hover {
-  background-color: #3db8af;
+  background-color: var(--secondary-strong-hover);
   border-color: #3db8af;
   color: #fff;
 }
@@ -530,6 +540,7 @@ textarea:focus,
   font-family: var(--font-primary);
   font-weight: 500;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   padding: 0.625rem 1.5rem;
   min-height: 44px;
   border: 1px solid transparent;
@@ -571,7 +582,8 @@ button.fab-button {
   height: 56px;
   width: 56px;
   transition: var(--transition);
-  background-color: var(--primary-color);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  background-color: var(--primary-strong);
   box-shadow: var(--box-shadow);
   color: white;
   min-height: 56px;
@@ -603,6 +615,7 @@ button.fab-button.fab-success {
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   overflow: hidden;
   background-color: white;
 }
@@ -927,7 +940,7 @@ select {
 
   /* Prevent horizontal scroll */
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 }
 
@@ -948,6 +961,14 @@ select {
     outline-offset: 3px;
     box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.2);
   }
+
+  /* iOS Safari zooms the page when a focused field's text is under 16px. Component styles
+     use 14-15px in places, so enforce the floor here for every text-entry control. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* =====================================================================
@@ -965,7 +986,7 @@ select {
   --ui-text: #1f2937;
   --ui-text-muted: #6b7280;
   --ui-text-subtle: #9ca3af;
-  --ui-primary-hover: #f25555;
+  --ui-primary-hover: var(--primary-strong-hover);
   --ui-danger: #dc2626;
   --ui-danger-surface: #fef2f2;
   --ui-radius: 0.5rem;
@@ -1039,7 +1060,7 @@ select {
 }
 
 .ui-btn--primary {
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   color: #fff;
 }
 
@@ -1204,7 +1225,7 @@ button.ui-cell-sub {
 }
 
 .ui-link:hover {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -1245,7 +1266,7 @@ button.ui-cell-sub {
 }
 
 .ui-muted {
-  color: var(--ui-text-subtle);
+  color: #6b7280;
 }
 
 .ui-truncate {
@@ -1258,6 +1279,11 @@ button.ui-cell-sub {
 
 .ui-truncate--sm {
   max-width: 9rem;
+}
+
+/* Primary name column — longer names (e.g. "Spring 2026 Goldens — Maple × Cooper") */
+.ui-truncate--lg {
+  max-width: 22rem;
 }
 
 /* Square image thumbnail with an icon placeholder */
@@ -1322,12 +1348,12 @@ button.ui-cell-sub {
   height: 0.75rem;
   margin-left: 0.25rem;
   vertical-align: -1px;
-  color: var(--ui-text-subtle);
+  color: #6b7280;
 }
 
 .p-datatable .p-datatable-thead > tr > th[aria-sort="ascending"] svg,
 .p-datatable .p-datatable-thead > tr > th[aria-sort="descending"] svg {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .p-datatable .p-datatable-sortable-column:focus-visible {
@@ -1397,7 +1423,7 @@ button.ui-cell-sub {
 }
 
 .p-datatable .text-muted {
-  color: var(--ui-text-subtle);
+  color: #6b7280;
 }
 
 /* ----- Paginator ------------------------------------------------------ */
@@ -1455,7 +1481,7 @@ button.ui-cell-sub {
 }
 
 .p-paginator .p-paginator-page.p-paginator-page-selected {
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   color: #fff;
   font-weight: 600;
 }
@@ -1534,7 +1560,7 @@ button.ui-cell-sub {
 }
 
 .p-select-overlay .p-select-option.p-select-option-selected {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-weight: 600;
 }
 
@@ -1572,7 +1598,7 @@ button.ui-cell-sub {
   height: 1.25rem;
   padding: 0 0.375rem;
   border-radius: 9999px;
-  background-color: var(--primary-color);
+  background-color: var(--primary-strong);
   color: #fff;
   font-size: 0.6875rem;
   font-weight: 700;
@@ -1785,7 +1811,9 @@ button.ui-cell-sub {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   color: inherit;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -21,7 +21,9 @@ app-profile-menu {
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
-  transition: all 0.2s ease-in-out;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, visibility;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
   z-index: 1300;
   overflow: hidden;
 }
@@ -38,7 +40,9 @@ app-profile-menu {
   padding: 0.75rem 1rem;
   color: #374151;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
   font-size: 0.9375rem;
   font-weight: 500;
 }
@@ -55,7 +59,7 @@ app-profile-menu {
 
 .dropdown-item:hover {
   background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .dropdown-item i {
@@ -93,7 +97,8 @@ app-profile-menu {
   border-radius: 50%;
   color: white;
   opacity: 0.9;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   text-decoration: none;
   font-size: 1.125rem;
 }

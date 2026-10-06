@@ -22,7 +22,7 @@ export class ServicesComponent implements OnInit {
     iconColor: '#4ecdc4',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search services...',
+    searchPlaceholder: 'Search services…',
     showActionButton: false
   };
 

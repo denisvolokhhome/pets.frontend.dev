@@ -18,7 +18,7 @@
         (click)="resendVerification()"
         [disabled]="isResending || resendCooldown > 0 || !email">
         <i class="bi bi-arrow-clockwise"></i>
-        {{ isResending ? 'Sending...' : resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend verification email' }}
+        {{ isResending ? 'Sending…' : resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend verification email' }}
       </button>
 
       <div class="verify-divider"></div>
@@ -33,7 +33,7 @@
       <div class="verify-icon verifying">
         <i class="bi bi-arrow-repeat spin"></i>
       </div>
-      <h1>Verifying your email...</h1>
+      <h1>Verifying your email…</h1>
       <p class="verify-subtitle">Please wait while we confirm your email address.</p>
     </div>
 
@@ -43,9 +43,9 @@
         <i class="bi bi-check-circle"></i>
       </div>
       <h1>Email verified!</h1>
-      <p class="verify-subtitle">Your account is now active. Taking you to your dashboard...</p>
+      <p class="verify-subtitle">Your account is now active. Taking you to your dashboard…</p>
       <div class="verify-redirecting">
-        <i class="bi bi-arrow-repeat spin"></i> Redirecting...
+        <i class="bi bi-arrow-repeat spin"></i> Redirecting…
       </div>
     </div>
 

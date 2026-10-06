@@ -11,7 +11,7 @@
         <i *ngIf="!getBreederImageUrl()" class="bi bi-person-circle"></i>
       </div>
       <div class="mobile-breeder-text">
-        <span class="mobile-breeder-name">{{ breederInfo?.breedery_name || breederInfo?.name || 'Breeder' }}</span>
+        <h1 class="mobile-breeder-name">{{ breederInfo?.breedery_name || breederInfo?.name || 'Breeder' }}</h1>
         <span class="mobile-breeder-location" *ngIf="getBreederLocation()">
           <i class="bi bi-geo-alt"></i> {{ getBreederLocation() }}
         </span>
@@ -47,8 +47,8 @@
     </div>
     <div class="drawer-body">
       <div class="drawer-filter-group">
-        <label class="drawer-filter-label">Breed</label>
-        <select class="drawer-filter-select" [(ngModel)]="selectedBreedId">
+        <label class="drawer-filter-label" for="og-drawer-breed">Breed</label>
+        <select id="og-drawer-breed" class="drawer-filter-select" [(ngModel)]="selectedBreedId">
           <option [ngValue]="undefined">All Breeds</option>
           <option *ngFor="let breed of breeds.slice(1)" [ngValue]="breed.value">{{ breed.label }}</option>
         </select>
@@ -87,7 +87,7 @@
         <div class="breeder-avatar" [style.background-image]="getBreederImageUrl() ? 'url(' + getBreederImageUrl() + ')' : ''">
           <i *ngIf="!getBreederImageUrl()" class="bi bi-person-circle"></i>
         </div>
-        <h2 class="breeder-name">{{ breederInfo.breedery_name || breederInfo.name || 'Breeder' }}</h2>
+        <h1 class="breeder-name">{{ breederInfo.breedery_name || breederInfo.name || 'Breeder' }}</h1>
         <p class="breeder-location" *ngIf="getBreederLocation()">
           <i class="bi bi-geo-alt"></i> {{ getBreederLocation() }}
         </p>
@@ -127,23 +127,23 @@
       <div class="sidebar-card">
         <h3 class="sidebar-title"><i class="bi bi-funnel"></i> Filter Offsprings</h3>
         <div class="filter-group">
-          <label class="filter-label">Breed</label>
-          <select class="filter-select" [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
+          <label class="filter-label" for="og-filter-breed">Breed</label>
+          <select id="og-filter-breed" class="filter-select" [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
             <option [ngValue]="undefined">All Breeds</option>
             <option *ngFor="let breed of breeds.slice(1)" [ngValue]="breed.value">{{ breed.label }}</option>
           </select>
         </div>
         <div class="filter-group">
-          <label class="filter-label">Gender</label>
-          <select class="filter-select" [(ngModel)]="selectedGender" (change)="onGenderFilterChange(selectedGender)">
+          <label class="filter-label" for="og-filter-gender">Gender</label>
+          <select id="og-filter-gender" class="filter-select" [(ngModel)]="selectedGender" (change)="onGenderFilterChange(selectedGender)">
             <option [ngValue]="undefined">All</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
         </div>
         <div class="filter-group">
-          <label class="filter-label">Status</label>
-          <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange(selectedStatus)">
+          <label class="filter-label" for="og-filter-status">Status</label>
+          <select id="og-filter-status" class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusFilterChange(selectedStatus)">
             <option [ngValue]="undefined">All</option>
             <option value="Available">Available</option>
             <option value="Reserved">Reserved</option>
@@ -162,7 +162,7 @@
     <section class="main-content">
       <div class="loading-container" *ngIf="isLoading">
         <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
-        <p class="loading-text">Loading offsprings...</p>
+        <p class="loading-text">Loading offsprings…</p>
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && !hasOffsprings()">

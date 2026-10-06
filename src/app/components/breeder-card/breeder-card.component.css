@@ -106,7 +106,7 @@
 
 .breeder-card__approx {
   font-size: 0.75rem;
-  color: #999;
+  color: #6b7280;
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -145,9 +145,10 @@
   padding: 0.375rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--secondary-color, #4ecdc4);
+  color: var(--secondary-strong);
   cursor: pointer;
-  transition: all 0.15s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
   min-height: 34px;
   display: inline-flex;
   align-items: center;
@@ -160,13 +161,13 @@
 
 .breeder-card__link--primary {
   font-weight: 600;
-  background: var(--secondary-color, #4ecdc4);
+  background: var(--secondary-strong);
   color: white;
   border-color: var(--secondary-color, #4ecdc4);
 }
 
 .breeder-card__link--primary:hover {
-  background: #3aafa9;
+  background: var(--secondary-strong-hover);
   border-color: #3aafa9;
 }
 
@@ -283,7 +284,7 @@
 .profile-close {
   background: none; border: 1px solid #e5e7eb; border-radius: 8px;
   width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-  color: #9ca3af; cursor: pointer; flex-shrink: 0;
+  color: #6b7280; cursor: pointer; flex-shrink: 0;
 }
 .profile-close:hover { background: #f3f4f6; color: #374151; }
 
@@ -299,7 +300,7 @@
 
 .profile-loading {
   padding: 3rem;
-  color: #9ca3af;
+  color: #6b7280;
   font-size: 1.5rem;
   text-align: center;
 }
@@ -335,7 +336,7 @@
   font-size: 0.8125rem; color: #6b7280;
   display: flex; align-items: center; gap: 0.25rem;
 }
-.profile-location i { color: var(--primary-color); font-size: 0.75rem; }
+.profile-location i { color: var(--primary-strong); font-size: 0.75rem; }
 
 /* Description */
 .profile-desc {
@@ -359,7 +360,7 @@
 .profile-section { flex: 1; min-width: 120px; }
 .profile-section-label {
   margin: 0 0 0.375rem;
-  font-size: 0.75rem; font-weight: 600; color: #9ca3af;
+  font-size: 0.75rem; font-weight: 600; color: #6b7280;
   text-transform: uppercase; letter-spacing: 0.5px;
 }
 .profile-kinds, .profile-breeds { display: flex; flex-wrap: wrap; gap: 0.375rem; }
@@ -376,12 +377,12 @@
 .profile-view-btn {
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%; padding: 0.75rem 1.5rem;
-  background: var(--primary-color, #ff6b6b); color: white;
+  background: var(--primary-strong); color: white;
   border: none; border-radius: 10px;
   font-weight: 600; font-size: 0.9375rem;
   cursor: pointer; transition: background 0.2s;
 }
-.profile-view-btn:hover { background: #ff5252; }
+.profile-view-btn:hover { background: var(--primary-strong-hover); }
 
 /* Reviews */
 .profile-reviews {
@@ -400,12 +401,12 @@
   border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid #fde68a;
 }
 .profile-reviews__empty {
-  text-align: center; color: #9ca3af; font-size: 0.875rem;
+  text-align: center; color: #6b7280; font-size: 0.875rem;
   padding: 1.5rem 0;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
 .profile-reviews__loading {
-  text-align: center; color: #9ca3af; font-size: 1.25rem; padding: 1.5rem 0;
+  text-align: center; color: #6b7280; font-size: 1.25rem; padding: 1.5rem 0;
 }
 .profile-reviews__list {
   display: flex; flex-direction: column; gap: 0.75rem;
@@ -419,7 +420,7 @@
   margin-bottom: 0.25rem;
 }
 .profile-review__name { font-size: 0.8125rem; font-weight: 600; color: #374151; }
-.profile-review__date { font-size: 0.75rem; color: #9ca3af; }
+.profile-review__date { font-size: 0.75rem; color: #6b7280; }
 .profile-review__tags {
   display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.375rem;
 }

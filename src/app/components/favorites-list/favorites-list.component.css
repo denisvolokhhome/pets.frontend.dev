@@ -1,7 +1,12 @@
+/* Same shell as the other list pages (pets, breedings): the app content
+   panel already provides background and padding. */
 .favorites-container {
-  min-height: 100vh;
-  background-color: #f9fafb;
-  padding: 24px;
+  min-height: calc(100vh - 200px);
+  max-width: 100%;
+}
+
+.page-subtitle-container {
+  margin: 1rem 0 1.5rem;
 }
 
 /* Page Header */
@@ -185,7 +190,8 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
 }
 
 .breeder-card:hover {
@@ -202,7 +208,7 @@
 
 .breeder-icon {
   font-size: 24px;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   width: 40px;
   height: 40px;
   display: flex;
@@ -242,7 +248,7 @@
 
 @media (max-width: 768px) {
   .favorites-container {
-    padding: 16px;
+    padding: 0;
   }
 
   .page-header {
@@ -319,7 +325,7 @@
   .mobile-bar__search { flex: 1; position: relative; min-width: 0; }
   .mobile-bar__search-icon {
     position: absolute; left: 0.75rem; top: 50%;
-    transform: translateY(-50%); color: #9ca3af; font-size: 0.875rem; pointer-events: none;
+    transform: translateY(-50%); color: #6b7280; font-size: 0.875rem; pointer-events: none;
   }
   .mobile-bar__input {
     width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem;
@@ -330,7 +336,7 @@
 
   /* 2-col offspring grid on mobile */
   .offspring-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 0.75rem !important;
     padding: 0 0.875rem;
   }

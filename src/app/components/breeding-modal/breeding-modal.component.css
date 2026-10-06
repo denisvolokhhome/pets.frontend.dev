@@ -144,7 +144,8 @@
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   border: none;
   font-size: 0.875rem;
   font-family: 'Poppins', sans-serif;
@@ -187,7 +188,7 @@
 
 .form-group label i {
   margin-right: 0.5rem;
-  color: #ff6b6b;
+  color: var(--primary-strong);
 }
 
 .form-group textarea {
@@ -197,7 +198,8 @@
   border-radius: 0.5rem;
   font-size: 0.875rem;
   resize: vertical;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   font-family: inherit;
 }
 
@@ -366,7 +368,8 @@
   font-size: 0.875rem;
   background-color: white;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   font-family: inherit;
 }
 

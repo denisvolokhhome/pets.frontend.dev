@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IPet } from '../models/pet';
-import { Observable, delay, retry, tap, catchError, throwError, Subject } from 'rxjs';
+import { Observable, delay, retry, tap, catchError, throwError, Subject, shareReplay } from 'rxjs';
 import { IBreed } from '../models/breed';
 import { ILocation } from '../models/location';
 import { IUser, IProfileImageResponse } from '../models/user';
@@ -204,15 +204,37 @@ export class DataService {
   }
 
   // User profile methods
+  // Several components load the profile on the same page; share one in-flight
+  // request for a short window. Cleared whenever the profile changes.
+  private profileRequest$: Observable<IUser> | null = null;
+  private profileRequestToken: string | null = null;
+  private profileRequestAt = 0;
+
   getCurrentUserProfile(): Observable<IUser> {
-    let header = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('id_token')
-    );
-    return this.http.get<IUser>(this.apiurl + '/users/me', { headers: header })
+    const token = localStorage.getItem('id_token');
+    if (
+      this.profileRequest$ &&
+      this.profileRequestToken === token &&
+      Date.now() - this.profileRequestAt < 2000
+    ) {
+      return this.profileRequest$;
+    }
+    let header = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    this.profileRequestToken = token;
+    this.profileRequestAt = Date.now();
+    this.profileRequest$ = this.http.get<IUser>(this.apiurl + '/users/me', { headers: header })
       .pipe(
-        catchError(this.handleError)
+        catchError((err) => {
+          this.profileRequest$ = null;
+          return this.handleError(err);
+        }),
+        shareReplay(1)
       );
+    return this.profileRequest$;
+  }
+
+  private clearProfileCache(): void {
+    this.profileRequest$ = null;
   }
 
   updateUserProfile(data: Partial<IUser>): Observable<IUser> {
@@ -222,6 +244,7 @@ export class DataService {
     );
     return this.http.patch<IUser>(this.apiurl + '/users/me', data, { headers: header })
       .pipe(
+        tap(() => this.clearProfileCache()),
         catchError(this.handleError)
       );
   }
@@ -244,6 +267,7 @@ export class DataService {
     return this.http.post<IProfileImageResponse>(this.apiurl + '/users/me/profile-image', formData, { headers: header })
       .pipe(
         tap(() => {
+          this.clearProfileCache();
           // Notify subscribers that profile was updated
           this.profileUpdated.next();
         }),

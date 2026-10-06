@@ -155,7 +155,7 @@
           </button>
           <button type="button" class="ui-btn ui-btn--danger" (click)="deleteForm()" [disabled]="isDeletingForm">
             <i class="bi bi-trash"></i>
-            {{ isDeletingForm ? 'Removing...' : 'Remove Form' }}
+            {{ isDeletingForm ? 'Removing…' : 'Remove Form' }}
           </button>
         </ng-container>
       </div>
@@ -180,7 +180,7 @@
 <!-- Loading State -->
 <div class="loading-container" *ngIf="isLoading">
   <div class="spinner"></div>
-  <p>Loading breeding details...</p>
+  <p>Loading breeding details…</p>
 </div>
 
 <!-- Add Offspring Modal -->
@@ -280,7 +280,7 @@
         <button type="button" class="ui-btn ui-btn--secondary" (click)="closeFormBuilder()">Cancel</button>
         <button type="button" class="ui-btn ui-btn--primary" (click)="saveForm()" [disabled]="isSavingForm">
           <i class="bi" [class.bi-check2]="!isSavingForm" [class.bi-hourglass-split]="isSavingForm"></i>
-          {{ isSavingForm ? 'Saving...' : 'Save Form' }}
+          {{ isSavingForm ? 'Saving…' : 'Save Form' }}
         </button>
       </div>
     </div>

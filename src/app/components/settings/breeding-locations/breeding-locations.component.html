@@ -21,7 +21,7 @@
 
   <!-- Loading Indicator -->
   <div class="loading" *ngIf="isLoading && !showForm">
-    Loading locations...
+    Loading locations…
   </div>
 
   <!-- Location List -->
@@ -192,7 +192,7 @@
 
       <div class="form-actions">
         <button type="submit" class="ui-btn ui-btn--primary" [disabled]="isLoading">
-          {{ isLoading ? 'Saving...' : 'Save Location' }}
+          {{ isLoading ? 'Saving…' : 'Save Location' }}
         </button>
         <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelForm()" [disabled]="isLoading">
           Cancel
@@ -232,7 +232,7 @@
           class="ui-btn ui-btn--danger-solid" 
           (click)="deleteLocation()" 
           [disabled]="isLoading">
-          {{ isLoading ? 'Deleting...' : 'Delete' }}
+          {{ isLoading ? 'Deleting…' : 'Delete' }}
         </button>
         <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelDelete()" [disabled]="isLoading">
           {{ deleteErrorPets.length > 0 ? 'Close' : 'Cancel' }}

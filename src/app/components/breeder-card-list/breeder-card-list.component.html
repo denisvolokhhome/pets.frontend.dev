@@ -23,8 +23,14 @@
         <path d="m21 21-4.35-4.35"></path>
       </svg>
     </div>
-    <h3>No breeders found</h3>
-    <p>Try adjusting your search criteria or expanding your search radius.</p>
+    <ng-container *ngIf="hasSearched; else notSearched">
+      <h3>No breeders found</h3>
+      <p>Try adjusting your search criteria or expanding your search radius.</p>
+    </ng-container>
+    <ng-template #notSearched>
+      <h3>Find breeders near you</h3>
+      <p>Enter your ZIP code above and press Search.</p>
+    </ng-template>
   </div>
 
   <!-- Breeder cards -->
@@ -44,7 +50,7 @@
     <!-- Load more indicator -->
     <div *ngIf="hasMoreToLoad()" class="load-more-indicator">
       <div class="spinner"></div>
-      <p>Loading more breeders...</p>
+      <p>Loading more breeders…</p>
     </div>
   </div>
 

@@ -30,7 +30,7 @@ export class GenealogyComponent implements OnInit {
     iconColor: '#ec4899',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search by pet name...',
+    searchPlaceholder: 'Search by pet name…',
     showActionButton: false,
   };
 

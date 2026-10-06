@@ -70,7 +70,7 @@ export class SubscriptionSettingsComponent implements OnInit {
         this.isVerifyingSession = false;
         // Session verify failed — fall back to normal load
         // (webhook may have already processed it)
-        this.toastr.warning('Could not verify payment session. Loading current plan...', 'Notice');
+        this.toastr.warning('Could not verify payment session. Loading current plan…', 'Notice');
         this.loadData();
       }
     });

@@ -6,7 +6,7 @@
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-spinner">
-    <p>Loading subscription details...</p>
+    <p>Loading subscription details…</p>
   </div>
 
   <!-- Error State -->
@@ -103,7 +103,7 @@
           [disabled]="isOpeningPortal"
           (click)="onViewInvoices()">
           <i class="bi bi-receipt"></i>
-          {{ isOpeningPortal ? 'Opening...' : 'View Invoices' }}
+          {{ isOpeningPortal ? 'Opening…' : 'View Invoices' }}
         </button>
       </div>
     </div>
@@ -168,7 +168,7 @@
             [disabled]="isRedirecting || isDowngrading"
             (click)="onUpgrade(plan)">
             <i class="bi bi-arrow-up-circle"></i>
-            {{ isRedirecting ? 'Redirecting...' : 'Upgrade' }}
+            {{ isRedirecting ? 'Redirecting…' : 'Upgrade' }}
           </button>
 
           <button
@@ -179,7 +179,7 @@
             (click)="onDowngrade(plan)">
             <i class="bi" [class.bi-arrow-down-circle]="!isDowngrading"
                           [class.bi-hourglass-split]="isDowngrading"></i>
-            {{ isDowngrading ? 'Processing...' : 'Downgrade' }}
+            {{ isDowngrading ? 'Processing…' : 'Downgrade' }}
           </button>
         </div>
       </div>

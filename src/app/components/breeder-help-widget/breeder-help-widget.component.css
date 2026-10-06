@@ -7,7 +7,9 @@
   border-radius: 8px;
   color: rgba(255,255,255,0.92);
   font-size: 0.8125rem; font-weight: 500;
-  cursor: pointer; transition: all 0.15s ease;
+  cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
   position: relative; white-space: nowrap;
 }
 .guide-trigger:hover { background: rgba(255,255,255,0.18); color: #fff; }
@@ -42,9 +44,11 @@
 .guide-title { font-size: 0.9375rem; font-weight: 600; color: #1a1a2e; margin: 0; }
 .guide-header-actions { display: flex; align-items: center; gap: 0.25rem; align-self: center; }
 .guide-icon-btn {
-  background: none; border: none; color: #9ca3af; cursor: pointer;
+  background: none; border: none; color: #6b7280; cursor: pointer;
   padding: 4px 6px; border-radius: 6px; font-size: 0.875rem;
-  transition: all 0.15s ease; display: flex; align-items: center;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease; display: flex; align-items: center;
   justify-content: center; line-height: 1;
 }
 .guide-icon-btn:hover { color: #4b5563; background: #f3f4f6; }
@@ -80,17 +84,19 @@
 .step-indicator {
   width: 22px; height: 22px; min-width: 22px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid #d1d5db; transition: all 0.25s ease;
+  border: 2px solid #d1d5db; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
 }
 .step-indicator.done {
-  background: var(--primary-color, #FF6B6B);
+  background: var(--primary-strong);
   border-color: var(--primary-color, #FF6B6B);
   color: #fff; font-size: 0.75rem;
 }
 .step-dot { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; }
 .step-label { flex: 1; font-size: 0.875rem; font-weight: 500; color: #374151; }
-.completed-label { color: #9ca3af; text-decoration: line-through; text-decoration-color: #d1d5db; }
-.step-chevron { font-size: 0.75rem; color: #9ca3af; transition: transform 0.15s ease; }
+.completed-label { color: #6b7280; text-decoration: line-through; text-decoration-color: #d1d5db; }
+.step-chevron { font-size: 0.75rem; color: #6b7280; transition: transform 0.15s ease; }
 .guide-step.active .step-chevron { transform: rotate(90deg); }
 
 .step-inline-form { padding: 0 0.75rem 0.75rem 2.75rem; animation: formSlideIn 0.2s ease-out; }
@@ -101,7 +107,7 @@
 .inline-hint { font-size: 0.8125rem; color: #6b7280; margin: 0 0 0.75rem; line-height: 1.5; }
 .inline-field { margin-bottom: 0.625rem; }
 .inline-field label { display: block; font-size: 0.75rem; font-weight: 500; color: #4b5563; margin-bottom: 0.25rem; }
-.inline-field .optional { font-weight: 400; color: #9ca3af; }
+.inline-field .optional { font-weight: 400; color: #6b7280; }
 .inline-field input,
 .inline-field textarea,
 .inline-field select {
@@ -123,13 +129,17 @@
 .btn-inline-cancel {
   padding: 0.4375rem 0.875rem; font-size: 0.8125rem; font-weight: 500;
   color: #6b7280; background: #fff; border: 1px solid #d1d5db;
-  border-radius: 8px; cursor: pointer; transition: all 0.15s ease; font-family: inherit;
+  border-radius: 8px; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
+  transition-timing-function: ease; font-family: inherit;
 }
 .btn-inline-cancel:hover { background: #f9fafb; color: #374151; }
 .btn-inline-save {
   padding: 0.4375rem 1rem; font-size: 0.8125rem; font-weight: 600;
-  color: #fff; background: var(--primary-color, #FF6B6B); border: none;
-  border-radius: 8px; cursor: pointer; transition: all 0.15s ease; font-family: inherit;
+  color: #fff; background: var(--primary-strong); border: none;
+  border-radius: 8px; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: ease; font-family: inherit;
 }
 .btn-inline-save:hover:not(:disabled) { filter: brightness(0.95); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(255,107,107,0.3); }
 .btn-inline-save:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -141,8 +151,10 @@
 .btn-complete-guide {
   display: block; width: 100%; margin-top: 0.5rem;
   padding: 0.5rem 1rem; font-size: 0.8125rem; font-weight: 600;
-  color: #fff; background: var(--primary-color, #FF6B6B); border: none;
-  border-radius: 8px; cursor: pointer; transition: all 0.15s ease;
+  color: #fff; background: var(--primary-strong); border: none;
+  border-radius: 8px; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform, filter;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
   font-family: inherit; text-align: center;
 }
 .btn-complete-guide:hover { filter: brightness(0.95); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(255,107,107,0.3); }

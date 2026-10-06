@@ -112,7 +112,7 @@
           </div>
           <div *ngIf="isParsing">
             <i class="bi bi-hourglass-split drop-icon animate-spin"></i>
-            <p class="drop-text">Parsing file...</p>
+            <p class="drop-text">Parsing file…</p>
           </div>
         </div>
 
@@ -266,7 +266,7 @@
           (click)="startImport()"
         >
           <i class="bi" [ngClass]="isImporting ? 'bi-hourglass-split' : 'bi-upload'"></i>
-          {{ isImporting ? 'Importing...' : 'Import ' + importableRowCount + (importableRowCount === 1 ? ' pet' : ' pets') }}
+          {{ isImporting ? 'Importing…' : 'Import ' + importableRowCount + (importableRowCount === 1 ? ' pet' : ' pets') }}
         </button>
       </ng-container>
 

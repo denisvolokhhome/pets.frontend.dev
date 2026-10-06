@@ -69,8 +69,8 @@ export class PetAssignmentComponent implements OnInit {
               console.log('Available adult pets count:', this.availablePets.length);
               
               if (this.availablePets.length === 0 && pets.length > 0) {
-                this.locationError = 'No adult pets available. All your pets are marked as puppies. Only adult pets can be assigned as parents. You can edit a pet and uncheck "Is Puppy" to mark it as an adult.';
-                this.toastr.warning('All your pets are marked as puppies. Edit a pet and uncheck "Is Puppy" to mark it as an adult.', 'No Adult Pets');
+                this.locationError = 'No adult pets available. All your pets are marked as young animals, and only adult pets can be assigned as parents.';
+                this.toastr.warning('All your pets are marked as young animals. Only adult pets can be assigned as parents.', 'No Adult Pets');
               } else if (pets.length === 0) {
                 this.locationError = 'No pets found. Please add adult pets first.';
                 this.toastr.warning('No pets found. Please add adult pets first.', 'Warning');

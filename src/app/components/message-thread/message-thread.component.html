@@ -12,7 +12,7 @@
       />
       <div *ngIf="!offspringContext.primary_image_url" 
            class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-        <i class="pi pi-image text-gray-400 text-xl"></i>
+        <i class="pi pi-image text-gray-500 text-xl"></i>
       </div>
       
       <div class="flex-1 min-w-0">
@@ -131,7 +131,7 @@
       </div>
       
       <!-- Empty state at the "top" (which appears at bottom due to flex-col-reverse) -->
-      <div *ngIf="!isLoading && messages.length === 0" class="flex flex-col items-center justify-center py-8 text-gray-400">
+      <div *ngIf="!isLoading && messages.length === 0" class="flex flex-col items-center justify-center py-8 text-gray-500">
         <i class="pi pi-comments text-5xl mb-3"></i>
         <p class="text-sm">No messages yet. Start the conversation!</p>
       </div>
@@ -139,7 +139,7 @@
 
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex-1 flex items-center justify-center bg-gray-50">
-      <i class="pi pi-spin pi-spinner text-3xl text-gray-400"></i>
+      <i class="pi pi-spin pi-spinner text-3xl text-gray-500"></i>
     </div>
 
     <!-- Reply Input (Fixed at bottom) -->
@@ -260,7 +260,7 @@
         />
         <div *ngIf="!offspringContext.primary_image_url" 
              class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-          <i class="pi pi-image text-gray-400 text-5xl"></i>
+          <i class="pi pi-image text-gray-500 text-5xl"></i>
         </div>
       </div>
       

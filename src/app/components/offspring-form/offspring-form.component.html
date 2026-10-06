@@ -186,7 +186,7 @@
             chooseIcon="pi pi-upload">
             <ng-template pTemplate="content">
               <div class="text-center py-4" *ngIf="uploadedImages.length === 0">
-                <i class="pi pi-cloud-upload text-4xl text-gray-400"></i>
+                <i class="pi pi-cloud-upload text-4xl text-gray-500"></i>
                 <p class="text-gray-500 mt-2">Drag and drop images here or click to browse</p>
               </div>
             </ng-template>
@@ -287,7 +287,7 @@
     <!-- Loading State -->
     <div class="card text-center py-8" *ngIf="isLoading">
       <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
-      <p class="mt-4 text-gray-600">Loading offspring...</p>
+      <p class="mt-4 text-gray-600">Loading offspring…</p>
     </div>
   </div>
 </div>

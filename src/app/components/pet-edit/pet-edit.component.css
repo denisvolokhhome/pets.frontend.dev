@@ -70,7 +70,7 @@
 
 .info-value i {
   font-size: 1rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   flex-shrink: 0;
 }
 
@@ -149,7 +149,7 @@
 }
 
 .column-heading--red i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 /* Photo Grid */
@@ -173,6 +173,7 @@
   background: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   color: var(--text-secondary);
 }
 
@@ -187,7 +188,7 @@
 
 .photo-upload-tile:hover {
   border-color: var(--primary-color);
-  color: var(--primary-color);
+  color: var(--primary-strong);
   background: #FEF2F2;
 }
 
@@ -257,7 +258,8 @@
   cursor: pointer !important;
   padding: 0 !important;
   margin: 0 !important;
-  transition: all 0.2s !important;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform !important;
+  transition-duration: 0.2s !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
   flex-shrink: 0 !important;
 }
@@ -319,7 +321,7 @@
 }
 
 .section-label i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 /* Modern Image Upload */
@@ -345,6 +347,7 @@
   justify-content: center;
   overflow: hidden;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   cursor: pointer;
 }
 
@@ -397,7 +400,7 @@
 
 .upload-placeholder i {
   font-size: 48px;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   opacity: 0.6;
 }
 
@@ -427,6 +430,7 @@
   gap: 0.5rem;
   opacity: 0;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   cursor: pointer;
   color: white;
 }
@@ -467,6 +471,7 @@
   border-radius: 8px;
   font-size: 0.875rem;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   background-color: #F9FAFB;
   color: var(--dark-color);
   box-sizing: border-box;
@@ -524,6 +529,7 @@ textarea.form-control-modern {
   background-color: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .gender-option:hover {
@@ -540,10 +546,11 @@ textarea.form-control-modern {
   font-size: 28px;
   color: var(--text-secondary);
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .gender-option.selected i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
 }
 
 .gender-option span {
@@ -570,6 +577,7 @@ textarea.form-control-modern {
   background-color: #F9FAFB;
   cursor: pointer;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
 }
 
@@ -591,6 +599,7 @@ textarea.form-control-modern {
   border-radius: 4px;
   background-color: white;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
   flex-shrink: 0;
 }
@@ -733,7 +742,9 @@ textarea.form-control-modern {
 .autocomplete-item {
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, padding-left;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
   font-size: 0.9375rem;
   color: var(--dark-color);
   border-bottom: 1px solid #f3f4f6;
@@ -745,7 +756,7 @@ textarea.form-control-modern {
 
 .autocomplete-item:hover {
   background: linear-gradient(90deg, rgba(255, 107, 107, 0.08) 0%, rgba(78, 205, 196, 0.08) 100%);
-  color: var(--primary-color);
+  color: var(--primary-strong);
   padding-left: 1.25rem;
 }
 

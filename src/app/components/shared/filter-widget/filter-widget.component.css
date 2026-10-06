@@ -1,3 +1,12 @@
+/* Below 1800px the sidebar is a fixed slide-in panel (or hidden), so the host
+   would be an empty flex item that still takes the parent's `gap`, shifting the
+   page content right. `contents` removes the host box from the layout. */
+@media (max-width: 1799px) {
+  :host {
+    display: contents;
+  }
+}
+
 /* Filter Sidebar Styles */
 .filters-sidebar {
   width: 280px;
@@ -41,7 +50,8 @@
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   font-size: 18px;
 }
 
@@ -90,7 +100,8 @@
   color: #374151;
   background: white;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
 }
 
 .filter-select:hover:not(:disabled) {
@@ -124,7 +135,8 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,7 +178,8 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
   display: flex;
   align-items: center;
   gap: 8px;

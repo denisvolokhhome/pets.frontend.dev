@@ -63,7 +63,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   font-size: 1.5rem;
   flex-shrink: 0;
@@ -109,7 +111,7 @@
 }
 
 .filters-title i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-size: 1.125rem;
 }
 
@@ -121,7 +123,9 @@
   border-radius: 6px;
   font-size: 1.125rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +172,7 @@
 }
 
 .filter-label i {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-size: 0.9375rem;
 }
 
@@ -180,7 +184,9 @@
   background: white;
   color: var(--dark-color);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 .filter-select:hover:not(:disabled) {
@@ -328,7 +334,7 @@
 }
 
 .text-muted {
-  color: #9ca3af;
+  color: #6b7280;
   font-style: italic;
 }
 
@@ -377,7 +383,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.2s;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
 }
 
 .btn-primary:hover {
@@ -521,7 +528,9 @@
 
 /* Smooth Transitions */
 .breedings-table tbody tr {
-  transition: all 0.2s ease-in-out;
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
 }
 
 /* Focus States for Accessibility */
@@ -610,7 +619,7 @@
   }
   .mobile-bar__search-icon {
     position: absolute; left: 0.75rem; top: 50%;
-    transform: translateY(-50%); color: #9ca3af;
+    transform: translateY(-50%); color: #6b7280;
     font-size: 0.875rem; pointer-events: none;
   }
   .mobile-bar__input {
@@ -632,9 +641,9 @@
     position: relative; transition: background 0.2s;
   }
   .mobile-icon-btn:hover { background: #e5e7eb; }
-  .mobile-icon-btn.has-filters { background: var(--primary-color); color: white; }
-  .mobile-icon-btn--primary { background: var(--secondary-color); color: white; }
-  .mobile-icon-btn--primary:hover { background: #3aafa9; }
+  .mobile-icon-btn.has-filters { background: var(--primary-strong); color: white; }
+  .mobile-icon-btn--primary { background: var(--secondary-strong); color: white; }
+  .mobile-icon-btn--primary:hover { background: var(--secondary-strong-hover); }
 
   .filter-dot {
     position: absolute; top: 6px; right: 6px;
@@ -695,10 +704,11 @@
 .drawer-pill {
   padding: 0.4375rem 0.875rem; border: 1.5px solid #d1d5db;
   border-radius: 20px; background: white; cursor: pointer;
-  font-size: 0.875rem; font-weight: 500; min-height: 38px; transition: all 0.15s;
+  font-size: 0.875rem; font-weight: 500; min-height: 38px; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 0.15s;
 }
 .drawer-pill:hover { border-color: var(--primary-color); }
-.drawer-pill.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+.drawer-pill.active { background: var(--primary-strong); color: white; border-color: var(--primary-color); }
 
 .drawer-footer {
   display: flex; gap: 0.75rem; padding: 1rem 1.25rem;
@@ -711,12 +721,12 @@
 }
 .drawer-apply-btn {
   flex: 2; padding: 0.6875rem 1rem; border: none;
-  border-radius: 10px; background: var(--secondary-color); color: white;
+  border-radius: 10px; background: var(--secondary-strong); color: white;
   font-size: 0.9375rem; font-weight: 600; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   min-height: 46px;
 }
-.drawer-apply-btn:hover { background: #3aafa9; }
+.drawer-apply-btn:hover { background: var(--secondary-strong-hover); }
 
 @media (max-width: 768px) {
   .mobile-filter-backdrop { display: block; pointer-events: none; }

@@ -81,7 +81,7 @@
 
 .info-box i {
   font-size: 1.25rem;
-  color: var(--primary-color);
+  color: var(--primary-strong);
   flex-shrink: 0;
 }
 
@@ -121,6 +121,7 @@
   border-radius: calc(var(--border-radius) * 0.75);
   font-size: 1rem;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   background-color: #F9FAFB;
 }
 
@@ -157,6 +158,7 @@
   font-size: 1rem;
   border-radius: calc(var(--border-radius) * 0.75);
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
@@ -185,14 +187,15 @@
 }
 
 .auth-link {
-  color: var(--primary-color);
+  color: var(--primary-strong);
   font-weight: 600;
   text-decoration: none;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .auth-link:hover {
-  color: var(--secondary-color);
+  color: var(--secondary-strong);
   text-decoration: underline;
 }
 
@@ -266,6 +269,7 @@
   font-weight: 600;
   text-decoration: underline;
   transition: var(--transition);
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
 }
 
 .alert-link:hover {

@@ -16,7 +16,7 @@
   <div class="mobile-bar">
     <div class="mobile-bar__search">
       <i class="bi bi-search mobile-bar__search-icon"></i>
-      <input type="text" class="mobile-bar__input" placeholder="Search offsprings..."
+      <input type="text" class="mobile-bar__input" placeholder="Search offsprings…"
         [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange($event)" aria-label="Search offsprings"/>
     </div>
     <button class="mobile-icon-btn" [class.has-filters]="hasActiveFilters()"
@@ -105,7 +105,7 @@
             <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
           </svg>
         </div>
-        <p>Loading offsprings...</p>
+        <p>Loading offsprings…</p>
       </div>
 
       <p-table 
@@ -164,10 +164,10 @@
             </td>
             <td>
               <ng-container *ngIf="offspring.mother || offspring.father; else noParents">
-                <span class="ui-truncate ui-truncate--sm" [title]="getMotherName(offspring) + ' × ' + getFatherName(offspring)">
-                  <button *ngIf="offspring.mother" type="button" class="ui-link font-medium" (click)="navigateToPet(offspring.mother.id)">{{ getMotherName(offspring) }}</button>
-                  <span *ngIf="offspring.mother && offspring.father" class="ui-muted"> × </span>
-                  <button *ngIf="offspring.father" type="button" class="ui-link font-medium" (click)="navigateToPet(offspring.father.id)">{{ getFatherName(offspring) }}</button>
+                <span class="parents-cell" [title]="getMotherName(offspring) + ' × ' + getFatherName(offspring)">
+                  <button *ngIf="offspring.mother" type="button" class="ui-link ui-truncate font-medium" (click)="navigateToPet(offspring.mother.id)">{{ getMotherName(offspring) }}</button>
+                  <span *ngIf="offspring.mother && offspring.father" class="ui-muted" aria-hidden="true">×</span>
+                  <button *ngIf="offspring.father" type="button" class="ui-link ui-truncate font-medium" (click)="navigateToPet(offspring.father.id)">{{ getFatherName(offspring) }}</button>
                 </span>
               </ng-container>
               <ng-template #noParents><span class="ui-muted">—</span></ng-template>

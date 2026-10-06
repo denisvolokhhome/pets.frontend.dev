@@ -37,7 +37,7 @@
     gap: 2px;
     padding: 0.5rem 0.25rem;
     text-decoration: none;
-    color: #9ca3af;
+    color: #6b7280;
     font-size: 0.625rem;
     font-weight: 500;
     min-height: 56px;
@@ -55,10 +55,10 @@
   }
 
   .mobile-nav-item.active {
-    color: var(--primary-color, #FF6B6B);
+    color: var(--primary-strong);
   }
 
   .mobile-nav-item:hover {
-    color: var(--primary-color, #FF6B6B);
+    color: var(--primary-strong);
   }
 }

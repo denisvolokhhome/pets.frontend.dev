@@ -60,7 +60,7 @@
           [disabled]="isLoading || preferencesForm.invalid">
           <i class="bi bi-check-circle" *ngIf="!isLoading"></i>
           <i class="bi bi-arrow-repeat spin" *ngIf="isLoading"></i>
-          {{ isLoading ? 'Saving...' : 'Save Preferences' }}
+          {{ isLoading ? 'Saving…' : 'Save Preferences' }}
         </button>
 
         <div class="save-feedback" *ngIf="saveSuccess">

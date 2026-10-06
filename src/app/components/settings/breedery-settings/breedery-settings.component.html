@@ -5,7 +5,7 @@
   </div>
 
   <div *ngIf="isLoading" class="loading-spinner">
-    <p>Loading...</p>
+    <p>Loading…</p>
   </div>
 
   <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" *ngIf="!isLoading">
@@ -82,7 +82,7 @@
           id="breedery_description"
           formControlName="breedery_description"
           rows="4"
-          placeholder="Tell visitors about your breedery, breeding philosophy, and experience..."
+          placeholder="Tell visitors about your breedery, breeding philosophy, and experience…"
         ></textarea>
       </div>
     </div>
@@ -105,6 +105,7 @@
           [ngModelOptions]="{standalone: true}"
           (keydown.enter)="$event.preventDefault(); addTag()"
           placeholder="Type a tag and press Enter"
+          aria-label="New search tag"
         />
         <button type="button" (click)="addTag()" class="ui-btn ui-btn--secondary">
           <i class="bi bi-plus-lg"></i>
@@ -115,7 +116,7 @@
       <div class="tags-display" *ngIf="tags.length > 0">
         <span *ngFor="let tag of tags; let i = index" class="tag-badge">
           {{ tag }}
-          <button type="button" (click)="removeTag(i)" class="tag-remove">
+          <button type="button" (click)="removeTag(i)" class="tag-remove" [attr.aria-label]="'Remove tag ' + tag">
             <i class="bi bi-x"></i>
           </button>
         </span>
@@ -135,7 +136,7 @@
         class="ui-btn ui-btn--primary"
       >
         <i class="bi bi-check-lg"></i>
-        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        {{ isLoading ? 'Saving…' : 'Save Changes' }}
       </button>
     </div>
   </form>
