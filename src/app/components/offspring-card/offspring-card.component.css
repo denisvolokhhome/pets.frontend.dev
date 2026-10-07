@@ -31,31 +31,40 @@
 }
 
 /* Status Badge */
+/* Soft white pill over the photo (Airbnb-style), status shown by text colour + dot */
 .status-badge {
   position: absolute;
   top: 12px;
   left: 12px;
-  padding: 4px 12px;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   font-size: 12px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+}
+
+.status-badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: currentColor;
 }
 
 .status-available {
-  background-color: #047857;
-  color: white;
+  color: #1f7a55;
 }
 
 .status-reserved {
-  background-color: #b45309;
-  color: white;
+  color: #a65a12;
 }
 
 .status-sold {
-  background-color: #6b7280;
-  color: white;
+  color: #4b5563;
 }
 
 /* Favorite Button */
@@ -173,8 +182,8 @@
 .contact-btn {
   width: 100%;
   padding: 10px 16px;
-  background-color: var(--primary-strong);
-  color: white;
+  background-color: #fdeeeb;
+  color: #b4473d;
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -188,11 +197,11 @@
 }
 
 .contact-btn:hover {
-  background-color: var(--primary-strong-hover);
+  background-color: #fadcd6;
 }
 
 .contact-btn:active {
-  background-color: var(--primary-strong-hover);
+  background-color: #f7cdc5;
 }
 
 .contact-btn i {
@@ -201,15 +210,16 @@
 
 /* Conversation Button Variant (for existing threads) */
 .contact-btn-conversation {
-  background-color: #0369a1;
+  background-color: #e5f4f2;
+  color: #22736d;
 }
 
 .contact-btn-conversation:hover {
-  background-color: #075985;
+  background-color: #d2ece8;
 }
 
 .contact-btn-conversation:active {
-  background-color: #075985;
+  background-color: #c2e4df;
 }
 
 /* Responsive adjustments */
@@ -228,5 +238,103 @@
 
   .price {
     font-size: 18px;
+  }
+}
+
+/* Phones: horizontal card — photo left, details right. Listing grids switch to
+   a single column at the same breakpoint, so a stacked 380px-tall card per
+   offspring would otherwise fill the whole screen. */
+@media (max-width: 576px) {
+  .offspring-card {
+    flex-direction: row;
+  }
+
+  .offspring-card:hover {
+    transform: none;
+  }
+
+  .card-image-container {
+    flex-shrink: 0;
+    width: 7.5rem;
+    height: auto;
+    min-height: 8.5rem;
+  }
+
+  .card-image {
+    position: absolute;
+    inset: 0;
+  }
+
+  .status-badge {
+    top: auto;
+    bottom: 8px;
+    left: 8px;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .status-badge::before {
+    width: 6px;
+    height: 6px;
+  }
+
+  .favorite-btn {
+    top: 6px;
+    right: 6px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .favorite-btn i {
+    font-size: 15px;
+  }
+
+  .card-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name price'
+      'info info'
+      'action action';
+    align-content: start;
+    column-gap: 8px;
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .offspring-name {
+    grid-area: name;
+    margin: 0 0 6px;
+  }
+
+  .price-container {
+    grid-area: price;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+  }
+
+  .price {
+    font-size: 16px;
+  }
+
+  .info-grid {
+    grid-area: info;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2px 12px;
+    margin-bottom: 10px;
+  }
+
+  .info-item {
+    gap: 4px;
+  }
+
+  .contact-btn {
+    grid-area: action;
+    align-self: end;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 }

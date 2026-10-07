@@ -290,11 +290,15 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Phones: single column of horizontal offspring cards */
+@media (max-width: 576px) {
   .offspring-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
+}
 
+@media (max-width: 480px) {
   .page-title {
     font-size: 20px;
   }
@@ -319,7 +323,7 @@
     padding: 0.5rem 0.75rem; background: white;
     border-bottom: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    position: sticky; top: 0; z-index: 100;
+    position: sticky; top: var(--mobile-navbar-h, 0); z-index: 100;
     margin-bottom: 0.875rem;
   }
   .mobile-bar__search { flex: 1; position: relative; min-width: 0; }

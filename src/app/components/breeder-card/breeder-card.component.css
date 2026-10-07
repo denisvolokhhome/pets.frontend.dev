@@ -178,22 +178,42 @@
 /* Mobile: larger touch targets */
 @media (max-width: 768px) {
   .breeder-card {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .breeder-card__image {
-    width: 72px;
-    height: 72px;
+    width: 60px;
+    height: 60px;
   }
 
   .breeder-card__name {
     font-size: 1rem;
   }
 
+  .breeder-card__meta {
+    flex-wrap: wrap;
+    gap: 0.125rem 0.75rem;
+  }
+
+  .breeder-card__approx {
+    white-space: nowrap;
+  }
+
+  /* Keep all actions on one row: equal-width buttons across the content column */
+  .breeder-card__actions {
+    flex-wrap: nowrap;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+  }
+
   .breeder-card__link {
-    font-size: 0.875rem;
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
     min-height: 40px;
-    padding: 0.5rem 0.875rem;
+    padding: 0.5rem 0.375rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
   }
 }
 

@@ -5,7 +5,7 @@
   gap: 1.5rem;
   min-height: calc(100vh - 200px);
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip; /* not hidden: that breaks the sticky mobile bar */
   position: relative;
 }
 
@@ -707,7 +707,7 @@
     border-bottom: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     position: sticky;
-    top: 0;
+    top: var(--mobile-navbar-h, 0);
     z-index: 100;
   }
 
@@ -766,16 +766,28 @@
     background: #ef4444; border-radius: 50%; border: 1.5px solid white;
   }
 
-  /* Pets layout: no sidebar gap */
-  .pets-layout {
-    flex-direction: column;
+  .pets-container {
     gap: 0;
   }
 
-  /* Pet cards: 2-col grid */
+  /* Pets layout: no sidebar gap, page gutter around the list */
+  .pets-layout {
+    flex-direction: column;
+    gap: 0;
+    padding: 0.75rem;
+  }
+
+  /* Pet cards: single column of horizontal cards */
+  .pets-content .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.625rem !important;
+  }
+}
+
+/* Large phones / small tablets: two columns of horizontal cards */
+@media (min-width: 577px) and (max-width: 768px) {
   .pets-content .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0.75rem !important;
   }
 }
 

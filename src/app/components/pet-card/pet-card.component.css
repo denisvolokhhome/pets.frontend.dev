@@ -138,3 +138,65 @@
   gap: 0.375rem;
   margin-top: 0.625rem;
 }
+
+/* Mobile: horizontal card — thumbnail left, details right, actions as a row
+   under the details (the overlay toolbar doesn't fit on a narrow thumbnail). */
+@media (max-width: 768px) {
+  .pet-card {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+  }
+
+  .pet-card:hover {
+    transform: none;
+  }
+
+  .pet-card__media {
+    display: contents;
+  }
+
+  .pet-card__photo {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    height: auto;
+    min-height: 7.5rem;
+  }
+
+  .pet-card__photo--empty {
+    font-size: 1.75rem;
+  }
+
+  .pet-card__flag {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  .pet-card__body {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 0.125rem;
+    padding: 0.75rem 0.875rem 0.25rem;
+  }
+
+  .pet-card__description {
+    margin-top: 0.25rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .pet-card__health {
+    margin-top: 0.375rem;
+  }
+
+  .pet-card__actions {
+    position: static;
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: flex-end;
+    padding: 0 0.375rem 0.375rem;
+    background: none;
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+  }
+}

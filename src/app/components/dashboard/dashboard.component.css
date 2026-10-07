@@ -308,8 +308,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  border: 2px solid var(--primary-color, #FF6B6B);
-  color: var(--primary-strong);
+  border: 1px solid #f3d6d0;
+  color: #b4473d;
   border-radius: 10px;
   background: white;
   cursor: pointer;
@@ -322,8 +322,8 @@
 }
 
 .action-btn:hover {
-  background: var(--primary-strong);
-  color: white;
+  background: #fdeeeb;
+  border-color: #f0bfb6;
 }
 
 /* ── Mobile overrides ── */
@@ -371,6 +371,12 @@
   .actions-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
+  }
+
+  /* Two-tile variants (pet seeker / service provider) still fill the row */
+  .stats-grid--2col,
+  .actions-grid--2col {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   /* Remove the odd-span rule */

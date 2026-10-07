@@ -207,5 +207,54 @@
   .plans-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
+    gap: 1rem;
+  }
+
+  /* Compact card: plan name and price on one row, limits left-aligned below */
+  .plan-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name price'
+      'limits limits'
+      'action action';
+    align-items: baseline;
+    padding: 1.25rem;
+    text-align: left;
+  }
+
+  .plan-card:hover {
+    transform: none;
+  }
+
+  /* Decorative; on a phone it doubled the Free card's height */
+  .plan-card-illustration {
+    display: none;
+  }
+
+  .plan-card-name {
+    grid-area: name;
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .plan-card-price {
+    grid-area: price;
+    margin: 0;
+    font-size: 1.375rem;
+  }
+
+  .plan-card-limits {
+    grid-area: limits;
+    margin: 0.75rem 0 1rem;
+  }
+
+  .plan-card-limits li {
+    justify-content: flex-start;
+    padding: 0.25rem 0;
+  }
+
+  .btn-get-started {
+    grid-area: action;
   }
 }

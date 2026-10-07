@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { GuestPromptModalComponent } from '../guest-prompt-modal/guest-prompt-modal.component';
 import { OffspringEditComponent } from '../offspring-edit/offspring-edit.component';
 import { OffspringDocumentsComponent } from '../offspring-documents/offspring-documents.component';
+import { OffspringCardComponent } from '../offspring-card/offspring-card.component';
 import { GenealogyService } from 'src/app/services/genealogy.service';
 import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../application-form-modal/application-form-modal.component';
 import { environment } from 'src/environments/environment';
@@ -22,7 +23,7 @@ import { ConfirmService } from 'src/app/services/confirm.service';
   selector: 'app-offspring-detail',
   templateUrl: './offspring-detail.component.html',
   styleUrls: ['./offspring-detail.component.css'],
-  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent]
+  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent, OffspringCardComponent]
 })
 export class OffspringDetailComponent implements OnInit {
   readonly apiHost = environment.API_HOST;

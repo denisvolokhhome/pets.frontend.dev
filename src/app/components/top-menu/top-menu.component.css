@@ -1,3 +1,18 @@
+/* Mobile: full-width navbar pinned to the top (no floating margins/corners) */
+@media (max-width: 768px) {
+  :host {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+  }
+
+  .top-menu {
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
 /* Profile menu positioning in navbar */
 app-profile-menu {
   display: flex;

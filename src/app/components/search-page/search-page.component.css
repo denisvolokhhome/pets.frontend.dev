@@ -593,14 +593,14 @@
 
   .map-panel {
     flex: none;
-    height: calc(100vh - 80px - 56px - 48px); /* viewport - navbar - mobile-bar - tabs */
+    height: calc(100vh - var(--mobile-navbar-h, 80px) - 56px - 48px); /* viewport - navbar - mobile-bar - tabs */
     min-height: 300px;
   }
 
   .results-panel {
     width: 100%;
     flex: none;
-    height: calc(100vh - 80px - 56px - 48px);
+    height: calc(100vh - var(--mobile-navbar-h, 80px) - 56px - 48px);
     border-left: none;
     border-top: 1px solid #e5e7eb;
     overflow-y: auto;

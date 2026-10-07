@@ -201,9 +201,22 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  /* Two compact columns of label/value pairs instead of one tall stack */
   .info-grid,
   .lineage-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 0.75rem;
+  }
+
+  .info-label {
+    margin-bottom: 0.125rem;
+    font-size: 0.8125rem;
+  }
+
+  .info-value {
+    margin: 0;
+    font-size: 0.9375rem;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -275,9 +288,10 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .related-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 }
 

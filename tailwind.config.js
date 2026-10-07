@@ -10,9 +10,9 @@ module.exports = {
         'primary-dark': '#E85555',
         secondary: '#4ECDC4',
         'secondary-dark': '#3DBDB4',
-        // Text-safe variants (WCAG AA with white) — see --primary-strong in styles.css
-        'primary-strong': '#D93A3A',
-        'secondary-strong': '#247F79',
+        // Deeper brand variants for text/fills — keep in sync with --primary-strong in styles.css
+        'primary-strong': '#DE6458',
+        'secondary-strong': '#2E9A92',
       },
       fontFamily: {
         heading: ['Poppins', 'sans-serif'],

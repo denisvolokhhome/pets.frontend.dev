@@ -202,24 +202,36 @@ input:disabled + .slider {
 
 /* Responsive */
 @media (max-width: 768px) {
+  /* The settings shell already provides the page gutter — match the other tabs */
   .notification-settings-container {
-    padding: 1rem;
+    padding: 0;
+  }
+
+  .settings-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .settings-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
   }
 
   .settings-content {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
+  /* Text left, switch right — the stacked layout put each switch on its own row */
   .preference-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    gap: 0.75rem;
+    padding: 1rem;
   }
 
   .preference-toggle {
+    flex-shrink: 0;
     margin-left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
   }
 }
