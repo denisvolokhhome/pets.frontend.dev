@@ -1,0 +1,352 @@
+.planner-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 2rem;
+}
+
+.planner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.planner-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.planner-title {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0;
+}
+
+.planner-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.planner-loading,
+.planner-empty p {
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+
+.planner-empty {
+  padding: 1rem;
+  border: 1px dashed var(--ui-border-strong);
+  border-radius: var(--ui-radius);
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.planner-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ui-danger);
+}
+
+.due-headline {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  background: var(--ui-surface-muted);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+  margin-bottom: 1.5rem;
+}
+
+.due-headline > i {
+  font-size: 1.5rem;
+  color: var(--ui-primary-hover);
+  line-height: 1;
+}
+
+.due-main {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.due-window {
+  font-weight: 400;
+  color: var(--ui-text-muted);
+  font-size: 0.95rem;
+}
+
+.due-sub {
+  color: var(--ui-text-muted);
+  font-size: 0.875rem;
+  margin-top: 0.125rem;
+}
+
+.planner-section {
+  margin-bottom: 1.5rem;
+}
+
+.planner-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.planner-section-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ui-text);
+  margin: 0;
+}
+
+.col-actions {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.notes-cell {
+  max-width: 16rem;
+  display: inline-block;
+}
+
+.ovulation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.ovulation-field label,
+.progesterone-list label,
+.planner-modal-body label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ui-text);
+  margin-bottom: 0.375rem;
+}
+
+.inline-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.planner-input {
+  min-height: 44px;
+  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--ui-radius);
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
+.planner-input:focus {
+  outline: none;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.value-input {
+  width: 7rem;
+}
+
+.field-hint {
+  font-size: 0.8125rem;
+  color: var(--ui-text-muted);
+  margin: 0.375rem 0 0;
+}
+
+.progesterone-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem;
+}
+
+.progesterone-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.125rem 0;
+  font-size: 0.9375rem;
+}
+
+.progesterone-list li span {
+  color: var(--ui-text-muted);
+  min-width: 7rem;
+}
+
+.milestone-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius);
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.milestone:last-child {
+  border-bottom: none;
+}
+
+.milestone-check {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 42px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.milestone-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ui-primary-hover);
+  cursor: pointer;
+}
+
+.milestone-date {
+  color: var(--ui-text-muted);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.milestone.is-done .milestone-title {
+  text-decoration: line-through;
+  color: var(--ui-text-subtle);
+}
+
+.milestone.is-overdue .milestone-title,
+.milestone.is-overdue .milestone-date {
+  color: var(--ui-danger);
+}
+
+.milestone-form {
+  margin-top: 0.75rem;
+}
+
+.milestone-form input[type="text"] {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.planner-disclaimer {
+  font-size: 0.8125rem;
+  color: var(--ui-text-muted);
+  margin: 0;
+}
+
+/* Mating modal — overlays must sit above the navbar (z-index budget ≥1300) */
+.planner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
+  padding: 1rem;
+}
+
+.planner-modal {
+  background: var(--ui-surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.planner-modal-header,
+.planner-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+}
+
+.planner-modal-header {
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.planner-modal-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.planner-modal-footer {
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid var(--ui-border);
+}
+
+.planner-modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.planner-modal-body .planner-input {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (max-width: 768px) {
+  .planner-card {
+    padding: 1.5rem;
+  }
+
+  .ovulation-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Bottom sheet on phones */
+@media (max-width: 640px) {
+  .planner-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .planner-modal {
+    max-width: none;
+    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+  }
+
+  .planner-modal-footer .ui-btn {
+    flex: 1;
+  }
+}

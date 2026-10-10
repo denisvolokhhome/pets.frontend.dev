@@ -67,6 +67,13 @@
     </div>
   </div>
 
+  <!-- Pregnancy planner -->
+  <app-breeding-planner
+    [breedingId]="breeding.id"
+    [parentPets]="breeding.parent_pets || []"
+    [voided]="breeding.status === 'Voided'">
+  </app-breeding-planner>
+
   <!-- Offspring Section -->
   <div class="section-card">
     <div class="section-header">

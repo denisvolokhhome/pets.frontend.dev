@@ -1,0 +1,220 @@
+<div class="planner-card">
+  <div class="planner-header">
+    <div class="planner-heading">
+      <h2 class="planner-title">Pregnancy planner</h2>
+      <span *ngIf="planner" [class]="badgeClass(planner.stage)">{{ planner.stage }}</span>
+    </div>
+    <div class="planner-actions" *ngIf="planner">
+      <button
+        *ngFor="let target of planner.allowed_stage_targets"
+        type="button"
+        class="ui-btn ui-btn--secondary ui-btn--sm"
+        [disabled]="voided || isSaving"
+        (click)="setStage(target)">
+        {{ stageActionLabel(target) }}
+      </button>
+    </div>
+  </div>
+
+  <p class="planner-loading" *ngIf="isLoading">Loading planner…</p>
+
+  <div class="planner-error" *ngIf="loadFailed">
+    <span>Couldn't load the planner.</span>
+    <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="load()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="planner && !isLoading">
+    <!-- Due date headline -->
+    <div class="due-headline" *ngIf="planner.due_date">
+      <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+      <div>
+        <div class="due-main">
+          Due {{ formatDate(planner.due_date) }}
+          <span class="due-window">({{ formatDate(planner.due_window_start) }} – {{ formatDate(planner.due_window_end) }})</span>
+        </div>
+        <div class="due-sub">
+          <span *ngIf="showGestation">day {{ planner.gestation_day }} · </span>
+          counted from {{ planner.anchored_on_ovulation ? 'ovulation' : 'first mating' }} on {{ formatDate(planner.anchor_date) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="planner-empty" *ngIf="!hasMatings">
+      <p>Log a mating to get a due date and reminders.</p>
+    </div>
+
+    <!-- Matings -->
+    <section class="planner-section">
+      <div class="planner-section-header">
+        <h3>Matings</h3>
+        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" [disabled]="voided || isSaving" (click)="openMatingForm()">
+          <i class="bi bi-plus"></i> Log mating
+        </button>
+      </div>
+
+      <div class="ui-table-container" *ngIf="hasMatings">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Method</th>
+              <th>Sire</th>
+              <th>Notes</th>
+              <th class="col-actions"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mating of planner.matings">
+              <td>{{ formatDate(mating.mated_on) }}</td>
+              <td>{{ methodLabel(mating.method) }}</td>
+              <td>{{ mating.sire_name || '—' }}</td>
+              <td><span class="ui-truncate notes-cell">{{ mating.notes || '—' }}</span></td>
+              <td class="col-actions">
+                <button type="button" class="ui-icon-btn" title="Edit mating" aria-label="Edit mating"
+                        [disabled]="voided || isSaving" (click)="openMatingForm(mating)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Delete mating" aria-label="Delete mating"
+                        [disabled]="voided || isSaving" (click)="deleteMating(mating)">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Ovulation & progesterone -->
+    <section class="planner-section" *ngIf="hasMatings || planner.progesterone_tests.length">
+      <div class="planner-section-header">
+        <h3>Ovulation &amp; progesterone</h3>
+      </div>
+      <div class="ovulation-grid">
+        <div class="ovulation-field">
+          <label for="ovulation-date">Ovulation date</label>
+          <div class="inline-row">
+            <input id="ovulation-date" type="date" class="planner-input" [(ngModel)]="ovulationDraft"
+                   [max]="today" [disabled]="voided || isSaving" />
+            <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm"
+                    [disabled]="voided || isSaving || !ovulationDraft || ovulationDraft === planner.ovulation_date"
+                    (click)="saveOvulation()">Save</button>
+            <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" *ngIf="planner.ovulation_date"
+                    [disabled]="voided || isSaving" (click)="clearOvulation()">Clear</button>
+          </div>
+          <p class="field-hint">Set this when your vet pins ovulation — it makes the due date more precise.</p>
+        </div>
+
+        <div class="progesterone-list">
+          <label>Progesterone tests (ng/mL)</label>
+          <ul *ngIf="planner.progesterone_tests.length">
+            <li *ngFor="let test of planner.progesterone_tests">
+              <span>{{ formatDate(test.tested_on) }}</span>
+              <strong>{{ test.value_ng_ml }}</strong>
+              <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Remove test" aria-label="Remove test"
+                      [disabled]="voided || isSaving" (click)="deleteTest(test.id)">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </li>
+          </ul>
+          <div class="inline-row">
+            <input type="date" class="planner-input" aria-label="Test date" [(ngModel)]="testDraft.tested_on"
+                   [max]="today" [disabled]="voided || isSaving" />
+            <input type="number" class="planner-input value-input" aria-label="Value in ng/mL" placeholder="ng/mL"
+                   min="0.01" max="99.99" step="0.01" [(ngModel)]="testDraft.value_ng_ml" [disabled]="voided || isSaving" />
+            <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm"
+                    [disabled]="voided || isSaving || !testDraft.tested_on || !testDraft.value_ng_ml"
+                    (click)="addTest()">Add</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milestones -->
+    <section class="planner-section" *ngIf="planner.milestones.length || hasMatings">
+      <div class="planner-section-header">
+        <h3>Milestones</h3>
+        <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" [disabled]="voided || isSaving"
+                (click)="showMilestoneForm = !showMilestoneForm">
+          <i class="bi bi-plus"></i> Add milestone
+        </button>
+      </div>
+
+      <ul class="milestone-list">
+        <li *ngFor="let m of planner.milestones" class="milestone"
+            [class.is-done]="m.completed_at" [class.is-overdue]="m.is_overdue">
+          <label class="milestone-check">
+            <input type="checkbox" [attr.data-milestone]="m.id" [checked]="!!m.completed_at"
+                   [disabled]="voided || isSaving" (click)="$event.preventDefault(); toggleMilestone(m)" />
+            <span class="milestone-title">{{ m.title }}</span>
+          </label>
+          <span class="milestone-date">
+            {{ formatDate(m.due_on) }}<span *ngIf="m.is_overdue"> · overdue</span>
+          </span>
+          <button *ngIf="m.is_custom" type="button" class="ui-icon-btn ui-icon-btn--danger" title="Delete milestone"
+                  aria-label="Delete milestone" [disabled]="voided || isSaving" (click)="deleteMilestone(m)">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </li>
+      </ul>
+
+      <div class="inline-row milestone-form" *ngIf="showMilestoneForm">
+        <input type="text" class="planner-input" placeholder="e.g. Vet check" maxlength="255" aria-label="Milestone title"
+               [(ngModel)]="milestoneDraft.title" />
+        <input type="date" class="planner-input" aria-label="Milestone date" [(ngModel)]="milestoneDraft.due_on" />
+        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm"
+                [disabled]="isSaving || !milestoneDraft.title.trim() || !milestoneDraft.due_on"
+                (click)="addMilestone()">Add</button>
+      </div>
+    </section>
+
+    <p class="planner-disclaimer">
+      <i class="bi bi-info-circle" aria-hidden="true"></i>
+      Estimates only — confirm timing with your veterinarian.
+    </p>
+  </ng-container>
+</div>
+
+<!-- Mating modal -->
+<div class="planner-overlay" *ngIf="matingDraft" (click)="closeMatingForm()">
+  <div class="planner-modal" role="dialog" aria-modal="true" aria-labelledby="mating-modal-title" (click)="$event.stopPropagation()">
+    <div class="planner-modal-header">
+      <h3 id="mating-modal-title">{{ matingDraft.id ? 'Edit mating' : 'Log mating' }}</h3>
+      <button type="button" class="ui-icon-btn" aria-label="Close" (click)="closeMatingForm()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="planner-modal-body">
+      <label for="mating-date">Date</label>
+      <input id="mating-date" type="date" class="planner-input" [(ngModel)]="matingDraft.mated_on" [max]="today" required />
+
+      <label for="mating-method">Method</label>
+      <select id="mating-method" class="planner-input" [(ngModel)]="matingDraft.method">
+        <option *ngFor="let opt of methodOptions" [value]="opt[0]">{{ opt[1] }}</option>
+      </select>
+
+      <label for="mating-sire">Sire</label>
+      <select id="mating-sire" class="planner-input" [(ngModel)]="matingDraft.sire_id">
+        <option *ngFor="let pet of maleParents" [value]="pet.id">{{ pet.name }}</option>
+        <option value="">Outside stud / not listed</option>
+      </select>
+
+      <ng-container *ngIf="!matingDraft.sire_id">
+        <label for="mating-outside">Stud name (optional)</label>
+        <input id="mating-outside" type="text" class="planner-input" maxlength="255" [(ngModel)]="matingDraft.outside_sire_name" />
+      </ng-container>
+
+      <label for="mating-notes">Notes (optional)</label>
+      <textarea id="mating-notes" class="planner-input" rows="3" maxlength="2000" [(ngModel)]="matingDraft.notes"></textarea>
+    </div>
+
+    <div class="planner-modal-footer">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="closeMatingForm()">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--primary" [disabled]="isSaving || !matingDraft.mated_on" (click)="saveMating()">
+        {{ isSaving ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>
