@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { BreedingPlannerService } from '../../services/breeding-planner.service';
@@ -43,10 +43,13 @@ interface MatingDraft {
   templateUrl: './breeding-planner.component.html',
   styleUrls: ['./breeding-planner.component.css']
 })
-export class BreedingPlannerComponent implements OnInit {
+export class BreedingPlannerComponent implements OnInit, OnChanges {
   @Input() breedingId!: number | string;
   @Input() parentPets: any[] = [];
   @Input() voided = false;
+  /** The breeding's stage as the host page last loaded it; a mismatch means something
+   *  outside the planner (e.g. adding offspring → Whelped) changed it, so reload. */
+  @Input() breedingStage: string | null | undefined;
 
   planner: IPlanner | null = null;
   isLoading = true;
@@ -75,6 +78,13 @@ export class BreedingPlannerComponent implements OnInit {
     this.load();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const stage = changes['breedingStage'];
+    if (stage && this.planner && stage.currentValue && stage.currentValue !== this.planner.stage) {
+      this.load();
+    }
+  }
+
   load(): void {
     this.isLoading = true;
     this.loadFailed = false;
@@ -94,6 +104,11 @@ export class BreedingPlannerComponent implements OnInit {
 
   get hasMatings(): boolean {
     return !!this.planner && this.planner.matings.length > 0;
+  }
+
+  /** Progesterone testing decides when to mate, so it's available before the first mating too. */
+  get showOvulation(): boolean {
+    return !!this.planner && (this.planner.stage !== BreedingStage.Whelped || this.planner.progesterone_tests.length > 0);
   }
 
   get showGestation(): boolean {

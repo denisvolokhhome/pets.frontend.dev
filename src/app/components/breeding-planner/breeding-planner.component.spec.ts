@@ -115,7 +115,35 @@ describe('BreedingPlannerComponent', () => {
     expect(service.setMilestoneCompleted).toHaveBeenCalledWith(7, 'x1', true);
   });
 
-  it('disables logging on a voided breeding', () => {
+  it('lets the breeder record progesterone tests before the first mating', () => {
+    const el = render(makePlanner());
+    expect(el.textContent).toContain('Progesterone tests');
+  });
+
+  it('hides ovulation and progesterone once the litter is whelped', () => {
+    const el = render(makePlanner({ stage: BreedingStage.Whelped }));
+    expect(el.textContent).not.toContain('Progesterone tests');
+  });
+
+    it('reloads when the page reports a different stage (e.g. offspring added → Whelped)', () => {
+    render(MATED);
+    service.getPlanner.calls.reset();
+    service.getPlanner.and.returnValue(of({ ...MATED, stage: BreedingStage.Whelped }));
+    fixture.componentRef.setInput('breedingStage', BreedingStage.Whelped);
+    fixture.detectChanges();
+    expect(service.getPlanner).toHaveBeenCalledTimes(1);
+    expect(component.planner?.stage).toBe(BreedingStage.Whelped);
+  });
+
+  it('does not reload when the reported stage already matches', () => {
+    render(MATED);
+    service.getPlanner.calls.reset();
+    fixture.componentRef.setInput('breedingStage', BreedingStage.Mated);
+    fixture.detectChanges();
+    expect(service.getPlanner).not.toHaveBeenCalled();
+  });
+
+    it('disables logging on a voided breeding', () => {
     const el = render(makePlanner(), true);
     expect(button(el, 'Log mating').disabled).toBeTrue();
   });

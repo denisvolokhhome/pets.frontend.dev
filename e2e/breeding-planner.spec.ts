@@ -103,7 +103,7 @@ test.describe('Breeding planner', () => {
     await planner.getByRole('button', { name: 'Log mating' }).click();
     await page.fill('#mating-date', '2026-09-10');
     await expect(page.locator('#mating-sire')).toHaveValue('sire-1');
-    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.locator('.planner-modal').getByRole('button', { name: 'Save', exact: true }).click();
 
     await expect(planner).toContainText('Due Nov 12, 2026');
     await expect(planner).toContainText('X-ray — count the litter');

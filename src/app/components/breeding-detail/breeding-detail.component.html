@@ -71,7 +71,8 @@
   <app-breeding-planner
     [breedingId]="breeding.id"
     [parentPets]="breeding.parent_pets || []"
-    [voided]="breeding.status === 'Voided'">
+    [voided]="breeding.status === 'Voided'"
+    [breedingStage]="breeding.stage">
   </app-breeding-planner>
 
   <!-- Offspring Section -->
