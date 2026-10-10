@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./privacy-policy.component.css']
 })
 export class PrivacyPolicyComponent {
-  lastUpdated = 'October 4, 2026';
+  lastUpdated = 'October 10, 2026';
 
   downloadPolicy(): void {
     const content = this.getPolicyText();
