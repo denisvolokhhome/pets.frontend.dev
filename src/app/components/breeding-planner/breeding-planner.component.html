@@ -60,8 +60,8 @@
               <th>Date</th>
               <th>Method</th>
               <th>Sire</th>
-              <th>Notes</th>
-              <th class="col-actions"><span class="visually-hidden">Actions</span></th>
+              <th class="col-notes">Notes</th>
+              <th class="col-actions" aria-label="Actions"></th>
             </tr>
           </thead>
           <tbody>
@@ -69,7 +69,7 @@
               <td>{{ formatDate(mating.mated_on) }}</td>
               <td>{{ methodLabel(mating.method) }}</td>
               <td>{{ mating.sire_name || '—' }}</td>
-              <td><span class="ui-truncate notes-cell">{{ mating.notes || '—' }}</span></td>
+              <td class="col-notes"><span class="ui-truncate notes-cell">{{ mating.notes || '—' }}</span></td>
               <td class="col-actions">
                 <button type="button" class="ui-icon-btn" title="Edit mating" aria-label="Edit mating"
                         [disabled]="voided || isSaving" (click)="openMatingForm(mating)">

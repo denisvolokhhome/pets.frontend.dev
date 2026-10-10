@@ -315,14 +315,6 @@
   margin-bottom: 1rem;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
 @media (max-width: 768px) {
   .planner-card {
     padding: 1.5rem;
@@ -335,6 +327,11 @@
 
 /* Bottom sheet on phones */
 @media (max-width: 640px) {
+  /* keep row actions on screen; notes are visible in the edit sheet */
+  .col-notes {
+    display: none;
+  }
+
   .planner-overlay {
     align-items: flex-end;
     padding: 0;
