@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
+import { isActivePregnancy } from 'src/app/models/breeding-planner';
 import { formatDisplayDate, statusBadgeClass, statusLabel } from 'src/app/utils/format-utils';
 import { ILocation } from 'src/app/models/location';
 import { IBreed } from 'src/app/models/breed';
@@ -378,6 +379,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
 
   readonly statusBadgeClass = statusBadgeClass;
   readonly statusLabel = statusLabel;
+  readonly isActivePregnancy = isActivePregnancy;
 
   getStatusBadgeClass(status: BreedingStatus): string {
     switch (status) {

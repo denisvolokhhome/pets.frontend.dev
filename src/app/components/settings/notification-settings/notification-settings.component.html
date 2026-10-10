@@ -51,6 +51,27 @@
             </label>
           </div>
         </div>
+
+        <div class="preference-item">
+          <div class="preference-info">
+            <label class="preference-label">
+              <i class="bi bi-calendar-heart"></i>
+              Breeding reminders
+            </label>
+            <p class="preference-description">
+              Get notified (in the app and by email) before milestones for pregnancies you're tracking — ultrasound, X-ray, due date
+            </p>
+          </div>
+          <div class="preference-toggle">
+            <label class="switch">
+              <input 
+                type="checkbox" 
+                formControlName="breeding_reminder"
+                [disabled]="isLoading">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="form-actions">

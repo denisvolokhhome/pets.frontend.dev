@@ -224,6 +224,9 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
       case 'favorite':
         this.router.navigate(['/offsprings']);
         break;
+      case 'breeding_milestone':
+        this.router.navigate(['/milestones', notification.related_id]);
+        break;
       default:
         console.warn('Unknown notification type:', notification.related_type);
     }
@@ -242,6 +245,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         return 'pi-envelope';
       case 'offspring_status_changed':
         return 'pi-info-circle';
+      case 'breeding_milestone':
+        return 'pi-calendar';
       default:
         return 'pi-bell';
     }
@@ -255,6 +260,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         return 'text-blue-500';
       case 'offspring_status_changed':
         return 'text-green-500';
+      case 'breeding_milestone':
+        return 'text-amber-500';
       default:
         return 'text-gray-500';
     }

@@ -9,6 +9,7 @@ export interface NotificationPreference {
   user_id: string;
   message_received: boolean;
   favorite_added: boolean;
+  breeding_reminder: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -16,6 +17,7 @@ export interface NotificationPreference {
 export interface NotificationPreferenceUpdate {
   message_received?: boolean;
   favorite_added?: boolean;
+  breeding_reminder?: boolean;
 }
 
 @Injectable({

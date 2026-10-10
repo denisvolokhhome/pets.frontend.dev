@@ -7,6 +7,11 @@ export enum BreedingStage {
   Whelped = 'Whelped'
 }
 
+/** Stages during which a due date is shown and reminders are sent. */
+export function isActivePregnancy(stage: BreedingStage | string | null | undefined): boolean {
+  return stage === BreedingStage.Mated || stage === BreedingStage.Confirmed;
+}
+
 export type MatingMethod = 'Natural' | 'AI_Fresh' | 'AI_Chilled' | 'AI_Frozen' | 'Surgical';
 
 export const MATING_METHOD_LABELS: Record<MatingMethod, string> = {

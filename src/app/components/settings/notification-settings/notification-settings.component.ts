@@ -22,7 +22,8 @@ export class NotificationSettingsComponent implements OnInit {
   ) {
     this.preferencesForm = this.fb.group({
       message_received: [true],
-      favorite_added: [false]
+      favorite_added: [false],
+      breeding_reminder: [true]
     });
   }
 
@@ -38,7 +39,8 @@ export class NotificationSettingsComponent implements OnInit {
       next: (preferences) => {
         this.preferencesForm.patchValue({
           message_received: preferences.message_received,
-          favorite_added: preferences.favorite_added
+          favorite_added: preferences.favorite_added,
+          breeding_reminder: preferences.breeding_reminder
         });
         this.isLoading = false;
       },
@@ -61,7 +63,8 @@ export class NotificationSettingsComponent implements OnInit {
 
     const preferences = {
       message_received: this.preferencesForm.value.message_received,
-      favorite_added: this.preferencesForm.value.favorite_added
+      favorite_added: this.preferencesForm.value.favorite_added,
+      breeding_reminder: this.preferencesForm.value.breeding_reminder
     };
 
     this.notificationPreferenceService.updatePreferences(preferences).subscribe({

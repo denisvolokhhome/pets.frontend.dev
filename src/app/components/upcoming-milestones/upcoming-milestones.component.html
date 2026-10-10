@@ -1,0 +1,19 @@
+<div class="upcoming-card" *ngIf="items.length">
+  <h2 class="upcoming-title">
+    <i class="bi bi-calendar-heart" aria-hidden="true"></i>
+    Upcoming pregnancy milestones
+  </h2>
+  <ul class="upcoming-list">
+    <li *ngFor="let item of items" [class.is-overdue]="item.is_overdue">
+      <a [routerLink]="['/breeding', item.breeding_id]" class="upcoming-row">
+        <span class="upcoming-main">
+          <span class="upcoming-milestone">{{ item.title }}</span>
+          <span class="upcoming-breeding">{{ item.breeding_label }}</span>
+        </span>
+        <span class="upcoming-date">
+          {{ item.is_overdue ? 'Overdue · ' : '' }}{{ formatDate(item.due_on) }}
+        </span>
+      </a>
+    </li>
+  </ul>
+</div>

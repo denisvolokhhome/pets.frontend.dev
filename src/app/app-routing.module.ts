@@ -15,6 +15,7 @@ import { GeneralSettingsComponent } from './components/settings/general-settings
 import { BreedingLocationsComponent } from './components/settings/breeding-locations/breeding-locations.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
+import { MilestoneRedirectComponent } from './components/milestone-redirect/milestone-redirect.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
 import { GuestToAccountComponent } from './components/guest-to-account/guest-to-account.component';
@@ -71,6 +72,7 @@ const routes: Routes = [
   { path: 'pets', component: PetsComponent, canActivate: [BreederGuard] },
   { path: 'breedings', component: BreedingsComponent, canActivate: [BreederGuard] },
   { path: 'breeding/:id', component: BreedingDetailComponent, canActivate: [BreederGuard] },
+  { path: 'milestones/:id', component: MilestoneRedirectComponent, canActivate: [BreederGuard] },
   { path: 'offsprings', component: OffspringListComponent, canActivate: [BreederGuard] },
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },

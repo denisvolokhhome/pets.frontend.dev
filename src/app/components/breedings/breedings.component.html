@@ -158,6 +158,7 @@
               <th>Location</th>
               <th>Offspring</th>
               <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="due_date">Due <p-sortIcon field="due_date"></p-sortIcon></th>
               <th pSortableColumn="created_at">Created <p-sortIcon field="created_at"></p-sortIcon></th>
               <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 6.5rem; text-align: right">Actions</th>
             </tr>
@@ -181,6 +182,13 @@
               <td>{{ getPuppiesCount(breeding) }}</td>
               <td>
                 <span [class]="statusBadgeClass(breeding.status)">{{ statusLabel(breeding.status) }}</span>
+              </td>
+              <td class="whitespace-nowrap">
+                <ng-container *ngIf="isActivePregnancy(breeding.stage) && breeding.due_date; else noDue">
+                  <span class="block">{{ formatDate(breeding.due_date) }}</span>
+                  <span [class]="statusBadgeClass(breeding.stage)">{{ breeding.stage }}</span>
+                </ng-container>
+                <ng-template #noDue>—</ng-template>
               </td>
               <td class="whitespace-nowrap">
                 <span class="block">{{ formatDate(breeding.created_at) }}</span>

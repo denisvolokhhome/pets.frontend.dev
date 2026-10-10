@@ -53,6 +53,8 @@ import { BreederCardListComponent } from './components/breeder-card-list/breeder
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { BreedingPlannerComponent } from './components/breeding-planner/breeding-planner.component';
+import { MilestoneRedirectComponent } from './components/milestone-redirect/milestone-redirect.component';
+import { UpcomingMilestonesComponent } from './components/upcoming-milestones/upcoming-milestones.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
 import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
 import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
@@ -155,6 +157,8 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     SearchPageComponent,
     BreedingDetailComponent,
     BreedingPlannerComponent,
+    MilestoneRedirectComponent,
+    UpcomingMilestonesComponent,
     OffspringModalComponent,
     ContactBreederComponent,
     NotificationIconComponent,
