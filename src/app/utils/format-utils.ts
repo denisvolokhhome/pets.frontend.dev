@@ -38,6 +38,12 @@ const STATUS_TONES: Record<string, BadgeTone> = {
   InProcess: 'warning',
   Done: 'success',
   Voided: 'neutral',
+  // Breeding planner stage
+  Planned: 'neutral',
+  Mated: 'info',
+  Confirmed: 'success',
+  Missed: 'danger',
+  Whelped: 'success',
 };
 
 /** CSS classes for a status pill, e.g. "ui-badge ui-badge--success". */

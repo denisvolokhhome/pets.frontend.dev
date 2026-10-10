@@ -1,4 +1,5 @@
 import { IPet } from './pet';
+import { BreedingStage } from './breeding-planner';
 
 export enum BreedingStatus {
   Started = 'Started',
@@ -15,6 +16,9 @@ export interface IBreeding {
   updated_at: string;
   parent_pets?: IPet[];
   puppies?: IPet[];
+  // Breeding planner
+  stage?: BreedingStage;
+  due_date?: string | null;
 }
 
 export interface IBreedingFilter {
