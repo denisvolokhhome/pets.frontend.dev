@@ -19,7 +19,8 @@ export class StarRatingComponent implements OnChanges {
   }
 
   computeStars(rating: number): StarState[] {
-    const clamped = Math.max(0, Math.min(5, rating));
+    // Round to the nearest half star: 4.3 → 4½, 4.2 → 4, 4.8 → 5
+    const clamped = Math.round(Math.max(0, Math.min(5, rating)) * 2) / 2;
     const result: StarState[] = [];
     for (let i = 1; i <= 5; i++) {
       if (clamped >= i) {

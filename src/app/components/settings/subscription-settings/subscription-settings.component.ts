@@ -204,13 +204,18 @@ export class SubscriptionSettingsComponent implements OnInit {
     }
   }
 
+  /** Leave the app for Stripe (checkout / billing portal). */
+  redirectTo(url: string): void {
+    window.location.href = url;
+  }
+
   onUpgrade(plan: IPlan): void {
     if (this.isRedirecting || this.isCurrentPlan(plan)) return;
 
     this.isRedirecting = true;
     this.billingService.createCheckoutSession(plan.id).subscribe({
       next: (response) => {
-        window.location.href = response.checkout_url;
+        this.redirectTo(response.checkout_url);
       },
       error: (err) => {
         this.isRedirecting = false;
@@ -250,7 +255,7 @@ export class SubscriptionSettingsComponent implements OnInit {
     this.isOpeningPortal = true;
     this.billingService.createPortalSession().subscribe({
       next: (response) => {
-        window.location.href = response.portal_url;
+        this.redirectTo(response.portal_url);
       },
       error: (err) => {
         this.isOpeningPortal = false;

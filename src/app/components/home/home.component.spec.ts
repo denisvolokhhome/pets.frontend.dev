@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,8 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [RouterTestingModule, CommonModule],
+      // <app-pricing-section> is its own component with its own spec
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     router = TestBed.inject(Router);
@@ -45,13 +48,16 @@ describe('HomeComponent', () => {
     expect(component.selectedFlow).toBe('breeder');
   });
 
-  it('should have 4 feature cards', () => {
-    expect(component.features.length).toBe(4);
+  it('should have 3 feature cards while service providers are hidden (default)', () => {
+    expect(component.features.map(f => f.title)).toEqual(['Manage Your Pets', 'Health Tracking', 'Connect Safely']);
   });
 
-  it('should include a Pet Services feature card', () => {
+  it('should add a Pet Services feature card when the feature flag is enabled', () => {
+    (environment as any).enableServiceProviders = true;
+    createComponent();
     const titles = component.features.map(f => f.title);
     expect(titles).toContain('Pet Services');
+    expect(titles.length).toBe(4);
   });
 
   // ── selectFlow ────────────────────────────────────────────────────────────
@@ -119,16 +125,16 @@ describe('HomeComponent', () => {
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
-  it('navigateToBreederRegister navigates to /register', () => {
+  it('navigateToBreederRegister navigates to /register?type=breeder', () => {
     const spy = spyOn(router, 'navigate');
     component.navigateToBreederRegister();
-    expect(spy).toHaveBeenCalledWith(['/register']);
+    expect(spy).toHaveBeenCalledWith(['/register'], { queryParams: { type: 'breeder' } });
   });
 
-  it('navigateToPetSeekerRegister navigates to /register/pet-seeker', () => {
+  it('navigateToPetSeekerRegister navigates to /register?type=pet_seeker', () => {
     const spy = spyOn(router, 'navigate');
     component.navigateToPetSeekerRegister();
-    expect(spy).toHaveBeenCalledWith(['/register/pet-seeker']);
+    expect(spy).toHaveBeenCalledWith(['/register'], { queryParams: { type: 'pet_seeker' } });
   });
 
   it('navigateToServiceProviderRegister navigates to /register?type=service when the feature flag is enabled', () => {
