@@ -1,7 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   standalone: false,
@@ -13,12 +15,14 @@ export class LeftMenuComponent implements OnInit {
   location: any;
   route: any;
   isCollapsed: boolean = false;
+  unreadMessages = 0;
   
   constructor(
     private router: Router, 
     private loc: Location,
     private cdr: ChangeDetectorRef,
-    public authService: AuthService
+    public authService: AuthService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +33,26 @@ export class LeftMenuComponent implements OnInit {
     this.router.events.subscribe((res) => {
       this.route = this.loc.path();
       this.cdr.detectChanges();
+    });
+
+    // Unread badge on the mobile Messages tab; refreshed on every navigation
+    this.loadUnreadCount();
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => this.loadUnreadCount());
+  }
+
+  private loadUnreadCount(): void {
+    if (!this.isAuthenticated) {
+      this.unreadMessages = 0;
+      return;
+    }
+    this.messageService.getUnreadCount().subscribe({
+      next: res => {
+        this.unreadMessages = res.unread_count;
+        this.cdr.detectChanges();
+      },
+      error: () => (this.unreadMessages = 0)
     });
   }
   

@@ -167,11 +167,16 @@
       <span>Favorites</span>
     </a>
   </ng-container>
-  <a [routerLink]="['/messages']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Messages">
-    <i class="bi bi-envelope"></i>
+  <a [routerLink]="['/messages']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item"
+     [attr.aria-label]="unreadMessages ? 'Messages, ' + unreadMessages + ' unread' : 'Messages'">
+    <span class="mobile-nav-icon">
+      <i class="bi bi-envelope"></i>
+      <span class="mobile-nav-badge" *ngIf="unreadMessages" aria-hidden="true">{{ unreadMessages > 9 ? '9+' : unreadMessages }}</span>
+    </span>
     <span>Messages</span>
   </a>
-  <a [routerLink]="['/settings']" routerLinkActive="active" class="mobile-nav-item" aria-label="Settings">
+  <!-- Breeders already have 5 tabs; their Settings lives in the top menu -->
+  <a *ngIf="!isBreeder" [routerLink]="['/settings']" routerLinkActive="active" class="mobile-nav-item" aria-label="Settings">
     <i class="bi bi-gear"></i>
     <span>Settings</span>
   </a>
