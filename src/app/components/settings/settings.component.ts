@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -9,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent {
+  readonly waitlistEnabled = environment.enableWaitlist;
   
   constructor(
     private router: Router,

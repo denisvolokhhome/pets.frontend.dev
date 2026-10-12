@@ -1,0 +1,30 @@
+.waitlist-page { padding: 1rem; max-width: 1000px; }
+.waitlist-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.page-title { margin: 0; font-size: 1.5rem; font-weight: 700; }
+.muted { color: var(--ui-text-muted); }
+.empty { padding: 1.5rem 0; }
+.waitlist-tabs { display: flex; gap: 0.25rem; border-bottom: 1px solid var(--ui-border); margin-bottom: 1rem; }
+.waitlist-tab {
+  min-height: 44px; padding: 0 1rem; background: none; border: 0; border-bottom: 2px solid transparent;
+  font-weight: 500; color: var(--ui-text-muted); cursor: pointer;
+}
+.waitlist-tab.active { color: var(--ui-text); border-bottom-color: #3b82f6; }
+.tab-count { margin-left: 0.5rem; padding: 0 0.5rem; border-radius: 999px; background: #e5e7eb; font-size: 0.8125rem; }
+.request-card { background: white; border: 1px solid var(--ui-border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
+.request-head { display: flex; justify-content: space-between; gap: 0.75rem; align-items: flex-start; }
+.request-who { display: flex; flex-direction: column; min-width: 0; }
+.request-pref { margin: 0.5rem 0; color: #374151; }
+.answers { margin: 0.5rem 0; padding: 0.75rem; background: #f9fafb; border-radius: 8px; }
+.answers dt { font-weight: 600; font-size: 0.875rem; }
+.answers dd { margin: 0 0 0.5rem; white-space: pre-wrap; }
+.request-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.table-wrap { overflow-x: auto; background: white; border-radius: 10px; }
+.actions-col { white-space: nowrap; text-align: right; }
+.panel-row td { background: #f9fafb; }
+.panel { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.panel-select { min-height: 44px; padding: 0 0.75rem; font-size: 16px; border: 1px solid #d1d5db; border-radius: 6px; background: white; }
+.events { list-style: none; margin: 0; padding: 0; }
+.events li { padding: 0.25rem 0; }
+@media (max-width: 768px) {
+  .waitlist-page { padding: 0.75rem; }
+}

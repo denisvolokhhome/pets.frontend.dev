@@ -96,6 +96,19 @@
     </li>
     
     <!-- Messages - available for all authenticated users -->
+    <li class="mb-2" *ngIf="isBreeder && waitlistEnabled">
+      <a
+        [routerLink]="['/waitlist']"
+        routerLinkActive="side-link--active"
+        #rlaBreederWaitlist="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [attr.aria-current]="rlaBreederWaitlist.isActive ? 'page' : null"
+        class="side-link"
+        [title]="isCollapsed ? 'Waitlist' : ''">
+        <i class="bi bi-hourglass-split text-xl"></i>
+        <span *ngIf="!isCollapsed">Waitlist</span>
+      </a>
+    </li>
     <li class="mb-2" *ngIf="isAuthenticated">
       <a 
         [routerLink]="['/messages']"

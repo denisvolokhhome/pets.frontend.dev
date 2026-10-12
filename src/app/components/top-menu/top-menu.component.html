@@ -141,6 +141,11 @@
                   <i class="bi bi-hourglass-split mr-2"></i>My waitlists
                 </a>
               </li>
+              <li *ngIf="waitlistEnabled && isBreeder">
+                <a href="/waitlist" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                  <i class="bi bi-hourglass-split mr-2"></i>Waitlist
+                </a>
+              </li>
               <li>
                 <a href="/settings" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                   <i class="bi bi-gear mr-2"></i>Settings

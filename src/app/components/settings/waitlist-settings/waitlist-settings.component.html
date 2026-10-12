@@ -1,0 +1,23 @@
+<div class="waitlist-settings">
+  <h2>Waitlist</h2>
+  <p class="muted">Shown to people who ask to join your waitlist.</p>
+  <p *ngIf="isLoading" class="muted">Loading…</p>
+  <form *ngIf="!isLoading" (ngSubmit)="save()" class="settings-form">
+    <div class="field-group">
+      <label class="field-label" for="ws-amount">Deposit amount ($)</label>
+      <input id="ws-amount" name="amount" type="number" min="0" step="0.01" class="field-input"
+             [class.field-error]="amountError" [(ngModel)]="amount" />
+      <span class="error-msg" *ngIf="amountError">{{ amountError }}</span>
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="ws-policy">Deposit policy</label>
+      <textarea id="ws-policy" name="policy" class="field-textarea" rows="5" [(ngModel)]="policy"
+                placeholder="Refund terms, when the deposit is due…"></textarea>
+    </div>
+    <div>
+      <button type="submit" class="ui-btn ui-btn--primary" data-testid="save" [disabled]="isSaving">
+        {{ isSaving ? 'Saving…' : 'Save' }}
+      </button>
+    </div>
+  </form>
+</div>

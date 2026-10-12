@@ -1,0 +1,120 @@
+<div class="waitlist-page">
+  <div class="waitlist-head">
+    <h1 class="page-title">Waitlist</h1>
+    <button type="button" class="ui-btn ui-btn--primary" data-testid="add-manual" (click)="showManual = true">
+      <i class="bi bi-person-plus"></i> Add person manually
+    </button>
+  </div>
+
+  <div class="waitlist-tabs" role="tablist">
+    <button type="button" role="tab" class="waitlist-tab" data-testid="tab-requests"
+            [class.active]="section === 'requests'" [attr.aria-selected]="section === 'requests'"
+            (click)="setSection('requests')">
+      Requests<span class="tab-count" *ngIf="pending.length">{{ pending.length }}</span>
+    </button>
+    <button type="button" role="tab" class="waitlist-tab" data-testid="tab-general"
+            [class.active]="section === 'general'" [attr.aria-selected]="section === 'general'"
+            (click)="setSection('general')">
+      General waitlist<span class="tab-count" *ngIf="general.length">{{ general.length }}</span>
+    </button>
+  </div>
+
+  <p *ngIf="isLoading" class="muted">Loading…</p>
+
+  <!-- Requests -->
+  <section *ngIf="!isLoading && section === 'requests'">
+    <p *ngIf="pending.length === 0" class="muted empty">No requests waiting for review.</p>
+    <div class="request-card" *ngFor="let e of pending">
+      <div class="request-head">
+        <div class="request-who">
+          <span class="ui-cell-title">{{ e.display_name }}</span>
+          <span class="ui-cell-sub">{{ contactLine(e) }}</span>
+        </div>
+        <span class="ui-badge ui-badge--neutral" *ngIf="e.possible_duplicate">Possible duplicate</span>
+      </div>
+      <p class="request-pref">
+        Prefers: {{ e.sex_preference }}<ng-container *ngIf="e.preference_notes"> · {{ e.preference_notes }}</ng-container>
+      </p>
+      <div *ngIf="answerEntries(e).length">
+        <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" data-testid="toggle-answers" (click)="toggleRequest(e)">
+          {{ expandedRequestId === e.id ? 'Hide answers' : 'Show answers' }}
+        </button>
+        <dl class="answers" *ngIf="expandedRequestId === e.id">
+          <ng-container *ngFor="let a of answerEntries(e)">
+            <dt>{{ a.question }}</dt>
+            <dd>{{ a.answer }}</dd>
+          </ng-container>
+        </dl>
+      </div>
+      <div class="request-actions">
+        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="approve" (click)="approve(e)">Approve</button>
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="decline" (click)="decline(e)">Decline</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- General waitlist -->
+  <section *ngIf="!isLoading && section === 'general'">
+    <p *ngIf="general.length === 0" class="muted empty">Nobody is on the general waitlist yet.</p>
+    <div class="table-wrap" *ngIf="general.length">
+      <table class="ui-table">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Deposit</th><th>Queue date</th><th class="actions-col">Actions</th></tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let e of general">
+            <tr data-testid="general-row">
+              <td>{{ e.position }}</td>
+              <td>
+                <span class="ui-cell-title">{{ e.display_name }}</span>
+                <span class="ui-cell-sub">{{ contactLine(e) }}<ng-container *ngIf="e.sex_preference !== 'Any'"> · {{ e.sex_preference }}</ng-container></span>
+                <span class="ui-badge ui-badge--neutral" *ngIf="e.possible_duplicate">Possible duplicate</span>
+              </td>
+              <td>{{ depositLabels[e.deposit_status] }}</td>
+              <td>{{ formatDate(e.queue_date) }}</td>
+              <td class="actions-col">
+                <button type="button" class="ui-icon-btn" title="Record deposit" aria-label="Record deposit"
+                        data-testid="deposit-btn" (click)="depositEntry = e"><i class="bi bi-cash-coin"></i></button>
+                <button type="button" class="ui-icon-btn" title="Move to litter" aria-label="Move to litter"
+                        data-testid="move-btn" (click)="openMove(e)"><i class="bi bi-arrow-right-circle"></i></button>
+                <button type="button" class="ui-icon-btn" title="History" aria-label="History"
+                        data-testid="history-btn" (click)="openHistory(e)"><i class="bi bi-clock-history"></i></button>
+                <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Withdraw" aria-label="Withdraw"
+                        data-testid="withdraw-btn" (click)="startWithdraw(e)"><i class="bi bi-person-dash"></i></button>
+              </td>
+            </tr>
+            <tr class="panel-row" *ngIf="panel?.id === e.id">
+              <td colspan="5">
+                <div class="panel" *ngIf="isPanel(e, 'move')">
+                  <label for="move-{{ e.id }}">Move to</label>
+                  <select id="move-{{ e.id }}" class="panel-select" data-testid="move-select" [(ngModel)]="moveBreedingId">
+                    <option [ngValue]="null">General waitlist</option>
+                    <option *ngFor="let b of breedings" [ngValue]="b.id">{{ b.label }}</option>
+                  </select>
+                  <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="move-confirm" (click)="confirmMove(e)">Move</button>
+                </div>
+                <div class="panel" *ngIf="isPanel(e, 'history')">
+                  <ul class="events">
+                    <li *ngIf="events.length === 0" class="muted">No history yet.</li>
+                    <li *ngFor="let ev of events"><strong>{{ eventLabel(ev.type) }}</strong> · {{ formatDate(ev.created_at) }}</li>
+                  </ul>
+                </div>
+                <div class="panel" *ngIf="isPanel(e, 'withdraw')">
+                  <span>Refunded or kept?</span>
+                  <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="withdraw-refunded" (click)="withdraw(e, 'refunded')">Refunded</button>
+                  <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="withdraw-kept" (click)="withdraw(e, 'forfeited')">Kept</button>
+                  <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="panel = null">Cancel</button>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<app-waitlist-deposit-modal *ngIf="depositEntry" [entry]="depositEntry"
+  (saved)="onDepositSaved()" (closed)="depositEntry = null"></app-waitlist-deposit-modal>
+<app-waitlist-manual-modal *ngIf="showManual"
+  (added)="onManualAdded()" (closed)="showManual = false"></app-waitlist-manual-modal>

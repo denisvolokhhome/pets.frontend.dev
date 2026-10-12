@@ -54,6 +54,11 @@ import { SearchPageComponent } from './components/search-page/search-page.compon
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
 import { BreedingPlannerComponent } from './components/breeding-planner/breeding-planner.component';
 import { MilestoneRedirectComponent } from './components/milestone-redirect/milestone-redirect.component';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
+import { WaitlistDepositModalComponent } from './components/waitlist-deposit-modal/waitlist-deposit-modal.component';
+import { WaitlistManualModalComponent } from './components/waitlist-manual-modal/waitlist-manual-modal.component';
+import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
+import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 import { UpcomingMilestonesComponent } from './components/upcoming-milestones/upcoming-milestones.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
 import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
@@ -160,6 +165,11 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     BreedingPlannerComponent,
     MilestoneRedirectComponent,
     UpcomingMilestonesComponent,
+    WaitlistComponent,
+    WaitlistDepositModalComponent,
+    WaitlistManualModalComponent,
+    WaitlistSettingsComponent,
+    WaitlistCardComponent,
     OffspringModalComponent,
     ContactBreederComponent,
     NotificationIconComponent,
