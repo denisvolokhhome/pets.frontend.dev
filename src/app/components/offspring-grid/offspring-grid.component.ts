@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { canJoinWaitlist } from 'src/app/models/waitlist';
 import { AuthService } from 'src/app/services/auth.service';
 import { rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 import { environment } from 'src/environments/environment';
@@ -83,16 +84,16 @@ export class OffspringGridComponent implements OnInit {
     }
   }
 
-  /** Join button: flag on, and the viewer is logged out or a pet seeker (not this breeder). */
+  /** Join button via the shared predicate. */
   canJoinWaitlist(): boolean {
-    if (!this.waitlistEnabled || !this.breederId) return false;
-    const user = this.authService.currentUser;
-    if (!user) return true;
-    return user.id !== this.breederId && this.authService.isPetSeeker;
+    return canJoinWaitlist(
+      this.waitlistEnabled, this.authService.hasValidToken(), this.authService.currentUser,
+      this.authService.isPetSeeker, this.breederId
+    );
   }
 
   joinWaitlist(): void {
-    if (!localStorage.getItem('id_token')) {
+    if (!this.authService.hasValidToken()) {
       rememberPostSignupRedirect(this.router.url);
       this.router.navigate(['/login']);
       return;

@@ -85,3 +85,21 @@ export const DEPOSIT_STATUS_LABELS: Record<DepositStatus, string> = {
   forfeited: 'Forfeited',
   applied: 'Applied to purchase'
 };
+
+/**
+ * Whether to show "Join waitlist" to a viewer of a breeder's listing.
+ * Logged-out visitors may click (they are sent to log in). With a token but no
+ * hydrated user yet we hide it, so a breeder never sees it on their own page.
+ */
+export function canJoinWaitlist(
+  flagOn: boolean,
+  hasToken: boolean,
+  user: { id: string } | null,
+  isPetSeeker: boolean,
+  breederId: string | null | undefined
+): boolean {
+  if (!flagOn || !breederId) return false;
+  if (!hasToken) return true;
+  if (!user) return false;
+  return user.id !== breederId && isPetSeeker;
+}

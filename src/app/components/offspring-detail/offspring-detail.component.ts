@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data.service';
 import { formatDisplayDate, statusBadgeClass, rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { canJoinWaitlist } from 'src/app/models/waitlist';
 import { JoinWaitlistModalComponent } from '../join-waitlist-modal/join-waitlist-modal.component';
 
 @Component({
@@ -573,19 +574,16 @@ export class OffspringDetailComponent implements OnInit {
     });
   }
 
-  /**
-   * Check if this is public view
-   */
-  /** Join button: public view, flag on, and the viewer is not a breeder (or this listing's breeder). */
+  /** Join button: public view only, via the shared predicate. */
   canJoinWaitlist(): boolean {
-    if (!this.waitlistEnabled || this.viewMode !== 'public' || !this.offspring?.user_id) return false;
-    const user = this.authService.currentUser;
-    if (!user) return true;
-    return user.id !== this.offspring.user_id && this.authService.isPetSeeker;
+    return this.viewMode === 'public' && canJoinWaitlist(
+      this.waitlistEnabled, this.authService.hasValidToken(), this.authService.currentUser,
+      this.authService.isPetSeeker, this.offspring?.user_id
+    );
   }
 
   joinWaitlist(): void {
-    if (!this.isAuthenticated()) {
+    if (!this.authService.hasValidToken()) {
       rememberPostSignupRedirect(this.router.url);
       this.router.navigate(['/login']);
       return;
@@ -593,6 +591,9 @@ export class OffspringDetailComponent implements OnInit {
     this.showJoinWaitlist = true;
   }
 
+  /**
+   * Check if this is public view
+   */
   isPublicView(): boolean {
     return this.viewMode === 'public';
   }

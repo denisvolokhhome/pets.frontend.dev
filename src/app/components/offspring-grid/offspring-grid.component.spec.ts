@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
 
 describe('OffspringGridComponent waitlist entry point', () => {
   let fixture: ComponentFixture<OffspringGridComponent>;
-  let auth: { currentUser: any; isPetSeeker: boolean };
+  let auth: { currentUser: any; isPetSeeker: boolean; token: boolean; hasValidToken: () => boolean };
   const original = environment.enableWaitlist;
 
   function create(): void {
@@ -25,7 +25,8 @@ describe('OffspringGridComponent waitlist entry point', () => {
   const joinBtn = (): HTMLElement | null => fixture.nativeElement.querySelector('[data-testid="join-waitlist"]');
 
   beforeEach(async () => {
-    auth = { currentUser: null, isPetSeeker: false };
+    auth = { currentUser: null, isPetSeeker: false, token: false, hasValidToken: () => auth.token };
+    localStorage.removeItem('post_signup_redirect');
     const offspringSvc = jasmine.createSpyObj('OffspringService', ['getPublicOffspringsByBreeder']);
     offspringSvc.getPublicOffspringsByBreeder.and.returnValue(of({ offsprings: [], total: 0 }));
     const data = jasmine.createSpyObj('DataService', ['getPublicBreederProfile']);
@@ -44,7 +45,10 @@ describe('OffspringGridComponent waitlist entry point', () => {
     }).compileComponents();
   });
 
-  afterEach(() => { (environment as any).enableWaitlist = original; });
+  afterEach(() => {
+    (environment as any).enableWaitlist = original;
+    localStorage.removeItem('post_signup_redirect');
+  });
 
   it('hides the Join button when the flag is off', () => {
     (environment as any).enableWaitlist = false;
@@ -61,7 +65,26 @@ describe('OffspringGridComponent waitlist entry point', () => {
   it('hides the Join button when the viewer is that breeder', () => {
     (environment as any).enableWaitlist = true;
     auth.currentUser = { id: 'b1' };
+    auth.token = true;
     create();
     expect(joinBtn()).toBeNull();
+  });
+
+  it('hides the Join button when a token exists but the user is not loaded yet', () => {
+    (environment as any).enableWaitlist = true;
+    auth.token = true;
+    create();
+    expect(joinBtn()).toBeNull();
+  });
+
+  it('logged-out click remembers the page and goes to login', () => {
+    (environment as any).enableWaitlist = true;
+    create();
+    const router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.resolveTo(true);
+    joinBtn()!.click();
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    const stored = JSON.parse(localStorage.getItem('post_signup_redirect') || 'null');
+    expect(stored?.url).toBe(router.url);
   });
 });

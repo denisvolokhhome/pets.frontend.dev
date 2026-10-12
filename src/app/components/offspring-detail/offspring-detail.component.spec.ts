@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 
 describe('OffspringDetailComponent waitlist entry point', () => {
   let fixture: ComponentFixture<OffspringDetailComponent>;
-  let auth: { currentUser: any; isPetSeeker: boolean; isBreeder: boolean };
+  let auth: { currentUser: any; isPetSeeker: boolean; isBreeder: boolean; token: boolean; hasValidToken: () => boolean };
   const original = environment.enableWaitlist;
 
   const offspring: any = {
@@ -28,7 +28,8 @@ describe('OffspringDetailComponent waitlist entry point', () => {
   const joinBtn = (): HTMLElement | null => fixture.nativeElement.querySelector('[data-testid="join-waitlist"]');
 
   beforeEach(async () => {
-    auth = { currentUser: null, isPetSeeker: false, isBreeder: false };
+    auth = { currentUser: null, isPetSeeker: false, isBreeder: false, token: false, hasValidToken: () => auth.token };
+    localStorage.removeItem('post_signup_redirect');
     const offspringSvc = jasmine.createSpyObj('OffspringService', ['getPublicOffspring', 'getOffspring', 'getPublicOffspringsByBreeder']);
     offspringSvc.getPublicOffspring.and.returnValue(of(offspring));
     offspringSvc.getPublicOffspringsByBreeder.and.returnValue(of({ offsprings: [], total: 0 }));
@@ -47,7 +48,10 @@ describe('OffspringDetailComponent waitlist entry point', () => {
     }).compileComponents();
   });
 
-  afterEach(() => { (environment as any).enableWaitlist = original; });
+  afterEach(() => {
+    (environment as any).enableWaitlist = original;
+    localStorage.removeItem('post_signup_redirect');
+  });
 
   it('hides the Join button when the flag is off', () => {
     (environment as any).enableWaitlist = false;
@@ -65,6 +69,7 @@ describe('OffspringDetailComponent waitlist entry point', () => {
     (environment as any).enableWaitlist = true;
     auth.currentUser = { id: 'b1' };
     auth.isBreeder = true;
+    auth.token = true;
     create();
     expect(joinBtn()).toBeNull();
   });
@@ -76,5 +81,14 @@ describe('OffspringDetailComponent waitlist entry point', () => {
     spyOn(router, 'navigate').and.resolveTo(true);
     joinBtn()!.click();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
+    const stored = JSON.parse(localStorage.getItem('post_signup_redirect') || 'null');
+    expect(stored?.url).toBe(router.url);
+  });
+
+  it('hides the Join button when a token exists but the user is not loaded yet', () => {
+    (environment as any).enableWaitlist = true;
+    auth.token = true;
+    create();
+    expect(joinBtn()).toBeNull();
   });
 });
