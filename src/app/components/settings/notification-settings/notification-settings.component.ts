@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NotificationPreferenceService } from '../../../services/notification-preference.service';
+import { NotificationPreferenceService, NotificationPreferenceUpdate } from '../../../services/notification-preference.service';
 import { ToastService } from '../../../services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -14,6 +15,7 @@ export class NotificationSettingsComponent implements OnInit {
   isLoading: boolean = false;
   saveSuccess: boolean = false;
   saveError: string | null = null;
+  readonly waitlistEnabled = environment.enableWaitlist;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +25,8 @@ export class NotificationSettingsComponent implements OnInit {
     this.preferencesForm = this.fb.group({
       message_received: [true],
       favorite_added: [false],
-      breeding_reminder: [true]
+      breeding_reminder: [true],
+      waitlist_update: [true]
     });
   }
 
@@ -40,7 +43,8 @@ export class NotificationSettingsComponent implements OnInit {
         this.preferencesForm.patchValue({
           message_received: preferences.message_received,
           favorite_added: preferences.favorite_added,
-          breeding_reminder: preferences.breeding_reminder
+          breeding_reminder: preferences.breeding_reminder,
+          waitlist_update: preferences.waitlist_update ?? true
         });
         this.isLoading = false;
       },
@@ -61,11 +65,14 @@ export class NotificationSettingsComponent implements OnInit {
     this.saveSuccess = false;
     this.saveError = null;
 
-    const preferences = {
+    const preferences: NotificationPreferenceUpdate = {
       message_received: this.preferencesForm.value.message_received,
       favorite_added: this.preferencesForm.value.favorite_added,
       breeding_reminder: this.preferencesForm.value.breeding_reminder
     };
+    if (this.waitlistEnabled) {
+      preferences.waitlist_update = this.preferencesForm.value.waitlist_update;
+    }
 
     this.notificationPreferenceService.updatePreferences(preferences).subscribe({
       next: () => {
