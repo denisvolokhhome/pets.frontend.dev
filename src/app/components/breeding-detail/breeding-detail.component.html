@@ -75,6 +75,15 @@
     [breedingStage]="breeding.stage">
   </app-breeding-planner>
 
+  <!-- Waitlist -->
+  <app-breeding-waitlist
+    *ngIf="waitlistEnabled"
+    [breedingId]="breeding.id"
+    [offspring]="breeding.puppies || []"
+    [voided]="breeding.status === 'Voided'"
+    (changed)="loadBreedingDetails()">
+  </app-breeding-waitlist>
+
   <!-- Offspring Section -->
   <div class="section-card">
     <div class="section-header">

@@ -1,0 +1,36 @@
+.wl-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 2rem;
+}
+.wl-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.wl-title { font-family: var(--font-primary); font-size: 1.5rem; font-weight: 600; color: var(--dark-color); margin: 0; }
+.wl-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.wl-muted, .wl-empty p { color: var(--ui-text-muted); margin: 0; }
+.wl-empty { padding: 1rem; border: 1px dashed var(--ui-border-strong); border-radius: var(--ui-radius); text-align: center; }
+.wl-error { display: flex; align-items: center; gap: 0.75rem; color: var(--ui-danger); }
+.wl-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; background: var(--ui-surface-muted); border: 1px solid var(--ui-border); border-radius: var(--ui-radius); }
+.wl-picker-label { color: var(--ui-text-muted); }
+.wl-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.wl-row { padding: 0.75rem 1rem; background: white; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); }
+.wl-main { display: flex; align-items: flex-start; gap: 0.75rem; }
+.wl-handle { cursor: grab; color: var(--ui-text-muted); padding-top: 0.15rem; }
+.wl-pos { font-weight: 700; color: var(--ui-text); min-width: 2rem; }
+.wl-who { flex: 1; min-width: 0; }
+.wl-name { font-weight: 600; color: var(--ui-text); }
+.wl-sub { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; color: var(--ui-text-muted); font-size: 0.875rem; }
+.override-note { font-style: italic; color: var(--ui-text-muted); font-size: 0.875rem; margin-top: 0.25rem; }
+.wl-note { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+.wl-move { display: flex; gap: 0.25rem; }
+.wl-match, .wl-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--ui-border); }
+.wl-input { min-height: 44px; font-size: 16px; padding: 0 0.75rem; border: 1px solid var(--ui-border-strong); border-radius: var(--ui-radius); background: white; max-width: 100%; }
+.cdk-drag-preview { box-shadow: var(--box-shadow); border-radius: var(--ui-radius); background: white; }
+.cdk-drag-placeholder { opacity: 0.4; }
+.cdk-drag-animating { transition: transform 200ms ease; }
+@media (max-width: 768px) {
+  .wl-card { padding: 1.25rem; }
+  .wl-handle { display: none; }
+  .wl-match .wl-input { flex: 1 1 100%; }
+}

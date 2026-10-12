@@ -52,6 +52,8 @@ import { BreederCardComponent } from './components/breeder-card/breeder-card.com
 import { BreederCardListComponent } from './components/breeder-card-list/breeder-card-list.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
+import { BreedingWaitlistComponent } from './components/breeding-waitlist/breeding-waitlist.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BreedingPlannerComponent } from './components/breeding-planner/breeding-planner.component';
 import { MilestoneRedirectComponent } from './components/milestone-redirect/milestone-redirect.component';
 import { WaitlistComponent } from './components/waitlist/waitlist.component';
@@ -163,6 +165,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     SearchPageComponent,
     BreedingDetailComponent,
     BreedingPlannerComponent,
+    BreedingWaitlistComponent,
     MilestoneRedirectComponent,
     UpcomingMilestonesComponent,
     WaitlistComponent,
@@ -213,6 +216,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     JoinWaitlistModalComponent,
     AppRoutingModule,
     FormsModule,
+    DragDropModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatButtonModule,

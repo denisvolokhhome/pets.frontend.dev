@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
+import { environment } from 'src/environments/environment';
 import { ConfirmService } from 'src/app/services/confirm.service';
 
 export interface ApplicationFormField {
@@ -19,6 +20,7 @@ export interface ApplicationFormField {
   styleUrls: ['./breeding-detail.component.css']
 })
 export class BreedingDetailComponent implements OnInit {
+  readonly waitlistEnabled = environment.enableWaitlist;
   breedingId: string = '';
   breeding: any = null;
   isLoading: boolean = true;
