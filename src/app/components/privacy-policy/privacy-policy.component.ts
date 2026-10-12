@@ -97,13 +97,14 @@ Waitlists and Deposits (only if you use the waitlist feature):
   person's name, email address, and phone number. We store these details so the
   breeder can manage their waitlist and contact that person. If that person
   later signs up or logs in to Breedly with the same email address, their
-  waitlist entry is linked to their account.
-- Deposit records (breeders only): the amount, date, and method (for example
-  Zelle, Venmo, or cash) of a deposit the breeder received directly from a pet
-  seeker, outside Breedly. Breedly stores these records for the breeder's
-  convenience; we do not process, hold, or transfer any deposit money.
+  waitlist entry may be linked to their account.
+- Deposit records: if a breeder records a deposit for your waitlist entry
+  (amount, date received, and payment method such as Zelle, Venmo, or cash),
+  the breeder and you can see it. Breedly stores this record but does not
+  process, hold, or verify payments.
 - Waitlist order and matching: the breeder's pick order and which offspring a
   person is matched to.
+
 Breeders who add other people's contact details are responsible for having
 permission to do so. If you believe a breeder has added your details to a
 waitlist and you would like them removed, contact us at privacy@breedly.us.
@@ -237,7 +238,9 @@ Breedly is intended exclusively for use within the United States.
 
 - Account data: Removed within 30 days of account deletion.
 - Pet and offspring listings: Soft-deleted while account is active.
-- Waitlist and deposit records: Retained while the breeder's account is active.
+- Waitlist and deposit records: Retained until the breeder removes the entry or
+  deletes their account. Anyone listed on a breeder's waitlist can ask the
+  breeder, or contact privacy@breedly.us, to have their details removed.
 - Messages: Permanently removed after 90 days of soft-deletion.
 - Billing records: Retained for 7 years for legal compliance.
 - Audit logs: Retained for 12 months.
