@@ -45,6 +45,8 @@ export interface ISeekerEntry {
 export interface IBreederWaitlist {
   pending: IWaitlistEntry[];
   general: IWaitlistEntry[];
+  /** Withdrawn entries still holding a received deposit: record it refunded or kept. */
+  deposits_to_settle: IWaitlistEntry[];
 }
 
 export interface ILitterWaitlist {

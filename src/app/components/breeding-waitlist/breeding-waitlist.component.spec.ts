@@ -37,7 +37,7 @@ describe('BreedingWaitlistComponent', () => {
 
   function render(opts: { voided?: boolean; offspring?: any[]; entries?: IWaitlistEntry[]; general?: IWaitlistEntry[] } = {}): HTMLElement {
     service.getLitterWaitlist.and.returnValue(of({ breeding_id: 7, entries: opts.entries ?? [A, B, C] }));
-    service.getBreederWaitlist.and.returnValue(of({ pending: [], general: opts.general ?? [] }));
+    service.getBreederWaitlist.and.returnValue(of({ pending: [], general: opts.general ?? [], deposits_to_settle: [] }));
     fixture = TestBed.createComponent(BreedingWaitlistComponent);
     component = fixture.componentInstance;
     component.breedingId = 7;
@@ -149,11 +149,22 @@ describe('BreedingWaitlistComponent', () => {
     expect(q(el, '[data-testid="withdraw-btn"]')).not.toBeNull();
   });
 
-  it('no offspring: only Withdraw is shown', () => {
+  it('no offspring: only Withdraw is shown, in the row header next to up/down (no action strip)', () => {
     const el = render({ offspring: [] });
     expect(q(el, '[data-testid="pass-btn"]')).toBeNull();
     expect(q(el, '[data-testid="match-select"]')).toBeNull();
-    expect(q(el, '[data-testid="withdraw-btn"]')).not.toBeNull();
+    const row = qa(el, '[data-testid="wl-row"]')[0];
+    expect(row.querySelector('.wl-move [data-testid="withdraw-btn"]')).not.toBeNull();
+    expect(row.querySelector('.wl-move [data-testid="withdraw-btn"]')!.classList).toContain('ui-icon-btn--danger');
+    expect(row.querySelector('.wl-match')).toBeNull();
+    expect(row.querySelectorAll('[data-testid="withdraw-btn"]').length).toBe(1);
+  });
+
+  it('with offspring, Withdraw stays in the action strip with Match/Pass', () => {
+    const el = render({ offspring: PUPS });
+    const row = qa(el, '[data-testid="wl-row"]')[0];
+    expect(row.querySelector('.wl-match [data-testid="withdraw-btn"]')).not.toBeNull();
+    expect(row.querySelector('.wl-move [data-testid="withdraw-btn"]')).toBeNull();
   });
 
   it('note save uses the entry CURRENT position after a reload reordered the list', () => {

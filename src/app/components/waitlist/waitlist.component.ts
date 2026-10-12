@@ -25,6 +25,7 @@ export class WaitlistComponent implements OnInit {
   section: Section = 'requests';
   pending: IWaitlistEntry[] = [];
   general: IWaitlistEntry[] = [];
+  depositsToSettle: IWaitlistEntry[] = [];
   isLoading = true;
 
   readonly depositLabels = DEPOSIT_STATUS_LABELS;
@@ -67,6 +68,7 @@ export class WaitlistComponent implements OnInit {
       next: w => {
         this.pending = w.pending;
         this.general = w.general;
+        this.depositsToSettle = w.deposits_to_settle ?? [];
         this.isLoading = false;
       },
       error: () => {
@@ -78,6 +80,12 @@ export class WaitlistComponent implements OnInit {
 
   contactLine(e: IWaitlistEntry): string {
     return [e.contact_email, e.contact_phone].filter(Boolean).join(' · ');
+  }
+
+  /** General-list name sub-line: contact details and a sex preference other than Any. */
+  subLine(e: IWaitlistEntry): string {
+    const sex = e.sex_preference !== 'Any' ? e.sex_preference : null;
+    return [e.contact_email, e.contact_phone, sex].filter(Boolean).join(' · ');
   }
 
   answerEntries(e: IWaitlistEntry): { question: string; answer: string }[] {
@@ -174,6 +182,23 @@ export class WaitlistComponent implements OnInit {
     this.waitlistService.withdraw(e.id, outcome).subscribe({
       next: () => { this.panel = null; this.toastr.success('Entry withdrawn.', 'Waitlist'); this.load(); },
       error: () => this.toastr.error('Could not withdraw this entry.', 'Error')
+    });
+  }
+
+  // ── Deposits to settle (withdrawn entries) ──
+
+  settleDeposit(e: IWaitlistEntry, outcome: 'refunded' | 'forfeited'): void {
+    this.waitlistService.updateDeposit(e.id, {
+      deposit_status: outcome,
+      deposit_amount: e.deposit_amount,
+      deposit_received_on: e.deposit_received_on,
+      deposit_method: e.deposit_method
+    }).subscribe({
+      next: () => {
+        this.toastr.success(outcome === 'refunded' ? 'Deposit marked refunded.' : 'Deposit marked kept.', 'Waitlist');
+        this.load();
+      },
+      error: () => this.toastr.error('Could not update the deposit.', 'Error')
     });
   }
 

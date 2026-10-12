@@ -6,6 +6,21 @@
     </button>
   </div>
 
+  <section class="settle" data-testid="settle-section" *ngIf="!isLoading && depositsToSettle.length">
+    <h2 class="settle-title">Deposits to settle</h2>
+    <p class="muted settle-hint">These people withdrew while you held their deposit. Record whether you refunded or kept it.</p>
+    <div class="settle-row" *ngFor="let e of depositsToSettle">
+      <div class="settle-who">
+        <span class="ui-cell-title">{{ e.display_name }}</span>
+        <span class="ui-cell-sub">{{ depositLabels[e.deposit_status] }}<ng-container *ngIf="e.deposit_amount"> · ${{ e.deposit_amount }}</ng-container><ng-container *ngIf="e.deposit_received_on"> · {{ formatDate(e.deposit_received_on) }}</ng-container></span>
+      </div>
+      <div class="settle-actions">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="settle-refunded" (click)="settleDeposit(e, 'refunded')">Refunded</button>
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="settle-kept" (click)="settleDeposit(e, 'forfeited')">Kept</button>
+      </div>
+    </div>
+  </section>
+
   <div class="waitlist-tabs" role="tablist">
     <button type="button" role="tab" class="waitlist-tab" data-testid="tab-requests"
             [class.active]="section === 'requests'" [attr.aria-selected]="section === 'requests'"
@@ -59,19 +74,20 @@
     <div class="table-wrap" *ngIf="general.length">
       <table class="ui-table">
         <thead>
-          <tr><th>#</th><th>Name</th><th>Deposit</th><th>Queue date</th><th class="actions-col">Actions</th></tr>
+          <tr><th>#</th><th>Name</th><th class="hide-sm">Deposit</th><th class="hide-sm">Queue date</th><th class="actions-col">Actions</th></tr>
         </thead>
         <tbody>
           <ng-container *ngFor="let e of general">
             <tr data-testid="general-row">
               <td>{{ e.position }}</td>
-              <td>
+              <td class="name-cell">
                 <span class="ui-cell-title">{{ e.display_name }}</span>
-                <span class="ui-cell-sub">{{ contactLine(e) }}<ng-container *ngIf="e.sex_preference !== 'Any'"> · {{ e.sex_preference }}</ng-container></span>
+                <span class="ui-cell-sub" *ngIf="subLine(e)">{{ subLine(e) }}</span>
+                <span class="name-deposit"><span [class]="depositClass(e.deposit_status)" data-testid="deposit-badge-sm">{{ depositLabels[e.deposit_status] }}</span></span>
                 <span class="ui-badge ui-badge--neutral" *ngIf="e.possible_duplicate">Possible duplicate</span>
               </td>
-              <td><span [class]="depositClass(e.deposit_status)" data-testid="deposit-badge">{{ depositLabels[e.deposit_status] }}</span></td>
-              <td>{{ formatDate(e.queue_date) }}</td>
+              <td class="hide-sm"><span [class]="depositClass(e.deposit_status)" data-testid="deposit-badge">{{ depositLabels[e.deposit_status] }}</span></td>
+              <td class="hide-sm">{{ formatDate(e.queue_date) }}</td>
               <td class="actions-col">
                 <button type="button" class="ui-icon-btn" title="Record deposit" aria-label="Record deposit"
                         data-testid="deposit-btn" (click)="depositEntry = e"><i class="bi bi-cash-coin"></i></button>

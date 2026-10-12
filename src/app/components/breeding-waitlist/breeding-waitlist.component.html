@@ -57,10 +57,13 @@
                     [disabled]="busy || first" (click)="moveBy(i, -1)"><i class="bi bi-arrow-up"></i></button>
             <button type="button" class="ui-icon-btn" title="Move down" aria-label="Move down"
                     [disabled]="busy || last" (click)="moveBy(i, 1)"><i class="bi bi-arrow-down"></i></button>
+            <!-- With no offspring there is nothing else to do: keep Withdraw here instead of an empty strip -->
+            <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Withdraw" aria-label="Withdraw"
+                    data-testid="withdraw-btn" *ngIf="!canPass" [disabled]="busy" (click)="startWithdraw(e)"><i class="bi bi-person-dash"></i></button>
           </div>
         </div>
 
-        <div class="wl-match">
+        <div class="wl-match" *ngIf="canPass">
           <select *ngIf="canMatch" class="wl-input" data-testid="match-select" aria-label="Offspring to match"
                   [(ngModel)]="matchChoice[e.id]" [disabled]="busy">
             <option [ngValue]="undefined">Choose offspring…</option>

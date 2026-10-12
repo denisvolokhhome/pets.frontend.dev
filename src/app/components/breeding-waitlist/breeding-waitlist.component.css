@@ -33,4 +33,6 @@
   .wl-card { padding: 1.25rem; }
   .wl-handle { display: none; }
   .wl-match .wl-input { flex: 1 1 100%; }
+  /* mobile-design.md: 44px touch targets (Match, Pass, Save note, Refunded, Kept, …) */
+  .wl-card .ui-btn--sm { min-height: 44px; }
 }

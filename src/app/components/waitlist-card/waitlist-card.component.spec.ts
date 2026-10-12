@@ -15,7 +15,7 @@ describe('WaitlistCardComponent', () => {
 
   function render(pendingCount: number): HTMLElement {
     waitlist.getBreederWaitlist.and.returnValue(of({
-      pending: Array.from({ length: pendingCount }, () => ({} as IWaitlistEntry)), general: []
+      pending: Array.from({ length: pendingCount }, () => ({} as IWaitlistEntry)), general: [], deposits_to_settle: []
     }));
     const fixture: ComponentFixture<WaitlistCardComponent> = TestBed.createComponent(WaitlistCardComponent);
     fixture.detectChanges();

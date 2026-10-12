@@ -20,7 +20,7 @@ describe('WaitlistComponent', () => {
     id: 'e1', breeder_id: 'b1', user_id: null, source: 'request', display_name: 'Ann Seeker',
     contact_email: 'ann@x.com', contact_phone: null, breeding_id: null, breeding_label: null,
     request_breeding_id: null, status: 'pending', sex_preference: 'Any', preference_notes: 'Wants a red one',
-    application_answers: { 'Why us?': 'Great reviews' }, queue_date: '2026-09-01', position: null,
+    application_answers: { 'Do you have a fenced yard?': 'Yes, 6 ft fence', 'Other pets at home': 'One cat' }, queue_date: '2026-09-01', position: null,
     position_override: null, override_note: null, deposit_status: 'none', deposit_amount: null,
     deposit_received_on: null, deposit_method: null, offspring_id: null, possible_duplicate: false,
     created_at: '2026-09-01T00:00:00Z', ...o
@@ -42,8 +42,8 @@ describe('WaitlistComponent', () => {
   beforeEach(async () => {
     sessionStorage.removeItem('waitlist_section');
     waitlist = jasmine.createSpyObj('WaitlistService',
-      ['getBreederWaitlist', 'approve', 'decline', 'move', 'withdraw', 'getEvents']);
-    waitlist.getBreederWaitlist.and.returnValue(of({ pending: [pending], general: [g1, g2] }));
+      ['getBreederWaitlist', 'approve', 'decline', 'move', 'withdraw', 'getEvents', 'updateDeposit']);
+    waitlist.getBreederWaitlist.and.returnValue(of({ pending: [pending], general: [g1, g2], deposits_to_settle: [] }));
     data = jasmine.createSpyObj('DataService', ['getBreedings']);
     data.getBreedings.and.returnValue(of([
       { id: 5, description: 'Spring litter', status: 'Started' },
@@ -68,11 +68,12 @@ describe('WaitlistComponent', () => {
     await create();
     expect(text()).toContain('Ann Seeker');
     expect(text()).toContain('Wants a red one');
-    expect(text()).not.toContain('Great reviews');
+    expect(text()).not.toContain('Yes, 6 ft fence');
     (q('[data-testid="toggle-answers"]') as HTMLButtonElement).click();
     fixture.detectChanges();
-    expect(text()).toContain('Why us?');
-    expect(text()).toContain('Great reviews');
+    expect(text()).toContain('Do you have a fenced yard?');
+    expect(text()).toContain('Yes, 6 ft fence');
+    expect(text()).toContain('Other pets at home');
   });
 
   it('renders the general list in order with deposit badge and duplicate flag', async () => {
@@ -166,5 +167,56 @@ describe('WaitlistComponent', () => {
     fixture.detectChanges();
     expect(waitlist.getEvents).toHaveBeenCalledWith('g1');
     expect(text()).toContain('Approved');
+  });
+
+  it('builds the name sub-line without a stray separator when there are no contact details', async () => {
+    const bare = entry({ id: 'g3', status: 'active', display_name: 'No Contact', position: 1,
+      contact_email: null, contact_phone: null, sex_preference: 'Female' });
+    waitlist.getBreederWaitlist.and.returnValue(of({ pending: [], general: [bare, g2], deposits_to_settle: [] }));
+    await create();
+    (q('[data-testid="tab-general"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const subs = fixture.nativeElement.querySelectorAll('tr[data-testid="general-row"] .ui-cell-sub');
+    expect(subs[0].textContent.trim()).toBe('Female');
+    expect(subs[1].textContent.trim()).toBe('ann@x.com');
+  });
+
+  it('general table hides queue date and moves the deposit badge under the name on small screens', async () => {
+    await create();
+    (q('[data-testid="tab-general"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    const ths = Array.from(fixture.nativeElement.querySelectorAll('.ui-table th')) as HTMLElement[];
+    const th = (label: string) => ths.find(h => h.textContent!.trim() === label)!;
+    expect(th('Deposit').classList).toContain('hide-sm');
+    expect(th('Queue date').classList).toContain('hide-sm');
+    const row = fixture.nativeElement.querySelector('tr[data-testid="general-row"]');
+    expect(row.querySelector('.name-deposit [data-testid="deposit-badge-sm"]')?.textContent).toContain('Deposit received');
+    expect(row.querySelectorAll('td.hide-sm').length).toBe(2);
+  });
+
+  describe('deposits to settle', () => {
+    const w1 = entry({ id: 'w1', status: 'withdrawn', display_name: 'Wes Gone', deposit_status: 'received',
+      deposit_amount: '300.00', deposit_received_on: '2026-09-05', deposit_method: 'Zelle' });
+
+    it('is hidden when nothing needs settling', async () => {
+      await create();
+      expect(q('[data-testid="settle-section"]')).toBeNull();
+    });
+
+    it('lists withdrawn entries with a received deposit and records Refunded / Kept', async () => {
+      waitlist.getBreederWaitlist.and.returnValue(of({ pending: [], general: [], deposits_to_settle: [w1] }));
+      waitlist.updateDeposit.and.returnValue(of({ ...w1, deposit_status: 'refunded' }));
+      await create();
+      const section = q('[data-testid="settle-section"]');
+      expect(section.textContent).toContain('Deposits to settle');
+      expect(section.textContent).toContain('Wes Gone');
+      (q('[data-testid="settle-refunded"]') as HTMLButtonElement).click();
+      expect(waitlist.updateDeposit).toHaveBeenCalledWith('w1', {
+        deposit_status: 'refunded', deposit_amount: '300.00', deposit_received_on: '2026-09-05', deposit_method: 'Zelle'
+      });
+      expect(waitlist.getBreederWaitlist).toHaveBeenCalledTimes(2);
+      (q('[data-testid="settle-kept"]') as HTMLButtonElement).click();
+      expect(waitlist.updateDeposit.calls.mostRecent().args[1].deposit_status).toBe('forfeited');
+    });
   });
 });

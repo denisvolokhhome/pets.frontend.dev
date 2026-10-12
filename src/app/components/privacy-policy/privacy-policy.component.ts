@@ -238,9 +238,9 @@ Breedly is intended exclusively for use within the United States.
 
 - Account data: Removed within 30 days of account deletion.
 - Pet and offspring listings: Soft-deleted while account is active.
-- Waitlist and deposit records: Retained until the breeder removes the entry or
-  deletes their account. Anyone listed on a breeder's waitlist can ask the
-  breeder, or contact privacy@breedly.us, to have their details removed.
+- Waitlist and deposit records: Retained until the breeder deletes their
+  account. Anyone listed on a breeder's waitlist can ask the breeder, or
+  contact privacy@breedly.us, to have their details removed.
 - Messages: Permanently removed after 90 days of soft-deletion.
 - Billing records: Retained for 7 years for legal compliance.
 - Audit logs: Retained for 12 months.

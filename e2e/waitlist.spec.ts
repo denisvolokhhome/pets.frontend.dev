@@ -156,6 +156,7 @@ async function mockApi(page: Page) {
       return json(route, {
         pending: e?.status === 'pending' ? [e] : [],
         general: e?.status === 'active' && e.breeding_id === null ? [e] : [],
+        deposits_to_settle: [],
       });
     }
     if (path === `/api/waitlist/breedings/${BREEDING_ID}` && method === 'GET') {
@@ -191,7 +192,7 @@ async function mockApi(page: Page) {
     }
     return json(route, []);
   });
-  return { calls, state };
+  return { calls, state, entryBase };
 }
 
 test.describe('Waitlist flow (flag on)', () => {
@@ -260,6 +261,28 @@ test.describe('Waitlist flow (flag on)', () => {
     // The breeding page refreshes its offspring list after a match: Biscuit is now Reserved.
     await expect(page.locator('p-table tbody')).toContainText('Reserved');
     await expect(page.locator('p-table tbody')).not.toContainText('Available');
+  });
+
+  test('general list fits a 390px phone with every row action on screen', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const { state, entryBase } = await mockApi(page);
+    state.role = 'breeder';
+    state.entry = { ...entryBase(), display_name: 'Samantha Longname-Seeker', contact_email: 'samantha.longname@example.com',
+      contact_phone: '555-123-4567', status: 'active', position: 1, queue_date: '2026-10-10', deposit_status: 'received' };
+    await page.goto('/waitlist');
+    await page.getByTestId('tab-general').click();
+    const row = page.getByTestId('general-row');
+    await expect(row).toContainText('Samantha');
+    await expect(row.getByTestId('deposit-badge-sm')).toBeVisible();
+    await expect(row.getByTestId('deposit-badge')).toBeHidden();
+    const docWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(docWidth).toBeLessThanOrEqual(390);
+    for (const id of ['deposit-btn', 'move-btn', 'history-btn', 'withdraw-btn']) {
+      const box = (await row.getByTestId(id).boundingBox())!;
+      expect(box.x + box.width).toBeLessThanOrEqual(390);
+      expect(box.width).toBeGreaterThanOrEqual(42);
+      expect(box.height).toBeGreaterThanOrEqual(42);
+    }
   });
 });
 
