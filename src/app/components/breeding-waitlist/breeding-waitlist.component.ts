@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Observable } from 'rxjs';
 
@@ -21,13 +21,14 @@ import { offspringDisplayName } from '../../utils/format-utils';
   templateUrl: './breeding-waitlist.component.html',
   styleUrls: ['./breeding-waitlist.component.css']
 })
-export class BreedingWaitlistComponent implements OnInit, OnChanges {
+export class BreedingWaitlistComponent implements OnInit, OnChanges, OnDestroy {
   @Input() breedingId!: number | string;
   @Input() offspring: any[] = [];
   @Input() voided = false;
   /** Emitted after a match so the host page can refresh its offspring list. */
   @Output() changed = new EventEmitter<void>();
 
+  private destroyed = false;
   entries: IWaitlistEntry[] = [];
   general: IWaitlistEntry[] = [];
   isLoading = true;
@@ -38,7 +39,7 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
   matchChoice: Record<string, string> = {};
   withdrawPanelId: string | null = null;
   /** The row just moved, offering "Add a note". */
-  lastMoved: { id: string; position: number } | null = null;
+  lastMoved: { id: string } | null = null;
   noteOpen = false;
   noteText = '';
 
@@ -54,6 +55,14 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed = true;
+  }
+
+  private redraw(): void {
+    if (!this.destroyed) this.cdr.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +81,10 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
     return !this.voided && this.availableOffspring.length > 0;
   }
 
+  get canPass(): boolean {
+    return !this.voided && (this.offspring || []).length > 0;
+  }
+
   get hasOverride(): boolean {
     return this.entries.some(e => e.position_override != null);
   }
@@ -81,24 +94,41 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
   }
 
   load(): void {
+    if (this.voided) {
+      this.isLoading = false;
+      return;
+    }
     this.waitlistService.getLitterWaitlist(this.id).subscribe({
       next: w => {
+        if (this.destroyed) return;
         this.entries = w.entries;
         this.isLoading = false;
         this.loadFailed = false;
-        this.cdr.detectChanges();
+        this.pruneState();
+        this.redraw();
       },
       error: () => {
+        if (this.destroyed) return;
         this.isLoading = false;
         this.loadFailed = true;
-        this.cdr.detectChanges();
+        this.redraw();
       }
     });
-    if (!this.voided) {
-      this.waitlistService.getBreederWaitlist().subscribe({
-        next: w => { this.general = w.general; this.cdr.detectChanges(); },
-        error: () => { /* picker simply stays hidden */ }
-      });
+    this.waitlistService.getBreederWaitlist().subscribe({
+      next: w => { if (this.destroyed) return; this.general = w.general; this.redraw(); },
+      error: () => { /* picker simply stays hidden */ }
+    });
+  }
+
+  /** Drop UI state that points at things the fresh data no longer has. */
+  private pruneState(): void {
+    const available = new Set(this.availableOffspring.map(o => o.id));
+    for (const id of Object.keys(this.matchChoice)) {
+      if (!available.has(this.matchChoice[id])) delete this.matchChoice[id];
+    }
+    if (this.lastMoved && !this.entries.some(e => e.id === this.lastMoved!.id)) {
+      this.lastMoved = null;
+      this.noteOpen = false;
     }
   }
 
@@ -137,7 +167,7 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
   private moveTo(entry: IWaitlistEntry | undefined, position: number): void {
     if (!entry || position < 1 || position > this.entries.length) return;
     this.act(this.waitlistService.reorder(entry.id, position), 'Order updated', () => {
-      this.lastMoved = { id: entry.id, position };
+      this.lastMoved = { id: entry.id };
       this.noteOpen = false;
       this.noteText = '';
     });
@@ -151,7 +181,14 @@ export class BreedingWaitlistComponent implements OnInit, OnChanges {
     const moved = this.lastMoved;
     const note = this.noteText.trim();
     if (!moved || !note) return;
-    this.act(this.waitlistService.reorder(moved.id, moved.position, note), 'Note saved', () => {
+    // Position is read now, not at move time: reloads may have reordered the list since.
+    const position = this.entries.findIndex(e => e.id === moved.id) + 1;
+    if (position < 1) {
+      this.lastMoved = null;
+      this.noteOpen = false;
+      return;
+    }
+    this.act(this.waitlistService.reorder(moved.id, position, note), 'Note saved', () => {
       this.noteOpen = false;
       this.noteText = '';
       this.lastMoved = null;

@@ -10,6 +10,7 @@ import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
 
 describe('BreedingDetailComponent waitlist card', () => {
+  let fixtureRef: any;
   function render(enabled: boolean): HTMLElement {
     const data = jasmine.createSpyObj('DataService', ['getBreeding']);
     data.getBreeding.and.returnValue(of({
@@ -28,6 +29,7 @@ describe('BreedingDetailComponent waitlist card', () => {
       ]
     });
     const fixture = TestBed.createComponent(BreedingDetailComponent);
+    fixtureRef = fixture;
     (fixture.componentInstance as any).waitlistEnabled = enabled;
     fixture.detectChanges();
     return fixture.nativeElement;
@@ -39,5 +41,15 @@ describe('BreedingDetailComponent waitlist card', () => {
 
   it('renders no app-breeding-waitlist when the flag is off', () => {
     expect(render(false).querySelector('app-breeding-waitlist')).toBeNull();
+  });
+
+  it('(changed) refreshes silently without tearing down the page', () => {
+    render(true);
+    const cmp = fixtureRef.componentInstance;
+    const card = fixtureRef.nativeElement.querySelector('app-breeding-waitlist');
+    cmp.refreshBreeding();
+    expect(cmp.isLoading).toBeFalse();
+    fixtureRef.detectChanges();
+    expect(fixtureRef.nativeElement.querySelector('app-breeding-waitlist')).toBe(card);
   });
 });

@@ -67,6 +67,17 @@ export class BreedingDetailComponent implements OnInit {
     });
   }
 
+  /** Re-fetches the breeding in place (no loader), so child cards keep their state. */
+  refreshBreeding(): void {
+    this.dataService.getBreeding(this.breedingId).subscribe({
+      next: data => {
+        this.breeding = data;
+        this.cdr.detectChanges();
+      },
+      error: () => this.toastr.error('Could not refresh the offspring list', 'Error')
+    });
+  }
+
   getBreedDisplay(): string {
     if (!this.breeding?.parent_pets || this.breeding.parent_pets.length === 0) {
       return 'Unknown';

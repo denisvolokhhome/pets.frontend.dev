@@ -81,7 +81,7 @@
     [breedingId]="breeding.id"
     [offspring]="breeding.puppies || []"
     [voided]="breeding.status === 'Voided'"
-    (changed)="loadBreedingDetails()">
+    (changed)="refreshBreeding()">
   </app-breeding-waitlist>
 
   <!-- Offspring Section -->

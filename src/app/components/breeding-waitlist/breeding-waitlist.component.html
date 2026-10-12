@@ -60,15 +60,15 @@
           </div>
         </div>
 
-        <div class="wl-match" *ngIf="canMatch">
-          <select class="wl-input" data-testid="match-select" aria-label="Offspring to match"
+        <div class="wl-match">
+          <select *ngIf="canMatch" class="wl-input" data-testid="match-select" aria-label="Offspring to match"
                   [(ngModel)]="matchChoice[e.id]" [disabled]="busy">
             <option [ngValue]="undefined">Choose offspring…</option>
             <option *ngFor="let o of availableOffspring" [ngValue]="o.id">{{ offspringLabel(o) }}</option>
           </select>
-          <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="match-btn"
+          <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="match-btn" *ngIf="canMatch"
                   [disabled]="busy || !matchChoice[e.id]" (click)="match(e)">Match</button>
-          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="pass-btn"
+          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="pass-btn" *ngIf="canPass"
                   [disabled]="busy" (click)="pass(e)">Pass</button>
           <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Withdraw" aria-label="Withdraw"
                   data-testid="withdraw-btn" [disabled]="busy" (click)="startWithdraw(e)"><i class="bi bi-person-dash"></i></button>

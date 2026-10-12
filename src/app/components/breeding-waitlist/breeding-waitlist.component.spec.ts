@@ -106,6 +106,7 @@ describe('BreedingWaitlistComponent', () => {
   it('"Add a note" after a move re-sends the same position with the note', () => {
     service.reorder.and.returnValue(of(B));
     const el = render();
+    service.getLitterWaitlist.and.returnValue(of({ breeding_id: 7, entries: [B, A, C] }));
     q(qa(el, '[data-testid="wl-row"]')[1], '[aria-label="Move up"]').click();
     fixture.detectChanges();
     q(el, '[data-testid="add-note"]').click();
@@ -140,10 +141,47 @@ describe('BreedingWaitlistComponent', () => {
     expect(emitted).toHaveBeenCalled();
   });
 
-  it('hides match controls when no offspring is Available', () => {
+  it('offspring but none Available: Withdraw and Pass shown, Match hidden', () => {
     const el = render({ offspring: [PUPS[1]] });
     expect(q(el, '[data-testid="match-select"]')).toBeNull();
+    expect(q(el, '[data-testid="match-btn"]')).toBeNull();
+    expect(q(el, '[data-testid="pass-btn"]')).not.toBeNull();
+    expect(q(el, '[data-testid="withdraw-btn"]')).not.toBeNull();
+  });
+
+  it('no offspring: only Withdraw is shown', () => {
+    const el = render({ offspring: [] });
     expect(q(el, '[data-testid="pass-btn"]')).toBeNull();
+    expect(q(el, '[data-testid="match-select"]')).toBeNull();
+    expect(q(el, '[data-testid="withdraw-btn"]')).not.toBeNull();
+  });
+
+  it('note save uses the entry CURRENT position after a reload reordered the list', () => {
+    service.reorder.and.returnValue(of(B));
+    const el = render();
+    q(qa(el, '[data-testid="wl-row"]')[1], '[aria-label="Move up"]').click(); // b -> 1
+    service.getLitterWaitlist.and.returnValue(of({ breeding_id: 7, entries: [A, C, B] }));
+    component.load();
+    fixture.detectChanges();
+    q(el, '[data-testid="add-note"]').click();
+    fixture.detectChanges();
+    component.noteText = 'Why';
+    fixture.detectChanges();
+    q(el, '[data-testid="save-note"]').click();
+    expect(service.reorder).toHaveBeenCalledWith('b', 3, 'Why');
+  });
+
+  it('prunes a match choice whose offspring is no longer Available', () => {
+    render({ offspring: PUPS });
+    component.matchChoice['a'] = 'o1';
+    component.offspring = [PUPS[1]];
+    component.load();
+    expect(component.matchChoice['a']).toBeUndefined();
+  });
+
+  it('does not load when voided', () => {
+    render({ voided: true });
+    expect(service.getLitterWaitlist).not.toHaveBeenCalled();
   });
 
   it('Pass calls pass', () => {
