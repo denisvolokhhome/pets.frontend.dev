@@ -97,6 +97,7 @@ async function mockApi(page: Page) {
   const state = {
     role: 'seeker' as 'seeker' | 'breeder',
     entry: null as any,
+    offspringStatus: 'Available',
   };
   const entryBase = () => ({
     id: 'e1',
@@ -137,7 +138,9 @@ async function mockApi(page: Page) {
     if (path === '/api/auth/users/me') return json(route, state.role === 'breeder' ? BREEDER : SEEKER);
     if (path === `/api/offsprings/public/${OFFSPRING_ID}`) return json(route, OFFSPRING);
     if (path.startsWith('/api/offsprings/public/breeder')) return json(route, { offsprings: [], items: [], total: 0 });
-    if (path === `/api/breedings/${BREEDING_ID}`) return json(route, BREEDING);
+    if (path === `/api/breedings/${BREEDING_ID}`) {
+      return json(route, { ...BREEDING, puppies: [{ ...OFFSPRING, status: state.offspringStatus }] });
+    }
     if (path === `/api/breedings/${BREEDING_ID}/planner`) return json(route, EMPTY_PLANNER);
     if (path === '/api/breedings') return json(route, [BREEDING]);
 
@@ -183,9 +186,9 @@ async function mockApi(page: Page) {
     }
     if (path === '/api/waitlist/entries/e1/match' && method === 'POST') {
       state.entry = { ...state.entry, status: 'matched', offspring_id: body.offspring_id };
+      state.offspringStatus = 'Reserved';
       return json(route, state.entry);
     }
-    if (path.startsWith('/api/waitlist/')) return json(route, []);
     return json(route, []);
   });
   return { calls, state };
@@ -209,7 +212,8 @@ test.describe('Waitlist flow (flag on)', () => {
     await expect(joinModal).toContainText('Refundable until the litter is born.');
     await joinModal.getByTestId('submit').click();
     await expect(joinModal).toBeHidden();
-    expect(post('/requests')?.body).toEqual(expect.objectContaining({
+    await expect(page.getByText('Request sent')).toBeVisible();
+    await expect.poll(() => post('/requests')?.body).toEqual(expect.objectContaining({
       request_breeding_id: BREEDING_ID, sex_preference: 'Any',
     }));
 
@@ -218,7 +222,8 @@ test.describe('Waitlist flow (flag on)', () => {
     await page.goto('/waitlist');
     await expect(page.locator('.request-card')).toContainText('Sam Seeker');
     await page.getByTestId('approve').click();
-    expect(post('/entries/e1/approve')).toBeTruthy();
+    await expect.poll(() => post('/entries/e1/approve')).toBeTruthy();
+    await expect(page.locator('.request-card')).toHaveCount(0);
 
     // 3. Records the deposit on the general list.
     await page.getByTestId('tab-general').click();
@@ -231,7 +236,7 @@ test.describe('Waitlist flow (flag on)', () => {
     await depositModal.locator('#dep-date').fill('2026-10-10');
     await depositModal.getByTestId('save').click();
     await expect(depositModal).toBeHidden();
-    expect(post('/entries/e1/deposit')?.body).toEqual(expect.objectContaining({
+    await expect.poll(() => post('/entries/e1/deposit')?.body).toEqual(expect.objectContaining({
       deposit_status: 'received', deposit_received_on: '2026-10-10',
     }));
     await expect(row.getByTestId('deposit-badge')).toContainText('Deposit received');
@@ -240,7 +245,7 @@ test.describe('Waitlist flow (flag on)', () => {
     await row.getByTestId('move-btn').click();
     await page.getByTestId('move-select').selectOption({ label: BREEDING.description });
     await page.getByTestId('move-confirm').click();
-    expect(post('/entries/e1/move')?.body).toEqual({ breeding_id: BREEDING_ID });
+    await expect.poll(() => post('/entries/e1/move')?.body).toEqual({ breeding_id: BREEDING_ID });
     await expect(page.getByTestId('general-row')).toHaveCount(0);
 
     // 5. On the litter page, matches them to an offspring.
@@ -248,9 +253,13 @@ test.describe('Waitlist flow (flag on)', () => {
     const litterRow = page.getByTestId('wl-row');
     await expect(litterRow).toContainText('Sam Seeker');
     await litterRow.getByTestId('match-select').selectOption({ label: 'Biscuit (Female)' });
+    await expect(page.locator('p-table tbody')).toContainText('Available');
     await litterRow.getByTestId('match-btn').click();
-    expect(post('/entries/e1/match')?.body).toEqual({ offspring_id: OFFSPRING_ID });
+    await expect.poll(() => post('/entries/e1/match')?.body).toEqual({ offspring_id: OFFSPRING_ID });
     await expect(page.getByTestId('wl-row')).toHaveCount(0);
+    // The breeding page refreshes its offspring list after a match: Biscuit is now Reserved.
+    await expect(page.locator('p-table tbody')).toContainText('Reserved');
+    await expect(page.locator('p-table tbody')).not.toContainText('Available');
   });
 });
 
@@ -266,6 +275,7 @@ test.describe('Waitlist flag off (default build)', () => {
     await mockApi(page);
     await page.goto(`/offspring/${OFFSPRING_ID}`);
     await expect(page.getByText('Biscuit').first()).toBeVisible();
+    await page.waitForLoadState('networkidle');
     await expect(page.getByTestId('join-waitlist')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Join waitlist' })).toHaveCount(0);
   });
