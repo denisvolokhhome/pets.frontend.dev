@@ -72,6 +72,7 @@ export interface IWaitlistSettings {
 export interface IWaitlistEvent {
   id: string;
   type: string;
+  actor_id: string | null;
   payload: Record<string, unknown>;
   created_at: string;
 }

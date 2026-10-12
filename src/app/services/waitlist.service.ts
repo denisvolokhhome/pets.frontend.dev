@@ -17,25 +17,19 @@ import {
 
 /** Request body for a pet seeker asking for a spot on a breeder's waitlist. */
 export interface IWaitlistRequestInput {
-  breeding_id?: number | null;
+  request_breeding_id?: number | null;
   sex_preference: SexPreference;
   preference_notes?: string | null;
   application_answers?: Record<string, string> | null;
 }
 
-/** Request body for a breeder adding a waitlist entry by hand. */
+/** Request body for a breeder adding a waitlist entry by hand. An email or a phone is required. */
 export interface IManualEntryInput {
-  display_name: string;
+  contact_name: string;
   contact_email?: string | null;
   contact_phone?: string | null;
-  breeding_id?: number | null;
   sex_preference?: SexPreference;
   preference_notes?: string | null;
-  queue_date?: string | null;
-  deposit_status?: DepositStatus;
-  deposit_amount?: string | null;
-  deposit_received_on?: string | null;
-  deposit_method?: string | null;
 }
 
 /** Request body for updating an entry's deposit. */
@@ -148,7 +142,7 @@ export class WaitlistService {
     return this.http.post<IWaitlistEntry>(this.entryUrl(id, 'pass'), {}, { headers: this.getHeaders() });
   }
 
-  withdraw(id: string, depositOutcome?: string): Observable<IWaitlistEntry> {
+  withdraw(id: string, depositOutcome?: 'refunded' | 'forfeited'): Observable<IWaitlistEntry> {
     const body = depositOutcome ? { deposit_outcome: depositOutcome } : {};
     return this.http.post<IWaitlistEntry>(this.entryUrl(id, 'withdraw'), body, { headers: this.getHeaders() });
   }

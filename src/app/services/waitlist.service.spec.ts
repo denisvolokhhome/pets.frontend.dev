@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from 'src/environments/environment';
-import { WaitlistService } from './waitlist.service';
+import { IDepositUpdate, IManualEntryInput, IWaitlistRequestInput, WaitlistService } from './waitlist.service';
 
 describe('WaitlistService', () => {
   let service: WaitlistService;
@@ -43,8 +43,8 @@ describe('WaitlistService', () => {
   });
 
   it('requestSpot', () => {
-    const body = { sex_preference: 'Any' };
-    service.requestSpot('b1', body as any).subscribe();
+    const body: IWaitlistRequestInput = { sex_preference: 'Any', request_breeding_id: 5 };
+    service.requestSpot('b1', body).subscribe();
     expectCall('POST', `${base}/breeders/b1/requests`, body);
   });
 
@@ -69,8 +69,8 @@ describe('WaitlistService', () => {
   });
 
   it('addManual', () => {
-    const body = { display_name: 'A' };
-    service.addManual(body as any).subscribe();
+    const body: IManualEntryInput = { contact_name: 'A', contact_email: 'a@b.com' };
+    service.addManual(body).subscribe();
     expectCall('POST', `${base}/entries`, body);
   });
 
@@ -85,8 +85,8 @@ describe('WaitlistService', () => {
   });
 
   it('updateDeposit', () => {
-    const body = { deposit_status: 'received' };
-    service.updateDeposit('e1', body as any).subscribe();
+    const body: IDepositUpdate = { deposit_status: 'received', deposit_received_on: '2026-01-01' };
+    service.updateDeposit('e1', body).subscribe();
     expectCall('PUT', `${base}/entries/e1/deposit`, body);
   });
 
