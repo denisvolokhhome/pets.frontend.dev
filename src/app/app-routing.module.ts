@@ -34,6 +34,8 @@ import { ServiceProviderGuard } from './guard/service-provider.guard';
 import { ServiceCategoriesSettingsComponent } from './components/settings/service-categories-settings/service-categories-settings.component';
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
+import { WaitlistGuard } from './guard/waitlist.guard';
+import { MyWaitlistsComponent } from './components/my-waitlists/my-waitlists.component';
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
@@ -77,6 +79,7 @@ const routes: Routes = [
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
+  { path: 'my-waitlists', component: MyWaitlistsComponent, canActivate: [WaitlistGuard, PetSeekerGuard] },
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [ServiceProviderGuard] },

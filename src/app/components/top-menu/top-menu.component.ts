@@ -18,6 +18,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   isMobileMenuOpen: boolean = false;
   showGetStartedDropdown: boolean = false;
   readonly serviceProvidersEnabled = environment.enableServiceProviders;
+  readonly waitlistEnabled = environment.enableWaitlist;
+
+  get isPetSeeker(): boolean {
+    return this.service.isPetSeeker;
+  }
 
   /** Sign-up pages (path may carry ?type=…) hide the Get Started menu. */
   get isOnRegister(): boolean {

@@ -1,0 +1,66 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="join-modal" role="dialog" aria-modal="true" aria-label="Join waitlist" (click)="$event.stopPropagation()">
+    <div class="join-modal-header">
+      <h3>Join waitlist{{ info?.breedery_name ? ' · ' + info?.breedery_name : '' }}</h3>
+      <button type="button" class="ui-icon-btn" (click)="onClose()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="join-modal-body">
+      <div *ngIf="isLoading" class="loading-state">Loading…</div>
+
+      <ng-container *ngIf="info && !isLoading">
+        <div *ngIf="info.has_active_entry" class="notice">
+          <p>You're already on this breeder's waitlist.</p>
+          <a routerLink="/my-waitlists" class="ui-link" (click)="onClose()">View My waitlists</a>
+        </div>
+
+        <ng-container *ngIf="!info.has_active_entry">
+          <div class="deposit-box" *ngIf="info.deposit_amount || info.deposit_policy">
+            <p class="deposit-amount" *ngIf="info.deposit_amount">Deposit: ${{ info.deposit_amount | number:'1.0-2' }}</p>
+            <p class="deposit-policy" *ngIf="info.deposit_policy">{{ info.deposit_policy }}</p>
+          </div>
+
+          <fieldset class="field-group">
+            <legend class="field-label">Sex preference</legend>
+            <div class="radio-row">
+              <label *ngFor="let opt of sexOptions" class="radio-opt">
+                <input type="radio" name="sexPreference" [value]="opt" [(ngModel)]="sexPreference" />
+                {{ opt }}
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="field-group">
+            <label class="field-label" for="jw-notes">Notes (optional)</label>
+            <textarea id="jw-notes" class="field-textarea" rows="3" [(ngModel)]="notes"
+                      placeholder="Colors, temperament, timing…"></textarea>
+          </div>
+
+          <div class="field-group" *ngFor="let field of fields">
+            <label class="field-label" [attr.for]="'jw-' + field.id">
+              {{ field.label }}
+              <span class="required-star" *ngIf="field.required">*</span>
+            </label>
+            <input *ngIf="field.type === 'text'" [id]="'jw-' + field.id" type="text" class="field-input"
+                   [class.field-error]="validationErrors[field.id]" [(ngModel)]="answers[field.id]"
+                   placeholder="Your answer…" />
+            <textarea *ngIf="field.type === 'textarea'" [id]="'jw-' + field.id" class="field-textarea" rows="4"
+                      [class.field-error]="validationErrors[field.id]" [(ngModel)]="answers[field.id]"
+                      placeholder="Your answer…"></textarea>
+            <span class="error-msg" *ngIf="validationErrors[field.id]">{{ validationErrors[field.id] }}</span>
+          </div>
+
+          <p class="error-msg" *ngIf="conflictMessage">{{ conflictMessage }}</p>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div class="join-modal-footer">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="onClose()">Cancel</button>
+      <button *ngIf="info && !info.has_active_entry" type="button" class="ui-btn ui-btn--primary"
+              data-testid="submit" (click)="onSubmit()" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Sending…' : 'Request a spot' }}
+      </button>
+    </div>
+  </div>
+</div>

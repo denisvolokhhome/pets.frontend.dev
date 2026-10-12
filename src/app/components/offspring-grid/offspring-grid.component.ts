@@ -4,6 +4,8 @@ import { Location } from '@angular/common';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,6 +19,8 @@ export class OffspringGridComponent implements OnInit {
 
   offsprings: OffspringRead[] = [];
   isLoading: boolean = true;
+  readonly waitlistEnabled = environment.enableWaitlist;
+  showJoinWaitlist: boolean = false;
   breederInfo: any = null;
   
   // Pagination
@@ -53,7 +57,8 @@ export class OffspringGridComponent implements OnInit {
     private offspringService: OffspringService,
     private dataService: DataService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +81,23 @@ export class OffspringGridComponent implements OnInit {
       this.loadOffsprings();
       this.loadBreederInfo();
     }
+  }
+
+  /** Join button: flag on, and the viewer is logged out or a pet seeker (not this breeder). */
+  canJoinWaitlist(): boolean {
+    if (!this.waitlistEnabled || !this.breederId) return false;
+    const user = this.authService.currentUser;
+    if (!user) return true;
+    return user.id !== this.breederId && this.authService.isPetSeeker;
+  }
+
+  joinWaitlist(): void {
+    if (!localStorage.getItem('id_token')) {
+      rememberPostSignupRedirect(this.router.url);
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.showJoinWaitlist = true;
   }
 
   /**

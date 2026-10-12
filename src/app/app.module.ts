@@ -79,6 +79,7 @@ import { OffspringListComponent } from './components/offspring-list/offspring-li
 import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringCardComponent } from './components/offspring-card/offspring-card.component';
+import { JoinWaitlistModalComponent } from './components/join-waitlist-modal/join-waitlist-modal.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
@@ -199,6 +200,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   imports: [
     BrowserModule,
     CommonModule,
+    JoinWaitlistModalComponent,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,

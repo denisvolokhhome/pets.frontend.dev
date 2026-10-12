@@ -124,6 +124,19 @@
         <span *ngIf="!isCollapsed">Favorites</span>
       </a>
     </li>
+    <li class="mb-2" *ngIf="isPetSeeker && waitlistEnabled">
+      <a
+        [routerLink]="['/my-waitlists']"
+        routerLinkActive="side-link--active"
+        #rlaWaitlists="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [attr.aria-current]="rlaWaitlists.isActive ? 'page' : null"
+        class="side-link"
+        [title]="isCollapsed ? 'My waitlists' : ''">
+        <i class="bi bi-hourglass-split text-xl"></i>
+        <span *ngIf="!isCollapsed">My waitlists</span>
+      </a>
+    </li>
   </ul>
 </div>
 </nav>
