@@ -4,8 +4,8 @@ import { WaitlistService } from '../../services/waitlist.service';
 import { DataService } from '../../services/data.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { ToastService } from '../../services/toast.service';
-import { DEPOSIT_STATUS_LABELS, IWaitlistEntry, IWaitlistEvent } from '../../models/waitlist';
-import { formatDisplayDate, statusBadgeClass } from '../../utils/format-utils';
+import { DEPOSIT_STATUS_LABELS, depositBadgeClass, IWaitlistEntry, IWaitlistEvent } from '../../models/waitlist';
+import { formatDisplayDate } from '../../utils/format-utils';
 
 type Section = 'requests' | 'general';
 type PanelKind = 'move' | 'history' | 'withdraw';
@@ -28,7 +28,7 @@ export class WaitlistComponent implements OnInit {
   isLoading = true;
 
   readonly depositLabels = DEPOSIT_STATUS_LABELS;
-  readonly badgeClass = statusBadgeClass;
+  readonly depositClass = depositBadgeClass;
   readonly formatDate = formatDisplayDate;
 
   /** Which row action panel (move / history / withdraw) is open, and for which entry. */

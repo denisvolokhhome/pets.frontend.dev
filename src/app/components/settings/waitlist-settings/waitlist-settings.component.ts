@@ -15,11 +15,18 @@ export class WaitlistSettingsComponent implements OnInit {
   policy = '';
   amountError = '';
   isLoading = true;
+  loadFailed = false;
   isSaving = false;
 
   constructor(private waitlistService: WaitlistService, private toastr: ToastService) {}
 
   ngOnInit(): void {
+    this.load();
+  }
+
+  load(): void {
+    this.isLoading = true;
+    this.loadFailed = false;
     this.waitlistService.getSettings().subscribe({
       next: s => {
         this.amount = s.deposit_amount ?? '';
@@ -28,12 +35,13 @@ export class WaitlistSettingsComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        this.toastr.error('Could not load waitlist settings.', 'Error');
+        this.loadFailed = true;
       }
     });
   }
 
   save(): void {
+    if (this.loadFailed || this.isLoading) return;
     const amount = String(this.amount ?? '').trim();
     this.amountError = '';
     if (amount && !(Number(amount) >= 0)) {

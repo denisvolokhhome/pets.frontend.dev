@@ -86,6 +86,16 @@ export const DEPOSIT_STATUS_LABELS: Record<DepositStatus, string> = {
   applied: 'Applied to purchase'
 };
 
+const DEPOSIT_TONES: Record<DepositStatus, string> = {
+  none: 'neutral', requested: 'warning', received: 'success',
+  refunded: 'neutral', forfeited: 'danger', applied: 'info'
+};
+
+/** CSS classes for a deposit status pill, e.g. "ui-badge ui-badge--success". */
+export function depositBadgeClass(status: DepositStatus | null | undefined): string {
+  return `ui-badge ui-badge--${DEPOSIT_TONES[status as DepositStatus] ?? 'neutral'}`;
+}
+
 /**
  * Whether to show "Join waitlist" to a viewer of a breeder's listing.
  * Logged-out visitors may click (they are sent to log in). With a token but no

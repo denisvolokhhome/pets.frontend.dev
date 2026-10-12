@@ -70,7 +70,7 @@
                 <span class="ui-cell-sub">{{ contactLine(e) }}<ng-container *ngIf="e.sex_preference !== 'Any'"> · {{ e.sex_preference }}</ng-container></span>
                 <span class="ui-badge ui-badge--neutral" *ngIf="e.possible_duplicate">Possible duplicate</span>
               </td>
-              <td>{{ depositLabels[e.deposit_status] }}</td>
+              <td><span [class]="depositClass(e.deposit_status)" data-testid="deposit-badge">{{ depositLabels[e.deposit_status] }}</span></td>
               <td>{{ formatDate(e.queue_date) }}</td>
               <td class="actions-col">
                 <button type="button" class="ui-icon-btn" title="Record deposit" aria-label="Record deposit"

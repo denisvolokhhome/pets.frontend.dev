@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { WaitlistSettingsComponent } from './waitlist-settings.component';
 import { WaitlistService } from '../../../services/waitlist.service';
@@ -52,5 +52,21 @@ describe('WaitlistSettingsComponent', () => {
     fixture.componentInstance.amount = '-5';
     fixture.componentInstance.save();
     expect(waitlist.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('on load failure hides the form, never saves, and offers retry', () => {
+    waitlist.getSettings.and.returnValue(throwError(() => new Error('boom')));
+    fixture.componentInstance.ngOnInit();
+    fixture.detectChanges();
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('form')).toBeNull();
+    expect(el.querySelector('[data-testid="retry"]')).not.toBeNull();
+    fixture.componentInstance.save();
+    expect(waitlist.updateSettings).not.toHaveBeenCalled();
+    waitlist.getSettings.and.returnValue(of({ deposit_amount: '5', deposit_policy: null }));
+    (el.querySelector('[data-testid="retry"]') as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(el.querySelector('form')).not.toBeNull();
+    expect(fixture.componentInstance.amount).toBe('5');
   });
 });

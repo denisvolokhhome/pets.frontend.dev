@@ -83,6 +83,8 @@ describe('WaitlistComponent', () => {
     expect(rows.length).toBe(2);
     expect(rows[0].textContent).toContain('Bob First');
     expect(rows[0].textContent).toContain('Deposit received');
+    expect(rows[0].querySelector('[data-testid="deposit-badge"]')?.className).toContain('ui-badge--success');
+    expect(rows[1].querySelector('[data-testid="deposit-badge"]')?.className).toContain('ui-badge--neutral');
     expect(rows[0].textContent).toContain('Possible duplicate');
     expect(rows[1].textContent).toContain('Cy Second');
     expect(rows[1].textContent).not.toContain('Possible duplicate');
