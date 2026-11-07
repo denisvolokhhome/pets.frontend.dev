@@ -79,6 +79,12 @@
     </div>
   </div>
 
+  <div class="waitlist-bar" *ngIf="canJoinWaitlist()">
+    <button type="button" class="ui-btn ui-btn--primary" data-testid="join-waitlist" (click)="joinWaitlist()">
+      <i class="bi bi-clock"></i> Join waitlist
+    </button>
+  </div>
+
   <div class="page-layout">
     <!-- Left Sidebar: Breeder Info + Filters (desktop) -->
     <aside class="sidebar">
@@ -195,3 +201,10 @@
   </div>
 
 </div>
+
+<app-join-waitlist-modal
+  *ngIf="showJoinWaitlist"
+  [breederId]="breederId"
+  (joined)="showJoinWaitlist = false"
+  (closed)="showJoinWaitlist = false">
+</app-join-waitlist-modal>

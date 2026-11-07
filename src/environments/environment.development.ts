@@ -9,4 +9,7 @@ export const environment = {
   // ENABLE_SERVICE_PROVIDERS in the backend's .env — keep both in sync.
   // Flip to true locally if you need to develop/test the service-provider flow.
   enableServiceProviders: false,
+  // Breeder waitlists & deposits are hidden until launch. Must match
+  // ENABLE_WAITLIST in the backend's .env — keep both in sync.
+  enableWaitlist: false,
 };

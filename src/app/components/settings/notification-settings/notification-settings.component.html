@@ -72,6 +72,27 @@
             </label>
           </div>
         </div>
+
+        <div class="preference-item" *ngIf="waitlistEnabled">
+          <div class="preference-info">
+            <label class="preference-label">
+              <i class="bi bi-list-check"></i>
+              Waitlist updates
+            </label>
+            <p class="preference-description">
+              Get notified (in the app and by email) about waitlist requests and changes to your waitlist spot or deposit
+            </p>
+          </div>
+          <div class="preference-toggle">
+            <label class="switch">
+              <input 
+                type="checkbox" 
+                formControlName="waitlist_update"
+                [disabled]="isLoading">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="form-actions">

@@ -1,0 +1,24 @@
+<div class="my-waitlists">
+  <h1 class="page-title">My waitlists</h1>
+
+  <p *ngIf="isLoading" class="muted">Loading…</p>
+
+  <p *ngIf="!isLoading && entries.length === 0" class="muted empty">You're not on any waitlists yet.</p>
+
+  <div class="entry-list">
+    <div class="entry-card" *ngFor="let e of entries">
+      <div class="entry-head">
+        <a class="ui-link entry-name" [routerLink]="['/breeder', e.breeder_id, 'offsprings']">{{ e.breedery_name || 'Breeder' }}</a>
+        <span [class]="badgeClass(e.status)">{{ statusText(e) }}</span>
+      </div>
+      <div class="entry-label">{{ e.list_label }}</div>
+      <div class="entry-meta">
+        <span *ngIf="e.status === 'active' && e.position !== null" class="entry-position">You're #{{ e.position }}</span>
+        <span class="entry-deposit">{{ depositLabels[e.deposit_status] }}<ng-container *ngIf="e.deposit_amount && e.deposit_status !== 'none'"> · ${{ e.deposit_amount | number:'1.0-2' }}</ng-container></span>
+      </div>
+      <div class="entry-actions" *ngIf="canWithdraw(e)">
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="withdraw" (click)="withdraw(e)">Withdraw</button>
+      </div>
+    </div>
+  </div>
+</div>

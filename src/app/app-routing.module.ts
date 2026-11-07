@@ -34,6 +34,10 @@ import { ServiceProviderGuard } from './guard/service-provider.guard';
 import { ServiceCategoriesSettingsComponent } from './components/settings/service-categories-settings/service-categories-settings.component';
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
+import { WaitlistGuard } from './guard/waitlist.guard';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
+import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
+import { MyWaitlistsComponent } from './components/my-waitlists/my-waitlists.component';
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
@@ -77,6 +81,8 @@ const routes: Routes = [
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
+  { path: 'waitlist', component: WaitlistComponent, canActivate: [WaitlistGuard, BreederGuard] },
+  { path: 'my-waitlists', component: MyWaitlistsComponent, canActivate: [WaitlistGuard, PetSeekerGuard] },
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [ServiceProviderGuard] },
@@ -94,6 +100,7 @@ const routes: Routes = [
       { path: 'locations', component: BreedingLocationsComponent },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
       { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
+      { path: 'waitlist', component: WaitlistSettingsComponent, canActivate: [WaitlistGuard, BreederGuard] },
       { path: 'support', component: SupportSettingsComponent },
       { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }
     ]

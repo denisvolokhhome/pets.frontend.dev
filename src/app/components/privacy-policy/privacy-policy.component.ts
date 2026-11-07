@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./privacy-policy.component.css']
 })
 export class PrivacyPolicyComponent {
-  lastUpdated = 'October 10, 2026';
+  lastUpdated = 'October 11, 2026';
 
   downloadPolicy(): void {
     const content = this.getPolicyText();
@@ -22,8 +22,8 @@ export class PrivacyPolicyComponent {
 
   private getPolicyText(): string {
     return `BREEDLY PRIVACY POLICY
-Last Updated: October 4, 2026
-Effective Date: October 4, 2026
+Last Updated: October 11, 2026
+Effective Date: October 11, 2026
 
 ================================================================================
 
@@ -84,6 +84,30 @@ Pet and Offspring Listings (Breeders):
 - Offspring details: name, gender, date of birth, price, availability status,
   colour markings, description
 - Images uploaded for pets and offspring
+- Breeding planner records (breeders only, never shown to pet seekers): mating
+  dates and methods, sire, progesterone test results, ovulation date,
+  pregnancy stage, and milestone dates
+
+Waitlists and Deposits (only if you use the waitlist feature):
+- Waitlist requests (pet seekers): the sex preference, notes, and answers to
+  the breeder's application form that you choose to submit. The breeder you
+  apply to can see this information, together with your name and contact details.
+- Contact details of people who are not Breedly users (breeders only): if a
+  breeder adds someone to their waitlist manually, the breeder enters that
+  person's name, email address, and phone number. We store these details so the
+  breeder can manage their waitlist and contact that person. If that person
+  later signs up or logs in to Breedly with the same email address, their
+  waitlist entry may be linked to their account.
+- Deposit records: if a breeder records a deposit for your waitlist entry
+  (amount, date received, and payment method such as Zelle, Venmo, or cash),
+  the breeder and you can see it. Breedly stores this record but does not
+  process, hold, or verify payments.
+- Waitlist order and matching: the breeder's pick order and which offspring a
+  person is matched to.
+
+Breeders who add other people's contact details are responsible for having
+permission to do so. If you believe a breeder has added your details to a
+waitlist and you would like them removed, contact us at privacy@breedly.us.
 
 Messages:
 - Message content between pet seekers and breeders
@@ -131,7 +155,8 @@ Service Delivery:
 - Display your breeder profile and listings to pet seekers
 - Enable messaging between breeders and pet seekers
 - Process subscription payments via Stripe
-- Send in-app notifications (new messages, favorites added)
+- Send in-app notifications (new messages, favorites added, and, if you use
+  the waitlist feature, waitlist updates)
 - Enable location-based search for nearby breeders and offspring
 
 Email Communications:
@@ -140,7 +165,10 @@ We send transactional emails through an email delivery (SMTP) provider, includin
 - A welcome email when you create an account
 - Activity notifications when you receive a new message and, for breeders, when
   a pet seeker adds one of your offspring to Favorites
-You can manage activity notification preferences in your account settings.
+- If you use the waitlist feature, waitlist update emails about your waitlist
+  requests and entries
+You can manage activity notification preferences in your account settings,
+including turning off "Waitlist updates".
 Account verification, password reset, and other security-related emails are
 required to operate your account and cannot be turned off.
 
@@ -210,6 +238,9 @@ Breedly is intended exclusively for use within the United States.
 
 - Account data: Removed within 30 days of account deletion.
 - Pet and offspring listings: Soft-deleted while account is active.
+- Waitlist and deposit records: Retained until the breeder deletes their
+  account. Anyone listed on a breeder's waitlist can ask the breeder, or
+  contact privacy@breedly.us, to have their details removed.
 - Messages: Permanently removed after 90 days of soft-deletion.
 - Billing records: Retained for 7 years for legal compliance.
 - Audit logs: Retained for 12 months.

@@ -15,15 +15,17 @@ import { GenealogyService } from 'src/app/services/genealogy.service';
 import { ApplicationFormModalComponent, ApplicationFormSubmission } from '../application-form-modal/application-form-modal.component';
 import { environment } from 'src/environments/environment';
 import { DataService } from 'src/app/services/data.service';
-import { formatDisplayDate, statusBadgeClass } from 'src/app/utils/format-utils';
+import { formatDisplayDate, statusBadgeClass, rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { canJoinWaitlist } from 'src/app/models/waitlist';
+import { JoinWaitlistModalComponent } from '../join-waitlist-modal/join-waitlist-modal.component';
 
 @Component({
   standalone: true,
   selector: 'app-offspring-detail',
   templateUrl: './offspring-detail.component.html',
   styleUrls: ['./offspring-detail.component.css'],
-  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent, OffspringCardComponent]
+  imports: [CommonModule, GalleriaModule, GuestPromptModalComponent, OffspringEditComponent, OffspringDocumentsComponent, ApplicationFormModalComponent, OffspringCardComponent, JoinWaitlistModalComponent]
 })
 export class OffspringDetailComponent implements OnInit {
   readonly apiHost = environment.API_HOST;
@@ -56,6 +58,10 @@ export class OffspringDetailComponent implements OnInit {
 
   // Application form modal (pet seeker)
   showApplicationForm: boolean = false;
+
+  // Waitlist (pet seeker)
+  readonly waitlistEnabled = environment.enableWaitlist;
+  showJoinWaitlist: boolean = false;
 
   constructor(
     private confirmService: ConfirmService,
@@ -566,6 +572,23 @@ export class OffspringDetailComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  /** Join button: public view only, via the shared predicate. */
+  canJoinWaitlist(): boolean {
+    return this.viewMode === 'public' && canJoinWaitlist(
+      this.waitlistEnabled, this.authService.hasValidToken(), this.authService.currentUser,
+      this.authService.isPetSeeker, this.offspring?.user_id
+    );
+  }
+
+  joinWaitlist(): void {
+    if (!this.authService.hasValidToken()) {
+      rememberPostSignupRedirect(this.router.url);
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.showJoinWaitlist = true;
   }
 
   /**

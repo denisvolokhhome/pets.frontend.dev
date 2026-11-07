@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: false,
@@ -16,6 +17,7 @@ export class LeftMenuComponent implements OnInit {
   route: any;
   isCollapsed: boolean = false;
   unreadMessages = 0;
+  readonly waitlistEnabled = environment.enableWaitlist;
   
   constructor(
     private router: Router, 

@@ -272,3 +272,5 @@
   .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 0.75rem; }
   .sidebar-card { flex: 1; min-width: 200px; }
 }
+
+.waitlist-bar { display: flex; justify-content: flex-end; padding: 0.75rem 1rem 0; }

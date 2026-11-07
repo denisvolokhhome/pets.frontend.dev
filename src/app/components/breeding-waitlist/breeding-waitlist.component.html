@@ -1,0 +1,90 @@
+<div class="wl-card">
+  <div class="wl-header">
+    <h2 class="wl-title">Waitlist</h2>
+    <div class="wl-actions" *ngIf="!voided && !isLoading">
+      <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" data-testid="reset-order"
+              *ngIf="hasOverride" [disabled]="busy" (click)="resetOrder()">Reset to deposit order</button>
+      <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="add-general"
+              *ngIf="general.length" [disabled]="busy" (click)="showPicker = !showPicker">
+        <i class="bi bi-plus"></i> Add from general list
+      </button>
+    </div>
+  </div>
+
+  <p class="wl-muted" *ngIf="voided">This breeding was voided — entries returned to the general list.</p>
+
+  <ng-container *ngIf="!voided">
+    <p class="wl-muted" *ngIf="isLoading">Loading waitlist…</p>
+    <div class="wl-error" *ngIf="loadFailed">
+      <span>Couldn't load the waitlist.</span>
+      <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="load()">Retry</button>
+    </div>
+
+    <div class="wl-picker" *ngIf="showPicker && general.length">
+      <span class="wl-picker-label">Pick someone from your general list:</span>
+      <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="general-option"
+              *ngFor="let g of general" [disabled]="busy" (click)="addFromGeneral(g)">{{ g.display_name }}</button>
+    </div>
+
+    <div class="wl-empty" *ngIf="!isLoading && !loadFailed && !entries.length">
+      <p>No one is on this litter's waitlist yet.</p>
+    </div>
+
+    <div class="wl-list" cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="busy">
+      <div class="wl-row" *ngFor="let e of entries; let i = index; let first = first; let last = last"
+           cdkDrag data-testid="wl-row">
+        <div class="wl-main">
+          <span class="wl-handle" cdkDragHandle aria-hidden="true"><i class="bi bi-grip-vertical"></i></span>
+          <span class="wl-pos">#{{ i + 1 }}</span>
+          <div class="wl-who">
+            <div class="wl-name">{{ e.display_name }}</div>
+            <div class="wl-sub">
+              <span>{{ e.sex_preference === 'Any' ? 'Any sex' : e.sex_preference }}</span>
+              <span [class]="depositClass(e.deposit_status)">{{ depositLabels[e.deposit_status] }}</span>
+            </div>
+            <div class="override-note" *ngIf="e.override_note">{{ e.override_note }}</div>
+            <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" data-testid="add-note"
+                    *ngIf="lastMoved?.id === e.id && !noteOpen" (click)="openNote()">Add a note</button>
+            <div class="wl-note" *ngIf="lastMoved?.id === e.id && noteOpen">
+              <input type="text" class="wl-input" maxlength="200" placeholder="Why the change? (optional)"
+                     aria-label="Why the change?" [(ngModel)]="noteText" />
+              <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="save-note"
+                      [disabled]="busy || !noteText.trim()" (click)="saveNote()">Save note</button>
+            </div>
+          </div>
+          <div class="wl-move">
+            <button type="button" class="ui-icon-btn" title="Move up" aria-label="Move up"
+                    [disabled]="busy || first" (click)="moveBy(i, -1)"><i class="bi bi-arrow-up"></i></button>
+            <button type="button" class="ui-icon-btn" title="Move down" aria-label="Move down"
+                    [disabled]="busy || last" (click)="moveBy(i, 1)"><i class="bi bi-arrow-down"></i></button>
+            <!-- With no offspring there is nothing else to do: keep Withdraw here instead of an empty strip -->
+            <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Withdraw" aria-label="Withdraw"
+                    data-testid="withdraw-btn" *ngIf="!canPass" [disabled]="busy" (click)="startWithdraw(e)"><i class="bi bi-person-dash"></i></button>
+          </div>
+        </div>
+
+        <div class="wl-match" *ngIf="canPass">
+          <select *ngIf="canMatch" class="wl-input" data-testid="match-select" aria-label="Offspring to match"
+                  [(ngModel)]="matchChoice[e.id]" [disabled]="busy">
+            <option [ngValue]="undefined">Choose offspring…</option>
+            <option *ngFor="let o of availableOffspring" [ngValue]="o.id">{{ offspringLabel(o) }}</option>
+          </select>
+          <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="match-btn" *ngIf="canMatch"
+                  [disabled]="busy || !matchChoice[e.id]" (click)="match(e)">Match</button>
+          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="pass-btn" *ngIf="canPass"
+                  [disabled]="busy" (click)="pass(e)">Pass</button>
+          <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Withdraw" aria-label="Withdraw"
+                  data-testid="withdraw-btn" [disabled]="busy" (click)="startWithdraw(e)"><i class="bi bi-person-dash"></i></button>
+        </div>
+
+        <div class="wl-panel" *ngIf="withdrawPanelId === e.id">
+          <span>Refunded or kept?</span>
+          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="withdraw-refunded"
+                  [disabled]="busy" (click)="withdraw(e, 'refunded')">Refunded</button>
+          <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="withdraw-kept"
+                  [disabled]="busy" (click)="withdraw(e, 'forfeited')">Kept</button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

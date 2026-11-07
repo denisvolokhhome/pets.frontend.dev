@@ -8,4 +8,7 @@ export const environment = {
   // Service provider accounts are hidden pre-launch. Must match
   // ENABLE_SERVICE_PROVIDERS in the backend's .env — keep both in sync.
   enableServiceProviders: false,
+  // Breeder waitlists & deposits are hidden until launch. Must match
+  // ENABLE_WAITLIST in the backend's .env — keep both in sync.
+  enableWaitlist: false,
 };
