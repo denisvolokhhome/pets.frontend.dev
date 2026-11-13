@@ -29,10 +29,10 @@
           <div class="flex items-center" *ngIf="!checkToken">
             <ul class="flex items-center space-x-2">
               <!-- Pricing link scrolls to #pricing on home page -->
-              <li>
+              <li *ngIf="billingEnabled">
                 <a href="/#pricing" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Pricing</a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true">/</span>
+              <span *ngIf="billingEnabled" class="text-white/70 text-base" aria-hidden="true">/</span>
               <!-- Show Sign In when NOT on login page -->
               <li *ngIf="this.route !== '/login'">
                 <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
@@ -60,7 +60,7 @@
                   class="dropdown-menu"
                   [class.show]="showGetStartedDropdown"
                   role="menu">
-                  <a href="/register" class="dropdown-item" role="menuitem">
+                  <a href="/register?type=breeder" class="dropdown-item" role="menuitem">
                     <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                   </a>
                   <a href="/register?type=pet_seeker" class="dropdown-item" role="menuitem">
@@ -102,7 +102,7 @@
           <div *ngIf="!checkToken">
             <ul class="space-y-2">
               <!-- Pricing link scrolls to #pricing on home page -->
-              <li>
+              <li *ngIf="billingEnabled">
                 <a href="/#pricing" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Pricing</a>
               </li>
               <!-- Show Sign In when NOT on login page -->
@@ -112,7 +112,7 @@
               <!-- Show Get Started options when NOT on register pages -->
               <li *ngIf="!isOnRegister">
                 <div class="px-3 py-2 text-white/70 text-sm font-semibold">Get Started</div>
-                <a href="/register" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/register?type=breeder" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                   <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                 </a>
                 <a href="/register?type=pet_seeker" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">

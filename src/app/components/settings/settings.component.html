@@ -30,7 +30,7 @@
         My Service Categories
       </button>
       <button 
-        *ngIf="isBreeder"
+        *ngIf="isBreeder && billingEnabled"
         class="sidebar-nav-item" 
         [class.active]="isActive('subscription')"
         (click)="navigateToSection('subscription')">

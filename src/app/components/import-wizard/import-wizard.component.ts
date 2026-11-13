@@ -12,6 +12,7 @@ import { ModalService } from 'src/app/services/modal.service';
 import { CsvParserService } from 'src/app/services/csv-parser.service';
 import { PetImportService } from 'src/app/services/pet-import.service';
 import { BillingService } from 'src/app/services/billing.service';
+import { environment } from 'src/environments/environment';
 import { ToastService } from 'src/app/services/toast.service';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
@@ -50,6 +51,7 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;
   billingLoaded = false;
   billingError = false;
+  readonly billingEnabled = environment.enableBilling;
 
   /** Step 3 state */
   importResult: ImportResult | null = null;
@@ -221,6 +223,14 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
   }
 
   private loadBillingInfo(): void {
+    if (!this.billingEnabled) {
+      // Paid plans are off: no pet limit, every valid row is importable.
+      this.billingLoaded = true;
+      this.billingError = true;
+      this.applyBillingLimits();
+      this.cdr.detectChanges();
+      return;
+    }
     this.billingLoaded = false;
     this.billingError = false;
 

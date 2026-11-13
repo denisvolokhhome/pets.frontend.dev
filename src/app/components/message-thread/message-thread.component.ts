@@ -77,6 +77,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   @Output() messageSent = new EventEmitter<string>();
   readonly formatPrice = formatPrice;
   @ViewChild('composer') composer?: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('messageList') messageList?: ElementRef<HTMLElement>;
 
   messages: ThreadMessage[] = [];
   replyForm: FormGroup;
@@ -170,6 +171,11 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           // Check if there are new messages
           const hasNewMessages = newMessages.length > this.messages.length;
           
+          // Opening a thread marks its messages read server-side; new ones may have arrived
+          if (!silent || hasNewMessages) {
+            this.messageService.notifyUnreadChanged();
+          }
+
           // Only update if messages have changed (prevents unnecessary re-renders)
           if (JSON.stringify(newMessages) !== JSON.stringify(this.messages)) {
             this.messages = newMessages;
@@ -234,9 +240,9 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           this.isSubmitting = false;
           
           // If this was the first message, extract and set the thread_id
-          if (!this.threadId && response.thread_id) {
+          const isFirstMessage = !this.threadId && !!response.thread_id;
+          if (isFirstMessage) {
             this.threadId = response.thread_id;
-            console.log('Thread ID set from response:', this.threadId);
             // Start polling now that we have a thread
             this.startPolling();
           }
@@ -255,6 +261,11 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           this.messages.push(newMessage);
           this.cdr.detectChanges();
           this.scrollToBottom();
+          if (isFirstMessage) {
+            // The server may have continued an existing conversation with this person:
+            // load its history now instead of waiting for the next poll.
+            this.loadThreadMessages(true);
+          }
           if (this.threadId) {
             this.messageSent.emit(this.threadId);
           }
@@ -321,7 +332,8 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
   private scrollToBottom(): void {
     // With flex-col-reverse, scrollTop: 0 is the bottom
     setTimeout(() => {
-      const messageContainer = document.querySelector('.overflow-y-auto');
+      // This thread's own list — a global query matched the sidebar's list first.
+      const messageContainer = this.messageList?.nativeElement;
       if (messageContainer) {
         messageContainer.scrollTop = 0;
       }
@@ -436,7 +448,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
             is_read: false,
             created_at: new Date().toISOString()
           };
-          
+
           this.messages.push(newMessage);
           this.cdr.detectChanges();
           this.scrollToBottom();

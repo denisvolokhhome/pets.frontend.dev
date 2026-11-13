@@ -12,6 +12,7 @@ export interface OffspringBase {
   price?: number | null;
   description?: string | null;
   color_markings?: string | null;
+  is_published?: boolean;
 }
 
 export interface OffspringCreate extends OffspringBase {
@@ -24,6 +25,7 @@ export interface OffspringUpdate {
   price?: number | null;
   description?: string | null;
   color_markings?: string | null;
+  is_published?: boolean;
 }
 
 export interface OffspringImage {

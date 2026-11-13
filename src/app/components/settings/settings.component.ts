@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SettingsComponent {
   readonly waitlistEnabled = environment.enableWaitlist;
+  readonly billingEnabled = environment.enableBilling;
   
   constructor(
     private router: Router,

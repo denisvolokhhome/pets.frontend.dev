@@ -75,9 +75,9 @@ describe('PricingSectionComponent', () => {
     expect(component.formatPrice(mockProPlan)).toBe('$29.99/month');
   });
 
-  it('should navigate to /register on Get Started click', () => {
+  it('should navigate straight to breeder registration on Get Started click', () => {
     component.onGetStarted();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/register']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/register'], { queryParams: { type: 'breeder' } });
   });
 
   it('should show error when plans load fails', () => {

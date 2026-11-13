@@ -35,6 +35,7 @@ import { ServiceCategoriesSettingsComponent } from './components/settings/servic
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
 import { WaitlistGuard } from './guard/waitlist.guard';
+import { BillingGuard } from './guard/billing.guard';
 import { WaitlistComponent } from './components/waitlist/waitlist.component';
 import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
 import { MyWaitlistsComponent } from './components/my-waitlists/my-waitlists.component';
@@ -99,7 +100,7 @@ const routes: Routes = [
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
-      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
+      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BillingGuard, BreederGuard] },
       { path: 'waitlist', component: WaitlistSettingsComponent, canActivate: [WaitlistGuard, BreederGuard] },
       { path: 'support', component: SupportSettingsComponent },
       { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }

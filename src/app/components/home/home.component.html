@@ -177,7 +177,7 @@
 </section>
 
 <!-- Pricing Section -->
-<app-pricing-section></app-pricing-section>
+<app-pricing-section *ngIf="billingEnabled"></app-pricing-section>
 
 <!-- CTA Footer Section -->
 <section class="cta-footer-section rounded-bottom" aria-labelledby="cta-footer-heading">

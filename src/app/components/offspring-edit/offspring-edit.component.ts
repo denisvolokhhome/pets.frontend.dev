@@ -63,7 +63,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     status: new FormControl<string>('Available', [Validators.required]),
     price: new FormControl<number | null>(null, [Validators.min(0)]),
     description: new FormControl<string>(''),
-    color_markings: new FormControl<string>('')
+    color_markings: new FormControl<string>(''),
+    is_published: new FormControl<boolean>(false, { nonNullable: true })
   });
 
   ngOnInit(): void {
@@ -126,7 +127,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: this.offspring.status,
       price: this.offspring.price,
       description: this.offspring.description || '',
-      color_markings: this.offspring.color_markings || ''
+      color_markings: this.offspring.color_markings || '',
+      is_published: !!this.offspring.is_published
     });
 
     // Disable immutable fields in edit mode
@@ -299,7 +301,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: formValue.status as 'Available' | 'Reserved' | 'Sold' | 'Archived',
       price: formValue.price || null,
       description: formValue.description || null,
-      color_markings: formValue.color_markings || null
+      color_markings: formValue.color_markings || null,
+      is_published: formValue.is_published
     };
 
     this.offspringService.createOffspring(offspringData).subscribe({
@@ -333,7 +336,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: formValue.status as 'Available' | 'Reserved' | 'Sold' | 'Archived',
       price: formValue.price || null,
       description: formValue.description || null,
-      color_markings: formValue.color_markings || null
+      color_markings: formValue.color_markings || null,
+      is_published: formValue.is_published
     };
 
     this.offspringService.updateOffspring(this.offspring.id, offspringData).subscribe({

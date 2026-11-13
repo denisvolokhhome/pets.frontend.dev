@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Subject, interval, merge } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'src/app/services/message.service';
 import { environment } from 'src/environments/environment';
@@ -12,11 +13,12 @@ import { environment } from 'src/environments/environment';
   templateUrl: './left-menu.component.html',
   styleUrls: ['./left-menu.component.css'],
 })
-export class LeftMenuComponent implements OnInit {
+export class LeftMenuComponent implements OnInit, OnDestroy {
   location: any;
   route: any;
   isCollapsed: boolean = false;
   unreadMessages = 0;
+  private destroy$ = new Subject<void>();
   readonly waitlistEnabled = environment.enableWaitlist;
   
   constructor(
@@ -37,11 +39,21 @@ export class LeftMenuComponent implements OnInit {
       this.cdr.detectChanges();
     });
 
-    // Unread badge on the mobile Messages tab; refreshed on every navigation
+    // Unread badge on the mobile Messages tab: refreshed on navigation, when a
+    // conversation is read / gets new messages, and every minute for new arrivals.
     this.loadUnreadCount();
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
+    merge(
+      this.router.events.pipe(filter(e => e instanceof NavigationEnd)),
+      this.messageService.unreadChanged$,
+      interval(60000),
+    )
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.loadUnreadCount());
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadUnreadCount(): void {

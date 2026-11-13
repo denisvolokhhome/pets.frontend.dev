@@ -153,6 +153,9 @@
             </td>
             <td>
               <span [class]="statusBadgeClass(offspring.status)">{{ offspring.status }}</span>
+              <span *ngIf="!offspring.is_published" class="ui-cell-sub flex items-center gap-1 mt-1" title="Not visible to pet seekers">
+                <i class="bi bi-eye-slash" aria-hidden="true"></i> Hidden
+              </span>
             </td>
             <td class="whitespace-nowrap">
               <span class="block">{{ formatDate(offspring.date_of_birth) }}</span>
@@ -185,6 +188,13 @@
             </td>
             <td pFrozenColumn [frozen]="true" alignFrozen="right" style="text-align: right">
               <div class="ui-row-actions">
+                <button type="button" class="ui-icon-btn" (click)="togglePublish(offspring)"
+                        [disabled]="isTogglingPublish[offspring.id]"
+                        [title]="offspring.is_published ? 'Unpublish (hide from pet seekers)' : 'Publish (show to pet seekers)'"
+                        [attr.aria-label]="offspring.is_published ? 'Unpublish' : 'Publish'"
+                        [attr.aria-pressed]="offspring.is_published">
+                  <i class="bi" [ngClass]="offspring.is_published ? 'bi-eye text-emerald-600' : 'bi-eye-slash'"></i>
+                </button>
                 <button type="button" class="ui-icon-btn" (click)="editOffspring(offspring)" title="Edit" aria-label="Edit">
                   <i class="bi bi-pencil"></i>
                 </button>

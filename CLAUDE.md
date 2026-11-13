@@ -47,8 +47,9 @@ There is no lint script or ESLint config.
 Feature flags are **build-time** and must match the backend's `.env`:
 - `enableServiceProviders` ↔ `ENABLE_SERVICE_PROVIDERS`
 - `enableWaitlist` ↔ `ENABLE_WAITLIST`
+- `enableBilling` ↔ `ENABLE_BILLING`: hides the home pricing section, the Pricing links in the top menu, Settings → Subscription (`BillingGuard`) and the import wizard's plan-limit check.
 
-Both flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all three environment files.
+All three flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all three environment files.
 
 ## Architecture
 

@@ -63,7 +63,6 @@ import { WaitlistSettingsComponent } from './components/settings/waitlist-settin
 import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 import { UpcomingMilestonesComponent } from './components/upcoming-milestones/upcoming-milestones.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
-import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
 import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
@@ -174,7 +173,6 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     WaitlistSettingsComponent,
     WaitlistCardComponent,
     OffspringModalComponent,
-    ContactBreederComponent,
     NotificationIconComponent,
     MessagesListComponent,
     MessageDetailComponent,

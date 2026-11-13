@@ -88,7 +88,7 @@
         </p>
         <p class="auth-footer-text mt-2">
           Are you a breeder? 
-          <a routerLink="/register" class="auth-link">Register as a breeder</a>
+          <a routerLink="/register" [queryParams]="{ type: 'breeder' }" class="auth-link">Register as a breeder</a>
         </p>
       </div>
     </form>
