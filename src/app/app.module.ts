@@ -8,6 +8,7 @@ import * as Sentry from '@sentry/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { TopMenuComponent } from './components/top-menu/top-menu.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -133,6 +134,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   declarations: [
     AppComponent,
     HomeComponent,
+    HomeNextComponent,
     TopMenuComponent,
     LoginComponent,
     RegisterComponent,

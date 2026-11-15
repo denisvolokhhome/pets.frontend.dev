@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
@@ -52,6 +53,7 @@ import { RefundPolicyComponent } from './components/refund-policy/refund-policy.
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'home-next', component: HomeNextComponent }, // Preview of the new visual direction
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
