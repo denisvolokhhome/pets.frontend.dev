@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(48, 38, 28, 0.5);
   display: none;
   align-items: center;
   justify-content: center;
@@ -56,17 +56,17 @@
 }
 
 :host ::ng-deep .modal-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--n-100);
   border-radius: 4px;
 }
 
 :host ::ng-deep .modal-body::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--n-500);
   border-radius: 4px;
 }
 
 :host ::ng-deep .modal-body::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--n-600);
 }
 
 /* Responsive adjustments */

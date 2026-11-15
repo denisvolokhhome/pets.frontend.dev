@@ -17,7 +17,7 @@ export class FavoritesListComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'My Favorites',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search favorites…',

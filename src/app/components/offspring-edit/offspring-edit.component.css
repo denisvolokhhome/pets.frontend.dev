@@ -19,10 +19,10 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: white;
+  background: var(--color-surface);
   padding: 1rem 0 0.75rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid var(--n-200);
 }
 
 /* Offspring Info Header (Non-editable fields) */
@@ -70,7 +70,7 @@
 
 .info-value i {
   font-size: 1rem;
-  color: #ec4899;
+  color: var(--female-color-1);
   flex-shrink: 0;
 }
 
@@ -118,7 +118,7 @@
 
 .column-separator {
   width: 1px;
-  background-color: #E5E7EB;
+  background-color: var(--n-200);
   align-self: stretch;
   min-height: 100%;
 }
@@ -140,7 +140,7 @@
 }
 
 .column-heading--red i {
-  color: #ec4899;
+  color: var(--female-color-1);
 }
 
 /* Photo Grid */
@@ -160,8 +160,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.15rem;
-  border: 1.5px dashed #D1D5DB;
-  background: #F9FAFB;
+  border: 1.5px dashed var(--n-300);
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -178,8 +178,8 @@
 }
 
 .photo-upload-tile:hover {
-  border-color: #ec4899;
-  color: #ec4899;
+  border-color: var(--female-color-1);
+  color: var(--female-color-1);
   background: #fdf2f8;
 }
 
@@ -204,7 +204,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(48, 38, 28, 0.65);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -233,7 +233,7 @@
   border-radius: 6px !important;
   border: none !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  color: #374151 !important;
+  color: var(--n-700) !important;
   font-size: 0.875rem !important;
   line-height: 1 !important;
   display: flex !important;
@@ -244,13 +244,13 @@
   margin: 0 !important;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform !important;
   transition-duration: 0.2s !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.3) !important;
   flex-shrink: 0 !important;
 }
 
 .photo-overlay-btn:hover:not(:disabled) {
   transform: scale(1.1) !important;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 3px 6px rgba(48, 38, 28, 0.4) !important;
 }
 
 .photo-overlay-btn:active:not(:disabled) {
@@ -267,26 +267,26 @@
 }
 
 .photo-overlay-btn-primary {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  background: var(--wheat) !important;
   color: white !important;
 }
 
 .photo-overlay-btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  background: var(--wheat) !important;
 }
 
 .photo-overlay-btn-primary:disabled {
-  background: #9ca3af !important;
+  background: var(--n-400) !important;
   opacity: 0.5 !important;
 }
 
 .photo-overlay-btn-delete {
-  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  background: var(--error) !important;
   color: white !important;
 }
 
 .photo-overlay-btn-delete:hover {
-  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  background: var(--error) !important;
 }
 
 /* Photo controls button group */
@@ -327,7 +327,7 @@
   font-size: 0.65rem;
   font-weight: 600;
   border-radius: 4px;
-  background: rgba(99, 102, 241, 0.9);
+  background: rgba(180, 70, 30, 0.9);
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -338,7 +338,7 @@
 }
 
 .photo-preview-tile--new {
-  border: 2px solid #10b981;
+  border: 2px solid var(--success);
 }
 
 /* Modern Form Controls */
@@ -359,25 +359,25 @@
   font-family: var(--font-secondary);
   width: 100%;
   padding: 0.6rem 0.875rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
   font-size: 0.875rem;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   color: var(--dark-color);
   box-sizing: border-box;
 }
 
 .form-control-modern:focus {
   outline: none;
-  border-color: #ec4899;
-  background-color: white;
+  border-color: var(--female-color-1);
+  background-color: var(--color-surface);
   box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
 }
 
 .form-control-modern::placeholder {
-  color: #9CA3AF;
+  color: var(--n-400);
 }
 
 .form-select-modern {
@@ -413,7 +413,7 @@ textarea.form-control-modern {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .hidden {
@@ -426,8 +426,8 @@ textarea.form-control-modern {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  border-top: 1px solid #E5E7EB;
-  background-color: white;
+  border-top: 1px solid var(--n-200);
+  background-color: var(--color-surface);
   flex-shrink: 0;
 }
 
@@ -506,7 +506,7 @@ textarea.form-control-modern {
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
   border-radius: 0.5rem;
   cursor: pointer;
 }
@@ -515,16 +515,16 @@ textarea.form-control-modern {
   height: 1.125rem;
   margin-top: 0.125rem;
   flex-shrink: 0;
-  accent-color: var(--primary, #e8645a);
+  accent-color: var(--clay);
   cursor: pointer;
 }
 .publish-toggle-title {
   display: block;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
 }
 .publish-toggle-hint {
   display: block;
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--n-500);
 }

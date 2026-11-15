@@ -9,16 +9,16 @@
 }
 
 .thread-item:hover {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
 }
 
 .thread-item.active {
-  background-color: #eff6ff;
+  background-color: var(--mist-softer);
   border-left: 3px solid var(--primary-color);
 }
 
 .primary-100 {
-  background-color: rgba(255, 107, 107, 0.1);
+  background-color: rgba(180, 70, 30, 0.1);
 }
 
 .primary-600 {
@@ -31,17 +31,17 @@
 }
 
 .threads-sidebar > div:last-child::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--n-100);
   border-radius: 3px;
 }
 
 .threads-sidebar > div:last-child::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--n-500);
   border-radius: 3px;
 }
 
 .threads-sidebar > div:last-child::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--n-600);
 }
 
 /* Mobile: list OR conversation, never both side by side (a 288px sidebar left ~100px for the chat at 390px). */
@@ -66,9 +66,9 @@
     flex-shrink: 0;
     padding: 0.75rem 1rem;
     min-height: 44px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--n-200);
     font-weight: 600;
-    color: #374151;
-    background: #fff;
+    color: var(--n-700);
+    background: var(--color-surface);
   }
 }

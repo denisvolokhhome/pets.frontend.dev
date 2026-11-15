@@ -1,5 +1,5 @@
 .terms-page {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
   min-height: 100vh;
   padding-bottom: 3rem;
 }
@@ -8,19 +8,19 @@
   text-align: center;
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--n-200);
 }
 
 .terms-title {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--ink);
   margin-bottom: 0.5rem;
 }
 
 .terms-meta {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--n-500);
   margin-bottom: 1.5rem;
 }
 
@@ -28,7 +28,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #4f46e5;
+  background-color: var(--clay);
   color: #ffffff;
   border: none;
   border-radius: 0.5rem;
@@ -40,39 +40,39 @@
 }
 
 .download-btn:hover {
-  background-color: #4338ca;
+  background-color: var(--clay-hover);
 }
 
 .download-btn:focus-visible {
-  outline: 3px solid #6366f1;
+  outline: 3px solid var(--clay);
   outline-offset: 2px;
 }
 
 .terms-section {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border-radius: 0.75rem;
   padding: 1.75rem 2rem;
   margin-bottom: 1.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(48, 38, 28, 0.06);
 }
 
 .section-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 1rem;
 }
 
 .subsection-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--n-700);
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
 }
 
 .terms-section p {
-  color: #374151;
+  color: var(--n-700);
   line-height: 1.7;
   margin-bottom: 0.75rem;
 }
@@ -80,7 +80,7 @@
 .terms-list {
   list-style: disc;
   padding-left: 1.5rem;
-  color: #374151;
+  color: var(--n-700);
   line-height: 1.8;
   margin-bottom: 0.75rem;
 }
@@ -90,20 +90,20 @@
 }
 
 .terms-link {
-  color: #4f46e5;
+  color: var(--clay);
   text-decoration: underline;
 }
 
 .terms-link:hover {
-  color: #4338ca;
+  color: var(--clay-hover);
 }
 
 .terms-highlight {
-  background-color: #ecfdf5;
-  border: 1px solid #6ee7b7;
+  background-color: var(--success-softer);
+  border: 1px solid var(--success-300);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  color: #065f46;
+  color: var(--success-700);
   font-size: 0.9rem;
 }
 
@@ -113,11 +113,11 @@
 
 .terms-warning {
   display: block;
-  background-color: #fef2f2;
-  border: 1px solid #fca5a5;
+  background-color: var(--error-softer);
+  border: 1px solid var(--error-300);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  color: #7f1d1d;
+  color: var(--error-700);
   font-size: 0.875rem;
   margin-top: 0.75rem;
 }
@@ -128,19 +128,19 @@
   gap: 1.5rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--n-200);
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: #6b7280;
+  color: var(--n-500);
   font-size: 0.9rem;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .back-link:hover {
-  color: #374151;
+  color: var(--n-700);
 }

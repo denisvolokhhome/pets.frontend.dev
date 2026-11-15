@@ -1,8 +1,8 @@
 .offspring-card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   display: flex;
@@ -12,7 +12,7 @@
 
 .offspring-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(48, 38, 28, 0.15);
 }
 
 /* Image Container */
@@ -21,7 +21,7 @@
   width: 100%;
   height: 200px;
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: var(--n-100);
 }
 
 .card-image {
@@ -42,7 +42,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 4px rgba(48, 38, 28, 0.12);
   font-size: 12px;
   font-weight: 600;
 }
@@ -64,7 +64,7 @@
 }
 
 .status-sold {
-  color: #4b5563;
+  color: var(--n-600);
 }
 
 /* Favorite Button */
@@ -83,21 +83,21 @@
   cursor: pointer;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.1);
 }
 
 .favorite-btn:hover {
-  background-color: white;
+  background-color: var(--color-surface);
   transform: scale(1.1);
 }
 
 .favorite-btn i {
   font-size: 18px;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .favorite-btn.favorited i {
-  color: #ef4444;
+  color: var(--error-500);
 }
 
 .favorite-btn:disabled {
@@ -116,7 +116,7 @@
 }
 
 .favorite-btn-disabled i {
-  color: #9ca3af;
+  color: var(--n-400);
 }
 
 /* Card Content */
@@ -128,9 +128,10 @@
 }
 
 .offspring-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2937;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--ink);
   margin: 0 0 12px 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -150,12 +151,12 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .info-item i {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--n-500);
   width: 16px;
 }
 
@@ -169,21 +170,22 @@
 .price-container {
   margin-bottom: 12px;
   padding-top: 8px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--n-200);
 }
 
 .price {
   font-size: 20px;
   font-weight: 700;
-  color: #047857;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Contact Button */
 .contact-btn {
   width: 100%;
   padding: 10px 16px;
-  background-color: #fdeeeb;
-  color: #b4473d;
+  background-color: var(--clay-soft);
+  color: var(--clay);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -197,11 +199,11 @@
 }
 
 .contact-btn:hover {
-  background-color: #fadcd6;
+  background-color: var(--clay-soft);
 }
 
 .contact-btn:active {
-  background-color: #f7cdc5;
+  background-color: var(--clay-soft);
 }
 
 .contact-btn i {

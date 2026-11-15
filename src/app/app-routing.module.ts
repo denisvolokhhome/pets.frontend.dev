@@ -52,8 +52,9 @@ import { BreederAgreementComponent } from './components/breeder-agreement/breede
 import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home-next', component: HomeNextComponent }, // Preview of the new visual direction
+  { path: '', component: HomeNextComponent },
+  { path: 'home-old', component: HomeComponent }, // previous design, kept for comparison
+  { path: 'home-next', redirectTo: '', pathMatch: 'full' },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },

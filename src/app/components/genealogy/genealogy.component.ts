@@ -27,7 +27,7 @@ export class GenealogyComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'Genealogy Tree',
     icon: 'bi bi-diagram-3',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search by pet name…',
@@ -158,7 +158,7 @@ export class GenealogyComponent implements OnInit {
     return g === 'Male' ? 'bi-gender-male' : g === 'Female' ? 'bi-gender-female' : 'bi-question-circle';
   }
   genderColor(g?: string): string {
-    return g === 'Male' ? '#3b82f6' : g === 'Female' ? '#ec4899' : '#9ca3af';
+    return g === 'Male' ? '#2C5F8A' : g === 'Female' ? '#B8467A' : '#A8A195';
   }
 
   edgeMatchesSearch(edge: BreedingEdge): boolean {

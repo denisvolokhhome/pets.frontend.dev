@@ -19,12 +19,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--color-surface);
   border-radius: 20px;
   padding: 4px 8px;
   font-size: 18px;
   line-height: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.25);
   border: 2px solid white;
   white-space: nowrap;
   cursor: pointer;
@@ -64,18 +64,18 @@
   margin: 0 0 8px 0;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--n-700);
 }
 
 :host ::ng-deep .breeder-popup p {
   margin: 4px 0;
   font-size: 14px;
-  color: #666;
+  color: var(--n-500);
 }
 
 :host ::ng-deep .breeder-popup .approx-notice {
   font-size: 12px;
-  color: #999;
+  color: var(--n-400);
   font-style: italic;
 }
 
@@ -95,17 +95,17 @@
 }
 
 :host ::ng-deep .popup-star--filled {
-  color: #f59e0b;
+  color: var(--wheat);
   font-size: 13px;
 }
 
 :host ::ng-deep .popup-star--empty {
-  color: #d1d5db;
+  color: var(--n-300);
   font-size: 13px;
 }
 
 :host ::ng-deep .popup-count {
-  color: #6b7280;
+  color: var(--n-500);
   font-size: 12px;
   margin-left: 2px;
 }
@@ -113,8 +113,8 @@
 :host ::ng-deep .popup-new-badge {
   display: inline-flex;
   align-items: center;
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: var(--mist);
+  color: var(--harbor);
   font-size: 11px;
   font-weight: 600;
   padding: 1px 6px;
@@ -218,7 +218,7 @@
 
 /* Accessibility - Focus states for map controls */
 :host ::ng-deep .leaflet-control-zoom a:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--harbor);
   outline-offset: 2px;
 }
 
@@ -234,7 +234,7 @@
 /* Touch feedback for mobile */
 @media (max-width: 768px) {
   :host ::ng-deep .leaflet-control-zoom a:active {
-    background-color: #e5e7eb;
+    background-color: var(--n-200);
   }
 
   :host ::ng-deep .leaflet-marker-icon:active {

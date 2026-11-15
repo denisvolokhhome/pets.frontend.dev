@@ -33,7 +33,7 @@
 
 .form-control {
   padding: 0.5rem 0.625rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--n-300);
   border-radius: 8px;
   font-size: 0.8125rem;
   min-height: 38px;
@@ -43,11 +43,11 @@
 .form-control:focus {
   outline: none;
   border-color: var(--secondary-color);
-  box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.15);
+  box-shadow: 0 0 0 2px rgba(31, 74, 58, 0.15);
 }
 
-.form-control.error { border-color: #ef4444; }
-.error-message { color: #ef4444; font-size: 0.6875rem; margin-top: 2px; position: absolute; bottom: -16px; left: 0; white-space: nowrap; }
+.form-control.error { border-color: var(--error-500); }
+.error-message { color: var(--error-500); font-size: 0.6875rem; margin-top: 2px; position: absolute; bottom: -16px; left: 0; white-space: nowrap; }
 
 /* Breed Dropdown */
 .breed-dropdown {
@@ -55,10 +55,10 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
-  border: 1px solid #d1d5db;
+  background: var(--color-surface);
+  border: 1px solid var(--n-300);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.12);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
@@ -74,11 +74,11 @@
   align-items: center;
 }
 
-.breed-option:hover { background: #f3f4f6; }
-.breed-option.no-results { color: #6b7280; cursor: default; }
-.breed-option.no-results:hover { background: white; }
-.breed-option.error-option { color: #ef4444; cursor: default; background: #fef2f2; gap: 0.5rem; }
-.breed-option.error-option:hover { background: #fef2f2; }
+.breed-option:hover { background: var(--n-100); }
+.breed-option.no-results { color: var(--n-500); cursor: default; }
+.breed-option.no-results:hover { background: var(--color-surface); }
+.breed-option.error-option { color: var(--error-500); cursor: default; background: var(--error-softer); gap: 0.5rem; }
+.breed-option.error-option:hover { background: var(--error-softer); }
 
 /* Radius Buttons */
 .radius-quick-select {
@@ -88,9 +88,9 @@
 
 .radius-btn {
   padding: 0.375rem 0.625rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--n-300);
   border-radius: 8px;
-  background: white;
+  background: var(--color-surface);
   cursor: pointer;
   font-size: 0.75rem;
   font-weight: 500;
@@ -101,7 +101,7 @@
 }
 
 .radius-btn:hover { border-color: var(--secondary-color); }
-.radius-btn.active { background: var(--secondary-strong); color: white; border-color: var(--secondary-color); }
+.radius-btn.active { background: var(--secondary-strong); color: white; border-color: var(--secondary-strong); }
 
 /* Search Button */
 .search-btn {
@@ -122,7 +122,7 @@
 }
 
 .search-btn:hover:not(:disabled) { background: var(--secondary-strong-hover); }
-.search-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+.search-btn:disabled { background: var(--n-400); cursor: not-allowed; }
 
 /* Mobile */
 @media (max-width: 768px) {

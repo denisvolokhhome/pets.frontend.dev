@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(48, 38, 28, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,9 +15,9 @@
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--color-surface);
   border-radius: 1rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(48, 38, 28, 0.1), 0 10px 10px -5px rgba(48, 38, 28, 0.04);
   max-width: 48rem;
   width: 100%;
   max-height: 90vh;
@@ -34,8 +34,8 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 2rem 2rem 1.5rem;
-  border-bottom: 2px solid #F3F4F6;
-  background: linear-gradient(135deg, #fef2f2 0%, #fff 100%);
+  border-bottom: 2px solid var(--n-100);
+  background: linear-gradient(135deg, var(--error-softer) 0%, #fff 100%);
 }
 
 .modal-header-content {
@@ -51,10 +51,10 @@
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  background: var(--clay);
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.3);
 }
 
 .modal-icon i {
@@ -69,14 +69,14 @@
 .modal-header h2 {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--n-800);
   margin: 0 0 0.25rem 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .modal-subtitle {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
   margin: 0;
   font-weight: 400;
 }
@@ -112,11 +112,11 @@
 .modal-body h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .modal-body h3::before {
@@ -124,7 +124,7 @@
   display: inline-block;
   width: 4px;
   height: 20px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  background: var(--clay);
   border-radius: 2px;
   margin-right: 0.75rem;
 }
@@ -135,8 +135,8 @@
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1.5rem 2rem;
-  border-top: 2px solid #F3F4F6;
-  background-color: #fafafa;
+  border-top: 2px solid var(--n-100);
+  background-color: var(--n-50);
 }
 
 .modal-footer button {
@@ -148,27 +148,27 @@
   transition-duration: 0.2s;
   border: none;
   font-size: 0.875rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .modal-footer button:first-child {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  background: var(--clay);
   color: white;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 2px 8px rgba(180, 70, 30, 0.3);
 }
 
 .modal-footer button:first-child:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.4);
 }
 
 .modal-footer button:last-child {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: var(--n-200);
+  color: var(--n-700);
 }
 
 .modal-footer button:last-child:hover {
-  background-color: #d1d5db;
+  background-color: var(--n-300);
 }
 
 /* Form styles */
@@ -181,9 +181,9 @@
   align-items: center;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--n-700);
   margin-bottom: 0.625rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .form-group label i {
@@ -194,7 +194,7 @@
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
   border-radius: 0.5rem;
   font-size: 0.875rem;
   resize: vertical;
@@ -205,12 +205,12 @@
 
 .form-group textarea:focus {
   outline: none;
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-group textarea::placeholder {
-  color: #9ca3af;
+  color: var(--n-400);
 }
 .modal-content {
   animation: slideIn 0.3s ease-out;
@@ -233,17 +233,17 @@
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--n-100);
   border-radius: 4px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(--n-500);
   border-radius: 4px;
 }
 
 .modal-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--n-600);
 }
 
 /* Enhanced Responsive Design */
@@ -336,37 +336,37 @@
 .modal-body h3 {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--n-200);
 }
 
 /* Pet Selection Section */
 .pet-selection-section {
-  background-color: #f0fdfa;
+  background-color: var(--pine-softer);
   padding: 1.5rem;
   border-radius: 0.75rem;
-  border: 2px solid #99f6e4;
+  border: 2px solid var(--pine-soft);
   margin-bottom: 1.5rem;
 }
 
 .pet-selection-section h3 {
-  color: #0f766e;
+  color: var(--pine-hover);
   margin-bottom: 0.5rem;
 }
 
 .pet-selection-section h3::before {
-  background: linear-gradient(135deg, var(--secondary-color), #0d9488);
+  background: linear-gradient(135deg, var(--secondary-color), var(--pine));
 }
 
 .form-select {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  background-color: white;
+  background-color: var(--color-surface);
   cursor: pointer;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.2s;
@@ -380,7 +380,7 @@
 }
 
 .form-select:disabled {
-  background-color: #f3f4f6;
+  background-color: var(--n-100);
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -391,19 +391,19 @@
 
 /* Selected Pets Preview */
 .selected-pets-preview {
-  background-color: white;
+  background-color: var(--color-surface);
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 2px solid #99f6e4;
+  border: 2px solid var(--pine-soft);
   margin-top: 1rem;
 }
 
 .selected-pets-preview h4 {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0f766e;
+  color: var(--pine-hover);
   margin-bottom: 0.75rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-primary);
 }
 
 .pet-preview-cards {
@@ -413,10 +413,10 @@
 }
 
 .pet-preview-card {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
   padding: 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
 }
 
 .pet-preview-card .flex {
@@ -435,8 +435,8 @@
 
 /* Error Message */
 .error-message {
-  background-color: #fff7ed;
-  border: 2px solid #fed7aa;
+  background-color: var(--apricot-softer);
+  border: 2px solid var(--apricot-soft);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   color: #c2410c;
@@ -480,29 +480,29 @@
 
 /* Pet Assignment Section */
 .pet-assignment {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
   padding: 1.25rem;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
 }
 
 /* Puppy Section */
 .puppy-section {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
   padding: 1.25rem;
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
 }
 
 /* View Mode Details */
 .litter-details {
-  color: #374151;
+  color: var(--n-700);
 }
 
 .detail-row {
   display: flex;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--n-100);
 }
 
 .detail-row:last-child {
@@ -511,7 +511,7 @@
 
 .detail-row .label {
   font-weight: 600;
-  color: #374151;
+  color: var(--n-700);
   min-width: 8rem;
 }
 
@@ -524,12 +524,12 @@
 .puppies h3 {
   font-size: 1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 0.75rem;
 }
 
 .parent-pets .bg-gray-50 {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
   border-radius: 0.5rem;
   padding: 1rem;
 }
@@ -545,14 +545,14 @@
 /* Table Styles for Puppies */
 .puppies table {
   width: 100%;
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  background-color: var(--color-surface);
+  border: 1px solid var(--n-200);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .puppies thead {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
 }
 
 .puppies th {
@@ -560,7 +560,7 @@
   text-align: left;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--n-700);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -568,19 +568,19 @@
 .puppies td {
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  color: #1f2937;
-  border-top: 1px solid #e5e7eb;
+  color: var(--n-800);
+  border-top: 1px solid var(--n-200);
 }
 
 .puppies tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--n-50);
 }
 
 /* Empty States */
 .text-center {
   text-align: center;
   padding: 1.5rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 /* Status Badges in View Mode */
@@ -607,33 +607,33 @@
 }
 
 .bg-blue-100 {
-  background-color: #dbeafe;
+  background-color: var(--mist);
 }
 
 .text-blue-800 {
-  color: #1e40af;
+  color: var(--harbor-hover);
 }
 
 .bg-yellow-100 {
-  background-color: #fef3c7;
+  background-color: var(--warning-soft);
 }
 
 .text-yellow-800 {
-  color: #92400e;
+  color: var(--warning-700);
 }
 
 .bg-green-100 {
-  background-color: #d1fae5;
+  background-color: var(--success-soft);
 }
 
 .text-green-800 {
-  color: #065f46;
+  color: var(--success-700);
 }
 
 .bg-gray-100 {
-  background-color: #f3f4f6;
+  background-color: var(--n-100);
 }
 
 .text-gray-800 {
-  color: #1f2937;
+  color: var(--n-800);
 }

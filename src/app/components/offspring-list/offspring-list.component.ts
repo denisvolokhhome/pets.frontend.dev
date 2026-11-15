@@ -21,7 +21,7 @@ export class OffspringListComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'My Offsprings',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search offsprings…',

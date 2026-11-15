@@ -1,7 +1,7 @@
 .upcoming-card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.06);
   padding: 1.25rem;
   margin-bottom: 1.5rem;
 }
@@ -12,7 +12,7 @@
   gap: 0.5rem;
   font-size: 1.0625rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--n-800);
   margin: 0 0 0.75rem;
 }
 

@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(48, 38, 28, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,9 +27,9 @@
 
 /* Modal Container */
 .modal-container {
-  background: white;
+  background: var(--color-surface);
   border-radius: var(--border-radius);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(48, 38, 28, 0.3);
   max-width: 700px;
   width: 100%;
   max-height: 90vh;
@@ -55,7 +55,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
-  border-bottom: 2px solid #E5E7EB;
+  border-bottom: 2px solid var(--n-200);
 }
 
 .modal-title {
@@ -114,12 +114,12 @@
 .form-textarea {
   font-family: var(--font-secondary);
   padding: 0.75rem 1rem;
-  border: 2px solid #E5E7EB;
+  border: 2px solid var(--n-200);
   border-radius: calc(var(--border-radius) * 0.75);
   font-size: 1rem;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  background-color: white;
+  background-color: var(--color-surface);
   color: var(--text-primary);
 }
 
@@ -128,11 +128,11 @@
 .form-textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-input:disabled {
-  background-color: #F3F4F6;
+  background-color: var(--n-100);
   color: var(--text-secondary);
   cursor: not-allowed;
 }
@@ -156,9 +156,9 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 1.25rem;
-  border: 2px solid #E5E7EB;
+  border: 2px solid var(--n-200);
   border-radius: var(--border-radius);
-  background-color: white;
+  background-color: var(--color-surface);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -175,12 +175,12 @@
 
 .gender-button:hover {
   border-color: var(--primary-color);
-  background-color: rgba(255, 107, 107, 0.05);
+  background-color: rgba(180, 70, 30, 0.05);
 }
 
 .gender-button.selected {
   border-color: var(--primary-color);
-  background-color: rgba(255, 107, 107, 0.1);
+  background-color: rgba(180, 70, 30, 0.1);
   color: var(--primary-strong);
 }
 
@@ -192,7 +192,7 @@
 /* Photos */
 .form-hint {
   font-weight: 400;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .photo-grid {
@@ -244,7 +244,7 @@
 }
 
 .photo-remove:hover:not(:disabled) {
-  background: #dc2626;
+  background: var(--error);
 }
 
 .photo-add {
@@ -253,8 +253,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  border: 2px dashed #d1d5db;
-  color: #6b7280;
+  border: 2px dashed var(--n-300);
+  color: var(--n-500);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -288,7 +288,7 @@
   justify-content: flex-end;
   gap: 1rem;
   padding: 1.5rem 2rem;
-  border-top: 2px solid #E5E7EB;
+  border-top: 2px solid var(--n-200);
 }
 
 /* Responsive Design */

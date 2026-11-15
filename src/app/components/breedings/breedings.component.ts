@@ -26,7 +26,7 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
   headerConfig: PageHeaderConfig = {
     title: 'Breedings Management',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search breedings…',

@@ -48,7 +48,7 @@
   width: 24px;
   height: 24px;
   margin-left: 12px;
-  border: 3px solid #e5e7eb;
+  border: 3px solid var(--n-200);
   border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -89,21 +89,21 @@
 }
 
 .alert-success {
-  background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%);
-  color: #065f46;
-  border: 1px solid #10b981;
+  background: linear-gradient(90deg, var(--success-soft) 0%, var(--success-300) 100%);
+  color: var(--success-700);
+  border: 1px solid var(--success);
 }
 
 .alert-error {
-  background: linear-gradient(90deg, #fee2e2 0%, #fecaca 100%);
-  color: #991b1b;
-  border: 1px solid #ef4444;
+  background: linear-gradient(90deg, var(--error-soft) 0%, var(--error-300) 100%);
+  color: var(--error-700);
+  border: 1px solid var(--error-500);
 }
 
 /* Form Sections */
 .form-section {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border: 1px solid var(--n-200);
   border-radius: 12px;
   padding: 1.75rem;
   margin-bottom: 1.5rem;
@@ -113,7 +113,7 @@
 }
 
 .form-section:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.06);
 }
 
 .section-header {
@@ -122,7 +122,7 @@
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 2px solid var(--n-100);
 }
 
 .section-header i {
@@ -177,27 +177,27 @@
 .form-group textarea {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
   border-radius: 8px;
   font-size: 0.9375rem;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.3s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  background: white;
+  background: var(--color-surface);
   color: var(--dark-color);
   font-family: inherit;
 }
 
 .form-group input[type="text"]:hover,
 .form-group textarea:hover {
-  border-color: #cbd5e1;
+  border-color: var(--n-300);
 }
 
 .form-group input[type="text"]:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-group textarea {
@@ -216,7 +216,7 @@
 .tag-input-group input {
   flex: 1;
   padding: 0.625rem 0.875rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
   border-radius: 8px;
   font-size: 0.9375rem;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -225,13 +225,13 @@
 }
 
 .tag-input-group input:hover {
-  border-color: #cbd5e1;
+  border-color: var(--n-300);
 }
 
 .tag-input-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 /* Tags Display */
@@ -240,9 +240,9 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   padding: 1rem;
-  background: #f9fafb;
+  background: var(--n-50);
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
 }
 
 .tag-badge {
@@ -250,12 +250,12 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   color: white;
   border-radius: 20px;
   font-size: 0.8125rem;
   font-weight: 500;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.25);
+  box-shadow: 0 2px 8px rgba(180, 70, 30, 0.25);
   animation: tagPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.2s;
@@ -278,7 +278,7 @@
 
 .tag-badge:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.4);
 }
 
 .tag-remove {
@@ -315,15 +315,15 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 2rem;
-  background: #f9fafb;
-  border: 2px dashed #e5e7eb;
+  background: var(--n-50);
+  border: 2px dashed var(--n-200);
   border-radius: 8px;
   text-align: center;
 }
 
 .empty-tags i {
   font-size: 2rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .empty-tags p {
@@ -338,12 +338,12 @@
   justify-content: flex-start;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 2px solid #f3f4f6;
+  border-top: 2px solid var(--n-100);
 }
 
 /* Success/Error Messages */
 .bg-green-100 {
-  background-color: #d1fae5;
+  background-color: var(--success-soft);
 }
 
 .border-green-400 {
@@ -351,19 +351,19 @@
 }
 
 .text-green-700 {
-  color: #047857;
+  color: var(--success);
 }
 
 .bg-red-100 {
-  background-color: #fee2e2;
+  background-color: var(--error-soft);
 }
 
 .border-red-400 {
-  border-color: #f87171;
+  border-color: var(--error-400);
 }
 
 .text-red-700 {
-  color: #b91c1c;
+  color: var(--error);
 }
 
 .p-4 {
@@ -395,7 +395,7 @@
   height: 120px;
   border-radius: 12px;
   overflow: hidden;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
@@ -410,7 +410,7 @@
 
 .image-preview.has-image:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(255, 107, 107, 0.2);
+  box-shadow: 0 8px 16px rgba(180, 70, 30, 0.2);
 }
 
 .image-preview.no-image {
@@ -419,18 +419,18 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #f9fafb;
+  background: var(--n-50);
   border-style: dashed;
 }
 
 .image-preview.no-image i {
   font-size: 2rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .image-preview.no-image span {
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .upload-controls {
@@ -455,13 +455,13 @@
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.3s;
   transition-timing-function: ease;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 2px 8px rgba(180, 70, 30, 0.3);
 }
 
 .upload-label:hover {
   background: var(--primary-strong-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.4);
 }
 
 .upload-label i {

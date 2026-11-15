@@ -2,7 +2,7 @@
   <!-- Left: Title -->
   <div class="header-left">
     <ng-template #titleContent>
-      <i [class]="config.icon" [style.color]="config.iconColor || '#ec4899'" aria-hidden="true"></i>
+      <i [class]="config.icon" [style.color]="config.iconColor || 'var(--clay)'" aria-hidden="true"></i>
       {{ config.title }}
     </ng-template>
     <h1 *ngIf="headingLevel === 1" class="page-title"><ng-container *ngTemplateOutlet="titleContent"></ng-container></h1>
