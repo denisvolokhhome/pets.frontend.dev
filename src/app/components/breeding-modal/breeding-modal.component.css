@@ -68,10 +68,10 @@
 
 .modal-header h2 {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--n-800);
   margin: 0 0 0.25rem 0;
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
 }
 
 .modal-subtitle {
@@ -141,7 +141,7 @@
 
 .modal-footer button {
   padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-pill);
   font-weight: 600;
   cursor: pointer;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -154,21 +154,20 @@
 .modal-footer button:first-child {
   background: var(--clay);
   color: white;
-  box-shadow: 0 2px 8px rgba(180, 70, 30, 0.3);
 }
 
-.modal-footer button:first-child:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.4);
+.modal-footer button:first-child:hover:not(:disabled) {
+  background: var(--clay-hover);
 }
 
 .modal-footer button:last-child {
-  background-color: var(--n-200);
-  color: var(--n-700);
+  background-color: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(30, 38, 32, 0.25);
 }
 
 .modal-footer button:last-child:hover {
-  background-color: var(--n-300);
+  background-color: var(--n-100);
 }
 
 /* Form styles */
@@ -376,7 +375,7 @@
 .form-select:focus {
   outline: none;
   border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+  box-shadow: 0 0 0 3px rgba(31, 74, 58, 0.1);
 }
 
 .form-select:disabled {
@@ -439,7 +438,7 @@
   border: 2px solid var(--apricot-soft);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  color: #c2410c;
+  color: var(--clay-hover);
   font-size: 0.875rem;
   display: flex;
   align-items: center;

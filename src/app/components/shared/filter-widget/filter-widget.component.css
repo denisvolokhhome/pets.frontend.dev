@@ -88,7 +88,7 @@
 
 .filter-label i {
   font-size: 16px;
-  color: #a855f7;
+  color: var(--clay);
 }
 
 .filter-select {
@@ -145,7 +145,7 @@
 
 .gender-btn:hover:not(:disabled) {
   border-color: var(--clay);
-  background: #f5f3ff;
+  background: var(--clay-softer);
 }
 
 .gender-btn.active {
@@ -188,7 +188,7 @@
 
 .pet-type-filter-btn:hover:not(:disabled) {
   border-color: var(--clay);
-  background: #f5f3ff;
+  background: var(--clay-softer);
 }
 
 .pet-type-filter-btn.active {
@@ -253,7 +253,7 @@
 
 .checkbox-label i {
   font-size: 16px;
-  color: #a855f7;
+  color: var(--clay);
 }
 
 .results-count {
@@ -309,7 +309,7 @@
     position: fixed;
     inset: 0;
     z-index: 1250;
-    background: rgba(17, 24, 39, 0.35);
+    background: rgba(48, 38, 28, 0.35);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;

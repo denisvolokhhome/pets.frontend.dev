@@ -261,7 +261,7 @@ textarea.form-control {
 
 .form-control.is-invalid:focus {
   border-color: var(--error);
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  box-shadow: 0 0 0 3px rgba(161, 50, 43, 0.1);
 }
 
 .invalid-feedback {

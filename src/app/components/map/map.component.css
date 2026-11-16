@@ -130,11 +130,11 @@
 
 /* Cluster styling */
 :host ::ng-deep .marker-cluster {
-  background-color: rgba(51, 136, 255, 0.6);
+  background-color: rgba(44, 95, 138, 0.6);
 }
 
 :host ::ng-deep .marker-cluster div {
-  background-color: rgba(51, 136, 255, 0.8);
+  background-color: rgba(44, 95, 138, 0.8);
   color: white;
   font-weight: bold;
 }

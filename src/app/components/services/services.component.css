@@ -350,8 +350,8 @@
   letter-spacing: 0.02em;
 }
 
-.status-badge--active { background: rgba(16, 185, 129, 0.12); color: var(--success-700); border: 1px solid rgba(16, 185, 129, 0.3); }
-.status-badge--inactive { background: rgba(107, 114, 128, 0.1); color: var(--n-600); border: 1px solid rgba(107, 114, 128, 0.2); }
+.status-badge--active { background: rgba(47, 122, 75, 0.12); color: var(--success-700); border: 1px solid rgba(47, 122, 75, 0.3); }
+.status-badge--inactive { background: rgba(95, 101, 92, 0.1); color: var(--n-600); border: 1px solid rgba(95, 101, 92, 0.2); }
 
 .service-card__actions { display: flex; align-items: center; gap: 0.5rem; }
 

@@ -212,16 +212,16 @@
 
 /* Conversation Button Variant (for existing threads) */
 .contact-btn-conversation {
-  background-color: #e5f4f2;
+  background-color: var(--pine-softer);
   color: #22736d;
 }
 
 .contact-btn-conversation:hover {
-  background-color: #d2ece8;
+  background-color: var(--pine-soft);
 }
 
 .contact-btn-conversation:active {
-  background-color: #c2e4df;
+  background-color: var(--pine-soft);
 }
 
 /* Responsive adjustments */

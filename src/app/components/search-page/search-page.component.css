@@ -385,7 +385,7 @@
 
 .dismiss-button:hover { background: rgba(48, 38, 28, 0.1); }
 .retry-button { background: var(--error); color: white; }
-.retry-button:hover { background: #c82333; }
+.retry-button:hover { background: var(--error-700); }
 
 /* Split Layout */
 .search-content {

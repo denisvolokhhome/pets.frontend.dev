@@ -52,12 +52,12 @@
   align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.8125rem;
 }
 .pet-card.placeholder i { font-size: 1.25rem; }
-.pet-card.converted { background: #faf5ff; }
+.pet-card.converted { background: var(--clay-softer); }
 .converted-badge {
   position: absolute; top: -8px; right: -8px; width: 22px; height: 22px;
   background: var(--clay); color: white; border-radius: 50%; display: flex;
   align-items: center; justify-content: center; font-size: 0.75rem;
-  box-shadow: 0 2px 4px rgba(139,92,246,0.4);
+  box-shadow: 0 2px 4px rgba(180, 70, 30, 0.4);
 }
 
 .pet-avatar {
@@ -78,7 +78,7 @@
   border-radius: 12px; cursor: pointer; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.2s; min-width: 180px;
 }
-.offspring-group-card:hover { background: var(--warning-soft); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217,119,6,0.15); }
+.offspring-group-card:hover { background: var(--warning-soft); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(154, 108, 20, 0.15); }
 .group-icon { width: 36px; height: 36px; background: var(--wheat); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
 .group-info { display: flex; flex-direction: column; }
 .group-count { font-weight: 600; font-size: 0.875rem; color: var(--warning-700); }
@@ -144,7 +144,7 @@
   display: flex; align-items: center; justify-content: center; transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   transition-duration: 0.15s;
 }
-.btn-convert-mini:hover { background: #f5f3ff; border-color: var(--clay); }
+.btn-convert-mini:hover { background: var(--clay-softer); border-color: var(--clay); }
 .empty-group { text-align: center; padding: 1.5rem; color: var(--n-500); font-size: 0.9375rem; }
 
 /* ── Convert warning list ───────────────────────────── */

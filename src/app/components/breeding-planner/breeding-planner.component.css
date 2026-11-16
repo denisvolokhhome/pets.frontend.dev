@@ -260,7 +260,7 @@
 .planner-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(48, 38, 28, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,8 +293,9 @@
 
 .planner-modal-header h3 {
   margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 .planner-modal-footer {

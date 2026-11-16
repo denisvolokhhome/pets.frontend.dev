@@ -568,7 +568,7 @@
 /* ── Pending plan card ── */
 .plan-card-pending {
   border-color: var(--harbor-300);
-  background: rgba(59, 130, 246, 0.03);
+  background: rgba(44, 95, 138, 0.03);
 }
 
 .plan-card-badge--pending {

@@ -322,9 +322,9 @@
 }
 
 .modal-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--dark-color);
   margin-bottom: 0.5rem;
 }
@@ -422,6 +422,7 @@
 
 @media (max-width: 576px) {
   .modal-title {
+    font-family: var(--font-display);
     font-size: 1.5rem;
   }
 

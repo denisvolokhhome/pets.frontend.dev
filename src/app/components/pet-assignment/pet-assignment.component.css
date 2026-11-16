@@ -204,5 +204,5 @@ select:hover:not(:disabled) {
 
 /* Error Message Enhancement */
 .error-message {
-  box-shadow: 0 1px 3px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 1px 3px rgba(184, 67, 58, 0.1);
 }

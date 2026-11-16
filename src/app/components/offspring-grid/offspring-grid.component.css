@@ -40,7 +40,7 @@
 .map-fallback {
   position: absolute; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 0.5rem;
-  background: linear-gradient(135deg, var(--mist-softer), #e0f2fe); color: var(--harbor-hover);
+  background: linear-gradient(135deg, var(--mist-softer), var(--mist)); color: var(--harbor-hover);
 }
 .map-fallback i { font-size: 2rem; }
 .map-fallback span { font-size: 0.8125rem; font-weight: 500; }

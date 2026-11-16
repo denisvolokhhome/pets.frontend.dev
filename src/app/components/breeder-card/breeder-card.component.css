@@ -46,7 +46,7 @@
   justify-content: center;
   color: var(--n-300);
   font-size: 1.75rem;
-  background: linear-gradient(135deg, var(--n-100), #e8e8e8);
+  background: linear-gradient(135deg, var(--n-100), var(--n-200));
 }
 
 /* Content area */
