@@ -418,6 +418,15 @@ textarea:focus,
   text-decoration: none;
 }
 
+.logo-text .logo-tld {
+  font-family: var(--font-primary);
+  font-size: 0.62em;
+  font-weight: 600;
+  color: var(--clay);
+  margin-left: 1px;
+  letter-spacing: 0;
+}
+
 .logo-text .logo-mark {
   width: 30px;
   height: 30px;

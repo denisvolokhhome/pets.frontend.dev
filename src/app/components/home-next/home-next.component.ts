@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../../services/auth.service';
 
 type Role = 'petSeeker' | 'breeder' | 'serviceProvider';
 
@@ -94,15 +95,15 @@ export class HomeNextComponent {
   };
 
   readonly samplePets: SamplePet[] = [
-    { name: 'Maple', price: '$2,800', meta: 'Golden Retriever · Female · 6 wks', image: 'pet-golden.webp', status: 'Available', chips: ['Vet checked', 'Microchipped'], kennel: 'Sunny Creek Goldens · TX' },
-    { name: 'Bramble', price: '$1,900', meta: 'Maine Coon · Male · 12 wks', image: 'pet-mainecoon.webp', status: 'Available', chips: ['TICA registered', 'Vaccinated'], kennel: 'Hill Country Coons · TX' },
-    { name: 'Biscuit', price: '$3,600', meta: 'French Bulldog · Male · 10 wks', image: 'pet-frenchie.webp', status: 'Reserved', chips: ['BOAS graded', 'DNA tested'], kennel: 'Lone Star Frenchies · TX' },
-    { name: 'Pebble', price: '$1,700', meta: 'British Shorthair · Female · 11 wks', image: 'pet-british.webp', status: 'Available', chips: ['Vet checked', 'Litter trained'], kennel: 'Bluebonnet Brits · TX' }
+    { name: 'Juno', price: '$1,800', meta: 'Siberian Husky · Female · 8 wks', image: 'pet-husky.webp', status: 'Available', chips: ['Vet checked', 'Microchipped'], kennel: 'Northwind Huskies · CO' },
+    { name: 'Maple', price: '$3,200', meta: 'Cavapoo · Female · 9 wks', image: 'pet-cavapoo.webp', status: 'Available', chips: ['Health tested parents', 'Vaccinated'], kennel: 'Sunny Creek Doodles · TX' },
+    { name: 'Copper', price: '$1,500', meta: 'American Staffordshire Terrier · Male · 12 wks', image: 'pet-staffy.webp', status: 'Reserved', chips: ['DNA tested', 'Vaccinated'], kennel: 'Red Clay Staffords · GA' },
+    { name: 'Biscuit', price: '$2,400', meta: 'Pembroke Welsh Corgi · Male · 10 wks', image: 'pet-corgi.webp', status: 'Available', chips: ['Vet checked', 'Crate trained'], kennel: 'Bluebonnet Corgis · TX' }
   ];
 
   saved = new Set<string>();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   get currentRole(): RoleOption {
     return this.roles.find(r => r.id === this.selectedRole) ?? this.roles[0];
@@ -129,6 +130,11 @@ export class HomeNextComponent {
   }
 
   register(type: 'breeder' | 'pet_seeker'): void {
+    // Signed-in users have nothing to register: send them to their workspace.
+    if (this.authService.hasValidToken()) {
+      this.router.navigate([this.authService.isBreeder ? '/pets' : '/dashboard']);
+      return;
+    }
     this.router.navigate(['/register'], { queryParams: { type } });
   }
 

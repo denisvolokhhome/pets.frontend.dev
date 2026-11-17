@@ -15,30 +15,28 @@
     <div class="wrap hero-grid">
       <div>
         <span class="eyebrow">Responsible breeders · United States</span>
-        <h1 id="hn-hero-heading">A puppy or kitten for the next 15 years — <em>from a breeder you can trust</em></h1>
+        <h1 id="hn-hero-heading">Meet your new best friend — <em>from a breeder you can trust</em></h1>
         <p class="lead">Breedly connects families with responsible breeders{{ serviceProvidersEnabled ? ' and local pet services' : '' }}. Health records, documents and reviews come first. The price comes second.</p>
         <div class="hero-cta">
-          <button class="btn btn--primary btn--lg" (click)="findPet()"><i class="bi bi-geo-alt" aria-hidden="true"></i>Find your pet</button>
+          <button class="btn btn--primary btn--lg btn--hero" (click)="findPet()"><i class="bi bi-geo-alt" aria-hidden="true"></i>Find your pet<i class="bi bi-arrow-right btn-arrow" aria-hidden="true"></i></button>
           <button class="btn btn--outline btn--lg" (click)="register('breeder')">I'm a breeder</button>
         </div>
-        <dl class="hero-meta">
-          <div><dt>Search</dt><dd>On the map, near you</dd></div>
-          <div><dt>Breeders</dt><dd>Profiles with documents</dd></div>
-          <div><dt>Contact</dt><dd>Direct messages</dd></div>
-        </dl>
       </div>
       <div class="hero-visual">
         <div class="hero-photo">
-          <img [src]="img + 'hero.webp'" width="1536" height="1024" alt="A breeder on a lawn holding a golden retriever puppy, with three more puppies and their mother nearby" fetchpriority="high" />
+          <img [src]="img + 'hero-puppy.webp'" width="960" height="1200" alt="A golden retriever puppy sitting on a garden path with a tulip in its mouth" fetchpriority="high" />
         </div>
-        <div class="float-card float-card--a" aria-hidden="true">
-          <img [src]="img + 'pet-golden.webp'" alt="" width="44" height="44" />
-          <div><div class="t">Maple · $2,800</div><div class="s">Golden Retriever · 6 wks</div></div>
-          <span class="badge badge--verified"><i class="bi bi-shield-check"></i>Verified</span>
+        <div class="float-card float-card--b">
+          <i class="bi bi-chat-heart" aria-hidden="true"></i>
+          <div><div class="s">Contact</div><div class="t">Direct messages</div></div>
         </div>
-        <div class="float-card float-card--b" aria-hidden="true">
-          <i class="bi bi-chat-heart" style="color:var(--clay)"></i>
-          <div class="s"><b style="color:var(--ink)">3 new messages</b> from families</div>
+        <div class="float-card float-card--c">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          <div><div class="s">Breeders</div><div class="t">Profiles with documents</div></div>
+        </div>
+        <div class="float-card float-card--a">
+          <i class="bi bi-geo-alt" aria-hidden="true"></i>
+          <div><div class="s">Search</div><div class="t">On the map, near you</div></div>
         </div>
       </div>
     </div>
@@ -50,7 +48,7 @@
       <div>
         <span class="eyebrow"><span class="num">01</span> Why Breedly</span>
         <p id="hn-trust-heading" class="quote">Families are found <em>by trust</em>, not by price.</p>
-        <p class="lead">A new pet is a decision for 10–15 years. That's why every listing shows who you're dealing with before it shows what it costs.</p>
+        <p class="lead">Bringing home a new pet is a big decision. That's why every listing shows who you're dealing with before it shows what it costs.</p>
       </div>
       <ol class="principles">
         <li>
@@ -106,9 +104,9 @@
         </div>
 
         <article class="breeder">
-          <div class="breeder-cover"><img [src]="img + 'hero.webp'" alt="" loading="lazy" /></div>
+          <div class="breeder-cover"><img [src]="img + 'breeder-cover.webp'" alt="" loading="lazy" width="900" height="405" /></div>
           <div class="breeder-body">
-            <img class="breeder-ava" [src]="img + 'hero.webp'" alt="Owner of Sunny Creek Goldens" loading="lazy" width="76" height="76" />
+            <img class="breeder-ava" [src]="img + 'breeder-avatar.webp'" alt="Owner of Sunny Creek Goldens" loading="lazy" width="76" height="76" />
             <div class="breeder-name">Sunny Creek Goldens</div>
             <div class="breeder-loc"><i class="bi bi-geo-alt"></i>Dripping Springs, TX · since 2014</div>
             <div class="stats">
