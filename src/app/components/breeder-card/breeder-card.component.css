@@ -5,7 +5,7 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.875rem;
-  background: white;
+  background: var(--color-surface);
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.2s, box-shadow 0.2s;
@@ -13,13 +13,13 @@
 }
 
 .breeder-card:hover {
-  background: #f7f7f7;
+  background: var(--n-50);
 }
 
 .breeder-card.highlighted {
-  border-color: var(--secondary-color, #4ecdc4);
-  background: rgba(78, 205, 196, 0.04);
-  box-shadow: 0 0 0 1px var(--secondary-color, #4ecdc4);
+  border-color: var(--secondary-color, var(--pine));
+  background: rgba(31, 74, 58, 0.04);
+  box-shadow: 0 0 0 1px var(--secondary-color, var(--pine));
 }
 
 /* Thumbnail — rounded square */
@@ -29,7 +29,7 @@
   height: 64px;
   border-radius: 12px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--n-100);
 }
 
 .breeder-card__thumbnail {
@@ -44,9 +44,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ccc;
+  color: var(--n-300);
   font-size: 1.75rem;
-  background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+  background: linear-gradient(135deg, var(--n-100), var(--n-200));
 }
 
 /* Content area */
@@ -81,8 +81,8 @@
   flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #555;
-  background: #f0f0f0;
+  color: var(--n-600);
+  background: var(--n-100);
   padding: 0.15rem 0.5rem;
   border-radius: 10px;
   white-space: nowrap;
@@ -92,7 +92,7 @@
 .breeder-card__breeds {
   margin: 0;
   font-size: 0.8125rem;
-  color: #666;
+  color: var(--n-500);
   line-height: 1.4;
 }
 
@@ -106,7 +106,7 @@
 
 .breeder-card__approx {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--n-500);
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -118,7 +118,7 @@
 
 .breeder-card__rating {
   font-size: 0.75rem;
-  color: #f59e0b;
+  color: var(--wheat);
   display: flex;
   align-items: center;
   gap: 0.2rem;
@@ -140,7 +140,7 @@
 
 .breeder-card__link {
   background: none;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--n-200);
   border-radius: 6px;
   padding: 0.375rem 0.75rem;
   font-size: 0.8125rem;
@@ -155,15 +155,15 @@
 }
 
 .breeder-card__link:hover {
-  background: rgba(78, 205, 196, 0.08);
-  border-color: var(--secondary-color, #4ecdc4);
+  background: rgba(31, 74, 58, 0.08);
+  border-color: var(--secondary-color, var(--pine));
 }
 
 .breeder-card__link--primary {
   font-weight: 600;
   background: var(--secondary-strong);
   color: white;
-  border-color: var(--secondary-color, #4ecdc4);
+  border-color: var(--secondary-color, var(--pine));
 }
 
 .breeder-card__link--primary:hover {
@@ -219,12 +219,12 @@
 
 /* Focus states */
 .breeder-card:focus {
-  outline: 2px solid var(--secondary-color, #4ecdc4);
+  outline: 2px solid var(--secondary-color, var(--pine));
   outline-offset: 2px;
 }
 
 .breeder-card__link:focus {
-  outline: 2px solid var(--secondary-color, #4ecdc4);
+  outline: 2px solid var(--secondary-color, var(--pine));
   outline-offset: 2px;
 }
 
@@ -239,7 +239,7 @@
 /* Print */
 @media print {
   .breeder-card {
-    border: 1px solid #ccc;
+    border: 1px solid var(--n-300);
     page-break-inside: avoid;
   }
   .breeder-card__actions {
@@ -250,7 +250,7 @@
 /* Profile Popup — centered modal on desktop, bottom sheet on mobile */
 .profile-backdrop {
   position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,0.45);
+  background: rgba(48, 38, 28, 0.45);
   display: flex; align-items: center; justify-content: center;
   padding: 1rem;
   animation: fadeIn 0.15s ease;
@@ -262,13 +262,13 @@
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
 .profile-popup {
-  background: white;
+  background: var(--color-surface);
   border-radius: 16px;
   max-width: 440px;
   width: 100%;
   max-height: 88vh;
   position: relative;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+  box-shadow: 0 10px 40px rgba(48, 38, 28, 0.18);
   animation: slideUp 0.22s ease;
   display: flex;
   flex-direction: column;
@@ -293,20 +293,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.875rem 1.25rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--n-100);
   flex-shrink: 0;
 }
 .profile-popup__title {
   font-size: 1rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--n-800);
 }
 .profile-close {
-  background: none; border: 1px solid #e5e7eb; border-radius: 8px;
+  background: none; border: 1px solid var(--n-200); border-radius: 8px;
   width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-  color: #6b7280; cursor: pointer; flex-shrink: 0;
+  color: var(--n-500); cursor: pointer; flex-shrink: 0;
 }
-.profile-close:hover { background: #f3f4f6; color: #374151; }
+.profile-close:hover { background: var(--n-100); color: var(--n-700); }
 
 /* Scrollable content */
 .profile-content {
@@ -320,7 +320,7 @@
 
 .profile-loading {
   padding: 3rem;
-  color: #6b7280;
+  color: var(--n-500);
   font-size: 1.5rem;
   text-align: center;
 }
@@ -336,11 +336,11 @@
 .profile-avatar {
   flex-shrink: 0;
   width: 72px; height: 72px; border-radius: 50%;
-  background: #f3f4f6; background-size: cover; background-position: center;
+  background: var(--n-100); background-size: cover; background-position: center;
   display: flex; align-items: center; justify-content: center; overflow: hidden;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--n-200);
 }
-.profile-avatar i { font-size: 2.5rem; color: #d1d5db; }
+.profile-avatar i { font-size: 2.5rem; color: var(--n-300); }
 .profile-hero__text {
   flex: 1; min-width: 0;
   display: flex; flex-direction: column; gap: 0.25rem;
@@ -348,12 +348,12 @@
 }
 .profile-name {
   margin: 0;
-  font-size: 1.125rem; font-weight: 700; color: #1f2937;
+  font-size: 1.125rem; font-weight: 700; color: var(--n-800);
   line-height: 1.3;
 }
 .profile-location {
   margin: 0;
-  font-size: 0.8125rem; color: #6b7280;
+  font-size: 0.8125rem; color: var(--n-500);
   display: flex; align-items: center; gap: 0.25rem;
 }
 .profile-location i { color: var(--primary-strong); font-size: 0.75rem; }
@@ -361,7 +361,7 @@
 /* Description */
 .profile-desc {
   margin: 0;
-  font-size: 0.875rem; color: #4b5563; line-height: 1.6;
+  font-size: 0.875rem; color: var(--n-600); line-height: 1.6;
 }
 
 /* Tags */
@@ -369,8 +369,8 @@
   display: flex; flex-wrap: wrap; gap: 0.375rem;
 }
 .profile-tag {
-  padding: 0.2rem 0.625rem; background: #f0fdf4; color: #166534;
-  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid #bbf7d0;
+  padding: 0.2rem 0.625rem; background: var(--success-softer); color: var(--success-700);
+  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid var(--success-300);
 }
 
 /* Animals + Breeds 2-col */
@@ -380,17 +380,17 @@
 .profile-section { flex: 1; min-width: 120px; }
 .profile-section-label {
   margin: 0 0 0.375rem;
-  font-size: 0.75rem; font-weight: 600; color: #6b7280;
+  font-size: 0.75rem; font-weight: 600; color: var(--n-500);
   text-transform: uppercase; letter-spacing: 0.5px;
 }
 .profile-kinds, .profile-breeds { display: flex; flex-wrap: wrap; gap: 0.375rem; }
 .profile-kind {
-  padding: 0.25rem 0.75rem; background: #eff6ff; color: #1e40af;
-  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid #bfdbfe;
+  padding: 0.25rem 0.75rem; background: var(--mist-softer); color: var(--harbor-hover);
+  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid var(--harbor-300);
 }
 .profile-breed {
-  padding: 0.25rem 0.75rem; background: #fef3c7; color: #92400e;
-  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid #fde68a;
+  padding: 0.25rem 0.75rem; background: var(--warning-soft); color: var(--warning-700);
+  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid var(--warning-300);
 }
 
 /* CTA button */
@@ -406,7 +406,7 @@
 
 /* Reviews */
 .profile-reviews {
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--n-100);
   padding-top: 1rem;
   display: flex; flex-direction: column; gap: 0.75rem;
 }
@@ -417,53 +417,53 @@
   display: flex; flex-wrap: wrap; gap: 0.375rem;
 }
 .profile-reviews__tag {
-  padding: 0.2rem 0.625rem; background: #fef3c7; color: #92400e;
-  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid #fde68a;
+  padding: 0.2rem 0.625rem; background: var(--warning-soft); color: var(--warning-700);
+  border-radius: 12px; font-size: 0.75rem; font-weight: 500; border: 1px solid var(--warning-300);
 }
 .profile-reviews__empty {
-  text-align: center; color: #6b7280; font-size: 0.875rem;
+  text-align: center; color: var(--n-500); font-size: 0.875rem;
   padding: 1.5rem 0;
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
 }
 .profile-reviews__loading {
-  text-align: center; color: #6b7280; font-size: 1.25rem; padding: 1.5rem 0;
+  text-align: center; color: var(--n-500); font-size: 1.25rem; padding: 1.5rem 0;
 }
 .profile-reviews__list {
   display: flex; flex-direction: column; gap: 0.75rem;
 }
 .profile-review {
-  padding: 0.75rem; background: #f9fafb;
-  border-radius: 10px; border: 1px solid #f3f4f6;
+  padding: 0.75rem; background: var(--n-50);
+  border-radius: 10px; border: 1px solid var(--n-100);
 }
 .profile-review__top {
   display: flex; justify-content: space-between; align-items: baseline;
   margin-bottom: 0.25rem;
 }
-.profile-review__name { font-size: 0.8125rem; font-weight: 600; color: #374151; }
-.profile-review__date { font-size: 0.75rem; color: #6b7280; }
+.profile-review__name { font-size: 0.8125rem; font-weight: 600; color: var(--n-700); }
+.profile-review__date { font-size: 0.75rem; color: var(--n-500); }
 .profile-review__tags {
   display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.375rem;
 }
 .profile-review__tag {
-  padding: 0.125rem 0.5rem; background: #eff6ff; color: #1e40af;
-  border-radius: 10px; font-size: 0.6875rem; font-weight: 500; border: 1px solid #bfdbfe;
+  padding: 0.125rem 0.5rem; background: var(--mist-softer); color: var(--harbor-hover);
+  border-radius: 10px; font-size: 0.6875rem; font-weight: 500; border: 1px solid var(--harbor-300);
 }
 .profile-review__comment {
-  margin: 0.375rem 0 0; font-size: 0.8125rem; color: #4b5563; line-height: 1.5;
+  margin: 0.375rem 0 0; font-size: 0.8125rem; color: var(--n-600); line-height: 1.5;
 }
 .profile-reviews__pagination {
   display: flex; align-items: center; justify-content: center;
   gap: 0.75rem; padding-top: 0.5rem;
 }
 .profile-reviews__page-btn {
-  background: none; border: 1px solid #e5e7eb; border-radius: 6px;
-  padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #374151;
+  background: none; border: 1px solid var(--n-200); border-radius: 6px;
+  padding: 0.25rem 0.625rem; font-size: 0.75rem; color: var(--n-700);
   cursor: pointer; display: inline-flex; align-items: center; gap: 0.25rem;
   transition: background 0.15s;
 }
-.profile-reviews__page-btn:hover:not(:disabled) { background: #f3f4f6; }
+.profile-reviews__page-btn:hover:not(:disabled) { background: var(--n-100); }
 .profile-reviews__page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.profile-reviews__page-info { font-size: 0.75rem; color: #6b7280; }
+.profile-reviews__page-info { font-size: 0.75rem; color: var(--n-500); }
 
 /* ── Mobile: bottom sheet ── */
 @media (max-width: 768px) {
@@ -490,7 +490,7 @@
   .profile-handle {
     display: block;
     width: 40px; height: 4px;
-    background: #d1d5db; border-radius: 2px;
+    background: var(--n-300); border-radius: 2px;
     margin: 0.625rem auto 0;
     flex-shrink: 0;
   }

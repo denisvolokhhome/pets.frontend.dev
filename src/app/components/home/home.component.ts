@@ -103,6 +103,7 @@ export class HomeComponent {
 
   // Service provider accounts are hidden pre-launch behind this flag.
   readonly serviceProvidersEnabled = environment.enableServiceProviders;
+  readonly billingEnabled = environment.enableBilling;
 
   selectedFlow: 'breeder' | 'petSeeker' | 'serviceProvider' = 'breeder';
 

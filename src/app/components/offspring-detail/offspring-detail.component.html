@@ -68,6 +68,15 @@
           <i class="pi pi-envelope"></i>
           {{ hasApplicationForm() ? 'Apply for Offspring' : 'Contact Breeder' }}
         </button>
+        <button
+          *ngIf="canJoinWaitlist()"
+          class="ui-btn ui-btn--primary"
+          data-testid="join-waitlist"
+          (click)="joinWaitlist()"
+          type="button">
+          <i class="pi pi-clock"></i>
+          Join waitlist
+        </button>
       </div>
     </div>
 
@@ -382,6 +391,15 @@
   (submitted)="onApplicationFormSubmitted($event)"
   (cancelled)="onApplicationFormCancelled()">
 </app-application-form-modal>
+
+<!-- Join Waitlist Modal (pet seeker) -->
+<app-join-waitlist-modal
+  *ngIf="showJoinWaitlist && offspring"
+  [breederId]="offspring.user_id"
+  [breedingId]="offspring.breeding_id"
+  (joined)="showJoinWaitlist = false"
+  (closed)="showJoinWaitlist = false">
+</app-join-waitlist-modal>
 
 <!-- Offspring Edit Modal -->
 <div *ngIf="showEditModal" class="modal-overlay" (click)="onModalClosed()">

@@ -8,4 +8,11 @@ export const environment = {
   // Service provider accounts are hidden pre-launch. Must match
   // ENABLE_SERVICE_PROVIDERS in the backend's .env — keep both in sync.
   enableServiceProviders: false,
+  // Breeder waitlists & deposits are hidden until launch. Must match
+  // ENABLE_WAITLIST in the backend's .env — keep both in sync.
+  enableWaitlist: false,
+  // Paid plans (pricing section, Pricing links, Settings → Subscription, plan
+  // limit UI). Off pre-launch: everyone is on the free plan with no limits.
+  // Must match ENABLE_BILLING in the backend's .env — keep both in sync.
+  enableBilling: false,
 };

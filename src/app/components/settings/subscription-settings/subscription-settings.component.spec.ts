@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of, throwError } from 'rxjs';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { SubscriptionSettingsComponent } from './subscription-settings.component';
 import { BillingService } from '../../../services/billing.service';
 import { ToastService } from '../../../services/toast.service';
@@ -66,13 +67,17 @@ describe('SubscriptionSettingsComponent', () => {
       declarations: [SubscriptionSettingsComponent],
       providers: [
         { provide: BillingService, useValue: billingServiceSpy },
-        { provide: ToastService, useValue: toastServiceSpy }
+        { provide: ToastService, useValue: toastServiceSpy },
+        // No Stripe checkout return params (?session_id / ?canceled)
+        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({}) } } }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubscriptionSettingsComponent);
     component = fixture.componentInstance;
+    // Never actually leave the test page for Stripe
+    spyOn(component, 'redirectTo');
   });
 
   it('should create', () => {
@@ -145,6 +150,7 @@ describe('SubscriptionSettingsComponent', () => {
 
     expect(billingServiceSpy.createCheckoutSession).toHaveBeenCalledWith('plan-pro-id');
     expect(component.isRedirecting).toBeTrue();
+    expect(component.redirectTo).toHaveBeenCalledWith('https://checkout.stripe.com/session123');
   });
 
   it('should not upgrade if already on the plan', () => {
@@ -196,7 +202,8 @@ describe('SubscriptionSettingsComponent', () => {
   it('should show Upgrade button only on paid non-current plans', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const upgradeButtons = compiled.querySelectorAll('.btn-upgrade');
+    const upgradeButtons = Array.from(compiled.querySelectorAll('button'))
+      .filter(b => b.textContent?.trim() === 'Upgrade');
 
     expect(upgradeButtons.length).toBe(1);
     expect(upgradeButtons[0].textContent).toContain('Upgrade');

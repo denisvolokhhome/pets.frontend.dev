@@ -34,12 +34,12 @@
   justify-content: center;
   padding: 3rem 1rem;
   text-align: center;
-  color: #6c757d;
+  color: var(--n-500);
 }
 
 .empty-icon { margin-bottom: 1rem; color: #adb5bd; }
 .empty-state h3 { margin: 0 0 0.5rem; font-size: 1.125rem; font-weight: 600; color: #495057; }
-.empty-state p { margin: 0; font-size: 0.875rem; color: #6c757d; max-width: 280px; }
+.empty-state p { margin: 0; font-size: 0.875rem; color: var(--n-500); max-width: 280px; }
 
 /* Skeleton loaders */
 .skeleton-container {
@@ -50,7 +50,7 @@
 }
 
 .skeleton-card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 0.875rem;
   display: flex;
@@ -61,7 +61,7 @@
 .skeleton-image {
   width: 64px;
   height: 64px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--n-100) 25%, var(--n-200) 50%, var(--n-100) 75%);
   background-size: 200% 100%;
   border-radius: 12px;
   flex-shrink: 0;
@@ -77,7 +77,7 @@
 
 .skeleton-line {
   height: 12px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--n-100) 25%, var(--n-200) 50%, var(--n-100) 75%);
   background-size: 200% 100%;
   border-radius: 4px;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -96,7 +96,7 @@
 .skeleton-button {
   width: 60px;
   height: 28px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--n-100) 25%, var(--n-200) 50%, var(--n-100) 75%);
   background-size: 200% 100%;
   border-radius: 6px;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -124,8 +124,8 @@
 .spinner {
   width: 28px;
   height: 28px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid var(--secondary-color, #4ecdc4);
+  border: 3px solid var(--n-100);
+  border-top: 3px solid var(--secondary-color, var(--pine));
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -138,18 +138,18 @@
 .load-more-indicator p {
   margin: 0;
   font-size: 0.8125rem;
-  color: #999;
+  color: var(--n-400);
 }
 
 /* Scrollbar */
 .breeder-card-list::-webkit-scrollbar { width: 6px; }
 .breeder-card-list::-webkit-scrollbar-track { background: transparent; }
-.breeder-card-list::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+.breeder-card-list::-webkit-scrollbar-thumb { background: var(--n-300); border-radius: 3px; }
 .breeder-card-list::-webkit-scrollbar-thumb:hover { background: #bbb; }
 
 /* Accessibility */
 .breeder-card-wrapper:focus-within {
-  outline: 2px solid var(--secondary-color, #4ecdc4);
+  outline: 2px solid var(--secondary-color, var(--pine));
   outline-offset: 2px;
   border-radius: 12px;
 }

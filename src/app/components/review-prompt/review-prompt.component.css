@@ -7,24 +7,24 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background-color: var(--n-50);
+  border: 1px solid var(--n-200);
   border-radius: 8px;
 }
 
 .prompt-card.reviewed {
-  background-color: #f0fdf4;
-  border-color: #bbf7d0;
+  background-color: var(--success-softer);
+  border-color: var(--success-300);
 }
 
 .prompt-text {
   margin: 0;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--n-700);
 }
 
 .reviewed .prompt-text {
-  color: #166534;
+  color: var(--success-700);
 }
 
 .rate-button {

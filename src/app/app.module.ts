@@ -8,6 +8,7 @@ import * as Sentry from '@sentry/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { TopMenuComponent } from './components/top-menu/top-menu.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -52,11 +53,17 @@ import { BreederCardComponent } from './components/breeder-card/breeder-card.com
 import { BreederCardListComponent } from './components/breeder-card-list/breeder-card-list.component';
 import { SearchPageComponent } from './components/search-page/search-page.component';
 import { BreedingDetailComponent } from './components/breeding-detail/breeding-detail.component';
+import { BreedingWaitlistComponent } from './components/breeding-waitlist/breeding-waitlist.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BreedingPlannerComponent } from './components/breeding-planner/breeding-planner.component';
 import { MilestoneRedirectComponent } from './components/milestone-redirect/milestone-redirect.component';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
+import { WaitlistDepositModalComponent } from './components/waitlist-deposit-modal/waitlist-deposit-modal.component';
+import { WaitlistManualModalComponent } from './components/waitlist-manual-modal/waitlist-manual-modal.component';
+import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
+import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 import { UpcomingMilestonesComponent } from './components/upcoming-milestones/upcoming-milestones.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
-import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
 import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
@@ -79,6 +86,7 @@ import { OffspringListComponent } from './components/offspring-list/offspring-li
 import { OffspringFormComponent } from './components/offspring-form/offspring-form.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
 import { OffspringCardComponent } from './components/offspring-card/offspring-card.component';
+import { JoinWaitlistModalComponent } from './components/join-waitlist-modal/join-waitlist-modal.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
@@ -126,6 +134,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   declarations: [
     AppComponent,
     HomeComponent,
+    HomeNextComponent,
     TopMenuComponent,
     LoginComponent,
     RegisterComponent,
@@ -157,10 +166,15 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     SearchPageComponent,
     BreedingDetailComponent,
     BreedingPlannerComponent,
+    BreedingWaitlistComponent,
     MilestoneRedirectComponent,
     UpcomingMilestonesComponent,
+    WaitlistComponent,
+    WaitlistDepositModalComponent,
+    WaitlistManualModalComponent,
+    WaitlistSettingsComponent,
+    WaitlistCardComponent,
     OffspringModalComponent,
-    ContactBreederComponent,
     NotificationIconComponent,
     MessagesListComponent,
     MessageDetailComponent,
@@ -199,8 +213,10 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   imports: [
     BrowserModule,
     CommonModule,
+    JoinWaitlistModalComponent,
     AppRoutingModule,
     FormsModule,
+    DragDropModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatButtonModule,

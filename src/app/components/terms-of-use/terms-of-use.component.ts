@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./terms-of-use.component.css']
 })
 export class TermsOfUseComponent {
-  lastUpdated = 'October 4, 2026';
+  lastUpdated = 'October 11, 2026';
 
   downloadTerms(): void {
     const content = this.getTermsText();
@@ -22,8 +22,8 @@ export class TermsOfUseComponent {
 
   private getTermsText(): string {
     return `BREEDLY TERMS OF USE
-Last Updated: October 4, 2026
-Effective Date: October 4, 2026
+Last Updated: October 11, 2026
+Effective Date: October 11, 2026
 
 ================================================================================
 
@@ -157,6 +157,19 @@ Breedly does not store raw payment card details.
 8.3 Cancellation and Refunds
 You may cancel at any time through account settings. Cancellation takes effect
 at the end of the current billing period. No refunds for partial periods.
+
+8.4 Waitlists and Deposits
+If you use the waitlist feature (which may not be available to all users yet):
+- Any deposit is arranged directly between the breeder and the pet seeker,
+  outside Breedly. Breedly does not process, collect, hold, or transfer deposit
+  payments.
+- Breeders may record deposits they have received (amount, date, and method) in
+  Breedly. Breedly stores these records for convenience only and does not
+  guarantee, verify, or refund any deposit.
+- Any dispute about a deposit, a waitlist place, or a match to an offspring is
+  solely between the breeder and the pet seeker.
+- Breeders are responsible for having permission to add another person's name,
+  email address, or phone number to their waitlist.
 
 ================================================================================
 

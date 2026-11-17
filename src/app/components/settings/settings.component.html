@@ -30,11 +30,18 @@
         My Service Categories
       </button>
       <button 
-        *ngIf="isBreeder"
+        *ngIf="isBreeder && billingEnabled"
         class="sidebar-nav-item" 
         [class.active]="isActive('subscription')"
         (click)="navigateToSection('subscription')">
         Subscription
+      </button>
+      <button 
+        *ngIf="isBreeder && waitlistEnabled"
+        class="sidebar-nav-item" 
+        [class.active]="isActive('waitlist')"
+        (click)="navigateToSection('waitlist')">
+        Waitlist
       </button>
       <!-- Notifications settings temporarily disabled
       <button 

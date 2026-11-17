@@ -19,10 +19,10 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: white;
+  background: var(--color-surface);
   padding: 1rem 0 0.75rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid var(--n-200);
 }
 
 /* Pet Info Header (Non-editable fields) */
@@ -32,8 +32,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.875rem 1rem;
-  background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05));
-  border: 1.5px solid rgba(255, 107, 107, 0.15);
+  background: linear-gradient(135deg, rgba(180, 70, 30, 0.05), rgba(31, 74, 58, 0.05));
+  border: 1.5px solid rgba(180, 70, 30, 0.15);
   border-radius: 8px;
   margin-bottom: 1.25rem;
 }
@@ -82,7 +82,7 @@
 .info-separator {
   width: 1px;
   height: 32px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 107, 107, 0.3), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(180, 70, 30, 0.3), transparent);
   flex-shrink: 0;
 }
 
@@ -93,9 +93,9 @@
 }
 
 .pet-form-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--dark-color);
   margin: 0;
 }
@@ -123,7 +123,7 @@
 
 .column-separator {
   width: 1px;
-  background-color: #E5E7EB;
+  background-color: var(--n-200);
   align-self: stretch;
   min-height: 100%;
 }
@@ -145,7 +145,7 @@
 }
 
 .column-heading--orange i {
-  color: #F97316;
+  color: var(--apricot);
 }
 
 .column-heading--red i {
@@ -169,8 +169,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.15rem;
-  border: 1.5px dashed #D1D5DB;
-  background: #F9FAFB;
+  border: 1.5px dashed var(--n-300);
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -189,7 +189,7 @@
 .photo-upload-tile:hover {
   border-color: var(--primary-color);
   color: var(--primary-strong);
-  background: #FEF2F2;
+  background: var(--error-softer);
 }
 
 .photo-preview-tile {
@@ -219,7 +219,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(48, 38, 28, 0.65);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -249,7 +249,7 @@
   border-radius: 6px !important;
   border: none !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  color: #374151 !important;
+  color: var(--n-700) !important;
   font-size: 0.875rem !important;
   line-height: 1 !important;
   display: flex !important;
@@ -260,13 +260,13 @@
   margin: 0 !important;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform !important;
   transition-duration: 0.2s !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.3) !important;
   flex-shrink: 0 !important;
 }
 
 .photo-overlay-btn:hover:not(:disabled) {
   transform: scale(1.1) !important;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 3px 6px rgba(48, 38, 28, 0.4) !important;
 }
 
 .photo-overlay-btn:active:not(:disabled) {
@@ -283,26 +283,26 @@
 }
 
 .photo-overlay-btn-primary {
-  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  background: var(--wheat) !important;
   color: white !important;
 }
 
 .photo-overlay-btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  background: var(--wheat) !important;
 }
 
 .photo-overlay-btn-primary:disabled {
-  background: #9ca3af !important;
+  background: var(--n-400) !important;
   opacity: 0.5 !important;
 }
 
 .photo-overlay-btn-delete {
-  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  background: var(--error) !important;
   color: white !important;
 }
 
 .photo-overlay-btn-delete:hover {
-  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  background: var(--error) !important;
 }
 
 /* Section Labels */
@@ -336,9 +336,9 @@
   width: 100%;
   height: 100%;
   min-height: 280px;
-  border: 3px dashed #D1D5DB;
+  border: 3px dashed var(--n-300);
   border-radius: var(--border-radius);
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -353,7 +353,7 @@
 
 .image-preview-modern:hover {
   border-color: var(--primary-color);
-  background-color: #FEF2F2;
+  background-color: var(--error-softer);
 }
 
 .image-preview-modern.has-image {
@@ -364,7 +364,7 @@
 /* Existing image with tint overlay */
 .image-preview-modern.has-existing-image {
   border-style: solid;
-  border-color: #9CA3AF;
+  border-color: var(--n-400);
   position: relative;
 }
 
@@ -422,7 +422,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(48, 38, 28, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -467,12 +467,12 @@
   font-family: var(--font-secondary);
   width: 100%;
   padding: 0.6rem 0.875rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
   font-size: 0.875rem;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   color: var(--dark-color);
   box-sizing: border-box;
 }
@@ -480,12 +480,12 @@
 .form-control-modern:focus {
   outline: none;
   border-color: var(--primary-color);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-control-modern::placeholder {
-  color: #9CA3AF;
+  color: var(--n-400);
 }
 
 .form-select-modern {
@@ -524,9 +524,9 @@ textarea.form-control-modern {
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  border: 2px solid #E5E7EB;
+  border: 2px solid var(--n-200);
   border-radius: calc(var(--border-radius) * 0.75);
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -534,12 +534,12 @@ textarea.form-control-modern {
 
 .gender-option:hover {
   border-color: var(--primary-color);
-  background-color: #FEF2F2;
+  background-color: var(--error-softer);
 }
 
 .gender-option.selected {
   border-color: var(--primary-color);
-  background-color: rgba(255, 107, 107, 0.1);
+  background-color: rgba(180, 70, 30, 0.1);
 }
 
 .gender-option i {
@@ -572,9 +572,9 @@ textarea.form-control-modern {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 0.75rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
@@ -583,7 +583,7 @@ textarea.form-control-modern {
 
 .checkbox-modern:hover {
   border-color: var(--primary-color);
-  background-color: #FEF2F2;
+  background-color: var(--error-softer);
 }
 
 .checkbox-modern input[type="checkbox"] {
@@ -595,9 +595,9 @@ textarea.form-control-modern {
 .checkbox-custom {
   width: 18px;
   height: 18px;
-  border: 1.5px solid #D1D5DB;
+  border: 1.5px solid var(--n-300);
   border-radius: 4px;
-  background-color: white;
+  background-color: var(--color-surface);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
@@ -634,8 +634,8 @@ textarea.form-control-modern {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  border-top: 1px solid #E5E7EB;
-  background-color: white;
+  border-top: 1px solid var(--n-200);
+  background-color: var(--color-surface);
   flex-shrink: 0;
 }
 
@@ -700,6 +700,7 @@ textarea.form-control-modern {
   }
 
   .pet-form-title {
+    font-family: var(--font-display);
     font-size: 1.125rem;
   }
 
@@ -728,14 +729,14 @@ textarea.form-control-modern {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--color-surface);
   border: 2px solid var(--primary-color);
   border-top: none;
   border-radius: 0 0 8px 8px;
   max-height: 250px;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.15);
   margin-top: -1px;
 }
 
@@ -747,7 +748,7 @@ textarea.form-control-modern {
   transition-timing-function: ease;
   font-size: 0.9375rem;
   color: var(--dark-color);
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--n-100);
 }
 
 .autocomplete-item:last-child {
@@ -755,7 +756,7 @@ textarea.form-control-modern {
 }
 
 .autocomplete-item:hover {
-  background: linear-gradient(90deg, rgba(255, 107, 107, 0.08) 0%, rgba(78, 205, 196, 0.08) 100%);
+  background: linear-gradient(90deg, rgba(180, 70, 30, 0.08) 0%, rgba(31, 74, 58, 0.08) 100%);
   color: var(--primary-strong);
   padding-left: 1.25rem;
 }
@@ -783,7 +784,7 @@ textarea.form-control-modern {
 }
 
 .autocomplete-dropdown::-webkit-scrollbar-track {
-  background: #f3f4f6;
+  background: var(--n-100);
   border-radius: 0 0 8px 0;
 }
 
@@ -793,7 +794,7 @@ textarea.form-control-modern {
 }
 
 .autocomplete-dropdown::-webkit-scrollbar-thumb:hover {
-  background: #ff5252;
+  background: var(--clay-hover);
 }
 
 /* Read-only Fields */
@@ -801,8 +802,8 @@ textarea.form-control-modern {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  background-color: #F3F4F6;
-  border: 2px solid #E5E7EB;
+  background-color: var(--n-100);
+  border: 2px solid var(--n-200);
   border-radius: calc(var(--border-radius) * 0.75);
   font-size: 0.9375rem;
   color: var(--dark-color);
@@ -830,8 +831,8 @@ textarea.form-control-modern {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background-color: #F3F4F6;
-  border: 2px solid #E5E7EB;
+  background-color: var(--n-100);
+  border: 2px solid var(--n-200);
   border-radius: calc(var(--border-radius) * 0.75);
   font-family: var(--font-secondary);
   font-weight: 600;
@@ -839,21 +840,21 @@ textarea.form-control-modern {
 }
 
 .gender-badge.male {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05));
-  border-color: rgba(59, 130, 246, 0.3);
-  color: #2563eb;
+  background: linear-gradient(135deg, rgba(44, 95, 138, 0.1), rgba(44, 95, 138, 0.05));
+  border-color: rgba(44, 95, 138, 0.3);
+  color: var(--harbor);
 }
 
 .gender-badge.female {
-  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(219, 39, 119, 0.05));
-  border-color: rgba(236, 72, 153, 0.3);
-  color: #db2777;
+  background: linear-gradient(135deg, rgba(184, 70, 122, 0.1), rgba(184, 70, 122, 0.05));
+  border-color: rgba(184, 70, 122, 0.3);
+  color: var(--female-color-1);
 }
 
 .gender-badge.not-specified {
-  background: linear-gradient(135deg, rgba(156, 163, 175, 0.1), rgba(107, 114, 128, 0.05));
-  border-color: rgba(156, 163, 175, 0.3);
-  color: #6b7280;
+  background: linear-gradient(135deg, rgba(168, 161, 149, 0.1), rgba(95, 101, 92, 0.05));
+  border-color: rgba(168, 161, 149, 0.3);
+  color: var(--n-500);
 }
 
 .gender-badge i {
@@ -866,18 +867,18 @@ textarea.form-control-modern {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, rgba(255, 230, 109, 0.2), rgba(255, 219, 77, 0.1));
-  border: 2px solid rgba(255, 230, 109, 0.4);
+  background: linear-gradient(135deg, rgba(221, 168, 70, 0.2), rgba(221, 168, 70, 0.1));
+  border: 2px solid rgba(221, 168, 70, 0.4);
   border-radius: calc(var(--border-radius) * 0.75);
   font-family: var(--font-secondary);
   font-weight: 600;
   font-size: 0.9375rem;
-  color: #92400e;
+  color: var(--warning-700);
 }
 
 .age-type-badge i {
   font-size: 1.125rem;
-  color: #f59e0b;
+  color: var(--wheat);
 }
 
 /* Photo badges */
@@ -889,25 +890,25 @@ textarea.form-control-modern {
   font-size: 0.65rem;
   font-weight: 600;
   border-radius: 4px;
-  background: rgba(99, 102, 241, 0.9);
+  background: rgba(180, 70, 30, 0.9);
   color: white;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .photo-badge--new {
-  background: rgba(16, 185, 129, 0.9);
+  background: rgba(47, 122, 75, 0.9);
 }
 
 .photo-preview-tile--new {
-  border: 2px solid #10b981;
+  border: 2px solid var(--success);
 }
 
 .form-text-muted {
   display: block;
   margin-top: 0.5rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 @media (max-width: 576px) {

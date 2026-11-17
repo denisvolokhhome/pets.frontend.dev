@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
-import { Subject, takeUntil, forkJoin } from 'rxjs';
+import { Subject, takeUntil, forkJoin, map, distinctUntilChanged } from 'rxjs';
 
 export interface SetupStep {
   id: string;
@@ -78,13 +78,21 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.authService.hasValidToken()) return;
-
-    this.authService.isLoggedIn$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(loggedIn => {
-        if (loggedIn && this.authService.isBreeder) {
+    // Key off the user object, not isLoggedIn$: right after login/registration
+    // isLoggedIn$ flips to true before /auth/users/me returns, so isBreeder is
+    // still false at that moment, and the later `true` is swallowed by
+    // distinctUntilChanged — the guide stayed hidden until a page refresh.
+    this.authService.currentUser$
+      .pipe(
+        map(user => (user?.is_breeder ? user.id : null)),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(breederId => {
+        if (breederId) {
           this.loadState();
+        } else {
+          this.cdr.markForCheck();
         }
       });
   }

@@ -1,0 +1,9 @@
+<div class="waitlist-card" *ngIf="waitlistEnabled && pendingCount > 0">
+  <a routerLink="/waitlist" class="waitlist-row">
+    <span class="waitlist-title">
+      <i class="bi bi-hourglass-split" aria-hidden="true"></i>
+      Waitlist requests awaiting review
+    </span>
+    <span class="waitlist-count">{{ pendingCount }}</span>
+  </a>
+</div>

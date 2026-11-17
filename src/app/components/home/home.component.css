@@ -57,8 +57,8 @@
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(255, 107, 107, 0.3) 0%,
-    rgba(78, 205, 196, 0.3) 100%
+    rgba(180, 70, 30, 0.3) 0%,
+    rgba(31, 74, 58, 0.3) 100%
   );
   z-index: -1;
 }
@@ -72,8 +72,8 @@
   height: 100%;
   background: linear-gradient(
     135deg,
-    rgba(255, 107, 107, 0.85) 0%,
-    rgba(78, 205, 196, 0.75) 100%
+    rgba(180, 70, 30, 0.85) 0%,
+    rgba(31, 74, 58, 0.75) 100%
   );
   z-index: 1;
 }
@@ -92,7 +92,7 @@
   color: #ffffff;
   margin-bottom: 1.5rem;
   line-height: 1.2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 4px rgba(48, 38, 28, 0.2);
   letter-spacing: -0.02em;
   /* Smooth fade-in animation */
   animation: fadeInUp 0.8s ease-out 0.1s both;
@@ -110,7 +110,7 @@
   color: #ffffff;
   margin-bottom: 2.5rem;
   line-height: 1.6;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 3px rgba(48, 38, 28, 0.2);
   opacity: 0.95;
   /* Smooth fade-in animation */
   animation: fadeInUp 0.8s ease-out 0.2s both;
@@ -143,14 +143,14 @@
 
 /* Main Search Button - Primary CTA */
 .cta-search-main {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   color: var(--primary-strong);
   border: 3px solid #ffffff;
   font-size: 1.5rem;
   font-weight: 700;
   padding: 1.25rem 4rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(48, 38, 28, 0.2);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
@@ -164,24 +164,24 @@
   color: #ffffff;
   border-color: #ffffff;
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3);
 }
 
 .cta-search-main:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3);
 }
 
 .cta-search-main:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-search-main:active {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(48, 38, 28, 0.2);
 }
 
 .cta-search-main i {
@@ -201,20 +201,20 @@
 
 /* Primary CTA Button (Breeder) */
 .cta-breeder {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   color: var(--primary-strong);
   border: 3px solid #ffffff;
   font-size: 1.125rem;
   font-weight: 600;
   padding: 1rem 2.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.15);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Accessibility: Primary color (#FF6B6B) on white background
+  /* Accessibility: Primary color (var(--clay)) on white background
    * Contrast ratio: 3.94:1
    * Passes WCAG AA for large text (18pt+/14pt+ bold)
    * Button text is 1.125rem (18px) and bold (600 weight)
@@ -226,24 +226,24 @@
   color: #ffffff;
   border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-breeder:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-breeder:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-breeder:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.15);
 }
 
 /* Secondary CTA Button (Pet Seeker) */
@@ -255,7 +255,7 @@
   font-weight: 600;
   padding: 1rem 2.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.1);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
@@ -264,28 +264,28 @@
 }
 
 .cta-pet-seeker:hover {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   color: var(--secondary-strong);
   border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-pet-seeker:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-pet-seeker:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-pet-seeker:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.1);
 }
 
 /* Icon spacing in buttons */
@@ -304,7 +304,7 @@
   font-weight: 600;
   padding: 1rem 2.5rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.1);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
@@ -313,28 +313,28 @@
 }
 
 .cta-service-provider:hover {
-  background-color: #ffffff;
-  color: #0d9488;
+  background-color: var(--color-surface);
+  color: var(--pine);
   border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-service-provider:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2);
 }
 
 .cta-service-provider:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 3px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(48, 38, 28, 0.2), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-service-provider:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.1);
 }
 
 /* Ensure text contrast meets accessibility standards */
@@ -345,7 +345,7 @@
 
 .features-section {
   padding: 5rem 1rem;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   /* Reserve space to prevent layout shift */
   contain: layout style;
 }
@@ -361,7 +361,7 @@
   /* Smooth fade-in animation */
   opacity: 0;
   animation: fadeInUp 0.6s ease-out forwards;
-  /* Accessibility: Dark color (#2C3E50) on white background
+  /* Accessibility: Dark color (var(--ink)) on white background
    * Contrast ratio: 12.63:1
    * Passes WCAG AAA for all text sizes
    */
@@ -377,7 +377,7 @@
   /* Smooth fade-in animation */
   opacity: 0;
   animation: fadeInUp 0.6s ease-out 0.1s forwards;
-  /* Accessibility: Text secondary (#6C757D) on white background
+  /* Accessibility: Text secondary (var(--n-500)) on white background
    * Contrast ratio: 4.54:1
    * Passes WCAG AA for normal text
    */
@@ -390,7 +390,7 @@
 
 /* Feature Card */
 .feature-card {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border-radius: var(--border-radius);
   padding: 2.5rem 2rem;
   text-align: center;
@@ -398,7 +398,7 @@
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   height: 100%;
   border: 2px solid transparent;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.08);
   /* Reserve minimum space to prevent layout shift */
   min-height: 300px;
   display: flex;
@@ -424,7 +424,7 @@
 
 .feature-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 24px rgba(48, 38, 28, 0.12);
   border-color: var(--primary-color);
 }
 
@@ -433,7 +433,7 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 1.5rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -447,7 +447,7 @@
 
 .feature-card:hover .feature-icon-wrapper {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 8px 16px rgba(180, 70, 30, 0.3);
 }
 
 /* Feature Icon */
@@ -469,7 +469,7 @@
   color: var(--dark-color);
   margin-bottom: 1rem;
   line-height: 1.3;
-  /* Accessibility: Dark color (#2C3E50) on white background
+  /* Accessibility: Dark color (var(--ink)) on white background
    * Contrast ratio: 12.63:1
    * Passes WCAG AAA for all text sizes
    */
@@ -482,7 +482,7 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 0;
-  /* Accessibility: Text secondary (#6C757D) on white background
+  /* Accessibility: Text secondary (var(--n-500)) on white background
    * Contrast ratio: 4.54:1
    * Passes WCAG AA for normal text
    */
@@ -680,28 +680,28 @@
     background-color: var(--primary-strong);
     color: #ffffff;
     transform: scale(0.98);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(48, 38, 28, 0.2);
   }
 
   .cta-breeder:active {
     background-color: var(--primary-strong);
     color: #ffffff;
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(48, 38, 28, 0.15);
   }
 
   .cta-pet-seeker:active {
     background-color: rgba(255, 255, 255, 0.9);
     color: var(--secondary-strong);
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(48, 38, 28, 0.1);
   }
 
   .cta-service-provider:active {
     background-color: rgba(255, 255, 255, 0.9);
-    color: #0d9488;
+    color: var(--pine);
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(48, 38, 28, 0.1);
   }
 }
 
@@ -888,7 +888,7 @@
 
 .how-it-works-section {
   padding: 5rem 1rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: linear-gradient(135deg, var(--n-50) 0%, #ffffff 100%);
   /* Reserve space to prevent layout shift */
   contain: layout style;
 }
@@ -898,9 +898,9 @@
   display: inline-flex;
   gap: 1rem;
   padding: 0.5rem;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.08);
 }
 
 .flow-toggle-btn {
@@ -929,26 +929,26 @@
 }
 
 .flow-toggle-btn.active {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   color: #ffffff;
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.3);
 }
 
 .flow-toggle-btn:focus {
-  outline: 3px solid rgba(255, 107, 107, 0.3);
+  outline: 3px solid rgba(180, 70, 30, 0.3);
   outline-offset: 2px;
 }
 
 .flow-toggle-btn:focus-visible {
-  outline: 3px solid rgba(255, 107, 107, 0.6);
+  outline: 3px solid rgba(180, 70, 30, 0.6);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15);
+  box-shadow: 0 0 0 4px rgba(180, 70, 30, 0.15);
 }
 
 .flow-toggle-btn:active {
   transform: scale(0.98);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(48, 38, 28, 0.1);
 }
 
 /* Steps Container */
@@ -983,12 +983,12 @@
   width: 50px;
   height: 50px;
   margin: 0 auto 1rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 12px rgba(180, 70, 30, 0.3);
   position: relative;
   z-index: 2;
   /* Prevent layout shift with explicit dimensions */
@@ -1009,7 +1009,7 @@
   width: 70px;
   height: 70px;
   margin: 0 auto 1rem;
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   border: 3px solid var(--light-color);
   border-radius: 50%;
   display: flex;
@@ -1017,7 +1017,7 @@
   justify-content: center;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(48, 38, 28, 0.08);
   /* Prevent layout shift with explicit dimensions */
   aspect-ratio: 1 / 1;
   flex-shrink: 0;
@@ -1026,13 +1026,13 @@
 .step-item:hover .step-icon-wrapper {
   transform: scale(1.1);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.2);
+  box-shadow: 0 4px 16px rgba(180, 70, 30, 0.2);
 }
 
 /* Step Icon */
 .step-icon {
   font-size: 2rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1118,7 +1118,7 @@
 }
 
 .step-item:hover .step-number-badge {
-  box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 16px rgba(180, 70, 30, 0.4);
 }
 
 .step-item:hover .step-title {
@@ -1390,7 +1390,7 @@
 
 .cta-footer-section {
   padding: 5rem 1rem;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: var(--clay);
   position: relative;
   overflow: hidden;
   /* Reserve space to prevent layout shift */
@@ -1424,7 +1424,7 @@
   color: #ffffff;
   margin-bottom: 1.25rem;
   line-height: 1.2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(48, 38, 28, 0.1);
   /* Accessibility: White text on gradient background (primary/secondary)
    * Contrast ratio: 3.94:1 on primary, 3.02:1 on secondary
    * Passes WCAG AA for large text (18pt+)
@@ -1452,7 +1452,7 @@
 
 /* CTA Footer Button - Prominent sign-up button */
 .cta-footer-button {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   color: var(--primary-strong);
   border: 3px solid #ffffff;
   font-family: var(--font-primary);
@@ -1460,13 +1460,13 @@
   font-weight: 600;
   padding: 1.125rem 3rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(48, 38, 28, 0.2);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Accessibility: Primary color (#FF6B6B) on white background
+  /* Accessibility: Primary color (var(--clay)) on white background
    * Contrast ratio: 3.94:1
    * Passes WCAG AA for large text (18pt+/14pt+ bold)
    * Button text is 1.25rem (20px) and bold (600 weight)
@@ -1475,7 +1475,7 @@
 
 /* Main Footer Search Button */
 .cta-footer-search-main {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   color: var(--primary-strong);
   border: 3px solid #ffffff;
   font-family: var(--font-primary);
@@ -1483,7 +1483,7 @@
   font-weight: 700;
   padding: 1.25rem 4rem;
   border-radius: var(--border-radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(48, 38, 28, 0.25);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   display: inline-flex;
@@ -1497,24 +1497,24 @@
   color: #ffffff;
   border-color: var(--dark-color);
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 36px rgba(48, 38, 28, 0.35);
 }
 
 .cta-footer-search-main:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 4px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 36px rgba(48, 38, 28, 0.35);
 }
 
 .cta-footer-search-main:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 4px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 36px rgba(48, 38, 28, 0.35), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-footer-search-main:active {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 24px rgba(48, 38, 28, 0.25);
 }
 
 .cta-footer-search-main i {
@@ -1526,24 +1526,24 @@
   color: #ffffff;
   border-color: var(--dark-color);
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3);
 }
 
 .cta-footer-button:focus {
   outline: 3px solid rgba(255, 255, 255, 0.5);
   outline-offset: 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3);
 }
 
 .cta-footer-button:focus-visible {
   outline: 3px solid rgba(255, 255, 255, 0.8);
   outline-offset: 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 6px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(48, 38, 28, 0.3), 0 0 0 6px rgba(255, 255, 255, 0.3);
 }
 
 .cta-footer-button:active {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(48, 38, 28, 0.2);
 }
 
 /* Icon in button */
@@ -1705,14 +1705,14 @@
     background-color: var(--dark-color);
     color: #ffffff;
     transform: scale(0.98);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 20px rgba(48, 38, 28, 0.25);
   }
 
   .cta-footer-button:active {
     background-color: var(--dark-color);
     color: #ffffff;
     transform: scale(0.98);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(48, 38, 28, 0.2);
   }
 }
 
@@ -1741,7 +1741,7 @@
 /* ===== Site Footer ===== */
 
 .site-footer {
-  background-color: var(--dark-color, #2C3E50);
+  background-color: var(--dark-color, var(--ink));
   padding: 2rem 1rem;
   color: #ffffff;
 }

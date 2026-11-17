@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
@@ -34,6 +35,11 @@ import { ServiceProviderGuard } from './guard/service-provider.guard';
 import { ServiceCategoriesSettingsComponent } from './components/settings/service-categories-settings/service-categories-settings.component';
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
+import { WaitlistGuard } from './guard/waitlist.guard';
+import { BillingGuard } from './guard/billing.guard';
+import { WaitlistComponent } from './components/waitlist/waitlist.component';
+import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
+import { MyWaitlistsComponent } from './components/my-waitlists/my-waitlists.component';
 import { MessageNewComponent } from './components/message-new/message-new.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { GenealogyComponent } from './components/genealogy/genealogy.component';
@@ -46,7 +52,9 @@ import { BreederAgreementComponent } from './components/breeder-agreement/breede
 import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeNextComponent },
+  { path: 'home-old', component: HomeComponent }, // previous design, kept for comparison
+  { path: 'home-next', redirectTo: '', pathMatch: 'full' },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
@@ -77,6 +85,8 @@ const routes: Routes = [
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
+  { path: 'waitlist', component: WaitlistComponent, canActivate: [WaitlistGuard, BreederGuard] },
+  { path: 'my-waitlists', component: MyWaitlistsComponent, canActivate: [WaitlistGuard, PetSeekerGuard] },
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [ServiceProviderGuard] },
@@ -93,7 +103,8 @@ const routes: Routes = [
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
-      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
+      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BillingGuard, BreederGuard] },
+      { path: 'waitlist', component: WaitlistSettingsComponent, canActivate: [WaitlistGuard, BreederGuard] },
       { path: 'support', component: SupportSettingsComponent },
       { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }
     ]

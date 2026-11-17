@@ -27,7 +27,7 @@ export class PetsComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'Pets Management',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: true,
     showSearch: true,
     searchPlaceholder: 'Search pets…',

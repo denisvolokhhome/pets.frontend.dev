@@ -1,15 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-
-export interface MessageCreate {
-  breeder_id: string;
-  sender_name: string;
-  sender_email: string;
-  message?: string;
-}
 
 export interface Message {
   id: string;
@@ -62,11 +55,6 @@ export interface UnreadCountResponse {
   unread_count: number;
 }
 
-export interface MessageSendResponse {
-  success: boolean;
-  message: string;
-}
-
 export interface MessageResponseCreate {
   response_text: string;
 }
@@ -111,16 +99,16 @@ export interface ThreadResponse {
 export class MessageService {
   private apiUrl = environment.API_URL;
 
+  /** Fires when messages were (probably) marked read or arrived, so unread badges can refresh. */
+  private readonly unreadChanged = new Subject<void>();
+  readonly unreadChanged$ = this.unreadChanged.asObservable();
+
   constructor(private http: HttpClient) {}
 
-  /**
-   * Send a message to a breeder (public endpoint - no authentication required)
-   */
-  sendMessage(messageData: MessageCreate): Observable<MessageSendResponse> {
-    return this.http
-      .post<MessageSendResponse>(`${this.apiUrl}/messages/send`, messageData)
-      .pipe(catchError(this.handleError));
+  notifyUnreadChanged(): void {
+    this.unreadChanged.next();
   }
+
 
   /**
    * Get all messages for the authenticated breeder
@@ -207,12 +195,17 @@ export class MessageService {
         .pipe(catchError(this.handleError));
     }
     
-    // Otherwise use the direct message endpoint (authenticated users only)
+    // Otherwise use the direct message endpoint (authenticated users only).
+    // Pass thread_id so a reply stays in its conversation instead of starting a new one.
+    const directPayload: any = {
+      receiver_id: messageData.receiver_id,
+      message: messageData.message,
+    };
+    if (messageData.thread_id) {
+      directPayload.thread_id = messageData.thread_id;
+    }
     return this.http
-      .post<ThreadMessage>(`${this.apiUrl}/messages/direct`, {
-        receiver_id: messageData.receiver_id,
-        message: messageData.message,
-      }, { headers })
+      .post<ThreadMessage>(`${this.apiUrl}/messages/direct`, directPayload, { headers })
       .pipe(catchError(this.handleError));
   }
 

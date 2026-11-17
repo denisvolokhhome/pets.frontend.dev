@@ -21,7 +21,7 @@ export class OffspringListComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'My Offsprings',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search offsprings…',
@@ -60,6 +60,7 @@ export class OffspringListComponent implements OnInit {
   isLoading: boolean = false;
   isDeleting: { [key: string]: boolean } = {};
   isUpdatingStatus: { [key: string]: boolean } = {};
+  isTogglingPublish: { [key: string]: boolean } = {};
 
   // Pagination
   totalRecords: number = 0;
@@ -273,6 +274,29 @@ export class OffspringListComponent implements OnInit {
         }
       });
     }
+  }
+
+  togglePublish(offspring: OffspringRead): void {
+    if (this.isTogglingPublish[offspring.id]) return;
+    const publish = !offspring.is_published;
+    this.isTogglingPublish[offspring.id] = true;
+    // Send the explicit target state (not the toggle endpoint) so a double click can't flip it back.
+    this.offspringService.updateOffspring(offspring.id, { is_published: publish }).subscribe({
+      next: (updated) => {
+        offspring.is_published = updated.is_published;
+        this.isTogglingPublish[offspring.id] = false;
+        this.toastr.success(
+          updated.is_published ? 'Offspring is now visible to pet seekers.' : 'Offspring is now hidden from pet seekers.',
+          updated.is_published ? 'Published' : 'Unpublished'
+        );
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error(error.message || 'Failed to update visibility', 'Error');
+        this.isTogglingPublish[offspring.id] = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onStatusChange(offspring: OffspringRead, newStatus: string): void {

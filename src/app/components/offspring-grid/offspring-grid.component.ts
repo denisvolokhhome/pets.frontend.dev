@@ -4,6 +4,9 @@ import { Location } from '@angular/common';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { canJoinWaitlist } from 'src/app/models/waitlist';
+import { AuthService } from 'src/app/services/auth.service';
+import { rememberPostSignupRedirect } from 'src/app/utils/format-utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,6 +20,8 @@ export class OffspringGridComponent implements OnInit {
 
   offsprings: OffspringRead[] = [];
   isLoading: boolean = true;
+  readonly waitlistEnabled = environment.enableWaitlist;
+  showJoinWaitlist: boolean = false;
   breederInfo: any = null;
   
   // Pagination
@@ -53,7 +58,8 @@ export class OffspringGridComponent implements OnInit {
     private offspringService: OffspringService,
     private dataService: DataService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +82,23 @@ export class OffspringGridComponent implements OnInit {
       this.loadOffsprings();
       this.loadBreederInfo();
     }
+  }
+
+  /** Join button via the shared predicate. */
+  canJoinWaitlist(): boolean {
+    return canJoinWaitlist(
+      this.waitlistEnabled, this.authService.hasValidToken(), this.authService.currentUser,
+      this.authService.isPetSeeker, this.breederId
+    );
+  }
+
+  joinWaitlist(): void {
+    if (!this.authService.hasValidToken()) {
+      rememberPostSignupRedirect(this.router.url);
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.showJoinWaitlist = true;
   }
 
   /**

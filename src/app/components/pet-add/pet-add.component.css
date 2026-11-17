@@ -23,10 +23,10 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: white;
+  background: var(--color-surface);
   padding: 1rem 0 0.75rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 1px solid var(--n-200);
 }
 
 .header-content {
@@ -36,9 +36,9 @@
 }
 
 .pet-form-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--dark-color);
   margin: 0;
 }
@@ -72,7 +72,7 @@
 
 .column-separator {
   width: 1px;
-  background-color: #E5E7EB;
+  background-color: var(--n-200);
   align-self: stretch;
   min-height: 100%;
 }
@@ -95,7 +95,7 @@
   color: var(--dark-color);
 }
 
-.column-heading--orange i { color: #F97316; }
+.column-heading--orange i { color: var(--apricot); }
 .column-heading--red    i { color: var(--primary-strong); }
 
 /* ── Form Groups ────────────────────────────────────────── */
@@ -117,12 +117,12 @@
   font-family: var(--font-secondary);
   width: 100%;
   padding: 0.6rem 0.875rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
   font-size: 0.875rem;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  background-color: #F9FAFB;
+  background-color: var(--n-50);
   color: var(--dark-color);
   box-sizing: border-box;
 }
@@ -130,12 +130,12 @@
 .form-control-modern:focus {
   outline: none;
   border-color: var(--primary-color);
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  background-color: var(--color-surface);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-control-modern::placeholder {
-  color: #9CA3AF;
+  color: var(--n-400);
 }
 
 .form-select-modern {
@@ -176,9 +176,9 @@ textarea.form-control-modern {
   justify-content: center;
   gap: 0.2rem;
   padding: 0.5rem 0.25rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
-  background: #F9FAFB;
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -186,14 +186,14 @@ textarea.form-control-modern {
 }
 
 .pet-type-tile:hover {
-  border-color: #9CA3AF;
-  background: white;
+  border-color: var(--n-400);
+  background: var(--color-surface);
 }
 
 /* Same selected treatment as the gender options */
 .pet-type-tile.selected {
   border-color: var(--primary-color);
-  background: rgba(255, 107, 107, 0.08);
+  background: rgba(180, 70, 30, 0.08);
 }
 
 .pet-type-icon {
@@ -224,9 +224,9 @@ textarea.form-control-modern {
   justify-content: center;
   gap: 0.3rem;
   padding: 0.875rem 0.5rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
-  background: #F9FAFB;
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -234,12 +234,12 @@ textarea.form-control-modern {
 
 .gender-option:hover {
   border-color: var(--primary-color);
-  background: #FEF2F2;
+  background: var(--error-softer);
 }
 
 .gender-option.selected {
   border-color: var(--primary-color);
-  background: rgba(255, 107, 107, 0.08);
+  background: rgba(180, 70, 30, 0.08);
 }
 
 .gender-option i {
@@ -278,8 +278,8 @@ textarea.form-control-modern {
   align-items: center;
   justify-content: center;
   gap: 0.15rem;
-  border: 1.5px dashed #D1D5DB;
-  background: #F9FAFB;
+  border: 1.5px dashed var(--n-300);
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -298,7 +298,7 @@ textarea.form-control-modern {
 .photo-upload-tile:hover {
   border-color: var(--primary-color);
   color: var(--primary-strong);
-  background: #FEF2F2;
+  background: var(--error-softer);
 }
 
 /* ── Photo Preview Tile ─────────────────────────────────── */
@@ -328,7 +328,7 @@ textarea.form-control-modern {
   height: 18px;
   border-radius: 4px;
   border: none;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(48, 38, 28, 0.55);
   color: white;
   font-size: 0.7rem;
   display: flex;
@@ -343,7 +343,7 @@ textarea.form-control-modern {
 }
 
 .photo-remove-btn:hover {
-  background: rgba(220, 38, 38, 0.9);
+  background: rgba(161, 50, 43, 0.9);
 }
 
 .photo-remove-btn i {
@@ -364,9 +364,9 @@ textarea.form-control-modern {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.625rem;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--n-200);
   border-radius: 8px;
-  background: #F9FAFB;
+  background: var(--n-50);
   cursor: pointer;
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
@@ -375,7 +375,7 @@ textarea.form-control-modern {
 
 .checkbox-modern:hover {
   border-color: var(--primary-color);
-  background: #FEF2F2;
+  background: var(--error-softer);
 }
 
 .checkbox-modern input[type="checkbox"] {
@@ -387,9 +387,9 @@ textarea.form-control-modern {
 .checkbox-custom {
   width: 16px;
   height: 16px;
-  border: 1.5px solid #D1D5DB;
+  border: 1.5px solid var(--n-300);
   border-radius: 4px;
-  background: white;
+  background: var(--color-surface);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform, border-width, height, left, top, width;
   position: relative;
@@ -441,14 +441,14 @@ textarea.form-control-modern {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--color-surface);
   border: 1.5px solid var(--primary-color);
   border-top: none;
   border-radius: 0 0 8px 8px;
   max-height: 220px;
   overflow-y: auto;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.12);
 }
 
 .autocomplete-item {
@@ -456,14 +456,14 @@ textarea.form-control-modern {
   cursor: pointer;
   font-size: 0.875rem;
   color: var(--dark-color);
-  border-bottom: 1px solid #F3F4F6;
+  border-bottom: 1px solid var(--n-100);
   transition: background 0.15s;
 }
 
 .autocomplete-item:last-child { border-bottom: none; }
 
 .autocomplete-item:hover {
-  background: #FEF2F2;
+  background: var(--error-softer);
   color: var(--primary-strong);
 }
 
@@ -486,8 +486,8 @@ textarea.form-control-modern {
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 0.875rem 1.25rem;
-  border-top: 1px solid #E5E7EB;
-  background: #F9FAFB;
+  border-top: 1px solid var(--n-200);
+  background: var(--n-50);
   flex-shrink: 0;
 }
 
@@ -505,7 +505,7 @@ textarea.form-control-modern {
 
   .form-column:last-child {
     grid-column: 1 / -1;
-    border-top: 1px solid #E5E7EB;
+    border-top: 1px solid var(--n-200);
     margin-top: 1rem;
     padding-top: 1rem;
     padding-left: 0;
@@ -525,7 +525,7 @@ textarea.form-control-modern {
   .form-column,
   .form-column:last-child {
     padding: 0;
-    border-top: 1px solid #E5E7EB;
+    border-top: 1px solid var(--n-200);
     margin-top: 1rem;
     padding-top: 1rem;
     grid-column: unset;

@@ -1,0 +1,40 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="wl-modal" role="dialog" aria-modal="true" aria-label="Add person manually" (click)="$event.stopPropagation()">
+    <div class="wl-modal-header">
+      <h3>Add person to waitlist</h3>
+      <button type="button" class="ui-icon-btn" (click)="onClose()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="wl-modal-body">
+      <div class="field-group">
+        <label class="field-label" for="man-name">Name *</label>
+        <input id="man-name" type="text" class="field-input" [class.field-error]="errors['name']" [(ngModel)]="name" />
+        <span class="error-msg" *ngIf="errors['name']">{{ errors['name'] }}</span>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="man-email">Email</label>
+        <input id="man-email" type="email" class="field-input" [class.field-error]="errors['contact']" [(ngModel)]="email" />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="man-phone">Phone</label>
+        <input id="man-phone" type="tel" class="field-input" [class.field-error]="errors['contact']" [(ngModel)]="phone" />
+        <span class="error-msg" *ngIf="errors['contact']">{{ errors['contact'] }}</span>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="man-sex">Sex preference</label>
+        <select id="man-sex" class="field-select" [(ngModel)]="sexPreference">
+          <option *ngFor="let o of sexOptions" [value]="o">{{ o }}</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="man-notes">Notes</label>
+        <textarea id="man-notes" class="field-textarea" rows="3" [(ngModel)]="notes"></textarea>
+      </div>
+    </div>
+    <div class="wl-modal-footer">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="onClose()">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--primary" data-testid="save" (click)="save()" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Adding…' : 'Add' }}
+      </button>
+    </div>
+  </div>
+</div>

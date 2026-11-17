@@ -218,8 +218,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
     // Create new circle
     this.radiusCircle = L.circle(L.latLng(center.latitude, center.longitude), {
       radius: radiusMeters,
-      color: '#3388ff',
-      fillColor: '#3388ff',
+      color: '#B4461E',
+      fillColor: '#F2955B',
       fillOpacity: 0.1,
       weight: 2
     });

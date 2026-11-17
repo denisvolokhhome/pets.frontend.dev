@@ -11,21 +11,21 @@
 .settings-header h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--n-500);
   margin: 0;
 }
 
 .settings-content {
-  background: white;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(48, 38, 28, 0.1);
 }
 
 .form-section {
@@ -35,13 +35,13 @@
 .form-section h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 0.5rem;
 }
 
 .section-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
   margin-bottom: 1.5rem;
 }
 
@@ -50,7 +50,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--n-200);
   border-radius: 8px;
   margin-bottom: 1rem;
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
@@ -58,8 +58,8 @@
 }
 
 .preference-item:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-color: var(--n-300);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.05);
 }
 
 .preference-info {
@@ -72,7 +72,7 @@
   gap: 0.5rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--n-800);
   margin-bottom: 0.5rem;
 }
 
@@ -83,7 +83,7 @@
 
 .preference-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
   margin: 0;
 }
 
@@ -113,7 +113,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #cbd5e1;
+  background-color: var(--n-300);
   transition: 0.4s;
   border-radius: 34px;
 }
@@ -125,7 +125,7 @@
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: var(--color-surface);
   transition: 0.4s;
   border-radius: 50%;
 }
@@ -173,8 +173,8 @@ input:disabled + .slider {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--success-soft);
+  color: var(--success-700);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -189,8 +189,8 @@ input:disabled + .slider {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--error-soft);
+  color: var(--error-700);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;

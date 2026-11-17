@@ -23,4 +23,22 @@ describe('NotificationDropdownComponent navigation', () => {
     const component = new NotificationDropdownComponent(null as any, null as any, null as any, null as any, null as any);
     expect(component.getNotificationIcon('breeding_milestone')).toBe('pi-calendar');
   });
+
+  it('sends breeder-side waitlist notifications to /waitlist', () => {
+    const navigate = navigateFor({ type: 'waitlist_request', related_type: 'waitlist_entry_breeder', related_id: 'w1' });
+    expect(navigate).toHaveBeenCalledWith(['/waitlist']);
+  });
+
+  it('sends seeker-side waitlist notifications to /my-waitlists', () => {
+    const navigate = navigateFor({ type: 'waitlist_update', related_type: 'waitlist_entry_seeker', related_id: 'w1' });
+    expect(navigate).toHaveBeenCalledWith(['/my-waitlists']);
+  });
+
+  it('uses a list icon and indigo colour for both waitlist types', () => {
+    const component = new NotificationDropdownComponent(null as any, null as any, null as any, null as any, null as any);
+    for (const t of ['waitlist_request', 'waitlist_update']) {
+      expect(component.getNotificationIcon(t)).toBe('pi-list');
+      expect(component.getNotificationIconClass(t)).toBe('text-indigo-500');
+    }
+  });
 });

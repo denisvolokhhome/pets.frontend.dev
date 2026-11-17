@@ -21,7 +21,6 @@ export class BreederCardComponent {
   @Output() cardHover = new EventEmitter<string>();
 
   apihost = environment.API_HOST;
-  showContactModal: boolean = false;
   showGuestModal: boolean = false;
   showProfilePopup: boolean = false;
   breederProfile: any = null;
@@ -198,25 +197,15 @@ export class BreederCardComponent {
       this.showGuestModal = true;
       return;
     }
-    this.showContactModal = true;
+    // Open the real conversation view (the old inline contact form posted to a
+    // removed guest-messaging endpoint and always failed).
+    this.router.navigate(['/messages/new'], {
+      queryParams: { breederId: this.breeder.user_id, breederName: this.breeder.breeder_name }
+    });
   }
 
   onGuestAuthSuccess(): void {
     this.showGuestModal = false;
-  }
-
-  /**
-   * Handle contact modal close
-   */
-  onContactModalClose(): void {
-    this.showContactModal = false;
-  }
-
-  /**
-   * Handle message sent successfully
-   */
-  onMessageSent(): void {
-    this.showContactModal = false;
   }
 
   /**

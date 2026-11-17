@@ -44,6 +44,12 @@ const STATUS_TONES: Record<string, BadgeTone> = {
   Confirmed: 'success',
   Missed: 'danger',
   Whelped: 'success',
+  // Waitlist
+  pending: 'warning',
+  active: 'success',
+  declined: 'danger',
+  matched: 'info',
+  withdrawn: 'neutral',
 };
 
 /** CSS classes for a status pill, e.g. "ui-badge ui-badge--success". */
