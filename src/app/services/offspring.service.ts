@@ -155,6 +155,15 @@ export class OffspringService {
   }
 
   /**
+   * Rotate a stored offspring image clockwise (90, 180, 270 or -90)
+   */
+  rotateOffspringImage(offspringId: string, imageId: string, degrees: number): Observable<OffspringImage> {
+    return this.http
+      .post<OffspringImage>(`${this.apiUrl}/offsprings/${offspringId}/images/${imageId}/rotate`, { degrees }, { headers: this.getAuthHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
    * Delete an offspring image
    */
   deleteOffspringImage(offspringId: string, imageId: string): Observable<void> {

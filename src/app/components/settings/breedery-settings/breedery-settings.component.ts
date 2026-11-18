@@ -142,6 +142,26 @@ export class BreederySettingsComponent implements OnInit {
     });
   }
 
+  isRotating = false;
+
+  rotateImage(): void {
+    if (this.isRotating) return;
+    this.isRotating = true;
+    this.cdr.detectChanges();
+    this.dataService.rotateProfileImage(90).subscribe({
+      next: (response) => {
+        this.imagePreview = this.getImageUrl(response.profile_image_path);
+        this.isRotating = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error(error.error?.detail || 'Failed to rotate image', 'Error');
+        this.isRotating = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   addTag(): void {
     const tag = this.tagInput.trim();
     if (!tag) return;

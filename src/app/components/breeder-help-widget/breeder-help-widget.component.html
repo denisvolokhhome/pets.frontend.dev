@@ -90,6 +90,10 @@
         <!-- Inline: Location Form -->
         <div *ngIf="activeStep === 'location' && step.id === 'location'" class="step-inline-form" (click)="$event.stopPropagation()">
           <p class="inline-hint">Add your first breeding location so pet seekers can find you on the map.</p>
+          <p class="privacy-note">
+            <i class="bi bi-shield-lock" aria-hidden="true"></i>
+            <span>The map shows only an approximate area, never your exact address. You can share your exact location with a pet seeker in Messages.</span>
+          </p>
           <form [formGroup]="locationForm" (ngSubmit)="saveLocation()">
             <div class="inline-field">
               <label for="setup_loc_name">Location name</label>

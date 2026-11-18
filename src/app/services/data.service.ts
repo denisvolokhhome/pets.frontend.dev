@@ -256,6 +256,28 @@ export class DataService {
     });
   }
 
+  /** Rotate a stored pet image clockwise (90, 180, 270 or -90). */
+  rotatePetImage(petId: string, imageId: number, degrees: number): Observable<IPet> {
+    const header = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
+    return this.http
+      .post<IPet>(`${this.apiurl}/pets/${petId}/image/${imageId}/rotate`, { degrees }, { headers: header })
+      .pipe(catchError(this.handleError));
+  }
+
+  /** Rotate the current user's profile image clockwise. */
+  rotateProfileImage(degrees: number): Observable<IProfileImageResponse> {
+    const header = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('id_token'));
+    return this.http
+      .post<IProfileImageResponse>(`${this.apiurl}/users/me/profile-image/rotate`, { degrees }, { headers: header })
+      .pipe(
+        tap(() => {
+          this.clearProfileCache();
+          this.profileUpdated.next();
+        }),
+        catchError(this.handleError)
+      );
+  }
+
   uploadProfileImage(file: File): Observable<IProfileImageResponse> {
     const formData = new FormData();
     formData.append('file', file);

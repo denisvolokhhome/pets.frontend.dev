@@ -31,12 +31,15 @@ export class OffspringEditComponent implements OnInit, OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Output() offspringSaved = new EventEmitter<void>();
   @Output() modalClosed = new EventEmitter<void>();
+  /** A stored photo changed (e.g. rotated): its URL changed, so lists must reload. */
+  @Output() imagesUpdated = new EventEmitter<void>();
 
   breedings: IBreeding[] = [];
   maxDate: Date;
   imagePreviews: string[] = [];
   imageFiles: File[] = [];
   existingImages: OffspringImage[] = [];
+  rotatingImageId: string | null = null;
   readonly MAX_PHOTOS = 5;
   
   isLoadingBreedings: boolean = false;
@@ -201,6 +204,26 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       error: (error) => {
         console.error('Error setting primary image:', error);
         this.toastr.error('Failed to set primary image', 'Error');
+      }
+    });
+  }
+
+  rotateImage(image: OffspringImage): void {
+    if (!this.offspring || this.rotatingImageId !== null) return;
+    this.rotatingImageId = image.id;
+    this.offspringService.rotateOffspringImage(this.offspring.id, image.id, 90).subscribe({
+      next: (rotated) => {
+        this.existingImages = this.existingImages.map(img =>
+          img.id === rotated.id ? { ...img, image_path: rotated.image_path, image_url: rotated.image_url } : img
+        );
+        this.imagesUpdated.emit();
+        this.rotatingImageId = null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.rotatingImageId = null;
+        this.toastr.error('Failed to rotate photo', 'Error');
+        this.cdr.detectChanges();
       }
     });
   }

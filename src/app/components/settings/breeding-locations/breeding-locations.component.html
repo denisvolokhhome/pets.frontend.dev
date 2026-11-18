@@ -95,7 +95,16 @@
   <!-- Location Form -->
   <div class="location-form" *ngIf="showForm">
     <h3>{{ editingLocation ? 'Edit Location' : 'Add New Location' }}</h3>
-    
+
+    <div class="privacy-note" role="note">
+      <i class="bi bi-shield-lock" aria-hidden="true"></i>
+      <p>
+        <strong>Your exact address stays private.</strong>
+        The map shows pet seekers only an approximate area (about 1 km), never your street address.
+        When you're ready, you can share your exact location with a pet seeker in Messages.
+      </p>
+    </div>
+
     <form [formGroup]="locationForm" (ngSubmit)="saveLocation()">
       <div class="form-group">
         <label for="name">Location Name *</label>

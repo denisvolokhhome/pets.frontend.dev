@@ -468,6 +468,26 @@
   font-size: 1rem;
 }
 
+/* Secondary action next to "Choose Image" */
+.upload-label.rotate-btn {
+  margin-right: 0.5rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--n-300, rgba(30, 38, 32, 0.25));
+  box-shadow: none;
+}
+
+.upload-label.rotate-btn:hover:not(:disabled) {
+  background: var(--n-100, var(--oat));
+  transform: none;
+  box-shadow: none;
+}
+
+.upload-label.rotate-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 .upload-hint {
   display: flex;
   align-items: center;
@@ -508,6 +528,10 @@
   .upload-label {
     width: 100%;
     justify-content: center;
+  }
+
+  .upload-label.rotate-btn {
+    margin: 0 0 0.5rem;
   }
 
   .tag-input-group {
