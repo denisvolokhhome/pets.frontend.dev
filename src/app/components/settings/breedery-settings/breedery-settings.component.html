@@ -42,21 +42,23 @@
         </div>
         
         <div class="upload-controls">
-          <label for="profile_image" class="upload-label">
-            <i class="bi bi-upload"></i>
-            Choose Image
-          </label>
-          <button
-            type="button"
-            class="upload-label rotate-btn"
-            *ngIf="imagePreview && !selectedFile"
-            (click)="rotateImage()"
-            [disabled]="isRotating"
-            aria-label="Rotate photo clockwise"
-          >
-            <i class="bi" [ngClass]="isRotating ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
-            Rotate
-          </button>
+          <div class="upload-actions">
+            <label for="profile_image" class="upload-label">
+              <i class="bi bi-upload"></i>
+              Choose Image
+            </label>
+            <button
+              type="button"
+              class="upload-label rotate-btn"
+              *ngIf="imagePreview && !selectedFile"
+              (click)="rotateImage()"
+              [disabled]="isRotating"
+              title="Rotate photo clockwise"
+            >
+              <i class="bi" [ngClass]="isRotating ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+              Rotate
+            </button>
+          </div>
           <input
             type="file"
             id="profile_image"
