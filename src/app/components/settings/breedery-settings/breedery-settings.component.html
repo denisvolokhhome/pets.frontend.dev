@@ -46,6 +46,17 @@
             <i class="bi bi-upload"></i>
             Choose Image
           </label>
+          <button
+            type="button"
+            class="upload-label rotate-btn"
+            *ngIf="imagePreview && !selectedFile"
+            (click)="rotateImage()"
+            [disabled]="isRotating"
+            aria-label="Rotate photo clockwise"
+          >
+            <i class="bi" [ngClass]="isRotating ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+            Rotate
+          </button>
           <input
             type="file"
             id="profile_image"

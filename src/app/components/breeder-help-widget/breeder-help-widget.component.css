@@ -171,3 +171,20 @@
   .guide-trigger-label { display: none; }
   .guide-trigger::after { content: '?'; font-weight: 600; }
 }
+
+/* Address privacy notice */
+.privacy-note {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 10px;
+  background: var(--pine-soft);
+  color: var(--ink);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.privacy-note p { margin: 0; }
+.privacy-note strong { font-weight: 600; }
+.privacy-note > .bi { color: var(--pine); font-size: 1.05rem; line-height: 1.4; flex-shrink: 0; }

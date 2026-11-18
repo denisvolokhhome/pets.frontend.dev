@@ -166,6 +166,15 @@
                   <button 
                     type="button" 
                     class="photo-overlay-btn" 
+                    (click)="rotateImage(existingImg)"
+                    [disabled]="rotatingImageId !== null"
+                    title="Rotate clockwise"
+                    aria-label="Rotate photo clockwise">
+                    <i class="bi" [ngClass]="rotatingImageId === existingImg.id ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
                     (click)="moveImageDown(i)"
                     [disabled]="i === existingImages.length - 1"
                     title="Move right"

@@ -242,7 +242,11 @@ export class OffspringListComponent implements OnInit {
     this.showEditModal = true;
   }
 
+  /** Set when photos were changed in the edit modal without saving the form. */
+  imagesDirty = false;
+
   onOffspringSaved(): void {
+    this.imagesDirty = false;
     this.showEditModal = false;
     this.selectedOffspring = null;
     this.loadOffsprings();
@@ -250,6 +254,10 @@ export class OffspringListComponent implements OnInit {
 
   onModalClosed(): void {
     this.showEditModal = false;
+    if (this.imagesDirty) {
+      this.imagesDirty = false;
+      this.loadOffsprings();
+    }
     this.selectedOffspring = null;
   }
 
