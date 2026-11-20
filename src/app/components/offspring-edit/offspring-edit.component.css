@@ -528,3 +528,10 @@ textarea.form-control-modern {
   font-size: 0.8125rem;
   color: var(--n-500);
 }
+
+.no-breeding-hint {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.375rem 0.5rem;
+  padding: 0.75rem 0.875rem; border-radius: 10px;
+  background: var(--warning-soft); color: var(--ink); font-size: 0.875rem;
+}
+.no-breeding-hint a { color: var(--clay); font-weight: 600; text-decoration: underline; }

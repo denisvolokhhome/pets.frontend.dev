@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../../services/data.service';
 import { ILocation } from '../../../models/location';
@@ -37,7 +38,9 @@ export class BreedingLocationsComponent implements OnInit {
     private fb: FormBuilder,
     private dataService: DataService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.locationForm = this.fb.group({
       name: ['', Validators.required],
@@ -55,6 +58,11 @@ export class BreedingLocationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLocations();
+    // `?new=1` (from the Pets / Add Offspring guidance): open the add form
+    if (this.route.snapshot.queryParamMap.get('new') === '1') {
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+      this.showAddForm();
+    }
   }
 
   async loadLocations(): Promise<void> {
