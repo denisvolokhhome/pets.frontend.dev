@@ -20,13 +20,18 @@
 | 5 | Click the map icon in the top bar (or **Find Your Pet** on home). | Map search page, title "🐾 Find Breeders". | |
 | 6 | ZIP `21701`, radius **40 mi**, **Search**. | Toast "Found N breeders" (**no** mention of service providers). Map pins + list. **Sunny Meadow Retrievers** is listed with its logo and breeds. | |
 | 7 | Filter by **Dog** / **Cat** chips. | List updates accordingly. | |
+| 7a | Look at the **Offsprings** link on each card. | Shows the number of available offspring, e.g. **Offsprings · 5** for Sunny Meadow. A breeder with none shows **Offsprings · 0**, greyed out and not clickable. | |
+| 7b | Click the **Has offspring** chip (on mobile: Filters → Availability → **Only breeders with offspring** → Search). | Breeders with 0 available offspring disappear; click again to bring them back. The choice survives going to a puppy page and back. | |
 
 ## C. Breeder profile
 
 | # | Action | Expected result | Pass |
 |---|--------|-----------------|------|
 | 8 | On Sunny Meadow's card click **Profile**. | Popup shows: logo, name, **Frederick, Maryland**, the description, the 4 tags, **Animals: Dogs**, **Breeds**: Beagle, Golden Retriever, Labrador Retriever, **View Offsprings**, Reviews ("No reviews yet" for now). No blank sections. | |
-| 9 | Click **View Offsprings**. | Grid of the 5 published offspring with photos, status, age, gender, breed, price formatted `$2,500`. | |
+| 9 | Click **View Offsprings**. | A pop-up opens **over the map** (bottom sheet on mobile) titled "Offspring from Sunny Meadow Retrievers": the 5 published offspring with photos, status, age, gender, breed, price formatted `$2,500`; gender / "Available only" filters at the top. | |
+| 9a | Scroll the pop-up down. | **More near you**: a sideways row of available puppies from *other* breeders in the search area, each with price, name · breed, breeder name · `N mi`. Same breed first. Hidden if there are none. | |
+| 9b | Press **Esc** (mobile: swipe the sheet down). | Pop-up closes; the map, list, filters and scroll position are exactly as before. | |
+| 9c | With a breeder that has a location phone and **Show phone number to pet seekers** on (Settings → Locations), search again. | Card and Profile pop-up show the phone; tapping it starts a call. With the switch off, no phone appears anywhere. | |
 
 ## D. Offspring listing & favorites
 

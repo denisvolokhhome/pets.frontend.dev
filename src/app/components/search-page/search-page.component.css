@@ -566,6 +566,7 @@
 .kind-pill:hover { border-color: var(--secondary-color); background: rgba(31, 74, 58, 0.05); }
 .kind-pill.active { background: var(--secondary-strong); color: white; border-color: var(--secondary-strong); }
 .kind-icon { font-size: 1rem; }
+.kind-divider { flex-shrink: 0; width: 1px; align-self: stretch; margin: 0.25rem 0.125rem; background: var(--n-200); }
 .kind-label { font-weight: 500; }
 
 .results-list {
