@@ -29,6 +29,8 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
   isLoadingMore = false;
   error: string | null = null;
   private sub?: Subscription;
+  /** Header data per group, built once so change detection sees a stable input */
+  private breederCache = new WeakMap<BreederOffspringGroup, BreederSearchResult>();
 
   constructor(private searchService: SearchService, private cdr: ChangeDetectorRef) {}
 
@@ -90,6 +92,8 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
 
   /** Adapt a group to the breeder card used as its header. */
   asBreeder(g: BreederOffspringGroup): BreederSearchResult {
+    const cached = this.breederCache.get(g);
+    if (cached) return cached;
     const breeds = new Map<number, { breed_id: number; breed_name: string; breed_kind: string; pet_count: number }>();
     for (const o of g.offsprings) {
       if (!o.breed_id) continue;
@@ -99,7 +103,7 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
       b.pet_count++;
       breeds.set(o.breed_id, b);
     }
-    return {
+    const breeder: BreederSearchResult = {
       location_id: 0,
       user_id: g.breeder_id,
       breeder_name: g.breeder_name,
@@ -113,6 +117,8 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
       review_count: g.review_count,
       available_offspring_count: g.available_count,
     };
+    this.breederCache.set(g, breeder);
+    return breeder;
   }
 
   trackByBreeder(_: number, g: BreederOffspringGroup): string {

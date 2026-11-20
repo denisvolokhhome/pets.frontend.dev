@@ -36,8 +36,8 @@
              data-testid="offspring-group" [attr.aria-label]="g.breeder_name">
       <app-breeder-card
         class="og-header"
-        [breeder]="asBreeder(g)"
-        [showOffspringButton]="false">
+        variant="compact"
+        [breeder]="asBreeder(g)">
       </app-breeder-card>
       <div class="og-grid">
         <app-offspring-card

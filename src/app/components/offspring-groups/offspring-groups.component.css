@@ -13,12 +13,15 @@
 .og-summary { margin: 0 0 1rem; font-size: 0.875rem; color: var(--stone); }
 
 .og-group {
-  margin-bottom: 1.75rem; padding-bottom: 1.75rem;
-  border-bottom: 1px solid var(--n-200);
+  margin-bottom: 1.25rem; padding: 0.75rem 1rem 1rem;
+  border: 1px solid var(--n-200); border-radius: 14px;
+  background: var(--cream);
 }
-.og-group:last-of-type { border-bottom: none; }
 
-.og-header { display: block; max-width: 560px; margin-bottom: 0.875rem; }
+.og-header {
+  display: block; padding-bottom: 0.75rem; margin-bottom: 0.875rem;
+  border-bottom: 1px solid var(--n-100);
+}
 
 .og-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem;
@@ -36,6 +39,7 @@
 
 @media (max-width: 768px) {
   .og { padding: 0.75rem 0.75rem 1.5rem; }
+  .og-group { padding: 0.625rem 0.625rem 0.75rem; }
   .og-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
 }
 @media (max-width: 576px) {

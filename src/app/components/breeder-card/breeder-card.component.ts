@@ -24,6 +24,8 @@ export class BreederCardComponent implements OnDestroy {
   @Input() searchBreedId: number | null = null;
   /** Off in the Offspring view, where the puppies are listed under the card */
   @Input() showOffspringButton: boolean = true;
+  /** 'compact' = one-line group header (map Offspring view) */
+  @Input() variant: 'card' | 'compact' = 'card';
 
   @Output() cardClick = new EventEmitter<string>();
   @Output() cardHover = new EventEmitter<string>();
