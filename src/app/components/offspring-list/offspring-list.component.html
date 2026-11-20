@@ -5,7 +5,7 @@
     [config]="headerConfig"
     [searchTerm]="searchTerm"
     (searchChange)="onSearchTermChange($event)">
-    <button class="ui-btn ui-btn--primary" (click)="onActionButtonClick()" type="button">
+    <button class="ui-btn ui-btn--primary" (click)="onActionButtonClick()" type="button" [disabled]="isCheckingPrereq">
       <i class="bi bi-plus-lg"></i>
       <span>Add Offspring</span>
     </button>
@@ -24,7 +24,7 @@
       <i class="bi bi-sliders"></i>
       <span class="filter-dot" *ngIf="hasActiveFilters()"></span>
     </button>
-    <button class="mobile-icon-btn mobile-icon-btn--primary" (click)="onActionButtonClick()" aria-label="Add offspring">
+    <button class="mobile-icon-btn mobile-icon-btn--primary" (click)="onActionButtonClick()" [disabled]="isCheckingPrereq" aria-label="Add offspring">
       <i class="bi bi-plus-lg"></i>
     </button>
   </div>

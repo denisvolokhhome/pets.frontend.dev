@@ -92,7 +92,7 @@
         (click)="openOffspringModal()" 
         type="button"
         class="ui-btn ui-btn--primary"
-        *ngIf="breeding.status !== 'Voided' && breeding.parent_pets && breeding.parent_pets.length > 0"
+        *ngIf="canAddOffspring()"
       >
         <i class="bi bi-plus-lg"></i>
         Add Offspring

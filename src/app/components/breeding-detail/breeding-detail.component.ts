@@ -48,6 +48,21 @@ export class BreedingDetailComponent implements OnInit {
     });
   }
 
+  /** `?addOffspring=1`: open Add Offspring once (arriving from the Add Offspring flow). */
+  private openAddOffspringIfAsked(): void {
+    if (this.route.snapshot.queryParamMap.get('addOffspring') !== '1') return;
+    this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    if (this.canAddOffspring()) {
+      this.openOffspringModal();
+      this.cdr.detectChanges();
+    }
+  }
+
+  /** Same rule as the Add Offspring button. */
+  canAddOffspring(): boolean {
+    return !!this.breeding && this.breeding.status !== 'Voided' && this.breeding.parent_pets?.length > 0;
+  }
+
   loadBreedingDetails(): void {
     this.isLoading = true;
     
@@ -56,6 +71,7 @@ export class BreedingDetailComponent implements OnInit {
         this.breeding = data;
         this.isLoading = false;
         this.cdr.detectChanges();
+        this.openAddOffspringIfAsked();
       },
       error: (error) => {
         console.error('Error loading breeding details:', error);

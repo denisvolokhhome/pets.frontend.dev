@@ -8,6 +8,11 @@ import { IBreed } from 'src/app/models/breed';
 import { environment } from 'src/environments/environment';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { DataService } from 'src/app/services/data.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { offspringPrereq } from 'src/app/utils/offspring-prereq';
+import { firstValueFrom, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   standalone: false,
@@ -87,7 +92,9 @@ export class OffspringListComponent implements OnInit {
     private offspringService: OffspringService,
     private toastr: ToastService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dataService: DataService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -226,10 +233,51 @@ export class OffspringListComponent implements OnInit {
     this.rows = event.rows;
   }
 
-  addOffspring(): void {
-    this.selectedOffspring = null;
-    this.modalMode = 'create';
-    this.showEditModal = true;
+  /** True while checking whether the breeder can add offspring yet. */
+  isCheckingPrereq = false;
+
+  /**
+   * Offspring belong to a breeding. Before opening the form, make sure the
+   * breeder has one; if not, explain and send them a step back (to create a
+   * breeding, or to add a male and a female pet when they can't breed yet).
+   */
+  async addOffspring(): Promise<void> {
+    if (this.isCheckingPrereq) return;
+    this.isCheckingPrereq = true;
+    try {
+      const breedings = await firstValueFrom(this.dataService.getBreedings().pipe(catchError(() => of(null))));
+      // If breedings can't be loaded, fall back to the form (it shows its own hint).
+      const userId = this.authService.currentUser?.id;
+      const pets = breedings && breedings.length === 0 && userId
+        ? await firstValueFrom(this.dataService.getPetsByBreeder(userId).pipe(catchError(() => of([]))))
+        : [];
+      const prereq = breedings ? offspringPrereq(breedings, pets) : 'ready';
+
+      if (prereq === 'ready') {
+        this.selectedOffspring = null;
+        this.modalMode = 'create';
+        this.showEditModal = true;
+      } else if (prereq === 'needs-breeding') {
+        const go = await this.confirmService.confirm({
+          title: 'Create a breeding first',
+          message: "Offspring belong to a breeding (a litter). You don't have any breedings yet. Create one, then add the puppies to it.",
+          confirmText: 'Create breeding',
+          cancelText: 'Not now',
+        });
+        if (go) this.router.navigate(['/breedings'], { queryParams: { new: 1, then: 'offspring' } });
+      } else {
+        const go = await this.confirmService.confirm({
+          title: 'Add your pets first',
+          message: 'Offspring come from a breeding, and a breeding needs a male and a female parent. Add your breeding pets, then create a breeding and its puppies.',
+          confirmText: 'Add pets',
+          cancelText: 'Not now',
+        });
+        if (go) this.router.navigate(['/pets'], { queryParams: { new: 1 } });
+      }
+    } finally {
+      this.isCheckingPrereq = false;
+      this.cdr.detectChanges();
+    }
   }
 
   viewOffspring(offspring: OffspringRead): void {

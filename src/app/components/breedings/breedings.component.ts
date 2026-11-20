@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IBreeding, BreedingStatus } from 'src/app/models/breeding';
 import { isActivePregnancy } from 'src/app/models/breeding-planner';
 import { formatDisplayDate, statusBadgeClass, statusLabel } from 'src/app/utils/format-utils';
@@ -41,8 +41,12 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
     public modalService: ModalService,
     private toastr: ToastService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
+
+  /** Arrived from Add Offspring: after the breeding is created, go on to add its puppies. */
+  continueToOffspring = false;
 
   breedings: IBreeding[] = [];
   filteredBreedings: IBreeding[] = [];
@@ -90,6 +94,20 @@ export class BreedingsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.checkTableScroll();
+    this.openQuickBreedingIfAsked();
+  }
+
+  /** `/breedings?new=1[&then=offspring]` opens Quick Breeding straight away. */
+  private openQuickBreedingIfAsked(): void {
+    const params = this.route.snapshot.queryParamMap;
+    if (params.get('new') !== '1') return;
+    this.continueToOffspring = params.get('then') === 'offspring';
+    // Drop the params so a refresh or Back doesn't reopen the modal.
+    this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    setTimeout(() => {
+      this.onAddBreedingClick();
+      this.cdr.detectChanges();
+    });
   }
 
   checkTableScroll(): void {
