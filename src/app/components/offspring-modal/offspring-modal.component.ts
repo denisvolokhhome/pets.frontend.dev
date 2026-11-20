@@ -113,7 +113,7 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
     };
 
     this.offspringService.createOffspring(offspringData).subscribe({
-      next: (offspring) => this.uploadPhotos(offspring.id),
+      next: (offspring) => this.uploadPhotos(offspring.id, !!offspring.is_published),
       error: (error) => {
         console.error('Error adding offspring:', error);
         const errorMsg = error?.message || error?.error?.detail || 'Failed to add offspring';
@@ -125,7 +125,7 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
   }
 
   /** Upload the chosen photos one by one; a failed photo doesn't undo the new offspring. */
-  private uploadPhotos(offspringId: string): void {
+  private uploadPhotos(offspringId: string, isPublished: boolean): void {
     from(this.imageFiles).pipe(
       concatMap(file => this.offspringService.uploadOffspringImage(offspringId, file).pipe(
         catchError(() => of(null))
@@ -144,7 +144,7 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
       this.isSubmitting = false;
       this.offspringAdded.emit();
       this.toastr.success(
-        offspringData.is_published
+        isPublished
           ? 'Pet seekers can now see it on the map and your breeder page.'
           : 'It is hidden from pet seekers until you publish it.',
         'Offspring added'
