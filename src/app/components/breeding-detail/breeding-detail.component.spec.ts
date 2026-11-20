@@ -8,6 +8,7 @@ import { BreedingDetailComponent } from './breeding-detail.component';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
 import { ConfirmService } from '../../services/confirm.service';
+import { OffspringService } from '../../services/offspring.service';
 
 describe('BreedingDetailComponent waitlist card', () => {
   let fixtureRef: any;
@@ -24,6 +25,7 @@ describe('BreedingDetailComponent waitlist card', () => {
         { provide: DataService, useValue: data },
         { provide: ToastService, useValue: jasmine.createSpyObj('ToastService', ['success', 'error']) },
         { provide: ConfirmService, useValue: {} },
+        { provide: OffspringService, useValue: jasmine.createSpyObj('OffspringService', ['updateOffspring']) },
         { provide: Router, useValue: { navigate: () => {} } },
         { provide: ActivatedRoute, useValue: { params: of({ id: '7' }) } }
       ]

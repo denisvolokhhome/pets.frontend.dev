@@ -69,6 +69,17 @@
     <!-- Keyed on conversationKey so switching conversations re-creates the thread
          (it reads threadId/breederId once, and polls the thread it started with). -->
     @if (!isLoading && (threadId || breederId)) {
+      <header class="conversation-header" data-testid="conversation-header">
+        <span class="conversation-avatar" aria-hidden="true">{{ conversationName.charAt(0).toUpperCase() }}</span>
+        <div class="conversation-title">
+          <span class="conversation-eyebrow">{{ threadId ? 'Conversation with' : 'New message to' }}</span>
+          <h2 class="conversation-name">{{ conversationName }}</h2>
+        </div>
+        <a *ngIf="canViewPartnerOffspring" class="ui-btn ui-btn--ghost ui-btn--sm"
+           [routerLink]="['/breeder', conversationPartnerId, 'offsprings']">
+          <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> View their offspring
+        </a>
+      </header>
       @for (key of [conversationKey]; track key) {
         <app-message-thread
           class="flex-1 flex flex-col overflow-hidden"

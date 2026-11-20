@@ -26,6 +26,7 @@ describe('OffspringGroupsComponent', () => {
   }
 
   beforeEach(async () => {
+    sessionStorage.removeItem('offspring_groups_state');
     svc = jasmine.createSpyObj('SearchService', ['searchOffspringGroups']);
     await TestBed.configureTestingModule({
       declarations: [OffspringGroupsComponent],
@@ -92,5 +93,30 @@ describe('OffspringGroupsComponent', () => {
     load();
     expect(cmp.error).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="offspring-groups-retry"]')).not.toBeNull();
+  });
+
+  it('restores loaded breeders for the same search instead of refetching (Back from a puppy)', () => {
+    svc.searchOffspringGroups.and.returnValues(
+      of({ groups: [group('a', 2)], total_breeders: 2, limit: 10, offset: 0 }),
+      of({ groups: [group('b', 9)], total_breeders: 2, limit: 10, offset: 1 }),
+    );
+    load();
+    cmp.loadMore();
+    cmp.ngOnDestroy();
+
+    const again = TestBed.createComponent(OffspringGroupsComponent).componentInstance;
+    again.center = { latitude: 30.2, longitude: -98.1 };
+    again.radius = 40; again.breedId = 3; again.animalKind = 'dog';
+    again.ngOnChanges({});
+    expect(svc.searchOffspringGroups).toHaveBeenCalledTimes(2);
+    expect(again.groups.map(g => g.breeder_id)).toEqual(['a', 'b']);
+  });
+
+  it('fetches again for a new search', () => {
+    svc.searchOffspringGroups.and.returnValue(of({ groups: [group('a', 2)], total_breeders: 1, limit: 10, offset: 0 }));
+    load();
+    cmp.searchVersion = 2;
+    cmp.ngOnChanges({});
+    expect(svc.searchOffspringGroups).toHaveBeenCalledTimes(2);
   });
 });

@@ -55,6 +55,20 @@ describe('MessageNewComponent conversation handling', () => {
     expect(cmp.threadId).toBe('t-new');
   });
 
+  it('names the person you are writing to', () => {
+    create({ breederId: 'b1', breederName: 'Quiet Creek' });
+    cmp.ngOnInit();
+    expect(cmp.conversationName).toBe('Quiet Creek');
+  });
+
+  it('falls back to the conversation list for a thread opened by id', () => {
+    create({ threadId: 't9' });
+    cmp.ngOnInit();
+    cmp.threads = [{ thread_id: 't9', participant_id: 'b9', participant_name: 'Maple Hill' } as any];
+    expect(cmp.conversationName).toBe('Maple Hill');
+    expect(cmp.conversationPartnerId).toBe('b9');
+  });
+
   it('ignores the re-emitted params after the initialMessage prefill is stripped', () => {
     create({ breederId: 'b1', initialMessage: 'Hello' });
     cmp.ngOnInit();

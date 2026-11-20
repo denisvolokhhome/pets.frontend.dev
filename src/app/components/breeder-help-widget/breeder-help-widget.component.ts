@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
-import { Subject, takeUntil, forkJoin, map, distinctUntilChanged } from 'rxjs';
+import { Subject, takeUntil, forkJoin, map, distinctUntilChanged, of, catchError } from 'rxjs';
+import { OffspringService } from '../../services/offspring.service';
+import { activeBreedings } from '../../utils/offspring-prereq';
 
 export interface SetupStep {
   id: string;
@@ -33,7 +35,9 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   steps: SetupStep[] = [
     { id: 'profile', label: 'Name your breedery', icon: 'bi-building', completed: false, active: false },
     { id: 'location', label: 'Add a location', icon: 'bi-geo-alt', completed: false, active: false },
-    { id: 'pet', label: 'Add your first pet', icon: 'bi-heart', completed: false, active: false },
+    { id: 'pet', label: 'Add a male and a female pet', icon: 'bi-heart', completed: false, active: false },
+    { id: 'breeding', label: 'Create a breeding (litter)', icon: 'bi-diagram-2', completed: false, active: false },
+    { id: 'offspring', label: 'Add offspring and make them visible', icon: 'bi-eye', completed: false, active: false },
   ];
 
   // Inline forms
@@ -59,7 +63,8 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
     private toastr: ToastService,
     private router: Router,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private offspringService: OffspringService
   ) {
     this.profileForm = this.fb.group({
       breedery_name: ['', Validators.required],
@@ -153,10 +158,16 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
   onStepClick(step: SetupStep): void {
     if (step.completed) return;
 
-    if (step.id === 'pet') {
-      // Navigate to pets page — no inline form for this one
+    // These steps happen on their own pages (no inline form)
+    const pages: Record<string, [string[], Record<string, any>?]> = {
+      pet: [['/pets'], { new: 1 }],
+      breeding: [['/breedings'], { new: 1, then: 'offspring' }],
+      offspring: [['/offsprings']],
+    };
+    const page = pages[step.id];
+    if (page) {
       this.closeDropdown();
-      this.router.navigate(['/pets']);
+      this.router.navigate(page[0], page[1] ? { queryParams: page[1] } : {});
       return;
     }
 
@@ -247,20 +258,29 @@ export class BreederHelpWidgetComponent implements OnInit, OnDestroy {
     forkJoin({
       profile: this.dataService.getCurrentUserProfile(),
       locations: this.dataService.getLocations(),
-      pets: this.dataService.getPetsByBreeder(userId)
+      pets: this.dataService.getPetsByBreeder(userId),
+      // The last two steps are optional extras: a failure there must not hide the guide
+      breedings: this.dataService.getBreedings().pipe(catchError(() => of([] as any[]))),
+      offspring: this.offspringService.getOffsprings(undefined, undefined, 100)
+        .pipe(map(r => r.offsprings || []), catchError(() => of([] as any[]))),
     })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: ({ profile, locations, pets }) => {
+        next: ({ profile, locations, pets, breedings, offspring }) => {
           const hasProfile = !!(profile.breedery_name && profile.breedery_name.trim());
           const hasLocations = locations && locations.length > 0;
-          const hasPets = pets && pets.filter(p => !p.is_puppy).length > 0;
+          // A breeding needs both parents
+          const genders = new Set((pets || []).filter(p => !p.is_puppy).map(p => (p.gender || '').toLowerCase()));
+          const hasPair = genders.has('male') && genders.has('female');
+          const hasBreeding = activeBreedings(breedings || []).length > 0;
+          const hasPublished = (offspring || []).some((o: any) => o.is_published);
 
-          this.steps[0].completed = hasProfile;
-          this.steps[1].completed = hasLocations;
-          this.steps[2].completed = hasPets;
+          const done: Record<string, boolean> = {
+            profile: hasProfile, location: hasLocations, pet: hasPair, breeding: hasBreeding, offspring: hasPublished,
+          };
+          this.steps.forEach(s => (s.completed = !!done[s.id]));
 
-          this.allComplete = hasProfile && hasLocations && hasPets;
+          this.allComplete = this.steps.every(s => s.completed);
 
           // Pre-fill profile form if data exists
           if (profile.breedery_name) {

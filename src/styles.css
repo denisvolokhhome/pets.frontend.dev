@@ -2060,3 +2060,33 @@ button.ui-cell-sub {
     height: 1.75rem !important;
   }
 }
+
+/* "Visible to pet seekers" switch (offspring forms) */
+.publish-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--n-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.publish-toggle input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  accent-color: var(--clay);
+  cursor: pointer;
+}
+.publish-toggle-title {
+  display: block;
+  font-weight: 600;
+  color: var(--n-800);
+}
+.publish-toggle-hint {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--n-500);
+}
+

@@ -6,11 +6,13 @@ import { BreederHelpWidgetComponent } from './breeder-help-widget.component';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 import { ToastService } from '../../services/toast.service';
+import { OffspringService } from '../../services/offspring.service';
 
 describe('BreederHelpWidgetComponent', () => {
   let fixture: ComponentFixture<BreederHelpWidgetComponent>;
   let currentUser$: BehaviorSubject<any>;
   let dataService: jasmine.SpyObj<DataService>;
+  let offspringService: jasmine.SpyObj<OffspringService>;
 
   beforeEach(async () => {
     currentUser$ = new BehaviorSubject<any>(null);
@@ -23,7 +25,10 @@ describe('BreederHelpWidgetComponent', () => {
       get isBreeder() { return !!currentUser$.value?.is_breeder; },
       hasValidToken: () => true,
     };
-    dataService = jasmine.createSpyObj('DataService', ['getCurrentUserProfile', 'getLocations', 'getPetsByBreeder']);
+    dataService = jasmine.createSpyObj('DataService', ['getCurrentUserProfile', 'getLocations', 'getPetsByBreeder', 'getBreedings']);
+    dataService.getBreedings.and.returnValue(of([]));
+    offspringService = jasmine.createSpyObj('OffspringService', ['getOffsprings']);
+    offspringService.getOffsprings.and.returnValue(of({ offsprings: [], total: 0, limit: 100, offset: 0 } as any));
     dataService.getCurrentUserProfile.and.returnValue(of({ breedery_name: '' } as any));
     dataService.getLocations.and.returnValue(of([]));
     dataService.getPetsByBreeder.and.returnValue(of([]));
@@ -33,6 +38,7 @@ describe('BreederHelpWidgetComponent', () => {
       providers: [
         { provide: AuthService, useValue: authStub },
         { provide: DataService, useValue: dataService },
+        { provide: OffspringService, useValue: offspringService },
         { provide: ToastService, useValue: jasmine.createSpyObj('ToastService', ['success', 'error']) },
       ],
     }).compileComponents();
@@ -66,5 +72,27 @@ describe('BreederHelpWidgetComponent', () => {
     fixture.detectChanges();
     expect(dataService.getCurrentUserProfile).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('.guide-trigger')).toBeNull();
+  });
+
+  it('walks all the way to visible offspring', () => {
+    dataService.getCurrentUserProfile.and.returnValue(of({ breedery_name: 'Happy Paws' } as any));
+    dataService.getLocations.and.returnValue(of([{ id: 1 }] as any));
+    dataService.getPetsByBreeder.and.returnValue(of([{ gender: 'Male' }, { gender: 'Female' }] as any));
+    dataService.getBreedings.and.returnValue(of([{ status: 'Started' }]));
+    offspringService.getOffsprings.and.returnValue(of({ offsprings: [{ is_published: false }], total: 1 } as any));
+    currentUser$.next({ id: 'u1', is_breeder: true });
+    fixture.detectChanges();
+    const cmp = fixture.componentInstance;
+    expect(cmp.steps.map(s => [s.id, s.completed])).toEqual([
+      ['profile', true], ['location', true], ['pet', true], ['breeding', true], ['offspring', false],
+    ]);
+    expect(cmp.allComplete).toBeFalse();
+  });
+
+  it('needs both a male and a female for the pets step', () => {
+    dataService.getPetsByBreeder.and.returnValue(of([{ gender: 'Female' }] as any));
+    currentUser$.next({ id: 'u1', is_breeder: true });
+    fixture.detectChanges();
+    expect(fixture.componentInstance.steps.find(s => s.id === 'pet')!.completed).toBeFalse();
   });
 });

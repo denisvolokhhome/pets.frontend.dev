@@ -441,3 +441,11 @@
 .ui-btn.back-button[class] {
   margin: 0 0 1rem -0.75rem;
 }
+
+.hidden-puppies-hint {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0 0 0.75rem; padding: 0.625rem 0.875rem; border-radius: 10px;
+  background: var(--warning-softer); color: var(--ink); font-size: 0.875rem;
+}
+.hidden-puppies-hint i { color: var(--warning); }
+.visibility-cell { display: inline-flex; align-items: center; gap: 0.5rem; }

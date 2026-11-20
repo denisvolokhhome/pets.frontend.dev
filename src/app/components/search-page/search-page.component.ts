@@ -581,6 +581,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       hasSearched: this.hasSearched,
       mobileActiveTab: this.mobileActiveTab,
       viewMode: this.viewMode,
+      searchVersion: this.searchVersion,
       drawerBreedTerm: this.drawerBreedTerm,
     };
     sessionStorage.setItem('search_page_state', JSON.stringify(state));
@@ -604,6 +605,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.hasSearched = state.hasSearched ?? false;
       this.mobileActiveTab = state.mobileActiveTab ?? 'list';
       this.viewMode = state.viewMode === 'offspring' ? 'offspring' : 'map';
+      this.searchVersion = state.searchVersion ?? 0;
       this.drawerBreedTerm = state.drawerBreedTerm ?? '';
       this.cdr.detectChanges();
       return this.hasSearched;

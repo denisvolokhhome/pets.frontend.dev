@@ -46,7 +46,9 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
       status: ['Available'],
       price: [''],
       color_markings: [''],
-      description: ['']
+      description: [''],
+      // New listings are public by default; the breeder can untick to keep it private
+      is_published: [true]
     });
   }
 
@@ -106,7 +108,8 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
       status: formValue.status || 'Available',
       price: formValue.price ? parseFloat(formValue.price) : null,
       color_markings: formValue.color_markings || null,
-      description: formValue.description || null
+      description: formValue.description || null,
+      is_published: !!formValue.is_published
     };
 
     this.offspringService.createOffspring(offspringData).subscribe({
@@ -140,7 +143,12 @@ export class OffspringModalComponent implements OnInit, OnDestroy {
       const failed = images.filter(img => !img).length;
       this.isSubmitting = false;
       this.offspringAdded.emit();
-      this.toastr.success('Offspring added successfully', 'Success');
+      this.toastr.success(
+        offspringData.is_published
+          ? 'Pet seekers can now see it on the map and your breeder page.'
+          : 'It is hidden from pet seekers until you publish it.',
+        'Offspring added'
+      );
       if (failed) {
         this.toastr.warning(
           `${failed} photo(s) could not be uploaded. You can add them from Edit.`,

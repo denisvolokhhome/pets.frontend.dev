@@ -68,7 +68,7 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     price: new FormControl<number | null>(null, [Validators.min(0)]),
     description: new FormControl<string>(''),
     color_markings: new FormControl<string>(''),
-    is_published: new FormControl<boolean>(false, { nonNullable: true })
+    is_published: new FormControl<boolean>(true, { nonNullable: true })
   });
 
   ngOnInit(): void {

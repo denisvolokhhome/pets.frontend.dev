@@ -61,6 +61,16 @@
           <i [class]="isFavorited() ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
           {{ isFavorited() ? 'Favorited' : 'Add to Favorites' }}
         </button>
+        <!-- With an application form, still let people just ask a question -->
+        <button
+          *ngIf="hasApplicationForm()"
+          class="ui-btn ui-btn--secondary"
+          data-testid="message-breeder"
+          (click)="messageBreeder()"
+          type="button">
+          <i class="pi pi-comment"></i>
+          Message breeder
+        </button>
         <button 
           class="ui-btn ui-btn--primary"
           (click)="contactBreeder()"
@@ -314,8 +324,8 @@
           </div>
         </div>
 
-        <!-- Metadata -->
-        <div class="card">
+        <!-- Metadata: for the breeder only; dates and IDs are noise for pet seekers -->
+        <div class="card" *ngIf="isBreederView()">
           <h2 class="text-lg font-semibold mb-4">Record Information</h2>
           
           <div class="info-grid">

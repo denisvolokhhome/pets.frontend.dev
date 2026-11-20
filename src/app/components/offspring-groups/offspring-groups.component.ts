@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BreederOffspringGroup, BreederSearchResult, Coordinates } from 'src/app/models/search';
 import { SearchService } from 'src/app/services/search.service';
@@ -22,6 +22,9 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
   @Input() searchVersion = 0;
 
   readonly PAGE_SIZE = 10;
+  /** Remembered so Back from a puppy (or Map → Offspring) returns to the same place */
+  private static readonly STATE_KEY = 'offspring_groups_state';
+  private static readonly STATE_MAX_AGE_MS = 15 * 60 * 1000;
 
   groups: BreederOffspringGroup[] = [];
   totalBreeders = 0;
@@ -32,7 +35,7 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
   /** Header data per group, built once so change detection sees a stable input */
   private breederCache = new WeakMap<BreederOffspringGroup, BreederSearchResult>();
 
-  constructor(private searchService: SearchService, private cdr: ChangeDetectorRef) {}
+  constructor(private searchService: SearchService, private cdr: ChangeDetectorRef, private host: ElementRef<HTMLElement>) {}
 
   ngOnChanges(_: SimpleChanges): void {
     this.reload();
@@ -40,6 +43,7 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.saveState();
   }
 
   get hasMore(): boolean {
@@ -56,8 +60,56 @@ export class OffspringGroupsComponent implements OnChanges, OnDestroy {
     this.totalBreeders = 0;
     this.error = null;
     if (!this.center) return;
+    if (this.restoreState()) return;
     this.isLoading = true;
     this.fetch(0);
+  }
+
+  /** Identifies one search; the remembered list is only reused for the same one. */
+  private get searchKey(): string {
+    return JSON.stringify([
+      this.center?.latitude, this.center?.longitude, this.radius, this.breedId, this.animalKind, this.searchVersion,
+    ]);
+  }
+
+  private scrollContainer(): HTMLElement | null {
+    return this.host.nativeElement.closest('.offspring-view');
+  }
+
+  private saveState(): void {
+    if (!this.center || this.groups.length === 0) return;
+    try {
+      sessionStorage.setItem(OffspringGroupsComponent.STATE_KEY, JSON.stringify({
+        key: this.searchKey,
+        at: Date.now(),
+        groups: this.groups,
+        totalBreeders: this.totalBreeders,
+        windowY: window.scrollY,
+        containerY: this.scrollContainer()?.scrollTop ?? 0,
+      }));
+    } catch { /* storage full or unavailable: just refetch next time */ }
+  }
+
+  private restoreState(): boolean {
+    let saved: any;
+    try {
+      saved = JSON.parse(sessionStorage.getItem(OffspringGroupsComponent.STATE_KEY) || 'null');
+    } catch {
+      return false;
+    }
+    if (!saved || saved.key !== this.searchKey || Date.now() - saved.at > OffspringGroupsComponent.STATE_MAX_AGE_MS) {
+      return false;
+    }
+    this.groups = saved.groups || [];
+    this.totalBreeders = saved.totalBreeders || 0;
+    this.cdr.detectChanges();
+    // Scroll once the restored list is on the page
+    setTimeout(() => {
+      const container = this.scrollContainer();
+      if (container) container.scrollTop = saved.containerY || 0;
+      window.scrollTo(0, saved.windowY || 0);
+    });
+    return true;
   }
 
   loadMore(): void {
