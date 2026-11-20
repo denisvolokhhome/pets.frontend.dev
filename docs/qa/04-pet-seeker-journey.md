@@ -43,3 +43,15 @@
 | 12 | Open **Favorites** (left menu). | Sunny is listed. "Breeders You're Following" shows **Sunny Meadow Retrievers** (not "Breeder"). | |
 | 13 | Type `labrador` in the Favorites search, then `sunny`. | `labrador` → no cards; `sunny` → Sunny. | |
 | 14 | Open the **Dashboard**. | **Favorites 1**. | |
+
+## Extra checks (UX pass)
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| X1 | As a guest on any page, look at the top bar. | **Find a pet** link to the map (hidden on the map itself). | |
+| X2 | Open the map and decline location access. | A neutral note: "Enter your ZIP code to see breeders and puppies near you." (no warning colours). | |
+| X3 | A breeder without a kennel name. | Shown under their own name (or "Breeder"), never a placeholder joke. | |
+| X4 | Offspring view → scroll down → open a puppy → **Back**. | Same breeders loaded and the same scroll position. A new search starts at the top. | |
+| X5 | Puppy whose litter has an application form. | **Message breeder** next to **Apply for Offspring**; no "Record Information" for seekers. | |
+| X6 | Contact a breeder. | The message screen says "New message to <breeder>" with **View their offspring**. | |
+

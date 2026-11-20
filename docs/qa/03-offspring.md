@@ -49,3 +49,12 @@ Use a brand-new breeder account (no location, pets or breedings).
 | G5 | Pick both parents → **Create Breeding**. | Lands on the new breeding's page with the **Add Offspring** form already open. Refreshing the page does **not** reopen it. | |
 | G6 | Back on Offsprings → **Add Offspring**. | The form opens directly; the Breeding dropdown lists the new breeding (voided breedings are never listed). | |
 
+## Visibility to pet seekers
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| V1 | On a breeding page click **Add Offspring**. | The form has **Visible to pet seekers**, ticked by default. Saving shows "Offspring added — Pet seekers can now see it…". Unticked: "…hidden from pet seekers until you publish it." | |
+| V2 | Look at the breeding's offspring table. | A **Visibility** column shows **Public** / **Hidden** with **Hide** / **Publish**. When any are hidden, a hint above the table says how many. **Publish** flips it and the puppy appears on the map's Offspring view. | |
+| V3 | Open the **Dashboard**. | A card says how many offspring pet seekers can see and how many are hidden ("Review hidden"); with none at all it offers **Add offspring**. Quick actions include **Add Offspring**. | |
+| V4 | Open **Setup guide**. | Five steps: name, location, a male and a female pet, a breeding, offspring made visible. Each unfinished step takes you to the right page. | |
+
