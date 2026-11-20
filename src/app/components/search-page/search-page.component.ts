@@ -36,6 +36,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   selectedBreed: Breed | null = null;
   selectedAnimalKind: string = '';
   radius: number = 40;
+  /** Hide breeders that have no available offspring */
+  onlyWithOffspring: boolean = false;
   mapCenter: Coordinates = { latitude: 39.8283, longitude: -98.5795 };
   searchResults: BreederSearchResult[] = [];
   breederMarkers: BreederMarker[] = [];
@@ -271,7 +273,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     const breeders$ = (this.searchMode === 'breeders' || this.searchMode === 'both')
       ? this.searchService.searchBreeders(
           coordinates.latitude, coordinates.longitude, this.radius,
-          this.selectedBreed?.id, this.selectedAnimalKind || undefined
+          this.selectedBreed?.id, this.selectedAnimalKind || undefined, this.onlyWithOffspring
         ).pipe(catchError(() => of([])))
       : of([]);
 
@@ -470,6 +472,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleOnlyWithOffspring(): void {
+    this.onlyWithOffspring = !this.onlyWithOffspring;
+    if (this.hasSearched && this.zipCode) {
+      this.onSearch();
+    }
+  }
+
   // ─── Mobile filter drawer ────────────────────────────────────────────────
 
   openMobileFilters(): void {
@@ -493,12 +502,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.selectedBreed = null;
     this.selectedAnimalKind = '';
     this.radius = 40;
+    this.onlyWithOffspring = false;
     this.drawerBreedTerm = '';
     this.drawerBreedSuggestions = [];
   }
 
   hasActiveFilters(): boolean {
-    return !!this.selectedBreed || !!this.selectedAnimalKind || this.radius !== 40;
+    return !!this.selectedBreed || !!this.selectedAnimalKind || this.radius !== 40 || this.onlyWithOffspring;
   }
 
   radiusChange(miles: number): void {
@@ -543,6 +553,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       selectedBreed: this.selectedBreed,
       selectedAnimalKind: this.selectedAnimalKind,
       radius: this.radius,
+      onlyWithOffspring: this.onlyWithOffspring,
       searchMode: this.searchMode,
       mapCenter: this.mapCenter,
       searchResults: this.searchResults,
@@ -564,6 +575,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.selectedBreed = state.selectedBreed ?? null;
       this.selectedAnimalKind = state.selectedAnimalKind ?? '';
       this.radius = state.radius ?? 40;
+      this.onlyWithOffspring = !!state.onlyWithOffspring;
       this.searchMode = this.serviceProvidersEnabled ? (state.searchMode ?? 'both') : 'breeders';
       this.mapCenter = state.mapCenter ?? { latitude: 39.8283, longitude: -98.5795 };
       this.searchResults = state.searchResults ?? [];

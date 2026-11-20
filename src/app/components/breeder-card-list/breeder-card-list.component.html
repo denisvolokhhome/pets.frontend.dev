@@ -42,6 +42,9 @@
       <app-breeder-card
         [breeder]="breeder"
         [isHighlighted]="isBreederHighlighted(breeder.user_id)"
+        [searchCenter]="searchCenter"
+        [searchRadius]="searchRadius"
+        [searchBreedId]="searchBreedId"
         (cardClick)="onCardClick($event)"
         (cardHover)="onCardHover($event)">
       </app-breeder-card>

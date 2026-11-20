@@ -54,6 +54,10 @@ export interface BreederSearchResult {
   location_description: string | null;
   rating: number | null;
   review_count: number;
+  /** Breeder's published offspring with status Available, across all locations */
+  available_offspring_count?: number;
+  /** Location phone; only present when the breeder chose to show it */
+  phone?: string | null;
 }
 
 /**

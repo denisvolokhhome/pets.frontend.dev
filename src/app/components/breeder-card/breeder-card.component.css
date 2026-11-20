@@ -510,3 +510,22 @@
 
   .profile-name { font-size: 1rem; }
 }
+
+/* Public phone */
+.breeder-card__phone {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  align-self: flex-start; margin-top: 0.25rem; font-size: 0.8125rem; color: var(--pine); text-decoration: none;
+}
+.breeder-card__phone:hover { text-decoration: underline; }
+.profile-phone {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  font-size: 0.875rem; color: var(--pine); text-decoration: none; margin: 0.125rem 0 0.25rem;
+}
+.profile-phone:hover { text-decoration: underline; }
+
+/* Offspring count */
+.breeder-card__count { font-variant-numeric: tabular-nums; }
+.breeder-card__link:disabled {
+  color: var(--n-400); cursor: not-allowed; background: none; border-color: transparent;
+}
+.profile-view-btn:disabled { opacity: 0.55; cursor: not-allowed; }

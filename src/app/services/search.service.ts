@@ -67,7 +67,8 @@ export class SearchService {
     longitude: number,
     radius: number,
     breedId?: number,
-    animalKind?: string
+    animalKind?: string,
+    hasOffspring?: boolean
   ): Observable<BreederSearchResult[]> {
     let params = new HttpParams()
       .set('latitude', latitude.toString())
@@ -80,6 +81,10 @@ export class SearchService {
 
     if (animalKind) {
       params = params.set('animal_kind', animalKind);
+    }
+
+    if (hasOffspring) {
+      params = params.set('has_offspring', 'true');
     }
 
     return this.http.get<BreederSearchResult[]>(

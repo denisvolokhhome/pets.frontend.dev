@@ -141,6 +141,22 @@
         </div>
       </div>
 
+      <!-- Availability -->
+      <div class="filter-section">
+        <label class="filter-label">Availability</label>
+        <div class="filter-pills">
+          <button
+            type="button"
+            class="filter-pill"
+            [class.active]="onlyWithOffspring"
+            [attr.aria-pressed]="onlyWithOffspring"
+            (click)="onlyWithOffspring = !onlyWithOffspring">
+            <i class="bi bi-check2-circle" aria-hidden="true"></i>
+            <span>Only breeders with offspring</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Radius -->
       <div class="filter-section">
         <label class="filter-label">Distance</label>
@@ -265,6 +281,17 @@
           <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
           <span class="kind-label">{{ pt.label }}</span>
         </button>
+        <span class="kind-divider" aria-hidden="true"></span>
+        <button
+          type="button"
+          class="kind-pill"
+          data-testid="only-with-offspring"
+          [class.active]="onlyWithOffspring"
+          [attr.aria-pressed]="onlyWithOffspring"
+          (click)="toggleOnlyWithOffspring()">
+          <i class="bi bi-check2-circle kind-icon" aria-hidden="true"></i>
+          <span class="kind-label">Has offspring</span>
+        </button>
       </div>
 
       <div class="results-list">
@@ -279,6 +306,9 @@
           <app-breeder-card-list
             [breeders]="searchResults"
             [highlightedId]="highlightedBreederId"
+            [searchCenter]="hasSearched ? mapCenter : null"
+            [searchRadius]="radius"
+            [searchBreedId]="selectedBreed?.id ?? null"
             [isLoading]="isLoading && searchMode !== 'services'"
             [hasSearched]="hasSearched"
             (cardClick)="onCardClick($event)"
