@@ -89,6 +89,7 @@ import { OffspringCardComponent } from './components/offspring-card/offspring-ca
 import { JoinWaitlistModalComponent } from './components/join-waitlist-modal/join-waitlist-modal.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { BreederOffspringModalComponent } from './components/breeder-offspring-modal/breeder-offspring-modal.component';
+import { OffspringGroupsComponent } from './components/offspring-groups/offspring-groups.component';
 import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
@@ -197,6 +198,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     OffspringFormComponent,
     OffspringGridComponent,
     BreederOffspringModalComponent,
+    OffspringGroupsComponent,
     FavoritesListComponent,
     ResetPasswordComponent,
     GenealogyComponent,

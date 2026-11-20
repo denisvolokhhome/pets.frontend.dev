@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MessageThreadComponent, OffspringContext } from '../message-thread/message-thread.component';
 import { MessageService, MessageListItem } from '../../services/message.service';
 import { OffspringService } from 'src/app/services/offspring.service';
@@ -22,7 +22,7 @@ interface MessageThread {
 @Component({
   selector: 'app-message-new',
   standalone: true,
-  imports: [CommonModule, MessageThreadComponent],
+  imports: [CommonModule, RouterLink, MessageThreadComponent],
   templateUrl: './message-new.component.html',
   styleUrls: ['./message-new.component.css']
 })
@@ -49,6 +49,25 @@ export class MessageNewComponent implements OnInit {
     private toastr: ToastService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  /** Who this conversation is with (shown in the header). */
+  get conversationName(): string {
+    if (this.breederName && this.breederName !== 'Breeder') return this.breederName;
+    return this.currentThread?.participant_name || 'Breeder';
+  }
+
+  get conversationPartnerId(): string | undefined {
+    return this.breederId || this.currentThread?.participant_id;
+  }
+
+  /** Seekers get a link to the breeder's offspring; breeders writing to seekers don't. */
+  get canViewPartnerOffspring(): boolean {
+    return !this.authService.isBreeder && !!this.conversationPartnerId;
+  }
+
+  private get currentThread(): MessageThread | undefined {
+    return this.threadId ? this.threads.find(t => t.thread_id === this.threadId) : undefined;
+  }
 
   /** Bumped whenever the user opens a different conversation; keys the thread view. */
   conversationKey = 0;

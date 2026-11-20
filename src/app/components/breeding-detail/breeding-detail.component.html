@@ -92,11 +92,16 @@
         (click)="openOffspringModal()" 
         type="button"
         class="ui-btn ui-btn--primary"
-        *ngIf="breeding.status !== 'Voided' && breeding.parent_pets && breeding.parent_pets.length > 0"
+        *ngIf="canAddOffspring()"
       >
         <i class="bi bi-plus-lg"></i>
         Add Offspring
       </button>
+    </div>
+
+    <div class="hidden-puppies-hint" *ngIf="hiddenPuppyCount > 0" data-testid="hidden-puppies-hint">
+      <i class="bi bi-eye-slash" aria-hidden="true"></i>
+      <span>{{ hiddenPuppyCount }} offspring {{ hiddenPuppyCount === 1 ? 'is' : 'are' }} hidden from pet seekers. Use <strong>Publish</strong> to show them on the map.</span>
     </div>
 
     <!-- Offspring Table -->
@@ -118,6 +123,7 @@
             <th pSortableColumn="birth_date">Born <p-sortIcon field="birth_date"></p-sortIcon></th>
             <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
             <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+            <th>Visibility</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-offspring>
@@ -141,11 +147,24 @@
               <span *ngIf="offspring.price != null; else noPrice">{{ offspring.price | currency:'USD':'symbol':'1.0-0' }}</span>
               <ng-template #noPrice><span class="ui-muted">—</span></ng-template>
             </td>
+            <td class="whitespace-nowrap">
+              <span class="visibility-cell">
+                <span [class]="offspring.is_published ? 'ui-badge ui-badge--success' : 'ui-badge ui-badge--warning'">
+                  {{ offspring.is_published ? 'Public' : 'Hidden' }}
+                </span>
+                <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm"
+                        data-testid="toggle-publish"
+                        [disabled]="isTogglingPublish[offspring.id]"
+                        (click)="togglePublish(offspring)">
+                  {{ offspring.is_published ? 'Hide' : 'Publish' }}
+                </button>
+              </span>
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
-            <td colspan="5" class="text-center">No offspring added yet</td>
+            <td colspan="6" class="text-center">No offspring added yet</td>
           </tr>
         </ng-template>
       </p-table>

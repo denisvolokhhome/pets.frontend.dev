@@ -5,6 +5,7 @@ import { ToastService } from '../../services/toast.service';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
 import { environment } from 'src/environments/environment';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { OffspringService } from 'src/app/services/offspring.service';
 
 export interface ApplicationFormField {
   id: string;
@@ -38,14 +39,61 @@ export class BreedingDetailComponent implements OnInit {
     private router: Router,
     private dataService: DataService,
     private toastr: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private offspringService: OffspringService
   ) {}
+
+  isTogglingPublish: { [id: string]: boolean } = {};
+
+  /** Show or hide a puppy from pet seekers, right from the breeding page. */
+  togglePublish(puppy: any): void {
+    if (this.isTogglingPublish[puppy.id]) return;
+    const publish = !puppy.is_published;
+    this.isTogglingPublish[puppy.id] = true;
+    // Explicit target state, so a double click can't flip it back
+    this.offspringService.updateOffspring(puppy.id, { is_published: publish }).subscribe({
+      next: updated => {
+        puppy.is_published = updated.is_published;
+        this.isTogglingPublish[puppy.id] = false;
+        this.toastr.success(
+          updated.is_published ? 'Pet seekers can now see it on the map.' : 'It is now hidden from pet seekers.',
+          updated.is_published ? 'Published' : 'Hidden'
+        );
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        this.isTogglingPublish[puppy.id] = false;
+        this.toastr.error(err?.message || 'Could not change visibility', 'Error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /** Puppies seekers can't see yet (drives the hint above the table). */
+  get hiddenPuppyCount(): number {
+    return (this.breeding?.puppies || []).filter((p: any) => p.is_published === false).length;
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.breedingId = params['id'];
       this.loadBreedingDetails();
     });
+  }
+
+  /** `?addOffspring=1`: open Add Offspring once (arriving from the Add Offspring flow). */
+  private openAddOffspringIfAsked(): void {
+    if (this.route.snapshot?.queryParamMap?.get('addOffspring') !== '1') return;
+    this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    if (this.canAddOffspring()) {
+      this.openOffspringModal();
+      this.cdr.detectChanges();
+    }
+  }
+
+  /** Same rule as the Add Offspring button. */
+  canAddOffspring(): boolean {
+    return !!this.breeding && this.breeding.status !== 'Voided' && this.breeding.parent_pets?.length > 0;
   }
 
   loadBreedingDetails(): void {
@@ -56,6 +104,7 @@ export class BreedingDetailComponent implements OnInit {
         this.breeding = data;
         this.isLoading = false;
         this.cdr.detectChanges();
+        this.openAddOffspringIfAsked();
       },
       error: (error) => {
         console.error('Error loading breeding details:', error);

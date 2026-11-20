@@ -5,6 +5,7 @@ import { OffspringService, OffspringRead, OffspringCreate, OffspringUpdate, Offs
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IBreeding } from 'src/app/models/breeding';
+import { activeBreedings } from 'src/app/utils/offspring-prereq';
 import { ConfirmService } from 'src/app/services/confirm.service';
 declare var window: any;
 
@@ -67,7 +68,7 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     price: new FormControl<number | null>(null, [Validators.min(0)]),
     description: new FormControl<string>(''),
     color_markings: new FormControl<string>(''),
-    is_published: new FormControl<boolean>(false, { nonNullable: true })
+    is_published: new FormControl<boolean>(true, { nonNullable: true })
   });
 
   ngOnInit(): void {
@@ -93,7 +94,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     this.isLoadingBreedings = true;
     this.dataService.getBreedings().subscribe({
       next: (breedings) => {
-        this.breedings = breedings;
+        // Offspring can't be added to a voided breeding
+        this.breedings = activeBreedings(breedings);
         this.isLoadingBreedings = false;
         this.cdr.detectChanges();
       },

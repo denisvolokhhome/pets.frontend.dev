@@ -91,4 +91,23 @@ describe('OffspringDetailComponent waitlist entry point', () => {
     create();
     expect(joinBtn()).toBeNull();
   });
+
+  it('offers a plain "Message breeder" next to Apply when the litter has an application form', () => {
+    offspring.breeding = { application_form: { form_fields: [{ id: 'f1' }] } };
+    create();
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('[data-testid="message-breeder"]')).not.toBeNull();
+    expect(el.textContent).toContain('Apply for Offspring');
+    delete offspring.breeding;
+  });
+
+  it('has no extra button when there is no application form', () => {
+    create();
+    expect(fixture.nativeElement.querySelector('[data-testid="message-breeder"]')).toBeNull();
+  });
+
+  it('hides "Record Information" from pet seekers', () => {
+    create();
+    expect(fixture.nativeElement.textContent).not.toContain('Record Information');
+  });
 });

@@ -66,7 +66,13 @@
         <!-- Breeding Selection (Create Mode Only) -->
         <div class="form-group-modern" *ngIf="mode === 'create'">
           <label for="breeding_id" class="form-label-modern">Breeding *</label>
+          <div class="no-breeding-hint" *ngIf="!isLoadingBreedings && breedings.length === 0" data-testid="no-breeding-hint">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span>Offspring belong to a breeding, and you don't have one yet.</span>
+            <a routerLink="/breedings" [queryParams]="{ new: 1, then: 'offspring' }" (click)="modalClosed.emit()">Create a breeding first</a>
+          </div>
           <select
+            *ngIf="isLoadingBreedings || breedings.length > 0"
             id="breeding_id"
             class="form-control-modern form-select-modern"
             [formControl]="breeding_id"

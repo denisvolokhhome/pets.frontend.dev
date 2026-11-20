@@ -28,6 +28,13 @@
           <!-- Auth links (not logged in) -->
           <div class="flex items-center" *ngIf="!checkToken">
             <ul class="flex items-center space-x-2">
+              <!-- Guests can always get back to the map search -->
+              <li *ngIf="!this.route?.startsWith('/search-pets')">
+                <a href="/search-pets" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-1.5" data-testid="guest-find-pet">
+                  <i class="bi bi-geo-alt" aria-hidden="true"></i>Find a pet
+                </a>
+              </li>
+              <span *ngIf="!this.route?.startsWith('/search-pets')" class="text-gray-400 text-base" aria-hidden="true">/</span>
               <!-- Pricing link scrolls to #pricing on home page -->
               <li *ngIf="billingEnabled">
                 <a href="/#pricing" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
@@ -101,6 +108,11 @@
           <!-- Auth links (not logged in) - Mobile -->
           <div *ngIf="!checkToken">
             <ul class="space-y-2">
+              <li *ngIf="!this.route?.startsWith('/search-pets')">
+                <a href="/search-pets" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
+                  <i class="bi bi-geo-alt mr-2" aria-hidden="true"></i>Find a pet
+                </a>
+              </li>
               <!-- Pricing link scrolls to #pricing on home page -->
               <li *ngIf="billingEnabled">
                 <a href="/#pricing" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">Pricing</a>

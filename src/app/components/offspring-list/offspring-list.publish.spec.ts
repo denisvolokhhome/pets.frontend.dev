@@ -10,7 +10,7 @@ describe('OffspringListComponent publish toggle', () => {
     svc = jasmine.createSpyObj('OffspringService', ['updateOffspring']);
     toastr = jasmine.createSpyObj('ToastService', ['success', 'error']);
     const cdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-    cmp = new OffspringListComponent({} as any, svc, toastr, {} as any, cdr);
+    cmp = new OffspringListComponent({} as any, svc, toastr, {} as any, cdr, {} as any, {} as any);
   });
 
   it('publishes an unpublished offspring with an explicit is_published=true', () => {

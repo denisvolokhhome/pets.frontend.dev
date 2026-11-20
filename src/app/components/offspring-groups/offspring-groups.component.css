@@ -1,0 +1,48 @@
+:host { display: block; }
+
+.og { padding: 1rem 1.25rem 2rem; max-width: 1400px; margin: 0 auto; }
+
+.og-state {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  padding: 3rem 1rem; text-align: center; color: var(--stone);
+}
+.og-state i { font-size: 2.5rem; color: var(--n-300); }
+.og-state h3 { margin: 0; font-family: var(--font-display); color: var(--ink); font-size: 1.125rem; }
+.og-state p { margin: 0; }
+
+.og-summary { margin: 0 0 1rem; font-size: 0.875rem; color: var(--stone); }
+
+.og-group {
+  margin-bottom: 1.25rem; padding: 0.75rem 1rem 1rem;
+  border: 1px solid var(--n-200); border-radius: 14px;
+  background: var(--cream);
+}
+
+.og-header {
+  display: block; padding-bottom: 0.75rem; margin-bottom: 0.875rem;
+  border-bottom: 1px solid var(--n-100);
+}
+
+.og-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem;
+}
+
+.og-more { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding-top: 0.5rem; }
+.og-more-error { margin: 0; color: var(--error); font-size: 0.875rem; }
+
+.spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid var(--n-200); border-top-color: var(--clay);
+  animation: og-spin 0.8s linear infinite;
+}
+@keyframes og-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .og { padding: 0.75rem 0.75rem 1.5rem; }
+  .og-group { padding: 0.625rem 0.625rem 0.75rem; }
+  .og-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+}
+@media (max-width: 576px) {
+  .og-grid { grid-template-columns: minmax(0, 1fr); gap: 0.625rem; }
+}
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }

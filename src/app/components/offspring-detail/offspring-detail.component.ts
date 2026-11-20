@@ -397,6 +397,17 @@ export class OffspringDetailComponent implements OnInit {
     this.navigateToMessageThread();
   }
 
+  /** Ask a question without filling in the application form. */
+  messageBreeder(): void {
+    if (!this.isAuthenticated()) {
+      this.storeOffspringContext();
+      this.showGuestModal = true;
+      return;
+    }
+    if (!this.offspring) return;
+    this.navigateToMessageThread();
+  }
+
   hasApplicationForm(): boolean {
     return !!(this.offspring?.breeding?.application_form?.form_fields?.length);
   }

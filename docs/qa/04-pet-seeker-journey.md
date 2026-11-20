@@ -21,6 +21,7 @@
 | 6 | ZIP `21701`, radius **40 mi**, **Search**. | Toast "Found N breeders" (**no** mention of service providers). Map pins + list. **Sunny Meadow Retrievers** is listed with its logo and breeds. | |
 | 7 | Filter by **Dog** / **Cat** chips. | List updates accordingly. | |
 | 7a | Look at the **Offsprings** link on each card. | Shows the number of available offspring, e.g. **Offsprings · 5** for Sunny Meadow. A breeder with none shows **Offsprings · 0**, greyed out and not clickable. | |
+| 7c | Click **Offspring** in the Map / Offspring switch (on mobile: the **Offspring** tab). | The map is replaced by a full-width list: "N available offspring from M breeders near you", then each breeder (nearest first) as a card with **Profile**, **Contact** and "N available", followed by their puppies. Every puppy card shows **~N mi away**. Reserved / Sold puppies are not listed; breeders with nothing available don't appear. **Dog** / **Cat** and the breed box filter the list. With more than 10 breeders, **Load more breeders** appends the next ones. Switching back to **Map** shows the map and pins again; a page refresh keeps the chosen view. | |
 | 7b | Click the **Has offspring** chip (on mobile: Filters → Availability → **Only breeders with offspring** → Search). | Breeders with 0 available offspring disappear; click again to bring them back. The choice survives going to a puppy page and back. | |
 
 ## C. Breeder profile
@@ -42,3 +43,15 @@
 | 12 | Open **Favorites** (left menu). | Sunny is listed. "Breeders You're Following" shows **Sunny Meadow Retrievers** (not "Breeder"). | |
 | 13 | Type `labrador` in the Favorites search, then `sunny`. | `labrador` → no cards; `sunny` → Sunny. | |
 | 14 | Open the **Dashboard**. | **Favorites 1**. | |
+
+## Extra checks (UX pass)
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| X1 | As a guest on any page, look at the top bar. | **Find a pet** link to the map (hidden on the map itself). | |
+| X2 | Open the map and decline location access. | A neutral note: "Enter your ZIP code to see breeders and puppies near you." (no warning colours). | |
+| X3 | A breeder without a kennel name. | Shown under their own name (or "Breeder"), never a placeholder joke. | |
+| X4 | Offspring view → scroll down → open a puppy → **Back**. | Same breeders loaded and the same scroll position. A new search starts at the top. | |
+| X5 | Puppy whose litter has an application form. | **Message breeder** next to **Apply for Offspring**; no "Record Information" for seekers. | |
+| X6 | Contact a breeder. | The message screen says "New message to <breeder>" with **View their offspring**. | |
+

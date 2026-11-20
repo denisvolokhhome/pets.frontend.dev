@@ -1,3 +1,5 @@
+import { OffspringRead } from 'src/app/services/offspring.service';
+
 /**
  * Data models and interfaces for Pet Search with Map feature
  */
@@ -58,6 +60,28 @@ export interface BreederSearchResult {
   available_offspring_count?: number;
   /** Location phone; only present when the breeder chose to show it */
   phone?: string | null;
+}
+
+/**
+ * A breeder and their available offspring (map "Offspring" view)
+ */
+export interface BreederOffspringGroup {
+  breeder_id: string;
+  breeder_name: string;
+  thumbnail_url: string | null;
+  /** Whole miles to the breeder's nearest location */
+  distance: number;
+  rating: number | null;
+  review_count: number;
+  available_count: number;
+  offsprings: OffspringRead[];
+}
+
+export interface OffspringGroupsResponse {
+  groups: BreederOffspringGroup[];
+  total_breeders: number;
+  limit: number;
+  offset: number;
 }
 
 /**

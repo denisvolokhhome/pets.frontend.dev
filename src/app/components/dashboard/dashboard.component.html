@@ -39,10 +39,34 @@
       </div>
     </div>
 
+    <!-- What pet seekers can see -->
+    <div class="dashboard-card visibility-card" *ngIf="publicOffspring !== null" data-testid="visibility-card"
+         [class.visibility-card--empty]="publicOffspring === 0">
+      <i class="bi visibility-card__icon" [ngClass]="publicOffspring > 0 ? 'bi-eye' : 'bi-eye-slash'" aria-hidden="true"></i>
+      <div class="visibility-card__text">
+        <p class="visibility-card__title" *ngIf="publicOffspring > 0">
+          {{ publicOffspring }} offspring visible to pet seekers on the map
+        </p>
+        <p class="visibility-card__title" *ngIf="publicOffspring === 0">
+          Pet seekers can't see any of your offspring yet
+        </p>
+        <p class="visibility-card__sub" *ngIf="hiddenOffspring > 0">
+          {{ hiddenOffspring }} hidden. Publish them so seekers can find them.
+        </p>
+        <p class="visibility-card__sub" *ngIf="publicOffspring === 0 && hiddenOffspring === 0">
+          Add offspring to a breeding and make them visible to start getting messages.
+        </p>
+      </div>
+      <a class="ui-btn ui-btn--secondary ui-btn--sm" [routerLink]="['/offsprings']"
+         [queryParams]="hiddenOffspring === 0 && publicOffspring === 0 ? { add: 1 } : {}">
+        {{ hiddenOffspring > 0 ? 'Review hidden' : (publicOffspring === 0 ? 'Add offspring' : 'Manage') }}
+      </a>
+    </div>
+
     <!-- Quick Actions -->
     <div class="dashboard-card">
       <h2 class="dashboard-card__title">Quick Actions</h2>
-      <div class="actions-grid">
+      <div class="actions-grid actions-grid--4col">
         <button (click)="openAddPetModal()" class="action-btn">
           <i class="bi bi-plus-circle text-2xl"></i>
           <span class="font-medium">Add New Pet</span>
@@ -50,6 +74,10 @@
         <a [routerLink]="['/breedings']" class="action-btn">
           <i class="bi bi-water text-2xl"></i>
           <span class="font-medium">Manage Breedings</span>
+        </a>
+        <a [routerLink]="['/offsprings']" [queryParams]="{ add: 1 }" class="action-btn" data-testid="quick-add-offspring">
+          <i class="bi bi-plus-square text-2xl"></i>
+          <span class="font-medium">Add Offspring</span>
         </a>
         <a [routerLink]="['/messages']" class="action-btn">
           <i class="bi bi-envelope text-2xl"></i>

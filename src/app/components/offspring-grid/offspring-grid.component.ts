@@ -138,7 +138,7 @@ export class OffspringGridComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading offsprings:', error);
-        this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.toastr.error(error.message || 'Failed to load offspring', 'Error');
         this.offsprings = [];
         this.totalOffsprings = 0;
         this.isLoading = false;

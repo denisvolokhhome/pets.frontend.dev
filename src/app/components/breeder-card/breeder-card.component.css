@@ -529,3 +529,39 @@
   color: var(--n-400); cursor: not-allowed; background: none; border-color: transparent;
 }
 .profile-view-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.breeder-card__available {
+  display: inline-flex; align-items: center; padding: 0 0.5rem;
+  font-size: 0.8125rem; font-weight: 600; color: var(--pine);
+}
+
+/* ─── Compact one-line header (Offspring view) ─────────────────────────── */
+.breeder-line {
+  display: flex; align-items: center; gap: 0.625rem; min-width: 0;
+}
+.breeder-line__avatar {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; overflow: hidden;
+  background: var(--n-100); display: flex; align-items: center; justify-content: center;
+  color: var(--n-300); font-size: 1.25rem;
+}
+.breeder-line__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.breeder-line__text { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.breeder-line__name {
+  margin: 0; font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.breeder-line__meta { font-size: 0.8125rem; color: var(--stone); white-space: nowrap; }
+.breeder-line__meta .bi-star-fill { color: var(--apricot); font-size: 0.75rem; }
+.breeder-line__meta a { color: var(--pine); text-decoration: none; }
+.breeder-line__meta a:hover { text-decoration: underline; }
+.breeder-line__actions { flex-shrink: 0; display: flex; gap: 0.25rem; }
+.breeder-line__link {
+  min-height: 36px; padding: 0 0.625rem; border: none; border-radius: 8px; background: none;
+  font-size: 0.8125rem; font-weight: 600; color: var(--clay); cursor: pointer;
+}
+.breeder-line__link:hover { background: var(--n-100); }
+
+@media (max-width: 576px) {
+  .breeder-line__text { flex-direction: column; gap: 0; align-items: flex-start; }
+  .breeder-line__meta { white-space: normal; }
+}

@@ -1,0 +1,60 @@
+<div class="og">
+  <!-- No search yet -->
+  <div class="og-state" *ngIf="!center">
+    <i class="bi bi-geo-alt" aria-hidden="true"></i>
+    <h3>Find puppies near you</h3>
+    <p>Enter your ZIP code above and press Search.</p>
+  </div>
+
+  <!-- Loading first page -->
+  <div class="og-state" *ngIf="center && isLoading">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Looking for available offspring…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="og-state" *ngIf="center && !isLoading && error && groups.length === 0">
+    <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+    <p>{{ error }}</p>
+    <button type="button" class="ui-btn ui-btn--secondary" data-testid="offspring-groups-retry" (click)="reload()">Try again</button>
+  </div>
+
+  <!-- Empty -->
+  <div class="og-state" *ngIf="center && !isLoading && !error && groups.length === 0" data-testid="offspring-groups-empty">
+    <i class="bi bi-search" aria-hidden="true"></i>
+    <h3>No available offspring nearby</h3>
+    <p>Try a bigger radius, another breed, or a different area.</p>
+  </div>
+
+  <ng-container *ngIf="groups.length > 0">
+    <p class="og-summary" aria-live="polite">
+      {{ totalOffspring }} available offspring from {{ groups.length }}<span *ngIf="hasMore"> of {{ totalBreeders }}</span>
+      breeder{{ totalBreeders === 1 ? '' : 's' }} near you
+    </p>
+
+    <section class="og-group" *ngFor="let g of groups; trackBy: trackByBreeder"
+             data-testid="offspring-group" [attr.aria-label]="g.breeder_name">
+      <app-breeder-card
+        class="og-header"
+        variant="compact"
+        [breeder]="asBreeder(g)">
+      </app-breeder-card>
+      <div class="og-grid">
+        <app-offspring-card
+          *ngFor="let o of g.offsprings; trackBy: trackByOffspring"
+          [offspring]="o"
+          [distance]="g.distance"
+          [showFavorite]="true">
+        </app-offspring-card>
+      </div>
+    </section>
+
+    <div class="og-more" *ngIf="hasMore || error">
+      <p *ngIf="error" class="og-more-error">{{ error }}</p>
+      <button type="button" class="ui-btn ui-btn--secondary" data-testid="offspring-groups-more"
+              [disabled]="isLoadingMore" (click)="loadMore()">
+        {{ isLoadingMore ? 'Loading…' : 'Load more breeders' }}
+      </button>
+    </div>
+  </ng-container>
+</div>

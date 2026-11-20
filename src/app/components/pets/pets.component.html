@@ -187,7 +187,13 @@
           <i class="bi bi-search"></i>
           <h3>No pets found</h3>
           <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
-          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <p *ngIf="!hasActiveFilters() && !needsLocation">Please add a pet to get started.</p>
+          <ng-container *ngIf="!hasActiveFilters() && needsLocation">
+            <p>Pets are kept at a breeding location. Add your first location, then add your pets.</p>
+            <a class="ui-btn ui-btn--primary" routerLink="/settings/locations" [queryParams]="{ new: 1 }">
+              <i class="bi bi-geo-alt" aria-hidden="true"></i> Add a location
+            </a>
+          </ng-container>
           <button *ngIf="hasActiveFilters()" class="ui-btn ui-btn--secondary" (click)="onClearFilters()">
             Clear Filters
           </button>
@@ -304,7 +310,13 @@
           <i class="bi bi-search"></i>
           <h3>No pets found</h3>
           <p *ngIf="hasActiveFilters()">Try adjusting your filters to see more results.</p>
-          <p *ngIf="!hasActiveFilters()">Please add a pet to get started.</p>
+          <p *ngIf="!hasActiveFilters() && !needsLocation">Please add a pet to get started.</p>
+          <ng-container *ngIf="!hasActiveFilters() && needsLocation">
+            <p>Pets are kept at a breeding location. Add your first location, then add your pets.</p>
+            <a class="ui-btn ui-btn--primary" routerLink="/settings/locations" [queryParams]="{ new: 1 }">
+              <i class="bi bi-geo-alt" aria-hidden="true"></i> Add a location
+            </a>
+          </ng-container>
           <button *ngIf="hasActiveFilters()" class="ui-btn ui-btn--secondary" (click)="onClearFilters()">
             Clear Filters
           </button>

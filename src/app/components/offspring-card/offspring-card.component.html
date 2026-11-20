@@ -60,6 +60,11 @@
         <i class="pi pi-tag"></i>
         <span>{{ getBreedName() }}</span>
       </div>
+
+      <div class="info-item info-item--distance" *ngIf="distance !== null" data-testid="offspring-distance">
+        <i class="pi pi-map-marker" aria-hidden="true"></i>
+        <span>~{{ distance }} mi away</span>
+      </div>
     </div>
 
     <!-- Price -->
