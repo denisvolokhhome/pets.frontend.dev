@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { BreederSearchResult } from 'src/app/models/search';
+import { BreederSearchResult, Coordinates } from 'src/app/models/search';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { ReviewService } from 'src/app/services/review.service';
@@ -16,12 +16,17 @@ import { environment } from 'src/environments/environment';
 export class BreederCardComponent {
   @Input() breeder!: BreederSearchResult;
   @Input() isHighlighted: boolean = false;
+  /** Current map search, used for "More near you" in the offspring modal */
+  @Input() searchCenter: Coordinates | null = null;
+  @Input() searchRadius: number = 40;
+  @Input() searchBreedId: number | null = null;
 
   @Output() cardClick = new EventEmitter<string>();
   @Output() cardHover = new EventEmitter<string>();
 
   apihost = environment.API_HOST;
   showGuestModal: boolean = false;
+  showOffspringModal: boolean = false;
   showProfilePopup: boolean = false;
   breederProfile: any = null;
   isLoadingProfile: boolean = false;
@@ -180,12 +185,43 @@ export class BreederCardComponent {
     return [loc.city, loc.state].filter(Boolean).join(', ');
   }
 
+  /** Available offspring count, or null when the API didn't send one */
+  get offspringCount(): number | null {
+    return this.breeder.available_offspring_count ?? null;
+  }
+
+  get hasNoOffspring(): boolean {
+    return this.offspringCount === 0;
+  }
+
+  /** `tel:` link for the breeder's public phone, or null */
+  get phoneHref(): string | null {
+    const digits = (this.breeder.phone || '').replace(/[^0-9+]/g, '');
+    return digits ? `tel:${digits}` : null;
+  }
+
+  /** Breeds to favour in suggestions: the searched breed, else this breeder's */
+  get suggestionBreedIds(): number[] {
+    if (this.searchBreedId) return [this.searchBreedId];
+    return (this.breeder.available_breeds || []).map(b => b.breed_id);
+  }
+
   /**
-   * Handle view offsprings button click
+   * Open the breeder's offspring in a modal over the map
    */
   onViewOffsprings(event: Event): void {
     event.stopPropagation(); // Prevent card click event
-    this.router.navigate(['/breeder', this.breeder.user_id, 'offsprings']);
+    this.showOffspringModal = true;
+  }
+
+  closeOffspringModal(): void {
+    this.showOffspringModal = false;
+  }
+
+  /** "Ask about upcoming litters" from the empty offspring modal */
+  onContactFromModal(): void {
+    this.showOffspringModal = false;
+    this.onContactBreeder(new Event('click'));
   }
 
   /**

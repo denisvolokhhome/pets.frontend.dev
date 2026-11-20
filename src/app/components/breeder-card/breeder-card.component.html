@@ -36,11 +36,22 @@
       <app-star-rating [rating]="breeder.rating ?? 0" [reviewCount]="breeder.review_count"></app-star-rating>
     </div>
 
+    <a *ngIf="phoneHref" class="breeder-card__phone" [href]="phoneHref" (click)="$event.stopPropagation()"
+       [attr.aria-label]="'Call ' + breeder.breeder_name">
+      <i class="bi bi-telephone" aria-hidden="true"></i> {{ breeder.phone }}
+    </a>
+
     <!-- Inline action links -->
     <div class="breeder-card__actions">
       <button class="breeder-card__link breeder-card__link--primary" (click)="onViewProfile($event)">Profile</button>
       <span class="breeder-card__divider">·</span>
-      <button class="breeder-card__link" (click)="onViewOffsprings($event)">Offsprings</button>
+      <button class="breeder-card__link"
+              data-testid="offspring-btn"
+              [disabled]="hasNoOffspring"
+              [attr.title]="hasNoOffspring ? 'No offspring available right now' : null"
+              (click)="onViewOffsprings($event)">
+        Offsprings<span *ngIf="offspringCount !== null" class="breeder-card__count"> · {{ offspringCount }}</span>
+      </button>
       <span class="breeder-card__divider" *ngIf="!authService.isBreeder">·</span>
       <button class="breeder-card__link" (click)="onContactBreeder($event)" *ngIf="!authService.isBreeder">Contact</button>
     </div>
@@ -95,6 +106,9 @@
           <p class="profile-location" *ngIf="getLocationText()">
             <i class="bi bi-geo-alt-fill"></i> {{ getLocationText() }}
           </p>
+          <a *ngIf="phoneHref" class="profile-phone" [href]="phoneHref">
+            <i class="bi bi-telephone-fill" aria-hidden="true"></i> {{ breeder.phone }}
+          </a>
           <app-star-rating *ngIf="reviewSummary"
             [rating]="reviewSummary.average_rating"
             [reviewCount]="reviewSummary.review_count">
@@ -129,8 +143,9 @@
       </div>
 
       <!-- CTA -->
-      <button class="profile-view-btn" (click)="closeProfilePopup(); onViewOffsprings($event)">
-        <i class="bi bi-grid-3x3-gap"></i> View Offsprings
+      <button class="profile-view-btn" [disabled]="hasNoOffspring" (click)="closeProfilePopup(); onViewOffsprings($event)">
+        <i class="bi bi-grid-3x3-gap"></i>
+        {{ hasNoOffspring ? 'No offspring available right now' : 'View Offsprings' + (offspringCount ? ' (' + offspringCount + ')' : '') }}
       </button>
 
       <!-- Reviews -->
@@ -184,3 +199,16 @@
     </div>
   </div>
 </div>
+
+<!-- Offspring modal (stays on the map) -->
+<app-breeder-offspring-modal
+  *ngIf="showOffspringModal"
+  [breederId]="breeder.user_id"
+  [breederName]="breeder.breeder_name"
+  [center]="searchCenter"
+  [radius]="searchRadius"
+  [breedIds]="suggestionBreedIds"
+  [showContact]="!authService.isBreeder"
+  (contact)="onContactFromModal()"
+  (closed)="closeOffspringModal()">
+</app-breeder-offspring-modal>

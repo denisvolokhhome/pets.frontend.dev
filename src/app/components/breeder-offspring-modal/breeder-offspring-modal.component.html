@@ -1,0 +1,50 @@
+<div class="bom-backdrop" [class.closing]="isClosing" (click)="close()">
+  <div class="bom-sheet"
+       [class.closing]="isClosing"
+       [class.dragging]="dragOffsetY > 0"
+       [style.transform]="dragOffsetY > 0 ? 'translateY(' + dragOffsetY + 'px)' : ''"
+       (click)="$event.stopPropagation()"
+       role="dialog" aria-modal="true" [attr.aria-label]="(breederName || 'Breeder') + ' offspring'">
+
+    <div class="bom-drag-zone" (touchstart)="onDragStart($event)" (touchmove)="onDragMove($event)" (touchend)="onDragEnd()">
+      <div class="bom-handle" aria-hidden="true"></div>
+      <header class="bom-header">
+        <div class="bom-title-wrap">
+          <span class="bom-eyebrow">Offspring from</span>
+          <h2 class="bom-title">{{ breederName || 'Breeder' }}</h2>
+        </div>
+        <button type="button" class="bom-close" (click)="close()" aria-label="Close">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </header>
+    </div>
+
+    <div class="bom-body">
+      <app-offspring-grid
+        [breederId]="breederId"
+        [embedded]="true"
+        [showContact]="showContact"
+        (contact)="onContact()">
+      </app-offspring-grid>
+
+      <section class="bom-nearby" *ngIf="nearby.length > 0" data-testid="nearby-strip" aria-labelledby="bom-nearby-title">
+        <h3 class="bom-nearby-title" id="bom-nearby-title">More near you</h3>
+        <div class="bom-nearby-row">
+          <a *ngFor="let o of nearby; trackBy: trackById"
+             class="bom-tile"
+             data-testid="nearby-tile"
+             [routerLink]="['/offspring', o.id]">
+            <div class="bom-tile-img" [style.background-image]="imageUrl(o) ? 'url(' + imageUrl(o) + ')' : ''">
+              <i *ngIf="!imageUrl(o)" class="bi bi-image" aria-hidden="true"></i>
+            </div>
+            <div class="bom-tile-body">
+              <span class="bom-tile-price" *ngIf="price(o) as p">{{ p }}</span>
+              <span class="bom-tile-name">{{ o.name || 'Unnamed' }}<span *ngIf="o.breed?.name"> · {{ o.breed?.name }}</span></span>
+              <span class="bom-tile-meta">{{ o.breeder_name }} · {{ o.distance }} mi</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
