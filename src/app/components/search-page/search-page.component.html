@@ -199,6 +199,30 @@
     </div>
   </div>
 
+  <!-- View switcher (desktop): map + breeders, or offspring grouped by breeder -->
+  <div class="view-switch-bar" *ngIf="searchMode !== 'services' && !isMapFullscreen">
+    <div class="view-switch-pills" *ngIf="viewMode === 'offspring'">
+      <button
+        *ngFor="let pt of petTypes"
+        class="kind-pill"
+        [class.active]="selectedAnimalKind === pt.value"
+        (click)="onAnimalKindChange(pt.value)">
+        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-label">{{ pt.label }}</span>
+      </button>
+    </div>
+    <div class="view-switch" role="group" aria-label="Choose a view">
+      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'map'"
+              [attr.aria-pressed]="viewMode === 'map'" (click)="setViewMode('map')">
+        <i class="bi bi-map" aria-hidden="true"></i> Map
+      </button>
+      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'offspring'"
+              [attr.aria-pressed]="viewMode === 'offspring'" data-testid="view-offspring" (click)="setViewMode('offspring')">
+        <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Offspring
+      </button>
+    </div>
+  </div>
+
   <!-- Mobile Tab Switcher (visible on mobile only) -->
   <div class="mobile-tabs" role="tablist" aria-label="View switcher">
     <button
@@ -220,10 +244,41 @@
       Results
       <span class="mobile-tab-badge" *ngIf="searchResults.length + serviceResults.length > 0">{{ searchResults.length + serviceResults.length }}</span>
     </button>
+    <button
+      *ngIf="searchMode !== 'services'"
+      class="mobile-tab"
+      [class.active]="mobileActiveTab === 'offspring'"
+      (click)="setMobileTab('offspring')"
+      role="tab"
+      [attr.aria-selected]="mobileActiveTab === 'offspring'">
+      <i class="bi bi-grid-3x3-gap"></i>
+      Offspring
+    </button>
+  </div>
+
+  <!-- Offspring view: available offspring grouped by breeder, no map -->
+  <div class="offspring-view" *ngIf="viewMode === 'offspring' && searchMode !== 'services'">
+    <div class="animal-kind-pills offspring-view-pills">
+      <button
+        *ngFor="let pt of petTypes"
+        class="kind-pill"
+        [class.active]="selectedAnimalKind === pt.value"
+        (click)="onAnimalKindChange(pt.value)">
+        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-label">{{ pt.label }}</span>
+      </button>
+    </div>
+    <app-offspring-groups
+      [center]="hasSearched ? mapCenter : null"
+      [radius]="radius"
+      [breedId]="selectedBreed?.id ?? null"
+      [animalKind]="selectedAnimalKind || null"
+      [searchVersion]="searchVersion">
+    </app-offspring-groups>
   </div>
 
   <!-- Main Split Layout: Map Left, List Right -->
-  <div class="search-content">
+  <div class="search-content" [class.view-hidden]="viewMode === 'offspring' && searchMode !== 'services'">
     <!-- Map Panel (Left) -->
     <div class="map-panel"
          [class.map-fullscreen]="isMapFullscreen"

@@ -3,6 +3,7 @@ import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http'
 import { Observable, throwError, timer } from 'rxjs';
 import { catchError, retry, retryWhen, mergeMap, finalize } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { OffspringGroupsResponse } from 'src/app/models/search';
 
 // Interfaces for search-related data models
 export interface Coordinates {
@@ -94,6 +95,27 @@ export class SearchService {
       retry(this.maxRetries),
       catchError(this.handleError)
     );
+  }
+
+  /**
+   * Available offspring near a point, grouped by breeder (nearest first)
+   */
+  searchOffspringGroups(query: {
+    latitude: number; longitude: number; radius: number;
+    breedId?: number | null; animalKind?: string | null; limit?: number; offset?: number;
+  }): Observable<OffspringGroupsResponse> {
+    let params = new HttpParams()
+      .set('latitude', query.latitude.toString())
+      .set('longitude', query.longitude.toString())
+      .set('radius', query.radius.toString())
+      .set('limit', (query.limit ?? 10).toString())
+      .set('offset', (query.offset ?? 0).toString());
+    if (query.breedId) params = params.set('breed_id', query.breedId.toString());
+    if (query.animalKind) params = params.set('animal_kind', query.animalKind);
+
+    // AuthInterceptor adds the token when signed in, so favorite hearts are filled in
+    return this.http.get<OffspringGroupsResponse>(`${this.apiUrl}/search/offsprings`, { params })
+      .pipe(catchError(this.handleError));
   }
 
   /**

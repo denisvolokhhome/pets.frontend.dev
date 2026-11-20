@@ -529,3 +529,8 @@
   color: var(--n-400); cursor: not-allowed; background: none; border-color: transparent;
 }
 .profile-view-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.breeder-card__available {
+  display: inline-flex; align-items: center; padding: 0 0.5rem;
+  font-size: 0.8125rem; font-weight: 600; color: var(--pine);
+}

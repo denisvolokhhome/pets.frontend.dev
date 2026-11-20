@@ -24,7 +24,7 @@
   <div class="breeder-card__content">
     <div class="breeder-card__top">
       <h3 class="breeder-card__name">{{ breeder.breeder_name }}</h3>
-      <span class="breeder-card__distance-badge">~{{ breeder.distance.toFixed(1) }} mi</span>
+      <span class="breeder-card__distance-badge">~{{ breeder.distance | number:'1.0-0' }} mi</span>
     </div>
 
     <p class="breeder-card__breeds">{{ getBreedNames() }}</p>
@@ -45,7 +45,9 @@
     <div class="breeder-card__actions">
       <button class="breeder-card__link breeder-card__link--primary" (click)="onViewProfile($event)">Profile</button>
       <span class="breeder-card__divider">·</span>
+      <span class="breeder-card__available" *ngIf="!showOffspringButton && offspringCount !== null">{{ offspringCount }} available</span>
       <button class="breeder-card__link"
+              *ngIf="showOffspringButton"
               data-testid="offspring-btn"
               [disabled]="hasNoOffspring"
               [attr.title]="hasNoOffspring ? 'No offspring available right now' : null"

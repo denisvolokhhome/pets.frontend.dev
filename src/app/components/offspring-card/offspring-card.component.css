@@ -340,3 +340,6 @@
     font-size: 13px;
   }
 }
+
+.info-item--distance { color: var(--pine); font-weight: 500; }
+.info-item--distance i { color: var(--pine); }
