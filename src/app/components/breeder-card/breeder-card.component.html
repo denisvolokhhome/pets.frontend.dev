@@ -50,7 +50,7 @@
               [disabled]="hasNoOffspring"
               [attr.title]="hasNoOffspring ? 'No offspring available right now' : null"
               (click)="onViewOffsprings($event)">
-        Offsprings<span *ngIf="offspringCount !== null" class="breeder-card__count"> · {{ offspringCount }}</span>
+        Offsprings<span *ngIf="offspringCount !== null" class="breeder-card__count">&nbsp;· {{ offspringCount }}</span>
       </button>
       <span class="breeder-card__divider" *ngIf="!authService.isBreeder">·</span>
       <button class="breeder-card__link" (click)="onContactBreeder($event)" *ngIf="!authService.isBreeder">Contact</button>

@@ -1,4 +1,6 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { BreederSearchResult, Coordinates } from 'src/app/models/search';
 import { AuthService } from 'src/app/services/auth.service';
@@ -13,7 +15,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './breeder-card.component.html',
   styleUrls: ['./breeder-card.component.css']
 })
-export class BreederCardComponent {
+export class BreederCardComponent implements OnDestroy {
   @Input() breeder!: BreederSearchResult;
   @Input() isHighlighted: boolean = false;
   /** Current map search, used for "More near you" in the offspring modal */
@@ -27,6 +29,9 @@ export class BreederCardComponent {
   apihost = environment.API_HOST;
   showGuestModal: boolean = false;
   showOffspringModal: boolean = false;
+  /** Set when a guest tapped Contact; resumed after they sign in */
+  private pendingContact = false;
+  private pendingContactSub?: Subscription;
   showProfilePopup: boolean = false;
   breederProfile: any = null;
   isLoadingProfile: boolean = false;
@@ -230,11 +235,15 @@ export class BreederCardComponent {
   onContactBreeder(event: Event): void {
     event.stopPropagation();
     if (!localStorage.getItem('id_token')) {
+      this.pendingContact = true;
       this.showGuestModal = true;
       return;
     }
-    // Open the real conversation view (the old inline contact form posted to a
-    // removed guest-messaging endpoint and always failed).
+    this.openConversation();
+  }
+
+  /** Open the real conversation view with this breeder. */
+  private openConversation(): void {
     this.router.navigate(['/messages/new'], {
       queryParams: { breederId: this.breeder.user_id, breederName: this.breeder.breeder_name }
     });
@@ -242,6 +251,21 @@ export class BreederCardComponent {
 
   onGuestAuthSuccess(): void {
     this.showGuestModal = false;
+    if (!this.pendingContact) return;
+    this.pendingContact = false;
+    // The signed-in user's profile loads a moment after the token arrives.
+    // Carry on to the conversation for seekers; a breeder account stays on the
+    // map (breeders don't message breeders from here).
+    this.pendingContactSub?.unsubscribe();
+    this.pendingContactSub = this.authService.currentUser$
+      .pipe(filter(user => !!user), take(1))
+      .subscribe(user => {
+        if (!user!.is_breeder && user!.account_type !== 'service') this.openConversation();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.pendingContactSub?.unsubscribe();
   }
 
   /**
