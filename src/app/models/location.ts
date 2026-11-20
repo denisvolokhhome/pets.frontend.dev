@@ -18,5 +18,7 @@ export interface ILocation {
   location_type: string;
   is_published?: boolean;
   is_default?: boolean;
+  phone?: string | null;
+  show_phone?: boolean;
   pets?: IPetBasicInfo[];
 }

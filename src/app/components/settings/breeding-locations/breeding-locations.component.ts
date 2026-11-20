@@ -47,7 +47,9 @@ export class BreedingLocationsComponent implements OnInit {
       state: ['', Validators.required],
       country: ['United States', Validators.required],
       zipcode: ['', Validators.required],
-      location_type: ['user', Validators.required]
+      location_type: ['user', Validators.required],
+      phone: ['', [Validators.maxLength(32), Validators.pattern(/^[0-9+()\-. ]*$/)]],
+      show_phone: [false]
     });
   }
 
@@ -103,7 +105,7 @@ export class BreedingLocationsComponent implements OnInit {
 
   showAddForm(): void {
     this.editingLocation = null;
-    this.locationForm.reset({ location_type: 'user', country: 'United States' });
+    this.locationForm.reset({ location_type: 'user', country: 'United States', phone: '', show_phone: false });
     this.showForm = true;
     this.saveError = null;
     this.saveSuccess = false;
@@ -119,7 +121,9 @@ export class BreedingLocationsComponent implements OnInit {
       state: location.state,
       country: location.country,
       zipcode: location.zipcode,
-      location_type: location.location_type
+      location_type: location.location_type,
+      phone: location.phone ?? '',
+      show_phone: !!location.show_phone
     });
     this.showForm = true;
     this.saveError = null;
