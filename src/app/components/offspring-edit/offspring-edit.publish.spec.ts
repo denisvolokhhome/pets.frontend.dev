@@ -26,10 +26,10 @@ describe('OffspringEditComponent publish checkbox', () => {
     expect(svc.updateOffspring).toHaveBeenCalledWith('o1', jasmine.objectContaining({ is_published: true }));
   });
 
-  it('sends is_published on create (defaults to false)', () => {
+  it('sends is_published on create (visible by default)', () => {
     cmp.mode = 'create';
     cmp.form.patchValue({ breeding_id: 1, gender: 'Female', date_of_birth: '2026-11-08' });
     cmp.createOffspring();
-    expect(svc.createOffspring).toHaveBeenCalledWith(jasmine.objectContaining({ is_published: false }));
+    expect(svc.createOffspring).toHaveBeenCalledWith(jasmine.objectContaining({ is_published: true }));
   });
 });

@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo"><span aria-hidden="true">🐾</span> Find Breeders{{ serviceProvidersEnabled ? ' & Services' : '' }}</h1>
+      <h1 class="search-logo"><span aria-hidden="true">🐾</span> {{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -184,7 +184,7 @@
   <!-- Geolocation Error Banner -->
   <div class="geolocation-error" *ngIf="geolocationError && !error">
     <div class="error-content">
-      <span class="error-icon">ℹ️</span>
+      <i class="bi bi-geo-alt error-icon" aria-hidden="true"></i>
       <span class="error-message">{{ geolocationError }}</span>
       <button class="dismiss-button" (click)="dismissGeolocationError()" aria-label="Dismiss"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
     </div>

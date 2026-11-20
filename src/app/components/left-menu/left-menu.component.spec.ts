@@ -36,7 +36,7 @@ describe('LeftMenuComponent mobile bottom bar', () => {
   }
 
   it('gives breeders five tabs, without Settings', () => {
-    expect(tabs(render('breeder'))).toEqual(['Home', 'Pets', 'Breedings', 'Offsprings', 'Messages']);
+    expect(tabs(render('breeder'))).toEqual(['Home', 'Pets', 'Breedings', 'Offspring', 'Messages']);
   });
 
   it('keeps Settings for pet seekers', () => {

@@ -5,6 +5,7 @@ import { DataService } from 'src/app/services/data.service';
 import { MessageService } from 'src/app/services/message.service';
 import { FavoriteService } from 'src/app/services/favorite.service';
 import { Router } from '@angular/router';
+import { OffspringService } from 'src/app/services/offspring.service';
 
 @Component({
   standalone: false,
@@ -16,6 +17,9 @@ export class DashboardComponent implements OnInit {
   
   totalPets: number = 0;
   activeBreedings: number = 0;
+  /** Offspring pet seekers can see vs. hidden ones (null until loaded) */
+  publicOffspring: number | null = null;
+  hiddenOffspring: number = 0;
   unreadMessages: number = 0;
   favoritesCount: number = 0;
   isLoading: boolean = true;
@@ -28,7 +32,8 @@ export class DashboardComponent implements OnInit {
     private messageService: MessageService,
     private favoriteService: FavoriteService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private offspringService: OffspringService
   ) {}
 
   ngOnInit(): void {
@@ -104,7 +109,20 @@ export class DashboardComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  private loadOffspringVisibility(): void {
+    this.offspringService.getOffsprings(undefined, undefined, 100).subscribe({
+      next: res => {
+        const listed = (res.offsprings || []).filter(o => o.status !== 'Archived');
+        this.publicOffspring = listed.filter(o => o.is_published).length;
+        this.hiddenOffspring = listed.length - this.publicOffspring;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.publicOffspring = null; }
+    });
+  }
+
   private loadBreederStats(userId: string): void {
+    this.loadOffspringVisibility();
     // Load pets count - filter out puppies (is_puppy = 1 or true)
     this.dataService.getPetsByBreeder(userId).subscribe({
       next: (pets) => {
@@ -126,8 +144,8 @@ export class DashboardComponent implements OnInit {
     this.dataService.getBreedings().subscribe({
       next: (breedings) => {
         console.log('Breedings loaded:', breedings);
-        // Count breedings with status 'InProcess' as active
-        this.activeBreedings = breedings.filter(b => b.status === 'InProcess').length;
+        // Started and in-progress breedings are active (Done / Voided are not)
+        this.activeBreedings = breedings.filter(b => b.status === 'Started' || b.status === 'InProcess').length;
         console.log('Active breedings count:', this.activeBreedings);
         this.cdr.detectChanges();
       },

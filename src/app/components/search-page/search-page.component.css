@@ -351,6 +351,14 @@
   z-index: 199;
 }
 
+.geolocation-error {
+  /* An invitation to enter a ZIP, not a warning */
+  background: var(--color-surface);
+  border-bottom-color: var(--n-200);
+  color: var(--ink);
+}
+.geolocation-error .error-icon { color: var(--clay); }
+
 .error-banner {
   background: var(--error-soft);
   border-bottom-color: var(--error-300);

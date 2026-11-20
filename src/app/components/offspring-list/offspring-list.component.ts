@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { PageHeaderConfig } from '../page-header/page-header.component';
@@ -24,12 +24,12 @@ export class OffspringListComponent implements OnInit {
   /** Filter panel visibility on laptop widths (see shared filter widget). */
   filtersOpen = false;
   headerConfig: PageHeaderConfig = {
-    title: 'My Offsprings',
+    title: 'My Offspring',
     icon: 'bi bi-heart-fill',
     iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search offsprings…',
+    searchPlaceholder: 'Search offspring…',
     showActionButton: true,
     actionButtonTitle: 'Add Offspring',
     actionButtonColor: 'var(--primary-color)'
@@ -94,11 +94,17 @@ export class OffspringListComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private dataService: DataService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route?: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.loadOffsprings();
+    // `?add=1` (dashboard quick action): start Add Offspring, with its guidance
+    if (this.route?.snapshot?.queryParamMap?.get('add') === '1') {
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+      this.addOffspring();
+    }
   }
   
   loadBreeds(): void {
@@ -139,7 +145,7 @@ export class OffspringListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading offsprings:', error);
-        this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.toastr.error(error.message || 'Failed to load offspring', 'Error');
         this.isLoading = false;
         this.cdr.detectChanges();
       }

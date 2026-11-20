@@ -74,7 +74,7 @@
               [disabled]="hasNoOffspring"
               [attr.title]="hasNoOffspring ? 'No offspring available right now' : null"
               (click)="onViewOffsprings($event)">
-        Offsprings<span *ngIf="offspringCount !== null" class="breeder-card__count">&nbsp;· {{ offspringCount }}</span>
+        Offspring<span *ngIf="offspringCount !== null" class="breeder-card__count">&nbsp;· {{ offspringCount }}</span>
       </button>
       <span class="breeder-card__divider" *ngIf="!authService.isBreeder">·</span>
       <button class="breeder-card__link" (click)="onContactBreeder($event)" *ngIf="!authService.isBreeder">Contact</button>
@@ -169,7 +169,7 @@
       <!-- CTA -->
       <button class="profile-view-btn" [disabled]="hasNoOffspring" (click)="closeProfilePopup(); onViewOffsprings($event)">
         <i class="bi bi-grid-3x3-gap"></i>
-        {{ hasNoOffspring ? 'No offspring available right now' : 'View Offsprings' + (offspringCount ? ' (' + offspringCount + ')' : '') }}
+        {{ hasNoOffspring ? 'No offspring available right now' : 'View Offspring' + (offspringCount ? ' (' + offspringCount + ')' : '') }}
       </button>
 
       <!-- Reviews -->

@@ -196,16 +196,17 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     let errorMessage = '';
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        errorMessage = 'Location access denied. Please enter your ZIP code to search.';
+        // Declining location is a normal choice, not an error
+        errorMessage = 'Enter your ZIP code to see breeders and puppies near you.';
         break;
       case error.POSITION_UNAVAILABLE:
-        errorMessage = 'Location information unavailable. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
         break;
       case error.TIMEOUT:
-        errorMessage = 'Location request timed out. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
         break;
       default:
-        errorMessage = 'Unable to detect your location. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
     }
     // Show inline banner only — no toast for geolocation errors (banner is sufficient)
     this.geolocationError = errorMessage;
