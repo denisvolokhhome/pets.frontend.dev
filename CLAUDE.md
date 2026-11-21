@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`).
+Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`) from `develop` (`Jenkinsfile`), and to production (`https://breedly.us`) from `main` (`Jenkinsfile.prod`: unit tests, `prod` build, deploy with health check and rollback).
 
 ## Commands
 
 ```bash
 npm start                                   # ng serve, development config → API at http://breedly.com:8000
 npx ng serve --configuration waitlist       # dev server with the waitlist feature flag on
-npm run build                               # production build (default config) → dist/pets.frontend.dev
+npm run build                               # default `production` config (dev-server API) → dist/pets.frontend.dev
+npx ng build --configuration prod           # real production build → api.breedly.us
 ```
 
 Unit tests (Karma + Jasmine, ChromeHeadless). There is no `test` npm script, so call the CLI directly:
@@ -39,8 +40,9 @@ There is no lint script or ESLint config.
 
 ## Environments and feature flags
 
-`src/environments/` contains three files, swapped in through `fileReplacements` in `angular.json`:
-- `environment.ts`: the **production** build (the default build config). It points at `https://api-dev.breedly.us`.
+`src/environments/` contains four files, swapped in through `fileReplacements` in `angular.json`:
+- `environment.ts`: the `production` build config (the default). Despite the name, it is the **dev server** build and points at `https://api-dev.breedly.us`.
+- `environment.prod.ts`: the `prod` build config, the real production site (`https://api.breedly.us`). `Jenkinsfile.prod` builds it with `--build-arg NG_CONFIG=prod`.
 - `environment.development.ts`: `ng serve` default. It points at the local backend at `http://breedly.com:8000` (`breedly.com` is in `allowedHosts`, so map it to localhost in `/etc/hosts`).
 - `environment.waitlist.ts`: the same as development but with `enableWaitlist: true`. It is for local and e2e use only.
 
@@ -49,7 +51,7 @@ Feature flags are **build-time** and must match the backend's `.env`:
 - `enableWaitlist` ↔ `ENABLE_WAITLIST`
 - `enableBilling` ↔ `ENABLE_BILLING`: hides the home pricing section, the Pricing links in the top menu, Settings → Subscription (`BillingGuard`) and the import wizard's plan-limit check.
 
-All three flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all three environment files.
+All three flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all four environment files, and keep `environment.prod.ts` in sync with the `ENABLE_*` values in the backend's `delivery/docker-compose.prod.yml`.
 
 ## Architecture
 

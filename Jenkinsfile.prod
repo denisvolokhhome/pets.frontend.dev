@@ -1,0 +1,125 @@
+// Production pipeline for the Breedly web app (breedly.us).
+// Jenkins job: "Breedly Prod/breedly-frontend-prod", builds branch `main`.
+//
+// Unit tests (Karma, headless Chromium, in Docker) -> production build (NG_CONFIG=prod -> api.breedly.us)
+// -> push to Harbor with an immutable tag -> deploy on prod-docker via deploy.sh (switch + health check,
+// auto-rollback) -> public smoke test through Cloudflare.
+//
+// deploy.sh and docker-compose.prod.yml on the server come from the backend repo's prod pipeline,
+// so the backend must have been deployed to production at least once.
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        timestamps()
+        timeout(time: 60, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+
+    parameters {
+        booleanParam(name: 'SKIP_DEPLOY', defaultValue: false, description: 'Build, test and push only; do not touch production')
+    }
+
+    environment {
+        HARBOR_REGISTRY = '192.168.68.110:80'
+        IMAGE_NAME      = 'breedly/breedly-frontend'
+        PROD_HOST       = '192.168.68.114'
+        PROD_DIR        = '/home/breedly/breedly-app'
+        KNOWN_HOSTS     = '/var/lib/jenkins/prod_known_hosts'
+        PUBLIC_URL      = 'https://breedly.us/'
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    env.GIT_SHA    = sh(returnStdout: true, script: 'git rev-parse --short=8 HEAD').trim()
+                    env.IMAGE_TAG  = "prod-${env.BUILD_NUMBER}-${env.GIT_SHA}"
+                    env.IMAGE      = "${env.HARBOR_REGISTRY}/${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+                    env.TEST_IMAGE = "breedly-frontend-test:${env.BUILD_NUMBER}"
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} ${env.GIT_SHA}"
+                }
+                sh 'git log -1 --format="Releasing %h %s (%an, %ad)"'
+            }
+        }
+
+        stage('Unit tests') {
+            steps {
+                sh '''
+                    docker build --pull -f deploy/Dockerfile --target test -t "$TEST_IMAGE" .
+                    docker run --rm "$TEST_IMAGE"
+                '''
+            }
+        }
+
+        stage('Build production image') {
+            steps {
+                sh '''
+                    docker build --platform linux/amd64 -f deploy/Dockerfile --build-arg NG_CONFIG=prod -t "$IMAGE" .
+                    # guard: the production bundle must talk to api.breedly.us and never to the dev API
+                    docker run --rm "$IMAGE" sh -c '
+                        grep -q "https://api.breedly.us" /usr/share/nginx/html/*.js || { echo "prod API URL not found in bundle"; exit 1; }
+                        ! grep -l "api-dev.breedly.us" /usr/share/nginx/html/*.js || { echo "dev API URL found in prod bundle"; exit 1; }
+                    '
+                '''
+            }
+        }
+
+        stage('Push to Harbor') {
+            steps {
+                withCredentials([string(credentialsId: 'harbor-username', variable: 'HU'), string(credentialsId: 'harbor-password', variable: 'HP')]) {
+                    sh '''
+                        echo "$HP" | docker login "$HARBOR_REGISTRY" -u "$HU" --password-stdin
+                        docker push "$IMAGE"
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to production') {
+            when { expression { !params.SKIP_DEPLOY } }
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER'),
+                    // same Harbor account the dev deploy uses (the 'harbor-credentials' ci-puller robot secret is stale)
+                    string(credentialsId: 'harbor-username', variable: 'PULL_U'),
+                    string(credentialsId: 'harbor-password', variable: 'PULL_P')
+                ]) {
+                    sh '''
+                        # quoted helpers: the workspace path contains a space ("Breedly Prod")
+                        ssh_prod() { ssh -i "$SSH_KEY" -o UserKnownHostsFile="$KNOWN_HOSTS" -o StrictHostKeyChecking=yes -o BatchMode=yes "$SSH_USER@$PROD_HOST" "$@"; }
+                        scp_prod() { scp -i "$SSH_KEY" -o UserKnownHostsFile="$KNOWN_HOSTS" -o StrictHostKeyChecking=yes -o BatchMode=yes "$@"; }
+                        ssh_prod "test -x $PROD_DIR/deploy.sh" \
+                            || { echo "deploy.sh missing on prod - run the backend prod pipeline first"; exit 1; }
+                        echo "$PULL_P" | ssh_prod "docker login $HARBOR_REGISTRY -u '$PULL_U' --password-stdin"
+                        ssh_prod "$PROD_DIR/deploy.sh frontend $IMAGE_TAG"
+                    '''
+                }
+            }
+        }
+
+        stage('Smoke test') {
+            when { expression { !params.SKIP_DEPLOY } }
+            steps {
+                sh '''
+                    for i in $(seq 1 12); do
+                        code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$PUBLIC_URL" || true)
+                        [ "$code" = "200" ] && { echo "public check OK ($PUBLIC_URL)"; exit 0; }
+                        echo "attempt $i: $PUBLIC_URL -> $code"; sleep 5
+                    done
+                    echo "public check failed"; exit 1
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker rmi "$IMAGE" "$TEST_IMAGE" >/dev/null 2>&1 || true'
+        }
+        success {
+            echo "Frontend ${env.IMAGE_TAG} is live on https://breedly.us"
+        }
+    }
+}
