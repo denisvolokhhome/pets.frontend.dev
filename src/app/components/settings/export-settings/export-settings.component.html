@@ -1,0 +1,78 @@
+<div class="export-settings">
+  <div class="settings-header">
+    <h2>Export data</h2>
+    <p class="settings-subtitle">Download the whole history of your breedery as one ZIP file, to keep a copy or to take it with you.</p>
+  </div>
+
+  <section class="form-section">
+    <h3 class="section-title">What's included</h3>
+    <ul class="included">
+      <li><i class="bi bi-table" aria-hidden="true"></i> Spreadsheets (CSV) of your locations, pets (deleted ones too), breedings with matings, progesterone tests and milestones, and all offspring, sold ones included</li>
+      <li><i class="bi bi-images" aria-hidden="true"></i> Every pet and offspring photo</li>
+      <li><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> Every pet and offspring document</li>
+    </ul>
+    <p class="note">Messages, reviews and waitlist entries are not included.</p>
+  </section>
+
+  <section class="form-section status-card" aria-live="polite">
+    <div *ngIf="loadError" class="banner banner--error" role="alert">
+      <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+      Something went wrong talking to the server. Please try again.
+    </div>
+
+    <ng-container [ngSwitch]="state">
+      <div *ngSwitchCase="'loading'" class="status-row">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Checking for a previous export…</span>
+      </div>
+
+      <div *ngSwitchCase="'none'">
+        <p class="status-text">We'll prepare your archive in the background. Large libraries can take a few minutes.</p>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="startExport()" [disabled]="isStarting">
+          <i class="bi bi-box-arrow-down" aria-hidden="true"></i>
+          {{ isStarting ? 'Starting…' : 'Export my data' }}
+        </button>
+      </div>
+
+      <div *ngSwitchCase="'preparing'">
+        <div class="status-row">
+          <span class="spinner" aria-hidden="true"></span>
+          <strong>Preparing your archive…</strong>
+        </div>
+        <p class="status-text">You can leave this page; it keeps going. Come back here to download it.</p>
+      </div>
+
+      <div *ngSwitchCase="'ready'">
+        <div class="status-row ready">
+          <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+          <strong>Your archive is ready</strong>
+        </div>
+        <p class="status-text">
+          Created {{ current?.completed_at | date:'MMM d, y, h:mm a' }} ·
+          available until {{ current?.expires_at | date:'MMM d, h:mm a' }}
+        </p>
+        <div class="actions">
+          <button type="button" class="ui-btn ui-btn--primary" (click)="download()" [disabled]="isDownloading">
+            <i class="bi bi-download" aria-hidden="true"></i>
+            {{ isDownloading ? 'Starting download…' : 'Download (' + sizeLabel + ')' }}
+          </button>
+          <button type="button" class="ui-btn ui-btn--ghost" (click)="startExport()" [disabled]="isStarting">
+            Create a new export
+          </button>
+        </div>
+        <p *ngIf="downloadError" class="field-error" role="alert">{{ downloadError }}</p>
+      </div>
+
+      <div *ngSwitchCase="'failed'">
+        <div class="status-row failed">
+          <i class="bi bi-x-circle-fill" aria-hidden="true"></i>
+          <strong>The export didn't finish</strong>
+        </div>
+        <p class="status-text" *ngIf="current?.error">{{ current?.error }}</p>
+        <button type="button" class="ui-btn ui-btn--primary" (click)="startExport()" [disabled]="isStarting">
+          Try again
+        </button>
+      </div>
+    </ng-container>
+  </section>
+</div>

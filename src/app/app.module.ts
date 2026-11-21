@@ -79,6 +79,7 @@ import { NotificationSettingsComponent } from './components/settings/notificatio
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
 import { PricingSectionComponent } from './components/pricing-section/pricing-section.component';
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
+import { ExportSettingsComponent } from './components/settings/export-settings/export-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
 import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
 import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
@@ -191,6 +192,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     NotificationSettingsComponent,
     SubscriptionSettingsComponent,
     SupportSettingsComponent,
+    ExportSettingsComponent,
     QuickBreedingAddComponent,
     FilterWidgetComponent,
     ConfirmDialogComponent,

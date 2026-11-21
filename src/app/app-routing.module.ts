@@ -24,6 +24,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
+import { ExportSettingsComponent } from './components/settings/export-settings/export-settings.component';
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
@@ -105,6 +106,7 @@ const routes: Routes = [
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
       { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BillingGuard, BreederGuard] },
       { path: 'waitlist', component: WaitlistSettingsComponent, canActivate: [WaitlistGuard, BreederGuard] },
+      { path: 'export', component: ExportSettingsComponent, canActivate: [BreederGuard] },
       { path: 'support', component: SupportSettingsComponent },
       { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }
     ]
