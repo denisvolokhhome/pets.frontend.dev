@@ -85,11 +85,13 @@ pipeline {
                     usernamePassword(credentialsId: 'harbor-credentials', usernameVariable: 'PULL_U', passwordVariable: 'PULL_P')
                 ]) {
                     sh '''
-                        SSH_OPTS="-i $SSH_KEY -o UserKnownHostsFile=$KNOWN_HOSTS -o StrictHostKeyChecking=yes -o BatchMode=yes"
-                        ssh $SSH_OPTS "$SSH_USER@$PROD_HOST" "test -x $PROD_DIR/deploy.sh" \
+                        # quoted helpers: the workspace path contains a space ("Breedly Prod")
+                        ssh_prod() { ssh -i "$SSH_KEY" -o UserKnownHostsFile="$KNOWN_HOSTS" -o StrictHostKeyChecking=yes -o BatchMode=yes "$SSH_USER@$PROD_HOST" "$@"; }
+                        scp_prod() { scp -i "$SSH_KEY" -o UserKnownHostsFile="$KNOWN_HOSTS" -o StrictHostKeyChecking=yes -o BatchMode=yes "$@"; }
+                        ssh_prod "test -x $PROD_DIR/deploy.sh" \
                             || { echo "deploy.sh missing on prod - run the backend prod pipeline first"; exit 1; }
-                        echo "$PULL_P" | ssh $SSH_OPTS "$SSH_USER@$PROD_HOST" "docker login $HARBOR_REGISTRY -u '$PULL_U' --password-stdin"
-                        ssh $SSH_OPTS "$SSH_USER@$PROD_HOST" "$PROD_DIR/deploy.sh frontend $IMAGE_TAG"
+                        echo "$PULL_P" | ssh_prod "docker login $HARBOR_REGISTRY -u '$PULL_U' --password-stdin"
+                        ssh_prod "$PROD_DIR/deploy.sh frontend $IMAGE_TAG"
                     '''
                 }
             }
