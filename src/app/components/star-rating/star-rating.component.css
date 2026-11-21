@@ -16,15 +16,15 @@
 }
 
 .star--filled {
-  color: #f59e0b;
+  color: var(--wheat);
 }
 
 .star--empty {
-  color: #d1d5db;
+  color: var(--n-300);
 }
 
 .star-rating__count {
-  color: #6b7280;
+  color: var(--n-500);
   font-size: 0.8125rem;
   margin-left: 2px;
 }
@@ -32,8 +32,8 @@
 .star-rating__new {
   display: inline-flex;
   align-items: center;
-  background-color: #dbeafe;
-  color: #1d4ed8;
+  background-color: var(--mist);
+  color: var(--harbor);
   font-size: 0.6875rem;
   font-weight: 600;
   padding: 1px 6px;

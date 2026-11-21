@@ -10,9 +10,9 @@
 /* Error message styling */
 .error-message {
   animation: slideIn 0.3s ease-out;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background-color: var(--error-softer);
+  border: 1px solid var(--error-300);
+  color: var(--error-700);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   display: flex;

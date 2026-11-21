@@ -35,3 +35,26 @@
 | 15 | Click **Filters** → Status **Reserved**. | Only Honey. Clear the filter. | |
 | 16 | Click an offspring's **Delete** (trash) then **Cancel** in the dialog. | In-app dialog "Delete offspring?" with **Cancel** focused; Cancel keeps the row. | |
 | 17 | Open **Genealogy** again. | Each family now shows "3 offsprings" / "2 offsprings". | |
+
+## Guidance when a breeder has nothing to add offspring to
+
+Use a brand-new breeder account (no location, pets or breedings).
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| G1 | Offsprings → **Add Offspring**. | Dialog **Add your pets first** ("…a breeding needs a male and a female parent…"), buttons **Not now** / **Add pets**. **Not now** closes it and stays on the page. | |
+| G2 | **Add Offspring** → **Add pets**. | Pets page. With no location: dialog **Add a breeding location first** → **Add location** opens Settings → Locations with the add form already open. The Pets empty state says "Pets are kept at a breeding location…" with an **Add a location** button. | |
+| G3 | Add a location, then a male and a female pet. Offsprings → **Add Offspring**. | Dialog **Create a breeding first** ("Offspring belong to a breeding (a litter)…"), buttons **Not now** / **Create breeding**. | |
+| G4 | **Create breeding**. | Breedings page with **Quick Breeding** already open. | |
+| G5 | Pick both parents → **Create Breeding**. | Lands on the new breeding's page with the **Add Offspring** form already open. Refreshing the page does **not** reopen it. | |
+| G6 | Back on Offsprings → **Add Offspring**. | The form opens directly; the Breeding dropdown lists the new breeding (voided breedings are never listed). | |
+
+## Visibility to pet seekers
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| V1 | On a breeding page click **Add Offspring**. | The form has **Visible to pet seekers**, ticked by default. Saving shows "Offspring added — Pet seekers can now see it…". Unticked: "…hidden from pet seekers until you publish it." | |
+| V2 | Look at the breeding's offspring table. | A **Visibility** column shows **Public** / **Hidden** with **Hide** / **Publish**. When any are hidden, a hint above the table says how many. **Publish** flips it and the puppy appears on the map's Offspring view. | |
+| V3 | Open the **Dashboard**. | A card says how many offspring pet seekers can see and how many are hidden ("Review hidden"); with none at all it offers **Add offspring**. Quick actions include **Add Offspring**. | |
+| V4 | Open **Setup guide**. | Five steps: name, location, a male and a female pet, a breeding, offspring made visible. Each unfinished step takes you to the right page. | |
+

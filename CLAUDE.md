@@ -4,14 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`).
+Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`) from `develop` (`Jenkinsfile`), and to production (`https://breedly.us`) from `main` (`Jenkinsfile.prod`: unit tests, `prod` build, deploy with health check and rollback).
 
 ## Commands
 
 ```bash
 npm start                                   # ng serve, development config → API at http://breedly.com:8000
 npx ng serve --configuration waitlist       # dev server with the waitlist feature flag on
-npm run build                               # production build (default config) → dist/pets.frontend.dev
+npm run build                               # default `production` config (dev-server API) → dist/pets.frontend.dev
+npx ng build --configuration prod           # real production build → api.breedly.us
 ```
 
 Unit tests (Karma + Jasmine, ChromeHeadless). There is no `test` npm script, so call the CLI directly:
@@ -39,16 +40,18 @@ There is no lint script or ESLint config.
 
 ## Environments and feature flags
 
-`src/environments/` contains three files, swapped in through `fileReplacements` in `angular.json`:
-- `environment.ts`: the **production** build (the default build config). It points at `https://api-dev.breedly.us`.
+`src/environments/` contains four files, swapped in through `fileReplacements` in `angular.json`:
+- `environment.ts`: the `production` build config (the default). Despite the name, it is the **dev server** build and points at `https://api-dev.breedly.us`.
+- `environment.prod.ts`: the `prod` build config, the real production site (`https://api.breedly.us`). `Jenkinsfile.prod` builds it with `--build-arg NG_CONFIG=prod`.
 - `environment.development.ts`: `ng serve` default. It points at the local backend at `http://breedly.com:8000` (`breedly.com` is in `allowedHosts`, so map it to localhost in `/etc/hosts`).
 - `environment.waitlist.ts`: the same as development but with `enableWaitlist: true`. It is for local and e2e use only.
 
 Feature flags are **build-time** and must match the backend's `.env`:
 - `enableServiceProviders` ↔ `ENABLE_SERVICE_PROVIDERS`
 - `enableWaitlist` ↔ `ENABLE_WAITLIST`
+- `enableBilling` ↔ `ENABLE_BILLING`: hides the home pricing section, the Pricing links in the top menu, Settings → Subscription (`BillingGuard`) and the import wizard's plan-limit check.
 
-Both flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all three environment files.
+All three flags are currently `false`. Hide flagged UI by checking `environment.<flag>` in components. Gate flagged routes with a guard like `WaitlistGuard`, composed before the role guard (`canActivate: [WaitlistGuard, BreederGuard]`). When you add or change a flag, update all four environment files, and keep `environment.prod.ts` in sync with the `ENABLE_*` values in the backend's `delivery/docker-compose.prod.yml`.
 
 ## Architecture
 
@@ -57,7 +60,7 @@ Both flags are currently `false`. Hide flagged UI by checking `environment.<flag
 - **Roles.** There are three account types: breeder (`user.is_breeder`), pet seeker (`account_type: 'pet_seeker'`) and service provider. Routes are protected by `AuthGuard`, `BreederGuard`, `PetSeekerGuard` and `ServiceProviderGuard` in `src/app/guard/`. Some routes are public, such as `/offspring/:id`, `/breeder/:id/offsprings` and `/search-pets`.
 - **Services.** HTTP services live in `src/app/services/` and are built from `environment.API_URL`. `DataService` is the large legacy service for pets, breeds, locations, breedings and profile. Newer features have their own service (`waitlist`, `breeding-planner`, `offspring`, `message`, `billing`, `review`, ...). Interfaces live in `src/app/models/`. `models/README.md` and `SEARCH_MODELS_SUMMARY.md` document the search/map models.
 - **UI stack.** Several UI libraries are in use together: PrimeNG 21 (tables, selects), Angular Material, Tailwind 3 (brand colors in `tailwind.config.js`), Leaflet with markercluster (map search), ngx-toastr wrapped by `ToastService`, and `ConfirmService`/`ConfirmDialogComponent` for confirmations.
-- **Shared UI kit.** It lives in global `src/styles.css` and provides the `ui-btn` (`--primary`, `--secondary`, `--ghost`, `--danger`, `--sm`), `ui-icon-btn`, `ui-badge--*`, `ui-table`, `ui-table-container`, `ui-row-actions`, `ui-cell-title`/`ui-cell-sub`, `ui-truncate` and `ui-link` classes. Prefer these over one-off styles. Brand colors are CSS variables in `:root`. Keep `--primary-strong` and the other `*-strong` values in sync with `tailwind.config.js`. The "Legacy button styles" in the same file exist only for backward compatibility.
+- **Shared UI kit.** It lives in global `src/styles.css` and provides the `ui-btn` (`--primary`, `--secondary`, `--ghost`, `--danger`, `--sm`), `ui-icon-btn`, `ui-badge--*`, `ui-table`, `ui-table-container`, `ui-row-actions`, `ui-cell-title`/`ui-cell-sub`, `ui-truncate` and `ui-link` classes. Prefer these over one-off styles. Design tokens are CSS variables in `:root`: the warm palette (`--oat` background, `--cream` surfaces, `--ink`/`--stone` text, `--clay` for actions, `--pine` for trust/verified, `--apricot` for highlights with dark text only), a warm neutral scale `--n-50`…`--n-900`, and semantic `--success`/`--warning`/`--error`/`--harbor` with `-soft` variants. Use tokens, never raw hex or cool Tailwind greys. Fonts: `--font-display` (Literata) for page titles and names, `--font-primary`/`--font-secondary` (Onest) for everything else. `tailwind.config.js` remaps the stock Tailwind hues (gray, blue, red, green, teal, indigo…) onto the same palette; keep its values in sync with `:root`. `body` carries Material's `mat-typography` class, which sets Roboto with higher specificity, so `styles.css` re-asserts the brand fonts on `body.mat-typography`. The "Legacy button styles" in the same file exist only for backward compatibility.
 - **Mobile.** Pages must work at 390px wide with no horizontal scroll. Buttons are globally forced to a 44–48px minimum touch target. Breeders get a bottom tab bar on mobile.
 - **Error reporting.** Sentry (`@sentry/angular`) is configured from `environment.sentryDsn`.
 

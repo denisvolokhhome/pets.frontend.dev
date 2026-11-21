@@ -47,3 +47,28 @@ describe('TopMenuComponent waitlist items', () => {
     expect(h).not.toContain('/waitlist');
   });
 });
+
+describe('TopMenuComponent Get Started links (logged out)', () => {
+  it('sends "I\'m a Breeder" straight to the breeder form, not the account-type chooser', () => {
+    TestBed.configureTestingModule({
+      declarations: [TopMenuComponent],
+      imports: [RouterTestingModule],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [{
+        provide: AuthService,
+        useValue: {
+          isBreeder: false, isPetSeeker: false, isServiceProvider: false,
+          isLoggedIn$: new BehaviorSubject<boolean>(false), hasValidToken: () => false
+        }
+      }]
+    });
+    const fixture = TestBed.createComponent(TopMenuComponent);
+    fixture.componentInstance.isMobileMenuOpen = true;
+    fixture.detectChanges();
+    const hrefs = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('a')).map(a => a.getAttribute('href') || '');
+
+    // Desktop dropdown + mobile menu
+    expect(hrefs.filter(h => h === '/register?type=breeder').length).toBe(2);
+    expect(hrefs).not.toContain('/register');
+  });
+});

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserComponent } from './components/user/user.component';
@@ -23,6 +24,7 @@ import { AuthCallbackComponent } from './components/auth-callback/auth-callback.
 import { BreederySettingsComponent } from './components/settings/breedery-settings/breedery-settings.component';
 import { NotificationSettingsComponent } from './components/settings/notification-settings/notification-settings.component';
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
+import { ExportSettingsComponent } from './components/settings/export-settings/export-settings.component';
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
 import { OffspringListComponent } from './components/offspring-list/offspring-list.component';
 import { OffspringDetailComponent } from './components/offspring-detail/offspring-detail.component';
@@ -35,6 +37,7 @@ import { ServiceCategoriesSettingsComponent } from './components/settings/servic
 
 import { PetSeekerGuard } from './guard/pet-seeker.guard';
 import { WaitlistGuard } from './guard/waitlist.guard';
+import { BillingGuard } from './guard/billing.guard';
 import { WaitlistComponent } from './components/waitlist/waitlist.component';
 import { WaitlistSettingsComponent } from './components/settings/waitlist-settings/waitlist-settings.component';
 import { MyWaitlistsComponent } from './components/my-waitlists/my-waitlists.component';
@@ -50,7 +53,9 @@ import { BreederAgreementComponent } from './components/breeder-agreement/breede
 import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeNextComponent },
+  { path: 'home-old', component: HomeComponent }, // previous design, kept for comparison
+  { path: 'home-next', redirectTo: '', pathMatch: 'full' },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
@@ -99,8 +104,9 @@ const routes: Routes = [
       { path: 'breedery', component: BreederySettingsComponent, canActivate: [BreederGuard] },
       { path: 'locations', component: BreedingLocationsComponent },
       { path: 'notifications', component: NotificationSettingsComponent, canActivate: [BreederGuard] },
-      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BreederGuard] },
+      { path: 'subscription', component: SubscriptionSettingsComponent, canActivate: [BillingGuard, BreederGuard] },
       { path: 'waitlist', component: WaitlistSettingsComponent, canActivate: [WaitlistGuard, BreederGuard] },
+      { path: 'export', component: ExportSettingsComponent, canActivate: [BreederGuard] },
       { path: 'support', component: SupportSettingsComponent },
       { path: 'service-categories', component: ServiceCategoriesSettingsComponent, canActivate: [ServiceProviderGuard] }
     ]

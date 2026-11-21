@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo"><span aria-hidden="true">🐾</span> Find Breeders{{ serviceProvidersEnabled ? ' & Services' : '' }}</h1>
+      <h1 class="search-logo"><span aria-hidden="true">🐾</span> {{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -141,6 +141,22 @@
         </div>
       </div>
 
+      <!-- Availability -->
+      <div class="filter-section">
+        <label class="filter-label">Availability</label>
+        <div class="filter-pills">
+          <button
+            type="button"
+            class="filter-pill"
+            [class.active]="onlyWithOffspring"
+            [attr.aria-pressed]="onlyWithOffspring"
+            (click)="onlyWithOffspring = !onlyWithOffspring">
+            <i class="bi bi-check2-circle" aria-hidden="true"></i>
+            <span>Only breeders with offspring</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Radius -->
       <div class="filter-section">
         <label class="filter-label">Distance</label>
@@ -168,7 +184,7 @@
   <!-- Geolocation Error Banner -->
   <div class="geolocation-error" *ngIf="geolocationError && !error">
     <div class="error-content">
-      <span class="error-icon">ℹ️</span>
+      <i class="bi bi-geo-alt error-icon" aria-hidden="true"></i>
       <span class="error-message">{{ geolocationError }}</span>
       <button class="dismiss-button" (click)="dismissGeolocationError()" aria-label="Dismiss"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
     </div>
@@ -180,6 +196,30 @@
       <i class="bi bi-exclamation-triangle error-icon" aria-hidden="true"></i>
       <span class="error-message">{{ error }}</span>
       <button class="retry-button" (click)="retrySearch()">Retry</button>
+    </div>
+  </div>
+
+  <!-- View switcher (desktop): map + breeders, or offspring grouped by breeder -->
+  <div class="view-switch-bar" *ngIf="searchMode !== 'services' && !isMapFullscreen">
+    <div class="view-switch-pills" *ngIf="viewMode === 'offspring'">
+      <button
+        *ngFor="let pt of petTypes"
+        class="kind-pill"
+        [class.active]="selectedAnimalKind === pt.value"
+        (click)="onAnimalKindChange(pt.value)">
+        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-label">{{ pt.label }}</span>
+      </button>
+    </div>
+    <div class="view-switch" role="group" aria-label="Choose a view">
+      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'map'"
+              [attr.aria-pressed]="viewMode === 'map'" (click)="setViewMode('map')">
+        <i class="bi bi-map" aria-hidden="true"></i> Map
+      </button>
+      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'offspring'"
+              [attr.aria-pressed]="viewMode === 'offspring'" data-testid="view-offspring" (click)="setViewMode('offspring')">
+        <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Offspring
+      </button>
     </div>
   </div>
 
@@ -204,10 +244,41 @@
       Results
       <span class="mobile-tab-badge" *ngIf="searchResults.length + serviceResults.length > 0">{{ searchResults.length + serviceResults.length }}</span>
     </button>
+    <button
+      *ngIf="searchMode !== 'services'"
+      class="mobile-tab"
+      [class.active]="mobileActiveTab === 'offspring'"
+      (click)="setMobileTab('offspring')"
+      role="tab"
+      [attr.aria-selected]="mobileActiveTab === 'offspring'">
+      <i class="bi bi-grid-3x3-gap"></i>
+      Offspring
+    </button>
+  </div>
+
+  <!-- Offspring view: available offspring grouped by breeder, no map -->
+  <div class="offspring-view" *ngIf="viewMode === 'offspring' && searchMode !== 'services'">
+    <div class="animal-kind-pills offspring-view-pills">
+      <button
+        *ngFor="let pt of petTypes"
+        class="kind-pill"
+        [class.active]="selectedAnimalKind === pt.value"
+        (click)="onAnimalKindChange(pt.value)">
+        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-label">{{ pt.label }}</span>
+      </button>
+    </div>
+    <app-offspring-groups
+      [center]="hasSearched ? mapCenter : null"
+      [radius]="radius"
+      [breedId]="selectedBreed?.id ?? null"
+      [animalKind]="selectedAnimalKind || null"
+      [searchVersion]="searchVersion">
+    </app-offspring-groups>
   </div>
 
   <!-- Main Split Layout: Map Left, List Right -->
-  <div class="search-content">
+  <div class="search-content" [class.view-hidden]="viewMode === 'offspring' && searchMode !== 'services'">
     <!-- Map Panel (Left) -->
     <div class="map-panel"
          [class.map-fullscreen]="isMapFullscreen"
@@ -265,6 +336,17 @@
           <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
           <span class="kind-label">{{ pt.label }}</span>
         </button>
+        <span class="kind-divider" aria-hidden="true"></span>
+        <button
+          type="button"
+          class="kind-pill"
+          data-testid="only-with-offspring"
+          [class.active]="onlyWithOffspring"
+          [attr.aria-pressed]="onlyWithOffspring"
+          (click)="toggleOnlyWithOffspring()">
+          <i class="bi bi-check2-circle kind-icon" aria-hidden="true"></i>
+          <span class="kind-label">Has offspring</span>
+        </button>
       </div>
 
       <div class="results-list">
@@ -279,6 +361,9 @@
           <app-breeder-card-list
             [breeders]="searchResults"
             [highlightedId]="highlightedBreederId"
+            [searchCenter]="hasSearched ? mapCenter : null"
+            [searchRadius]="radius"
+            [searchBreedId]="selectedBreed?.id ?? null"
             [isLoading]="isLoading && searchMode !== 'services'"
             [hasSearched]="hasSearched"
             (cardClick)="onCardClick($event)"

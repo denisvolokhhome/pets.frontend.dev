@@ -53,3 +53,17 @@ Use a throwaway email — the lock applies to that address (and to your IP) for 
 | 19 | As a **pet seeker**, open `<app>/pets`, `<app>/breedings`, `<app>/offsprings`. | Redirected away (toast: only accessible to breeders). | |
 | 20 | As anyone, open `<app>/services` and `<app>/settings/service-categories`. | Redirected to the dashboard (service providers are hidden pre-launch). | |
 | 21 | Look everywhere (menus, home page, sign-up, search toasts, **Privacy Policy, Terms of Use**) for "Service Provider". | Not shown anywhere. The Privacy Policy describes Google sign-in and email notifications; both legal pages show "Last updated October 4, 2026". | |
+
+## E. Export all breedery data
+
+Use a breeder with pets, a breeding, a sold puppy, photos and at least one document (e.g. Ellie).
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| 22 | As the breeder, **Settings → Export data**. | Page lists what's included; button **Export my data**. Not visible to pet seekers (`<app>/settings/export` redirects them). | |
+| 23 | Click **Export my data**. | "Preparing your archive…" with a spinner; after a short wait it switches by itself to **Your archive is ready** with **Download (N MB)** and "available until" ~24 h from now. | |
+| 24 | Leave the page while it's preparing, come back. | Still preparing or ready — the export kept going. | |
+| 25 | Click **Download**. | The browser's own download starts (`breedly-export-YYYY-MM-DD.zip`). | |
+| 26 | Unzip it. | `README.txt`, CSVs (locations, pets, breedings, breeding_pets, matings, progesterone_tests, milestones, offspring) open correctly in Excel (accents intact); sold puppies and deleted pets are in the sheets; `photos/` and `documents/` contain the files, in folders by pet/puppy name. | |
+| 27 | Copy the download link from the browser's downloads list and open it in a private window after a minute or two. | It still works within the hour after the first download; a link that was never used stops working after 60 seconds. | |
+| 28 | Click **Create a new export**. | A new archive is prepared; the old one is gone. | |

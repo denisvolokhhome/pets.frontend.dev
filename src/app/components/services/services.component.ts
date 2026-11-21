@@ -19,7 +19,7 @@ export class ServicesComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'My Services',
     icon: 'bi bi-briefcase-fill',
-    iconColor: '#4ecdc4',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search services…',

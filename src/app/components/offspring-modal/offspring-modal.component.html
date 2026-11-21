@@ -132,6 +132,17 @@
             ></textarea>
           </div>
 
+          <!-- Visibility -->
+          <div class="form-group full-width">
+            <label class="publish-toggle" for="om_is_published">
+              <input type="checkbox" id="om_is_published" formControlName="is_published" />
+              <span>
+                <span class="publish-toggle-title">Visible to pet seekers</span>
+                <span class="publish-toggle-hint">Shows this offspring on your public breeder page and in map search. Untick to keep it private for now.</span>
+              </span>
+            </label>
+          </div>
+
           <!-- Photos -->
           <div class="form-group full-width">
             <span class="form-label">Photos <span class="form-hint">(up to {{ MAX_PHOTOS }}, the first one is the main photo)</span></span>

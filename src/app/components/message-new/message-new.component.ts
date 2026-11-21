@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MessageThreadComponent, OffspringContext } from '../message-thread/message-thread.component';
 import { MessageService, MessageListItem } from '../../services/message.service';
 import { OffspringService } from 'src/app/services/offspring.service';
@@ -22,7 +22,7 @@ interface MessageThread {
 @Component({
   selector: 'app-message-new',
   standalone: true,
-  imports: [CommonModule, MessageThreadComponent],
+  imports: [CommonModule, RouterLink, MessageThreadComponent],
   templateUrl: './message-new.component.html',
   styleUrls: ['./message-new.component.css']
 })
@@ -50,15 +50,35 @@ export class MessageNewComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  /** Who this conversation is with (shown in the header). */
+  get conversationName(): string {
+    if (this.breederName && this.breederName !== 'Breeder') return this.breederName;
+    return this.currentThread?.participant_name || 'Breeder';
+  }
+
+  get conversationPartnerId(): string | undefined {
+    return this.breederId || this.currentThread?.participant_id;
+  }
+
+  /** Seekers get a link to the breeder's offspring; breeders writing to seekers don't. */
+  get canViewPartnerOffspring(): boolean {
+    return !this.authService.isBreeder && !!this.conversationPartnerId;
+  }
+
+  private get currentThread(): MessageThread | undefined {
+    return this.threadId ? this.threads.find(t => t.thread_id === this.threadId) : undefined;
+  }
+
+  /** Bumped whenever the user opens a different conversation; keys the thread view. */
+  conversationKey = 0;
+  private lastRequested?: string;
+
   ngOnInit(): void {
     // Load threads first
     this.loadThreads();
     
     // Then load specific thread if provided in query params
     this.route.queryParams.subscribe(params => {
-      this.breederId = params['breederId'];
-      this.offspringId = params['offspringId'];
-      this.threadId = params['threadId'];
       // Only take it when present: removing it from the URL below re-emits params without it
       if (params['initialMessage']) {
         this.initialMessage = params['initialMessage'];
@@ -70,6 +90,23 @@ export class MessageNewComponent implements OnInit {
         });
       }
 
+      // Compare against the previous URL, not current state: state changes after a
+      // send / thread lookup, and the initialMessage strip above re-emits the same URL.
+      const requested = [params['breederId'], params['threadId'], params['offspringId']].join('|');
+      if (requested === this.lastRequested) {
+        return;
+      }
+      this.lastRequested = requested;
+      this.conversationKey++;
+
+      this.breederId = params['breederId'];
+      if (params['breederName']) {
+        this.breederName = params['breederName'];
+      }
+      this.offspringId = params['offspringId'];
+      this.threadId = params['threadId'];
+      this.offspringContext = undefined;
+
       if (!this.breederId && !this.threadId) {
         // No specific thread selected, just show threads list
         this.isLoading = false;
@@ -77,12 +114,35 @@ export class MessageNewComponent implements OnInit {
         return;
       }
 
-      if (this.offspringId) {
+      if (this.offspringId && !this.threadId) {
+        // Every "contact about this puppy" entry point (incl. after the guest login
+        // prompt) lands here without a threadId: reuse the existing conversation
+        // instead of starting a second one.
+        this.resumeOffspringThread();
+      } else if (this.offspringId) {
         this.loadOffspringContext();
       } else {
         // No offspring context to load, ready to show form
         this.isLoading = false;
         this.cdr.detectChanges();
+      }
+    });
+  }
+
+  private resumeOffspringThread(): void {
+    const key = this.conversationKey;
+    this.isLoading = true;
+    this.messageService.checkOffspringThread(this.offspringId!).subscribe({
+      next: (res) => {
+        if (key !== this.conversationKey) return; // user opened another conversation meanwhile
+        if (res.has_thread && res.thread_id) {
+          this.threadId = res.thread_id;
+        }
+        this.loadOffspringContext();
+      },
+      error: () => {
+        if (key !== this.conversationKey) return;
+        this.loadOffspringContext();
       }
     });
   }
@@ -183,7 +243,23 @@ export class MessageNewComponent implements OnInit {
   /**
    * Select a thread from the sidebar
    */
+  /** Mobile "back": leave the open conversation and show the list again. */
+  closeConversation(): void {
+    this.router.navigate([], { queryParams: {}, replaceUrl: false });
+    this.conversationKey++;
+    this.lastRequested = '||';
+    this.breederId = '';
+    this.threadId = undefined;
+    this.offspringId = undefined;
+    this.offspringContext = undefined;
+    this.initialMessage = undefined;
+    this.cdr.detectChanges();
+  }
+
   selectThread(thread: MessageThread): void {
+    this.conversationKey++;
+    // A prefill belongs to the conversation it was opened for, not the next one.
+    this.initialMessage = undefined;
     this.breederId = thread.participant_id;
     this.breederName = thread.participant_name;
     this.threadId = thread.thread_id || undefined;

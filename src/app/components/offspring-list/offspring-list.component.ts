@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { PageHeaderConfig } from '../page-header/page-header.component';
@@ -8,6 +8,11 @@ import { IBreed } from 'src/app/models/breed';
 import { environment } from 'src/environments/environment';
 import { formatDisplayDate, isAutoNamedOffspring, offspringDisplayName, statusBadgeClass } from 'src/app/utils/format-utils';
 import { ConfirmService } from 'src/app/services/confirm.service';
+import { DataService } from 'src/app/services/data.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { offspringPrereq } from 'src/app/utils/offspring-prereq';
+import { firstValueFrom, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   standalone: false,
@@ -19,12 +24,12 @@ export class OffspringListComponent implements OnInit {
   /** Filter panel visibility on laptop widths (see shared filter widget). */
   filtersOpen = false;
   headerConfig: PageHeaderConfig = {
-    title: 'My Offsprings',
+    title: 'My Offspring',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
-    searchPlaceholder: 'Search offsprings…',
+    searchPlaceholder: 'Search offspring…',
     showActionButton: true,
     actionButtonTitle: 'Add Offspring',
     actionButtonColor: 'var(--primary-color)'
@@ -60,6 +65,7 @@ export class OffspringListComponent implements OnInit {
   isLoading: boolean = false;
   isDeleting: { [key: string]: boolean } = {};
   isUpdatingStatus: { [key: string]: boolean } = {};
+  isTogglingPublish: { [key: string]: boolean } = {};
 
   // Pagination
   totalRecords: number = 0;
@@ -86,11 +92,19 @@ export class OffspringListComponent implements OnInit {
     private offspringService: OffspringService,
     private toastr: ToastService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dataService: DataService,
+    private authService: AuthService,
+    private route?: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.loadOffsprings();
+    // `?add=1` (dashboard quick action): start Add Offspring, with its guidance
+    if (this.route?.snapshot?.queryParamMap?.get('add') === '1') {
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+      this.addOffspring();
+    }
   }
   
   loadBreeds(): void {
@@ -131,7 +145,7 @@ export class OffspringListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading offsprings:', error);
-        this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.toastr.error(error.message || 'Failed to load offspring', 'Error');
         this.isLoading = false;
         this.cdr.detectChanges();
       }
@@ -225,10 +239,51 @@ export class OffspringListComponent implements OnInit {
     this.rows = event.rows;
   }
 
-  addOffspring(): void {
-    this.selectedOffspring = null;
-    this.modalMode = 'create';
-    this.showEditModal = true;
+  /** True while checking whether the breeder can add offspring yet. */
+  isCheckingPrereq = false;
+
+  /**
+   * Offspring belong to a breeding. Before opening the form, make sure the
+   * breeder has one; if not, explain and send them a step back (to create a
+   * breeding, or to add a male and a female pet when they can't breed yet).
+   */
+  async addOffspring(): Promise<void> {
+    if (this.isCheckingPrereq) return;
+    this.isCheckingPrereq = true;
+    try {
+      const breedings = await firstValueFrom(this.dataService.getBreedings().pipe(catchError(() => of(null))));
+      // If breedings can't be loaded, fall back to the form (it shows its own hint).
+      const userId = this.authService.currentUser?.id;
+      const pets = breedings && breedings.length === 0 && userId
+        ? await firstValueFrom(this.dataService.getPetsByBreeder(userId).pipe(catchError(() => of([]))))
+        : [];
+      const prereq = breedings ? offspringPrereq(breedings, pets) : 'ready';
+
+      if (prereq === 'ready') {
+        this.selectedOffspring = null;
+        this.modalMode = 'create';
+        this.showEditModal = true;
+      } else if (prereq === 'needs-breeding') {
+        const go = await this.confirmService.confirm({
+          title: 'Create a breeding first',
+          message: "Offspring belong to a breeding (a litter). You don't have any breedings yet. Create one, then add the puppies to it.",
+          confirmText: 'Create breeding',
+          cancelText: 'Not now',
+        });
+        if (go) this.router.navigate(['/breedings'], { queryParams: { new: 1, then: 'offspring' } });
+      } else {
+        const go = await this.confirmService.confirm({
+          title: 'Add your pets first',
+          message: 'Offspring come from a breeding, and a breeding needs a male and a female parent. Add your breeding pets, then create a breeding and its puppies.',
+          confirmText: 'Add pets',
+          cancelText: 'Not now',
+        });
+        if (go) this.router.navigate(['/pets'], { queryParams: { new: 1 } });
+      }
+    } finally {
+      this.isCheckingPrereq = false;
+      this.cdr.detectChanges();
+    }
   }
 
   viewOffspring(offspring: OffspringRead): void {
@@ -241,7 +296,11 @@ export class OffspringListComponent implements OnInit {
     this.showEditModal = true;
   }
 
+  /** Set when photos were changed in the edit modal without saving the form. */
+  imagesDirty = false;
+
   onOffspringSaved(): void {
+    this.imagesDirty = false;
     this.showEditModal = false;
     this.selectedOffspring = null;
     this.loadOffsprings();
@@ -249,6 +308,10 @@ export class OffspringListComponent implements OnInit {
 
   onModalClosed(): void {
     this.showEditModal = false;
+    if (this.imagesDirty) {
+      this.imagesDirty = false;
+      this.loadOffsprings();
+    }
     this.selectedOffspring = null;
   }
 
@@ -273,6 +336,29 @@ export class OffspringListComponent implements OnInit {
         }
       });
     }
+  }
+
+  togglePublish(offspring: OffspringRead): void {
+    if (this.isTogglingPublish[offspring.id]) return;
+    const publish = !offspring.is_published;
+    this.isTogglingPublish[offspring.id] = true;
+    // Send the explicit target state (not the toggle endpoint) so a double click can't flip it back.
+    this.offspringService.updateOffspring(offspring.id, { is_published: publish }).subscribe({
+      next: (updated) => {
+        offspring.is_published = updated.is_published;
+        this.isTogglingPublish[offspring.id] = false;
+        this.toastr.success(
+          updated.is_published ? 'Offspring is now visible to pet seekers.' : 'Offspring is now hidden from pet seekers.',
+          updated.is_published ? 'Published' : 'Unpublished'
+        );
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.toastr.error(error.message || 'Failed to update visibility', 'Error');
+        this.isTogglingPublish[offspring.id] = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onStatusChange(offspring: OffspringRead, newStatus: string): void {

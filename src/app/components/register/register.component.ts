@@ -27,7 +27,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.service.IsLoggedIn().subscribe((res) => {
       if (res) {
-        this.router.navigate(['']);
+        this.router.navigate(['/dashboard']);
       }
     });
     // Pre-select account type from query param (e.g. ?type=service from home page CTA)

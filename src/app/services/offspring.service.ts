@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 export interface OffspringBase {
@@ -12,6 +12,7 @@ export interface OffspringBase {
   price?: number | null;
   description?: string | null;
   color_markings?: string | null;
+  is_published?: boolean;
 }
 
 export interface OffspringCreate extends OffspringBase {
@@ -24,6 +25,7 @@ export interface OffspringUpdate {
   price?: number | null;
   description?: string | null;
   color_markings?: string | null;
+  is_published?: boolean;
 }
 
 export interface OffspringImage {
@@ -54,6 +56,22 @@ export interface OffspringRead extends OffspringBase {
   father?: any;
   mother?: any;
   is_favorited?: boolean;
+}
+
+export interface NearbyOffspring extends OffspringRead {
+  breeder_name: string;
+  /** Whole miles from the search centre */
+  distance: number;
+}
+
+export interface NearbyOffspringQuery {
+  latitude: number;
+  longitude: number;
+  radius: number;
+  excludeBreederId?: string;
+  /** Preferred breeds, listed first */
+  breedIds?: number[];
+  limit?: number;
 }
 
 export interface OffspringListResponse {
@@ -90,7 +108,7 @@ export class OffspringService {
       offset: offset.toString()
     };
     
-    if (status) params.status = status;
+    if (status) params.status_filter = status;  // backend query param name
     if (breedId) params.breed_id = breedId.toString();
 
     return this.http
@@ -149,6 +167,15 @@ export class OffspringService {
     
     return this.http
       .post<OffspringImage>(`${this.apiUrl}/offsprings/${offspringId}/images`, formData, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Rotate a stored offspring image clockwise (90, 180, 270 or -90)
+   */
+  rotateOffspringImage(offspringId: string, imageId: string, degrees: number): Observable<OffspringImage> {
+    return this.http
+      .post<OffspringImage>(`${this.apiUrl}/offsprings/${offspringId}/images/${imageId}/rotate`, { degrees }, { headers: this.getAuthHeaders() })
       .pipe(catchError(this.handleError));
   }
 
@@ -212,6 +239,26 @@ export class OffspringService {
     return this.http
       .get<OffspringListResponse>(`${this.apiUrl}/offsprings/public/breeder/${breederId}`, { headers, params })
       .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Available offspring from other breeders near a point ("More near you").
+   */
+  getNearbyOffsprings(query: NearbyOffspringQuery): Observable<NearbyOffspring[]> {
+    let params = new HttpParams()
+      .set('latitude', query.latitude.toString())
+      .set('longitude', query.longitude.toString())
+      .set('radius', query.radius.toString())
+      .set('limit', (query.limit ?? 12).toString());
+    if (query.excludeBreederId) params = params.set('exclude_breeder_id', query.excludeBreederId);
+    for (const id of query.breedIds ?? []) params = params.append('breed_id', id.toString());
+
+    const token = localStorage.getItem('id_token');
+    const headers = token ? this.getAuthHeaders() : undefined;
+
+    return this.http
+      .get<{ offsprings: NearbyOffspring[] }>(`${this.apiUrl}/offsprings/public/nearby`, { headers, params })
+      .pipe(map(r => r.offsprings), catchError(this.handleError));
   }
 
   /**

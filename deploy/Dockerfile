@@ -1,36 +1,35 @@
-# Multi-stage build for Angular frontend
-FROM node:20-alpine as builder
+# Multi-stage build for the Angular frontend (build context = repo root).
+#
+#   docker build -f deploy/Dockerfile .                                   dev-server image (api-dev.breedly.us)
+#   docker build -f deploy/Dockerfile --build-arg NG_CONFIG=prod .        production image (api.breedly.us)
+#   docker build -f deploy/Dockerfile --target test -t fe-test . && docker run --rm fe-test   unit tests
 
-# Set working directory
+FROM node:20-alpine AS deps
 WORKDIR /app
-
-# Copy package files from parent directory
-COPY ../package*.json ./
-
-# Install dependencies
+COPY package*.json ./
 RUN npm ci --legacy-peer-deps
+COPY . .
 
-# Copy application code from parent directory
-COPY ../ .
+# Unit tests (Karma + headless Chromium). Run with `docker run`, not at build time,
+# so a test failure is reported as a failed test step rather than a failed build.
+FROM deps AS test
+RUN apk add --no-cache chromium
+ENV CHROME_BIN=/usr/bin/chromium-browser
+CMD ["npx", "ng", "test", "--watch=false", "--browsers=ChromeHeadlessCI", "--reporters=dots"]
 
-# Build the application
-RUN npm run build -- --configuration production
+FROM deps AS builder
+# Angular build configuration: `production` (dev server, environment.ts) or `prod` (breedly.us, environment.prod.ts)
+ARG NG_CONFIG=production
+RUN npm run build -- --configuration ${NG_CONFIG}
 
-# Production stage with nginx
+# Runtime stage with nginx
 FROM nginx:alpine
-
-# Copy custom nginx config from deploy folder
 COPY deploy/nginx.conf /etc/nginx/nginx.conf
-
-# Copy built application from builder
 COPY --from=builder /app/dist/pets.frontend.dev /usr/share/nginx/html
-
-# Expose port
 EXPOSE 80
 
-# Health check
+# 127.0.0.1, not localhost: busybox wget resolves localhost to ::1 and nginx listens on IPv4 only
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --quiet --tries=1 --spider http://127.0.0.1/ || exit 1
 
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]

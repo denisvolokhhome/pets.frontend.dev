@@ -19,6 +19,8 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   @Input() selectedPet: IPet | null = null;
   /** When opened without a pet (Breedings page "Add Breeding"), let the user pick the first parent. */
   @Input() allowParentPick = false;
+  /** Started from Add Offspring: open the new breeding's Add Offspring form next. */
+  @Input() continueToOffspring = false;
   parentCandidates: IPet[] = [];
   isLoadingParents = false;
 
@@ -325,7 +327,10 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
             
             // Navigate to the breeding detail page
             setTimeout(() => {
-              this.router.navigate(['/breeding', newBreeding.id]);
+              this.router.navigate(
+                ['/breeding', newBreeding.id],
+                this.continueToOffspring ? { queryParams: { addOffspring: 1 } } : {}
+              );
             }, 500);
           },
           error: (error) => {

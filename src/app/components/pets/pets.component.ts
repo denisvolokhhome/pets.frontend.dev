@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, HostListener } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { ConfirmService } from 'src/app/services/confirm.service';
 import { filter } from 'rxjs/operators';
 import { IPet } from 'src/app/models/pet';
 import { ILocation } from 'src/app/models/location';
@@ -27,7 +28,7 @@ export class PetsComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'Pets Management',
     icon: 'bi bi-heart-fill',
-    iconColor: '#ec4899',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: true,
     showSearch: true,
     searchPlaceholder: 'Search pets…',
@@ -52,8 +53,13 @@ export class PetsComponent implements OnInit {
     public ModalService: ModalService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private confirmService: ConfirmService
   ){}
+
+  /** `/pets?new=1` (from Add Offspring): open Add Pet once locations are known. */
+  private openAddPetWhenReady = false;
 
   pets: IPet [] = [];
   filteredPets: IPet[] = [];
@@ -90,6 +96,10 @@ export class PetsComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('new') === '1') {
+      this.openAddPetWhenReady = true;
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    }
     this.loadPets();
     this.loadLocations();
     this.loadBreeds();
@@ -136,6 +146,10 @@ export class PetsComponent implements OnInit {
     this.DataService.getLocations().subscribe((locations) => {
       this.locations = locations;
       this.locationsLoaded = true;
+      if (this.openAddPetWhenReady) {
+        this.openAddPetWhenReady = false;
+        setTimeout(() => this.isImportCsvDisabled ? this.suggestLocationFirst() : this.onAddPetClick());
+      }
     });
   }
 
@@ -243,6 +257,11 @@ export class PetsComponent implements OnInit {
     this.openAddPetModal();
   }
 
+  /** No breeding location yet, so pets can't be added. */
+  get needsLocation(): boolean {
+    return this.locationsLoaded && (!this.locations || this.locations.length === 0);
+  }
+
   get isImportCsvDisabled(): boolean {
     return !this.locations || this.locations.length === 0;
   }
@@ -269,6 +288,17 @@ export class PetsComponent implements OnInit {
   searchPets(event: any){
     this.term = event.target.value;
     console.log('searching... ' + this.term);
+  }
+
+  /** Pets are kept at a breeding location, so one is needed before Add Pet. */
+  async suggestLocationFirst(): Promise<void> {
+    const go = await this.confirmService.confirm({
+      title: 'Add a breeding location first',
+      message: 'Your pets are kept at a breeding location, and you don\'t have one yet. Add it in Settings, then come back to add your pets.',
+      confirmText: 'Add location',
+      cancelText: 'Not now',
+    });
+    if (go) this.router.navigate(['/settings/locations'], { queryParams: { new: 1 } });
   }
 
   openAddPetModal(): void {

@@ -1,13 +1,13 @@
 <header>
-  <nav class="top-menu shadow mt-3 mx-3 rounded-default" aria-label="Main navigation">
+  <nav class="top-menu mt-3 mx-3 rounded-default" aria-label="Main navigation">
     <div class="w-full px-4">
       <div class="flex items-center justify-between h-16">
         <!-- Brand -->
-        <a class="logo-text text-xl font-bold text-white hover:text-gray-100 transition-colors" href="/" aria-label="Breedly home">Breedly</a>
+        <a class="logo-text" href="/" aria-label="Breedly.us home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M6.5 28V15a9.5 9.5 0 0 1 19 0v13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M16 19.2c2.5 0 4.6 2.1 4.6 4.3 0 1.7-1.3 2.6-2.8 2.6-.8 0-1.2-.3-1.8-.3s-1 .3-1.8.3c-1.5 0-2.8-.9-2.8-2.6 0-2.2 2.1-4.3 4.6-4.3z" fill="currentColor"/><circle cx="11.7" cy="17.3" r="1.55" fill="currentColor"/><circle cx="14.4" cy="14.4" r="1.55" fill="currentColor"/><circle cx="17.6" cy="14.4" r="1.55" fill="currentColor"/><circle cx="20.3" cy="17.3" r="1.55" fill="currentColor"/></svg><span>Breedly<span class="logo-tld">.us</span></span></a>
         
         <!-- Mobile menu button -->
         <button
-          class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white transition-colors"
+          class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-900 hover:bg-linen focus:outline-none focus:ring-2 focus:ring-clay transition-colors"
           type="button"
           (click)="toggleMobileMenu()"
           [attr.aria-controls]="'navbarNav'"
@@ -28,16 +28,23 @@
           <!-- Auth links (not logged in) -->
           <div class="flex items-center" *ngIf="!checkToken">
             <ul class="flex items-center space-x-2">
-              <!-- Pricing link scrolls to #pricing on home page -->
-              <li>
-                <a href="/#pricing" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Pricing</a>
+              <!-- Guests can always get back to the map search -->
+              <li *ngIf="!this.route?.startsWith('/search-pets')">
+                <a href="/search-pets" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-1.5" data-testid="guest-find-pet">
+                  <i class="bi bi-geo-alt" aria-hidden="true"></i>Find a pet
+                </a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true">/</span>
+              <span *ngIf="!this.route?.startsWith('/search-pets')" class="text-gray-400 text-base" aria-hidden="true">/</span>
+              <!-- Pricing link scrolls to #pricing on home page -->
+              <li *ngIf="billingEnabled">
+                <a href="/#pricing" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+              </li>
+              <span *ngIf="billingEnabled" class="text-gray-400 text-base" aria-hidden="true">/</span>
               <!-- Show Sign In when NOT on login page -->
               <li *ngIf="this.route !== '/login'">
-                <a href="/login" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Sign In</a>
+                <a href="/login" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors">Sign In</a>
               </li>
-              <span class="text-white/70 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && !isOnRegister">/</span>
+              <span class="text-gray-400 text-base" aria-hidden="true" *ngIf="this.route !== '/login' && !isOnRegister">/</span>
               <!-- Show Get Started dropdown when NOT on register pages -->
               <li *ngIf="!isOnRegister" class="relative get-started-dropdown"
                 #getStartedDropdown
@@ -46,7 +53,7 @@
                 <!-- Click opens (not toggles): hover already opened it for mouse users,
                      and touch taps fire mouseenter + click together. -->
                 <button 
-                  class="px-3 py-2 text-white/90 hover:text-white transition-colors flex items-center gap-1"
+                  class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1"
                   (click)="showGetStartedDropdown = true"
                   [attr.aria-expanded]="showGetStartedDropdown"
                   aria-haspopup="true"
@@ -60,7 +67,7 @@
                   class="dropdown-menu"
                   [class.show]="showGetStartedDropdown"
                   role="menu">
-                  <a href="/register" class="dropdown-item" role="menuitem">
+                  <a href="/register?type=breeder" class="dropdown-item" role="menuitem">
                     <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                   </a>
                   <a href="/register?type=pet_seeker" class="dropdown-item" role="menuitem">
@@ -83,7 +90,7 @@
             <app-notification-dropdown></app-notification-dropdown>
             <ul class="flex">
               <li>
-                <a href="/dashboard" class="px-3 py-2 text-white/90 hover:text-white transition-colors">Dashboard</a>
+                <a href="/dashboard" class="px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors">Dashboard</a>
               </li>
             </ul>
             <app-profile-menu></app-profile-menu>
@@ -97,28 +104,33 @@
         [class.max-h-0]="!isMobileMenuOpen"
         [class.max-h-96]="isMobileMenuOpen"
         id="navbarNav">
-        <div class="py-4 space-y-2 border-t border-white/20">
+        <div class="py-4 space-y-2 border-t border-gray-200">
           <!-- Auth links (not logged in) - Mobile -->
           <div *ngIf="!checkToken">
             <ul class="space-y-2">
+              <li *ngIf="!this.route?.startsWith('/search-pets')">
+                <a href="/search-pets" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
+                  <i class="bi bi-geo-alt mr-2" aria-hidden="true"></i>Find a pet
+                </a>
+              </li>
               <!-- Pricing link scrolls to #pricing on home page -->
-              <li>
-                <a href="/#pricing" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Pricing</a>
+              <li *ngIf="billingEnabled">
+                <a href="/#pricing" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">Pricing</a>
               </li>
               <!-- Show Sign In when NOT on login page -->
               <li *ngIf="this.route !== '/login'">
-                <a href="/login" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Sign In</a>
+                <a href="/login" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">Sign In</a>
               </li>
               <!-- Show Get Started options when NOT on register pages -->
               <li *ngIf="!isOnRegister">
-                <div class="px-3 py-2 text-white/70 text-sm font-semibold">Get Started</div>
-                <a href="/register" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <div class="px-3 py-2 text-gray-400 text-sm font-semibold">Get Started</div>
+                <a href="/register?type=breeder" class="block px-6 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-person-badge mr-2"></i>I'm a Breeder
                 </a>
-                <a href="/register?type=pet_seeker" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/register?type=pet_seeker" class="block px-6 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-search-heart mr-2"></i>I'm a Pet Seeker
                 </a>
-                <a *ngIf="serviceProvidersEnabled" href="/register?type=service" class="block px-6 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a *ngIf="serviceProvidersEnabled" href="/register?type=service" class="block px-6 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-briefcase mr-2"></i>I'm a Service Provider
                 </a>
               </li>
@@ -129,25 +141,25 @@
           <div *ngIf="checkToken">
             <ul class="space-y-2">
               <li>
-                <a href="/search-pets" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/search-pets" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-map mr-2"></i>Search Map
                 </a>
               </li>
               <li>
-                <a href="/dashboard" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">Dashboard</a>
+                <a href="/dashboard" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">Dashboard</a>
               </li>
               <li *ngIf="waitlistEnabled && isPetSeeker">
-                <a href="/my-waitlists" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/my-waitlists" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-hourglass-split mr-2"></i>My waitlists
                 </a>
               </li>
               <li *ngIf="waitlistEnabled && isBreeder">
-                <a href="/waitlist" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/waitlist" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-hourglass-split mr-2"></i>Waitlist
                 </a>
               </li>
               <li>
-                <a href="/settings" class="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <a href="/settings" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-gear mr-2"></i>Settings
                 </a>
               </li>

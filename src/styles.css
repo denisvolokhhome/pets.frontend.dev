@@ -4,51 +4,93 @@
 @tailwind utilities;
 
 :root{
-  /* Breedly Color Palette */
-  --primary-color: #FF6B6B;      /* Coral Red - brand surfaces, borders, icons, decoration */
-  --secondary-color: #4ECDC4;    /* Turquoise - brand surfaces, borders, icons, decoration */
-  /* Deeper brand variants: use for coral/teal TEXT and for fills that carry white text
-   * (buttons, active pills, badges). Tuned soft/warm (Airbnb-like) rather than maximum
-   * contrast: ~3.4:1 with white — AA for bold/large text and UI components, not for
-   * small body text, so keep small text in --text-primary/--text-secondary. */
-  --primary-strong: #DE6458;     /* soft coral, 3.46:1 with white */
-  --primary-strong-hover: #CC5549;
-  --secondary-strong: #2E9A92;   /* friendly teal, 3.41:1 with white */
-  --secondary-strong-hover: #27857E;
-  --page-bg: #FAF7F4;            /* warm cream app background */
-  --accent-color: #FFE66D;       /* Sunny Yellow - Use with dark text for accessibility */
-  --success-color: #95E1D3;      /* Mint Green - Use with dark text for accessibility */
-  --dark-color: #2C3E50;         /* Navy - WCAG AAA compliant with white text */
-  --light-color: #F8F9FA;        /* Off-white - Use with dark text */
-  --text-primary: #2C3E50;       /* Navy - WCAG AAA compliant on white background (12.63:1) */
-  --text-secondary: #6C757D;     /* Gray - WCAG AA compliant on white background (4.54:1) */
+  /* ===== Breedly design tokens (warm "oat / clay / pine" direction) =====
+   * One accent per screen: clay = actions (buttons, links), pine = trust
+   * (verified, positive status), apricot = highlights (featured), always
+   * with dark text. Neutrals are warm; never use cool Tailwind greys. */
+  --oat: #F7F2EA;          /* app background */
+  --cream: #FFFCF6;        /* cards, sheets, modals */
+  --linen: #EFE7DA;        /* chips, secondary surfaces */
+  --linen-2: #E7DCCB;
+  --ink: #1E2620;          /* text, 13.9:1 on oat */
+  --stone: #5F655C;        /* secondary text, 5.4:1 on oat */
+  --faint: #8F8A7E;        /* decorative only, not for text */
 
-  /* Color Contrast Ratios (WCAG 2.1 AA: normal text 4.5:1, large text 3:1):
-   * - White on Primary (#FF6B6B): 2.78:1 - FAILS even for large text; never put text on it
-   * - White on Secondary (#4ECDC4): 1.93:1 - FAILS; never put text on it
-   * - White on Primary Strong (#DE6458): 3.46:1 - AA large/bold text & UI only
-   * - White on Secondary Strong (#2E9A92): 3.41:1 - AA large/bold text & UI only
-   * - Text Primary (#2C3E50) on White: 12.63:1 - AAA
-   * - Text Secondary (#6C757D) on White: 4.54:1 - AA
-   */
+  --clay: #B4461E;         /* primary action, 5.5:1 with white */
+  --clay-hover: #963817;
+  --clay-soft: #F6E0D3;
+  --clay-softer: #FBF0E9;
+  --apricot: #F2955B;      /* highlight; dark text only */
+  --apricot-soft: #FCE7D8;
+  --apricot-softer: #FEF4EC;
+  --apricot-ink: #7A3412;
+  --pine: #1F4A3A;         /* trust / verified, 9:1 with white */
+  --pine-hover: #163829;
+  --pine-soft: #DCE8E0;
+  --pine-softer: #EEF4F0;
+  --wheat: #DDA846;
+
+  /* Semantic */
+  --success: #2F7A4B; --success-700: #1F5A36; --success-300: #A9CDB3; --success-soft: #DCEBDF; --success-softer: #EEF5EF;
+  --warning: #9A6C14; --warning-700: #6E4C0E; --warning-300: #EBD49A; --warning-soft: #F4E6C6; --warning-softer: #FBF4E2;
+  --error: #A1322B;   --error-700: #7E2620;   --error-500: #B8433A; --error-400: #D0645A; --error-300: #E9B4AC; --error-soft: #F4DAD6; --error-softer: #FBEDEA;
+  --harbor: #2C5F8A;  --harbor-hover: #224B6E; --harbor-400: #5B86AB; --harbor-300: #BCD0E2; --mist: #DCE7F0; --mist-softer: #EEF3F8;
+
+  /* Warm neutral scale (replaces Tailwind gray/slate) */
+  --n-50: #FBF7F0;
+  --n-100: #F4EEE4;
+  --n-200: #E9E1D4;
+  --n-300: #DAD0C1;
+  --n-400: #A8A195;
+  --n-500: #5F655C;
+  --n-600: #4A5048;
+  --n-700: #343B35;
+  --n-800: #252D27;
+  --n-900: #1E2620;
+
+  --color-bg: var(--oat);
+  --color-surface: var(--cream);
+  --color-border: var(--n-200);
+
+  /* Breedly Color Palette (names kept for existing components) */
+  --primary-color: var(--clay);
+  --secondary-color: var(--pine);
+  /* Fills that carry white text: both pass WCAG AA for normal text. */
+  --primary-strong: var(--clay);
+  --primary-strong-hover: var(--clay-hover);
+  /* The old design used teal as a second action colour; actions are clay now. */
+  --secondary-strong: var(--clay);
+  --secondary-strong-hover: var(--clay-hover);
+  --page-bg: var(--oat);
+  --accent-color: var(--wheat);
+  --success-color: var(--pine-soft);
+  --dark-color: var(--ink);
+  --light-color: var(--n-50);
+  --text-primary: var(--ink);
+  --text-secondary: var(--stone);
 
   /* Legacy color mappings for backward compatibility */
-  --first-color: #FF6B6B;
+  --first-color: var(--clay);
   --second-color: var(--page-bg);
-  --accent-color-1: #FF6B6B;
-  --success-color-1: #95E1D3;
-  --edit-color-1: #FFE66D;
-  --delete-color-1: #ff8541;
-  --male-color-1: #3d8bfd;
-  --female-color-1: #de5c9d;
-  
-  /* Typography */
-  --font-primary: 'Poppins', sans-serif;
-  --font-secondary: 'Inter', sans-serif;
-  
+  --accent-color-1: var(--clay);
+  --success-color-1: var(--pine-soft);
+  --edit-color-1: var(--wheat);
+  --delete-color-1: var(--apricot);
+  --male-color-1: var(--harbor);
+  --female-color-1: #B8467A;
+
+  /* Typography: Literata for page titles and names, Onest for everything else */
+  --font-display: 'Literata', Georgia, serif;
+  --font-primary: 'Onest', 'Helvetica Neue', Arial, sans-serif;
+  --font-secondary: 'Onest', 'Helvetica Neue', Arial, sans-serif;
+
   /* Design System */
-  --border-radius: 12px;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 14px;
+  --radius-pill: 9999px;
+  --shadow-sm: 0 1px 2px rgba(77, 58, 38, 0.07);
+  --shadow-md: 0 6px 18px rgba(77, 58, 38, 0.09), 0 1px 3px rgba(77, 58, 38, 0.06);
+  --shadow-lg: 0 24px 60px rgba(77, 58, 38, 0.14), 0 4px 12px rgba(77, 58, 38, 0.06);
+  --box-shadow: var(--shadow-md);
   /* Timing only — each rule using it sets its own transition-property. */
   --transition: 0.3s ease;
 }
@@ -67,6 +109,8 @@
 
 /* Base Typography */
 body {
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
   font-family: var(--font-secondary);
   font-size: 1rem;
   line-height: 1.6;
@@ -74,24 +118,68 @@ body {
   font-weight: 400;
 }
 
+/* Angular Material's prebuilt theme puts Roboto on body.mat-typography and its
+   headings with a higher specificity than the rules here, so re-assert the
+   brand fonts on top of it (sizes stay as Material sets them). */
+body.mat-typography,
+body.mat-typography p,
+body.mat-typography button,
+body.mat-typography input,
+body.mat-typography select,
+body.mat-typography textarea {
+  font-family: var(--font-secondary);
+}
+
+body.mat-typography h1,
+body.mat-typography h2,
+body.mat-typography .h1,
+body.mat-typography .h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* Page titles are always the display serif, whatever a component sets. */
+body.mat-typography h1 {
+  font-family: var(--font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
+}
+
+body.mat-typography h3,
+body.mat-typography h4,
+body.mat-typography h5,
+body.mat-typography h6 {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--ink);
+}
+
 /* Heading Styles */
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: var(--font-primary);
   font-weight: 600;
+  letter-spacing: -0.005em;
   line-height: 1.2;
   color: var(--dark-color);
   margin-bottom: 0.5rem;
 }
 
+/* Page titles use the display serif */
+h1, .h1, h2, .h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
 h1, .h1 {
   font-size: 2.5rem;
-  font-weight: 700;
 }
 
 h2, .h2 {
   font-size: 2rem;
-  font-weight: 600;
 }
 
 h3, .h3 {
@@ -243,7 +331,7 @@ html, body {
   background-color: var(--second-color);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.05);
   flex: 1; /* Allow it to grow and fill available space */
   display: flex;
   flex-direction: column;
@@ -268,7 +356,7 @@ textarea:focus,
 [tabindex]:focus {
   outline: 3px solid var(--primary-color);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+  box-shadow: 0 0 0 4px rgba(180, 70, 30, 0.2);
 }
 
 /* Focus visible for modern browsers (only show on keyboard focus) */
@@ -280,7 +368,7 @@ textarea:focus,
 *:focus-visible {
   outline: 3px solid var(--primary-color);
   outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2);
+  box-shadow: 0 0 0 4px rgba(180, 70, 30, 0.2);
 }
 
 /* Skip to main content link for keyboard users */
@@ -308,8 +396,9 @@ textarea:focus,
 
 /* Legacy navigation styles - kept for backward compatibility with any remaining components */
 .top-menu {
-  background-color: var(--primary-color);
-  box-shadow: var(--box-shadow);
+  background-color: var(--cream);
+  border: 1px solid var(--n-200);
+  box-shadow: var(--shadow-sm);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   border-radius: var(--border-radius);
@@ -318,9 +407,31 @@ textarea:focus,
 }
 
 .logo-text {
-    font-family: var(--font-primary);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-size: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-size: 1.6rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.logo-text .logo-tld {
+  font-family: var(--font-primary);
+  font-size: 0.62em;
+  font-weight: 600;
+  color: var(--clay);
+  margin-left: 1px;
+  letter-spacing: 0;
+}
+
+.logo-text .logo-mark {
+  width: 30px;
+  height: 30px;
+  color: var(--clay);
+  flex-shrink: 0;
 }
 
 .sub-menu {
@@ -337,7 +448,7 @@ textarea:focus,
 .form-control,
 .form-select {
   border-radius: calc(var(--border-radius) * 0.75);
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--n-200);
   padding: 0.625rem 1rem;
   font-family: var(--font-secondary);
   font-size: 1rem;
@@ -350,7 +461,7 @@ textarea:focus,
 .form-control:focus,
 .form-select:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(180, 70, 30, 0.15);
   outline: none;
 }
 
@@ -369,7 +480,7 @@ textarea:focus,
 
 .form-check-input {
   border-radius: 0.25rem;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--n-200);
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   min-width: 20px;
@@ -385,7 +496,7 @@ textarea:focus,
 
 .form-check-input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(180, 70, 30, 0.15);
 }
 
 .form-check-label {
@@ -406,7 +517,7 @@ textarea:focus,
 /* Invalid/Valid States */
 .form-control.is-invalid,
 .form-select.is-invalid {
-  border-color: #dc3545;
+  border-color: var(--error);
 }
 
 .form-control.is-invalid:focus,
@@ -469,18 +580,18 @@ textarea:focus,
 
 .btn-primary:hover {
   background-color: var(--primary-strong-hover);
-  border-color: #ff5252;
+  border-color: var(--clay-hover);
   color: #fff;
 }
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(180, 70, 30, 0.5);
   outline: none;
 }
 
 .btn-primary:active {
   background-color: var(--primary-strong-hover);
-  border-color: #ff5252;
+  border-color: var(--clay-hover);
   transform: scale(0.98);
 }
 
@@ -508,7 +619,7 @@ textarea:focus,
 }
 
 .btn-outline-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(180, 70, 30, 0.5);
   outline: none;
 }
 
@@ -565,8 +676,8 @@ textarea:focus,
 }
 
 .btn-success:hover {
-  background-color: #7fd4c4;
-  border-color: #7fd4c4;
+  background-color: var(--pine-soft);
+  border-color: var(--pine-soft);
 }
 
 .btn-success:active {
@@ -607,12 +718,12 @@ button.fab-button {
 
 button.fab-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(48, 38, 28, 0.15);
 }
 
 button.fab-button:active {
   transform: scale(0.95);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 8px rgba(48, 38, 28, 0.12);
 }
 
 button.fab-button.fab-success {
@@ -632,22 +743,22 @@ button.fab-button.fab-success {
   transition: var(--transition);
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
   overflow: hidden;
-  background-color: white;
+  background-color: var(--color-surface);
 }
 
 .card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(48, 38, 28, 0.15);
   transform: translateY(-2px);
 }
 
 .card:active {
   transform: translateY(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(48, 38, 28, 0.1);
 }
 
 .card.clickable {
   cursor: pointer;
-  -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
+  -webkit-tap-highlight-color: rgba(180, 70, 30, 0.1);
 }
 
 .card.clickable:active {
@@ -680,11 +791,11 @@ button.fab-button.fab-success {
 .card-body .pet-gender {
   height: 3rem;
   width: 3rem;
-  background-color: #f5f5f5;
+  background-color: var(--n-100);
   border-radius: 50%;
   top: -35px;
   right: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.1);
 }
 
 .card-title {
@@ -825,7 +936,7 @@ app-quick-breeding-add .cdk-overlay-pane {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #f6f6f6;
+  background-color: var(--n-50);
   border-radius: 5px;
 }
 
@@ -855,7 +966,7 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
+  -webkit-tap-highlight-color: rgba(180, 70, 30, 0.1);
 }
 
 a:active {
@@ -870,7 +981,7 @@ input[type="submit"],
 input[type="reset"] {
   min-height: 44px;
   min-width: 44px;
-  -webkit-tap-highlight-color: rgba(255, 107, 107, 0.1);
+  -webkit-tap-highlight-color: rgba(180, 70, 30, 0.1);
 }
 
 /* Remove default tap highlight and add custom feedback */
@@ -974,7 +1085,7 @@ select {
   *:focus-visible {
     outline: 3px solid var(--primary-color);
     outline-offset: 3px;
-    box-shadow: 0 0 0 6px rgba(255, 107, 107, 0.2);
+    box-shadow: 0 0 0 6px rgba(180, 70, 30, 0.2);
   }
 
   /* iOS Safari zooms the page when a focused field's text is under 16px. Component styles
@@ -993,19 +1104,19 @@ select {
    ===================================================================== */
 
 :root {
-  --ui-border: #e5e7eb;
-  --ui-border-strong: #d1d5db;
+  --ui-border: var(--n-200);
+  --ui-border-strong: var(--n-300);
   --ui-surface: #ffffff;
-  --ui-surface-muted: #f9fafb;
-  --ui-surface-hover: #f3f4f6;
-  --ui-text: #1f2937;
-  --ui-text-muted: #6b7280;
-  --ui-text-subtle: #9ca3af;
+  --ui-surface-muted: var(--n-50);
+  --ui-surface-hover: var(--n-100);
+  --ui-text: var(--n-800);
+  --ui-text-muted: var(--n-500);
+  --ui-text-subtle: var(--n-400);
   --ui-primary-hover: var(--primary-strong-hover);
-  --ui-danger: #dc2626;
-  --ui-danger-surface: #fef2f2;
-  --ui-radius: 0.5rem;
-  --ui-focus-ring: 0 0 0 3px rgba(255, 107, 107, 0.25);
+  --ui-danger: var(--error);
+  --ui-danger-surface: var(--error-softer);
+  --ui-radius: 0.625rem;
+  --ui-focus-ring: 0 0 0 3px rgba(180, 70, 30, 0.25);
   --ui-cell-padding: 0.75rem;
 
   /* PrimeNG 21 runs without a theme preset here, so its structural CSS
@@ -1047,7 +1158,7 @@ select {
   height: 2.5rem;
   padding: 0 1rem;
   border: 1px solid transparent;
-  border-radius: var(--ui-radius);
+  border-radius: var(--radius-pill);
   font-family: var(--font-primary);
   font-size: 0.875rem;
   font-weight: 600;
@@ -1084,25 +1195,25 @@ select {
 }
 
 .ui-btn--secondary {
-  background-color: var(--ui-surface);
-  border-color: var(--ui-border-strong);
+  background-color: transparent;
+  border-color: rgba(30, 38, 32, 0.25);
   color: var(--ui-text);
 }
 
 .ui-btn--secondary:hover:not(:disabled) {
-  background-color: var(--ui-surface-muted);
-  border-color: #9ca3af;
+  background-color: var(--linen);
+  border-color: rgba(30, 38, 32, 0.35);
 }
 
 .ui-btn--danger {
   background-color: var(--ui-surface);
-  border-color: #fecaca;
+  border-color: var(--error-300);
   color: var(--ui-danger);
 }
 
 .ui-btn--danger:hover:not(:disabled) {
   background-color: var(--ui-danger-surface);
-  border-color: #fca5a5;
+  border-color: var(--error-300);
 }
 
 /* Final confirmation of a destructive action (e.g. inside a delete dialog) */
@@ -1112,7 +1223,7 @@ select {
 }
 
 .ui-btn--danger-solid:hover:not(:disabled) {
-  background-color: #b91c1c;
+  background-color: var(--error);
 }
 
 .ui-btn--ghost {
@@ -1257,14 +1368,14 @@ button.ui-cell-sub {
   line-height: 1.25;
   white-space: nowrap;
   background-color: var(--ui-surface-hover);
-  color: #4b5563;
+  color: var(--n-600);
 }
 
-.ui-badge--success { background-color: #ecfdf5; color: #047857; }
-.ui-badge--warning { background-color: #fffbeb; color: #b45309; }
-.ui-badge--info    { background-color: #eff6ff; color: #1d4ed8; }
-.ui-badge--danger  { background-color: var(--ui-danger-surface); color: #b91c1c; }
-.ui-badge--neutral { background-color: var(--ui-surface-hover); color: #4b5563; }
+.ui-badge--success { background-color: var(--success-softer); color: var(--success); }
+.ui-badge--warning { background-color: var(--warning-softer); color: var(--warning); }
+.ui-badge--info    { background-color: var(--mist-softer); color: var(--harbor); }
+.ui-badge--danger  { background-color: var(--ui-danger-surface); color: var(--error); }
+.ui-badge--neutral { background-color: var(--ui-surface-hover); color: var(--n-600); }
 
 /* Two-line cell: primary value with a muted detail line underneath */
 .ui-cell-title {
@@ -1281,7 +1392,7 @@ button.ui-cell-sub {
 }
 
 .ui-muted {
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .ui-truncate {
@@ -1363,7 +1474,7 @@ button.ui-cell-sub {
   height: 0.75rem;
   margin-left: 0.25rem;
   vertical-align: -1px;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .p-datatable .p-datatable-thead > tr > th[aria-sort="ascending"] svg,
@@ -1438,7 +1549,7 @@ button.ui-cell-sub {
 }
 
 .p-datatable .text-muted {
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 /* ----- Paginator ------------------------------------------------------ */
@@ -1480,7 +1591,7 @@ button.ui-cell-sub {
   border: none;
   border-radius: var(--ui-radius);
   background: transparent;
-  color: #4b5563;
+  color: var(--n-600);
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
@@ -1552,7 +1663,7 @@ button.ui-cell-sub {
   background-color: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--ui-radius);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(48, 38, 28, 0.1);
 }
 
 .p-select-overlay .p-select-list {
@@ -1588,7 +1699,7 @@ button.ui-cell-sub {
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--border-radius);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(48, 38, 28, 0.04);
 }
 
 .table-container .p-datatable {
@@ -1653,7 +1764,8 @@ button.ui-cell-sub {
   overflow-x: auto;
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
-  border-radius: var(--ui-radius);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
 }
 
 .ui-table,
@@ -1779,7 +1891,7 @@ button.ui-cell-sub {
 
 .p-toast .p-toast-message {
   margin: 0 0 1rem 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(48, 38, 28, 0.15);
   border-radius: 12px;
   backdrop-filter: blur(10px);
   border: none;
@@ -1841,7 +1953,7 @@ button.ui-cell-sub {
 
 /* Success Toast */
 .p-toast .p-toast-message-success {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: var(--success);
   color: white;
 }
 
@@ -1851,7 +1963,7 @@ button.ui-cell-sub {
 
 /* Error Toast */
 .p-toast .p-toast-message-error {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, var(--error-500) 0%, var(--error) 100%);
   color: white;
 }
 
@@ -1861,7 +1973,7 @@ button.ui-cell-sub {
 
 /* Warning Toast */
 .p-toast .p-toast-message-warn {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(135deg, var(--wheat) 0%, var(--warning) 100%);
   color: white;
 }
 
@@ -1871,7 +1983,7 @@ button.ui-cell-sub {
 
 /* Info Toast */
 .p-toast .p-toast-message-info {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: var(--harbor);
   color: white;
 }
 
@@ -1924,7 +2036,7 @@ button.ui-cell-sub {
 
   .p-toast .p-toast-message {
     border-radius: 10px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18) !important;
+    box-shadow: 0 4px 20px rgba(48, 38, 28, 0.18) !important;
     margin-bottom: 0.5rem !important;
   }
 
@@ -1948,3 +2060,33 @@ button.ui-cell-sub {
     height: 1.75rem !important;
   }
 }
+
+/* "Visible to pet seekers" switch (offspring forms) */
+.publish-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--n-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.publish-toggle input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  accent-color: var(--clay);
+  cursor: pointer;
+}
+.publish-toggle-title {
+  display: block;
+  font-weight: 600;
+  color: var(--n-800);
+}
+.publish-toggle-hint {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--n-500);
+}
+

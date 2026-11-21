@@ -44,9 +44,9 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 2rem;
-  background: #1f2937;
-  color: #e5e7eb;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  background: var(--ink);
+  color: var(--oat);
+  box-shadow: 0 -4px 20px rgba(48, 38, 28, 0.15);
   animation: slideUp 0.4s ease-out;
 }
 
@@ -64,7 +64,7 @@
 
 .cookie-icon {
   font-size: 1.25rem;
-  color: var(--secondary-strong);
+  color: var(--apricot);
   flex-shrink: 0;
 }
 
@@ -77,10 +77,10 @@
 .cookie-accept-btn {
   flex-shrink: 0;
   padding: 0.5rem 1.5rem;
-  background: linear-gradient(135deg, #4ecdc4, #3bb8b0);
-  color: #1f2937;
+  background: var(--apricot);
+  color: var(--ink);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-pill);
   font-weight: 600;
   font-size: 0.8125rem;
   cursor: pointer;
@@ -91,7 +91,7 @@
 
 .cookie-accept-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+  box-shadow: 0 4px 12px rgba(242, 149, 91, 0.35);
 }
 
 .cookie-accept-btn:active {

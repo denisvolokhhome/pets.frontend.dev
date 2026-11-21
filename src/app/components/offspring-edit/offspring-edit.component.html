@@ -66,7 +66,13 @@
         <!-- Breeding Selection (Create Mode Only) -->
         <div class="form-group-modern" *ngIf="mode === 'create'">
           <label for="breeding_id" class="form-label-modern">Breeding *</label>
+          <div class="no-breeding-hint" *ngIf="!isLoadingBreedings && breedings.length === 0" data-testid="no-breeding-hint">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span>Offspring belong to a breeding, and you don't have one yet.</span>
+            <a routerLink="/breedings" [queryParams]="{ new: 1, then: 'offspring' }" (click)="modalClosed.emit()">Create a breeding first</a>
+          </div>
           <select
+            *ngIf="isLoadingBreedings || breedings.length > 0"
             id="breeding_id"
             class="form-control-modern form-select-modern"
             [formControl]="breeding_id"
@@ -147,6 +153,17 @@
             step="0.01"
           />
         </div>
+
+        <!-- Visibility -->
+        <div class="form-group-modern">
+          <label class="publish-toggle" for="is_published">
+            <input type="checkbox" id="is_published" formControlName="is_published" />
+            <span>
+              <span class="publish-toggle-title">Visible to pet seekers</span>
+              <span class="publish-toggle-hint">Shows this offspring on your public breeder page and in map search.</span>
+            </span>
+          </label>
+        </div>
       </div>
 
       <div class="column-separator"></div>
@@ -205,6 +222,15 @@
                     title="Move image left"
                     aria-label="Move image left">
                     <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="photo-overlay-btn" 
+                    (click)="rotateImage(existingImg)"
+                    [disabled]="rotatingImageId !== null"
+                    title="Rotate clockwise"
+                    aria-label="Rotate photo clockwise">
+                    <i class="bi" [ngClass]="rotatingImageId === existingImg.id ? 'bi-hourglass-split' : 'bi-arrow-clockwise'"></i>
                   </button>
                   <button 
                     type="button" 

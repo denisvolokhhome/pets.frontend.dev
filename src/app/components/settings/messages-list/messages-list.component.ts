@@ -30,7 +30,7 @@ export class MessagesListComponent implements OnInit {
   headerConfig: PageHeaderConfig = {
     title: 'Messages',
     icon: 'bi bi-envelope-fill',
-    iconColor: '#6366f1',
+    iconColor: 'var(--clay)',
     showLayoutSwitcher: false,
     showSearch: true,
     searchPlaceholder: 'Search messages…',

@@ -50,6 +50,7 @@ export class PricingSectionComponent implements OnInit {
   }
 
   onGetStarted(): void {
-    this.router.navigate(['/register']);
+    // Plans are for breeders — skip the account-type chooser.
+    this.router.navigate(['/register'], { queryParams: { type: 'breeder' } });
   }
 }

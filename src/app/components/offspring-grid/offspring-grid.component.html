@@ -1,5 +1,6 @@
-<div class="offspring-page">
+<div class="offspring-page" [class.offspring-page--embedded]="embedded">
 
+  <ng-container *ngIf="!embedded">
   <!-- ===== MOBILE: Compact breeder bar ===== -->
   <div class="mobile-breeder-bar">
     <button class="mobile-back-btn" (click)="goToSearch()" aria-label="Back to search">
@@ -37,10 +38,10 @@
   <div class="mobile-filter-drawer"
        [class.open]="isMobileFilterOpen"
        role="dialog"
-       aria-label="Filter offsprings"
+       aria-label="Filter offspring"
        aria-modal="true">
     <div class="drawer-header">
-      <h2 class="drawer-title">Filter Offsprings</h2>
+      <h2 class="drawer-title">Filter Offspring</h2>
       <button class="drawer-close" (click)="isMobileFilterOpen = false" aria-label="Close filters">
         <i class="bi bi-x-lg"></i>
       </button>
@@ -78,6 +79,7 @@
       </button>
     </div>
   </div>
+  </ng-container>
 
   <div class="waitlist-bar" *ngIf="canJoinWaitlist()">
     <button type="button" class="ui-btn ui-btn--primary" data-testid="join-waitlist" (click)="joinWaitlist()">
@@ -87,7 +89,7 @@
 
   <div class="page-layout">
     <!-- Left Sidebar: Breeder Info + Filters (desktop) -->
-    <aside class="sidebar">
+    <aside class="sidebar" *ngIf="!embedded">
       <!-- Breeder Info -->
       <div class="sidebar-card" *ngIf="breederInfo">
         <div class="breeder-avatar" [style.background-image]="getBreederImageUrl() ? 'url(' + getBreederImageUrl() + ')' : ''">
@@ -131,7 +133,7 @@
 
       <!-- Filters -->
       <div class="sidebar-card">
-        <h3 class="sidebar-title"><i class="bi bi-funnel"></i> Filter Offsprings</h3>
+        <h3 class="sidebar-title"><i class="bi bi-funnel"></i> Filter Offspring</h3>
         <div class="filter-group">
           <label class="filter-label" for="og-filter-breed">Breed</label>
           <select id="og-filter-breed" class="filter-select" [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
@@ -166,19 +168,41 @@
 
     <!-- Main Content -->
     <section class="main-content">
+      <!-- Compact filters for the map modal -->
+      <div class="embedded-filters" *ngIf="embedded && (hasOffsprings() || hasActiveFilters())">
+        <select *ngIf="breeds.length > 2 || selectedBreedId" class="filter-select embedded-breed" aria-label="Breed"
+                [(ngModel)]="selectedBreedId" (change)="onBreedFilterChange(selectedBreedId)">
+          <option [ngValue]="undefined">All breeds</option>
+          <option *ngFor="let breed of breeds.slice(1)" [ngValue]="breed.value">{{ breed.label }}</option>
+        </select>
+        <div class="drawer-pills" role="group" aria-label="Gender">
+          <button type="button" class="drawer-pill" [class.active]="selectedGender === undefined" (click)="onGenderFilterChange(undefined)">All</button>
+          <button type="button" class="drawer-pill" [class.active]="selectedGender === 'Male'" (click)="onGenderFilterChange('Male')">♂ Male</button>
+          <button type="button" class="drawer-pill" [class.active]="selectedGender === 'Female'" (click)="onGenderFilterChange('Female')">♀ Female</button>
+        </div>
+        <div class="drawer-pills" role="group" aria-label="Status">
+          <button type="button" class="drawer-pill" [class.active]="selectedStatus === 'Available'"
+                  (click)="onStatusFilterChange(selectedStatus === 'Available' ? undefined : 'Available')">Available only</button>
+        </div>
+      </div>
+
       <div class="loading-container" *ngIf="isLoading">
         <i class="pi pi-spin pi-spinner text-4xl text-blue-500"></i>
-        <p class="loading-text">Loading offsprings…</p>
+        <p class="loading-text">Loading offspring…</p>
       </div>
 
       <div class="empty-state" *ngIf="!isLoading && !hasOffsprings()">
         <i class="pi pi-inbox empty-icon"></i>
-        <h3 class="empty-title">No Offsprings Found</h3>
+        <h3 class="empty-title">No Offspring Found</h3>
         <p class="empty-message">
-          <span *ngIf="hasActiveFilters()">No offsprings match your filters.</span>
-          <span *ngIf="!hasActiveFilters()">This breeder doesn't have any available offsprings at the moment.</span>
+          <span *ngIf="hasActiveFilters()">No offspring match your filters.</span>
+          <span *ngIf="!hasActiveFilters()">This breeder doesn't have any available offspring at the moment.</span>
         </p>
         <button *ngIf="hasActiveFilters()" type="button" class="ui-btn ui-btn--secondary" (click)="clearFilters()">Clear Filters</button>
+        <button *ngIf="showContact && !hasActiveFilters()" type="button" class="ui-btn ui-btn--primary"
+                data-testid="ask-upcoming" (click)="contact.emit()">
+          <i class="bi bi-chat-dots" aria-hidden="true"></i> Ask about upcoming litters
+        </button>
       </div>
 
       <div class="offspring-grid" *ngIf="!isLoading && hasOffsprings()">
@@ -195,7 +219,7 @@
       </div>
 
       <div class="results-summary" *ngIf="!isLoading && hasOffsprings()">
-        <p>Showing {{ offsprings.length }} of {{ totalOffsprings }} offspring{{ totalOffsprings !== 1 ? 's' : '' }}</p>
+        <p>Showing {{ offsprings.length }} of {{ totalOffsprings }} offspring</p>
       </div>
     </section>
   </div>

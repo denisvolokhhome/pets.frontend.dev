@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { BreederSearchResult } from 'src/app/models/search';
+import { BreederSearchResult, Coordinates } from 'src/app/models/search';
 
 @Component({
   standalone: false,
@@ -11,6 +11,10 @@ export class BreederCardListComponent implements OnChanges, AfterViewInit {
   @Input() breeders: BreederSearchResult[] = [];
   @Input() highlightedId: string | null = null;
   @Input() isLoading: boolean = false;
+  /** Current search, passed to cards for nearby offspring suggestions */
+  @Input() searchCenter: Coordinates | null = null;
+  @Input() searchRadius: number = 40;
+  @Input() searchBreedId: number | null = null;
   /** False until the first search runs — shows a prompt instead of "No breeders found". */
   @Input() hasSearched: boolean = true;
 

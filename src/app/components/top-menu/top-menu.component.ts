@@ -19,6 +19,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
   showGetStartedDropdown: boolean = false;
   readonly serviceProvidersEnabled = environment.enableServiceProviders;
   readonly waitlistEnabled = environment.enableWaitlist;
+  readonly billingEnabled = environment.enableBilling;
 
   get isBreeder(): boolean {
     return this.service.isBreeder;

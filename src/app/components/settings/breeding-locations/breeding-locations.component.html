@@ -56,6 +56,10 @@
         <p *ngIf="location.address2">{{ location.address2 }}</p>
         <p>{{ location.city }}, {{ location.state }} {{ location.zipcode }}</p>
         <p>{{ location.country }}</p>
+        <p *ngIf="location.phone" class="location-phone">
+          <i class="bi bi-telephone" aria-hidden="true"></i> {{ location.phone }}
+          <span class="phone-visibility">{{ location.show_phone ? '· shown to seekers' : '· hidden' }}</span>
+        </p>
         
         <!-- Pet Names Section -->
         <div class="pets-section" *ngIf="location.pets && location.pets.length > 0">
@@ -95,7 +99,16 @@
   <!-- Location Form -->
   <div class="location-form" *ngIf="showForm">
     <h3>{{ editingLocation ? 'Edit Location' : 'Add New Location' }}</h3>
-    
+
+    <div class="privacy-note" role="note">
+      <i class="bi bi-shield-lock" aria-hidden="true"></i>
+      <p>
+        <strong>Your exact address stays private.</strong>
+        The map shows pet seekers only an approximate area (about 1 km), never your street address.
+        When you're ready, you can share your exact location with a pet seeker in Messages.
+      </p>
+    </div>
+
     <form [formGroup]="locationForm" (ngSubmit)="saveLocation()">
       <div class="form-group">
         <label for="name">Location Name *</label>
@@ -187,6 +200,30 @@
           <div class="error-message" *ngIf="isFieldInvalid('country')">
             Country is required
           </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone (optional)</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            autocomplete="tel"
+            maxlength="32"
+            [class.invalid]="isFieldInvalid('phone')"
+            placeholder="+1 (512) 555-0100">
+          <div class="error-message" *ngIf="isFieldInvalid('phone')">
+            Use digits, spaces and + ( ) - . only
+          </div>
+        </div>
+
+        <div class="form-group form-group--check">
+          <label class="check-label" for="show_phone">
+            <input type="checkbox" id="show_phone" formControlName="show_phone">
+            <span>Show phone number to pet seekers on the map</span>
+          </label>
         </div>
       </div>
 

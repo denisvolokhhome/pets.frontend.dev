@@ -5,6 +5,7 @@ import { OffspringService, OffspringRead, OffspringCreate, OffspringUpdate, Offs
 import { DataService } from 'src/app/services/data.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { IBreeding } from 'src/app/models/breeding';
+import { activeBreedings } from 'src/app/utils/offspring-prereq';
 import { ConfirmService } from 'src/app/services/confirm.service';
 declare var window: any;
 
@@ -31,12 +32,15 @@ export class OffspringEditComponent implements OnInit, OnChanges {
   @Input() mode: 'create' | 'edit' = 'create';
   @Output() offspringSaved = new EventEmitter<void>();
   @Output() modalClosed = new EventEmitter<void>();
+  /** A stored photo changed (e.g. rotated): its URL changed, so lists must reload. */
+  @Output() imagesUpdated = new EventEmitter<void>();
 
   breedings: IBreeding[] = [];
   maxDate: Date;
   imagePreviews: string[] = [];
   imageFiles: File[] = [];
   existingImages: OffspringImage[] = [];
+  rotatingImageId: string | null = null;
   readonly MAX_PHOTOS = 5;
   
   isLoadingBreedings: boolean = false;
@@ -63,7 +67,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     status: new FormControl<string>('Available', [Validators.required]),
     price: new FormControl<number | null>(null, [Validators.min(0)]),
     description: new FormControl<string>(''),
-    color_markings: new FormControl<string>('')
+    color_markings: new FormControl<string>(''),
+    is_published: new FormControl<boolean>(true, { nonNullable: true })
   });
 
   ngOnInit(): void {
@@ -89,7 +94,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     this.isLoadingBreedings = true;
     this.dataService.getBreedings().subscribe({
       next: (breedings) => {
-        this.breedings = breedings;
+        // Offspring can't be added to a voided breeding
+        this.breedings = activeBreedings(breedings);
         this.isLoadingBreedings = false;
         this.cdr.detectChanges();
       },
@@ -126,7 +132,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: this.offspring.status,
       price: this.offspring.price,
       description: this.offspring.description || '',
-      color_markings: this.offspring.color_markings || ''
+      color_markings: this.offspring.color_markings || '',
+      is_published: !!this.offspring.is_published
     });
 
     // Disable immutable fields in edit mode
@@ -199,6 +206,26 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       error: (error) => {
         console.error('Error setting primary image:', error);
         this.toastr.error('Failed to set primary image', 'Error');
+      }
+    });
+  }
+
+  rotateImage(image: OffspringImage): void {
+    if (!this.offspring || this.rotatingImageId !== null) return;
+    this.rotatingImageId = image.id;
+    this.offspringService.rotateOffspringImage(this.offspring.id, image.id, 90).subscribe({
+      next: (rotated) => {
+        this.existingImages = this.existingImages.map(img =>
+          img.id === rotated.id ? { ...img, image_path: rotated.image_path, image_url: rotated.image_url } : img
+        );
+        this.imagesUpdated.emit();
+        this.rotatingImageId = null;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.rotatingImageId = null;
+        this.toastr.error('Failed to rotate photo', 'Error');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -299,7 +326,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: formValue.status as 'Available' | 'Reserved' | 'Sold' | 'Archived',
       price: formValue.price || null,
       description: formValue.description || null,
-      color_markings: formValue.color_markings || null
+      color_markings: formValue.color_markings || null,
+      is_published: formValue.is_published
     };
 
     this.offspringService.createOffspring(offspringData).subscribe({
@@ -333,7 +361,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
       status: formValue.status as 'Available' | 'Reserved' | 'Sold' | 'Archived',
       price: formValue.price || null,
       description: formValue.description || null,
-      color_markings: formValue.color_markings || null
+      color_markings: formValue.color_markings || null,
+      is_published: formValue.is_published
     };
 
     this.offspringService.updateOffspring(this.offspring.id, offspringData).subscribe({

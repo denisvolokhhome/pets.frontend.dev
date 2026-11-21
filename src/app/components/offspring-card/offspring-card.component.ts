@@ -20,6 +20,8 @@ import { formatPrice } from 'src/app/utils/format-utils';
 export class OffspringCardComponent implements OnInit {
   @Input() offspring!: OffspringRead;
   @Input() showFavorite: boolean = true;
+  /** Whole miles from the seeker's search location (map Offspring view) */
+  @Input() distance: number | null = null;
   @Output() favoriteToggled = new EventEmitter<string>();
 
   isTogglingFavorite: boolean = false;

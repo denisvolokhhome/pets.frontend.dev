@@ -76,9 +76,9 @@
         [routerLinkActiveOptions]="{exact: true}"
         [attr.aria-current]="rlaOffsprings.isActive ? 'page' : null"
         class="side-link"
-        [title]="isCollapsed ? 'Offsprings' : ''">
+        [title]="isCollapsed ? 'Offspring' : ''">
         <i class="bi bi-grid-3x3 text-xl"></i>
-        <span *ngIf="!isCollapsed">Offsprings</span>
+        <span *ngIf="!isCollapsed">Offspring</span>
       </a>
     </li>
     <li class="mb-2" *ngIf="isBreeder">
@@ -177,9 +177,9 @@
       <i class="bi bi-water"></i>
       <span>Breedings</span>
     </a>
-    <a [routerLink]="['/offsprings']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Offsprings">
+    <a [routerLink]="['/offsprings']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="mobile-nav-item" aria-label="Offspring">
       <i class="bi bi-grid-3x3"></i>
-      <span>Offsprings</span>
+      <span>Offspring</span>
     </a>
   </ng-container>
   <!-- Pet seeker tabs -->

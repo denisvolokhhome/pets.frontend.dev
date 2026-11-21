@@ -1,42 +1,42 @@
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  position: fixed; inset: 0; background: rgba(48, 38, 28, 0.5);
   /* Modal overlays must be >= 1300 (navbar is 1200) per mobile-design.md */
   display: flex; align-items: center; justify-content: center; z-index: 1300;
 }
 .join-modal {
-  background: white; border-radius: 10px; width: 100%; max-width: 560px;
+  background: var(--color-surface); border-radius: 10px; width: 100%; max-width: 560px;
   max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(48, 38, 28, 0.2);
 }
 .join-modal-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 1.25rem; border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.25rem; border-bottom: 1px solid var(--n-200);
 }
-.join-modal-header h3 { margin: 0; font-size: 1.125rem; font-weight: 600; color: #111827; }
+.join-modal-header h3 { margin: 0; font-size: 1.125rem; font-weight: 600; color: var(--ink); }
 .join-modal-body { padding: 1.25rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
-.loading-state { text-align: center; color: #6b7280; padding: 2rem 0; }
-.notice { background: #f3f4f6; border-radius: 8px; padding: 1rem; }
+.loading-state { text-align: center; color: var(--n-500); padding: 2rem 0; }
+.notice { background: var(--n-100); border-radius: 8px; padding: 1rem; }
 .notice p { margin: 0 0 0.5rem; font-weight: 500; }
-.deposit-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem 1rem; }
-.deposit-amount { margin: 0; font-weight: 600; color: #111827; }
-.deposit-policy { margin: 0.25rem 0 0; font-size: 0.875rem; color: #4b5563; white-space: pre-wrap; }
+.deposit-box { background: var(--n-50); border: 1px solid var(--n-200); border-radius: 8px; padding: 0.75rem 1rem; }
+.deposit-amount { margin: 0; font-weight: 600; color: var(--ink); }
+.deposit-policy { margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--n-600); white-space: pre-wrap; }
 .field-group { display: flex; flex-direction: column; gap: 0.375rem; border: 0; padding: 0; margin: 0; min-width: 0; }
-.field-label { font-size: 0.9375rem; font-weight: 500; color: #374151; padding: 0; }
-.required-star { color: #dc2626; margin-left: 2px; }
+.field-label { font-size: 0.9375rem; font-weight: 500; color: var(--n-700); padding: 0; }
+.required-star { color: var(--error); margin-left: 2px; }
 .radio-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.radio-opt { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 44px; padding: 0 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
+.radio-opt { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 44px; padding: 0 0.75rem; border: 1px solid var(--n-300); border-radius: 6px; font-size: 1rem; }
 .field-input, .field-textarea {
-  width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px;
+  width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--n-300); border-radius: 6px;
   font-size: 16px; font-family: inherit; box-sizing: border-box;
 }
 .field-input { min-height: 44px; }
-.field-input:focus, .field-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.15); }
+.field-input:focus, .field-textarea:focus { outline: none; border-color: var(--harbor); box-shadow: 0 0 0 2px rgba(44, 95, 138, 0.15); }
 .field-textarea { resize: vertical; }
-.field-error { border-color: #f87171 !important; }
-.error-msg { font-size: 0.8125rem; color: #dc2626; margin: 0; }
+.field-error { border-color: var(--error-400) !important; }
+.error-msg { font-size: 0.8125rem; color: var(--error); margin: 0; }
 .join-modal-footer {
   display: flex; justify-content: flex-end; gap: 0.75rem;
-  padding: 0.75rem 1.25rem; border-top: 1px solid #e5e7eb; background: #f9fafb;
+  padding: 0.75rem 1.25rem; border-top: 1px solid var(--n-200); background: var(--n-50);
 }
 
 /* Bottom sheet on small screens */

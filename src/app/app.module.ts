@@ -8,6 +8,7 @@ import * as Sentry from '@sentry/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
+import { HomeNextComponent } from './components/home-next/home-next.component';
 import { TopMenuComponent } from './components/top-menu/top-menu.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -63,7 +64,6 @@ import { WaitlistSettingsComponent } from './components/settings/waitlist-settin
 import { WaitlistCardComponent } from './components/waitlist-card/waitlist-card.component';
 import { UpcomingMilestonesComponent } from './components/upcoming-milestones/upcoming-milestones.component';
 import { OffspringModalComponent } from './components/offspring-modal/offspring-modal.component';
-import { ContactBreederComponent } from './components/contact-breeder/contact-breeder.component';
 import { NotificationIconComponent } from './components/notification-icon/notification-icon.component';
 import { MessagesListComponent } from './components/settings/messages-list/messages-list.component';
 import { MessageDetailComponent } from './components/settings/message-detail/message-detail.component';
@@ -79,6 +79,7 @@ import { NotificationSettingsComponent } from './components/settings/notificatio
 import { SubscriptionSettingsComponent } from './components/settings/subscription-settings/subscription-settings.component';
 import { PricingSectionComponent } from './components/pricing-section/pricing-section.component';
 import { SupportSettingsComponent } from './components/settings/support-settings/support-settings.component';
+import { ExportSettingsComponent } from './components/settings/export-settings/export-settings.component';
 import { QuickBreedingAddComponent } from './components/quick-breeding-add/quick-breeding-add.component';
 import { FilterWidgetComponent } from './components/shared/filter-widget/filter-widget.component';
 import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
@@ -88,6 +89,8 @@ import { OffspringDetailComponent } from './components/offspring-detail/offsprin
 import { OffspringCardComponent } from './components/offspring-card/offspring-card.component';
 import { JoinWaitlistModalComponent } from './components/join-waitlist-modal/join-waitlist-modal.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
+import { BreederOffspringModalComponent } from './components/breeder-offspring-modal/breeder-offspring-modal.component';
+import { OffspringGroupsComponent } from './components/offspring-groups/offspring-groups.component';
 import { OffspringEditComponent } from './components/offspring-edit/offspring-edit.component';
 import { FavoritesListComponent } from './components/favorites-list/favorites-list.component';
 import { NotificationDropdownComponent } from './components/notification-dropdown/notification-dropdown.component';
@@ -134,6 +137,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   declarations: [
     AppComponent,
     HomeComponent,
+    HomeNextComponent,
     TopMenuComponent,
     LoginComponent,
     RegisterComponent,
@@ -174,7 +178,6 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     WaitlistSettingsComponent,
     WaitlistCardComponent,
     OffspringModalComponent,
-    ContactBreederComponent,
     NotificationIconComponent,
     MessagesListComponent,
     MessageDetailComponent,
@@ -189,12 +192,15 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     NotificationSettingsComponent,
     SubscriptionSettingsComponent,
     SupportSettingsComponent,
+    ExportSettingsComponent,
     QuickBreedingAddComponent,
     FilterWidgetComponent,
     ConfirmDialogComponent,
     OffspringListComponent,
     OffspringFormComponent,
     OffspringGridComponent,
+    BreederOffspringModalComponent,
+    OffspringGroupsComponent,
     FavoritesListComponent,
     ResetPasswordComponent,
     GenealogyComponent,

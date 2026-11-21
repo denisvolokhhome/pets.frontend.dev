@@ -41,6 +41,7 @@ export class PetEditComponent implements OnInit, OnChanges {
   imagePreviews: string[] = [];
   imageFiles: File[] = [];
   existingImages: any[] = []; // Track existing images from backend
+  rotatingImageId: number | null = null;
   readonly MAX_PHOTOS = 5;
 
   readURLMultiple(event: any): void {
@@ -110,6 +111,33 @@ export class PetEditComponent implements OnInit, OnChanges {
       error: (error: any) => {
         console.error('Error setting primary image:', error);
         this.toastService.error('Failed to set primary image. Please try again.');
+      }
+    });
+  }
+
+  rotateImage(image: any): void {
+    if (!this.pet || !image.id || this.rotatingImageId !== null) return;
+    this.rotatingImageId = image.id;
+    this.DataService.rotatePetImage(this.pet.id, image.id, 90).subscribe({
+      next: (updatedPet: IPet) => {
+        const rotated = updatedPet.images?.find(img => img.id === image.id);
+        if (rotated) {
+          image.url = rotated.image_url
+            ? `${this.DataService.apiurl.replace('/api', '')}${rotated.image_url}`
+            : this.getImageUrl(rotated.image_path);
+        }
+        // The file got a new name: keep the input pet in sync and refresh the list behind.
+        this.pet!.images = updatedPet.images;
+        this.pet!.image_path = updatedPet.image_path;
+        this.pet!.image_url = updatedPet.image_url;
+        this.rotatingImageId = null;
+        this.petUpdated.emit();
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.rotatingImageId = null;
+        this.toastService.error('Failed to rotate photo. Please try again.');
+        this.cdr.detectChanges();
       }
     });
   }

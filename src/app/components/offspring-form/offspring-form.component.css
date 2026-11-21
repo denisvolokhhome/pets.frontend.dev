@@ -1,12 +1,12 @@
 .offspring-form-container {
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--n-50);
 }
 
 .card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.1);
   padding: 2rem;
 }
 
@@ -17,20 +17,20 @@
 .form-label {
   display: block;
   font-weight: 600;
-  color: #374151;
+  color: var(--n-700);
   margin-bottom: 0.5rem;
 }
 
 .form-label.required::after {
   content: ' *';
-  color: #ef4444;
+  color: var(--error-500);
 }
 
 .form-input,
 .form-textarea {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--n-300);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.2s;
@@ -40,7 +40,7 @@
 .form-textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+  box-shadow: 0 0 0 3px rgba(180, 70, 30, 0.1);
 }
 
 .form-textarea {
@@ -51,7 +51,7 @@
   display: block;
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 .form-actions {
@@ -60,7 +60,7 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--n-200);
 }
 
 .btn-icon {
@@ -108,9 +108,9 @@
 }
 
 .alert-info {
-  background-color: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
+  background-color: var(--mist);
+  color: var(--harbor-hover);
+  border: 1px solid var(--harbor-300);
 }
 
 .image-gallery {
@@ -121,7 +121,7 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(48, 38, 28, 0.1);
 }
 
 .image-item img {
@@ -134,14 +134,14 @@
 
 /* PrimeNG customization */
 ::ng-deep .p-fileupload {
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--n-300);
   border-radius: 8px;
-  background-color: #f9fafb;
+  background-color: var(--n-50);
 }
 
 ::ng-deep .p-fileupload:hover {
   border-color: var(--primary-color);
-  background-color: rgba(255, 107, 107, 0.05);
+  background-color: rgba(180, 70, 30, 0.05);
 }
 
 ::ng-deep .p-fileupload .p-fileupload-buttonbar {
@@ -163,7 +163,7 @@
 
 ::ng-deep .p-dropdown .p-dropdown-trigger,
 ::ng-deep .p-calendar .p-datepicker-trigger {
-  color: #6b7280;
+  color: var(--n-500);
 }
 
 ::ng-deep .p-inputnumber-input {
@@ -176,10 +176,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--n-50);
   border-radius: 12px;
   margin-bottom: 2rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--n-200);
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -197,7 +197,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6c757d;
+  color: var(--n-500);
 }
 
 .info-value {
@@ -211,21 +211,21 @@
 
 .info-value i {
   font-size: 1.125rem;
-  color: #6c757d;
+  color: var(--n-500);
 }
 
 .info-value .bi-gender-male {
-  color: #0d6efd;
+  color: var(--harbor);
 }
 
 .info-value .bi-gender-female {
-  color: #d63384;
+  color: var(--female-color-1);
 }
 
 .info-separator {
   width: 1px;
   height: 40px;
-  background: #dee2e6;
+  background: var(--n-200);
   flex-shrink: 0;
 }
 
@@ -243,7 +243,7 @@
   .info-item {
     min-width: 100%;
     padding: 0.75rem 0;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--n-200);
   }
 
   .info-item:last-child {

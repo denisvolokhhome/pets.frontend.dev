@@ -36,6 +36,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   selectedBreed: Breed | null = null;
   selectedAnimalKind: string = '';
   radius: number = 40;
+  /** Hide breeders that have no available offspring */
+  onlyWithOffspring: boolean = false;
   mapCenter: Coordinates = { latitude: 39.8283, longitude: -98.5795 };
   searchResults: BreederSearchResult[] = [];
   breederMarkers: BreederMarker[] = [];
@@ -58,7 +60,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   geolocationError: string | null = null;
   hasSearched: boolean = false;
   isMapFullscreen: boolean = false;
-  mobileActiveTab: 'map' | 'list' = 'map';
+  mobileActiveTab: 'map' | 'list' | 'offspring' = 'map';
+  /** 'map' = map + breeder list; 'offspring' = full-width offspring grouped by breeder */
+  viewMode: 'map' | 'offspring' = 'map';
+  /** Bumped on every search so the Offspring view reloads even with the same filters */
+  searchVersion = 0;
 
   // Mobile filter drawer state
   isMobileFilterOpen: boolean = false;
@@ -190,16 +196,17 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     let errorMessage = '';
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        errorMessage = 'Location access denied. Please enter your ZIP code to search.';
+        // Declining location is a normal choice, not an error
+        errorMessage = 'Enter your ZIP code to see breeders and puppies near you.';
         break;
       case error.POSITION_UNAVAILABLE:
-        errorMessage = 'Location information unavailable. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
         break;
       case error.TIMEOUT:
-        errorMessage = 'Location request timed out. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
         break;
       default:
-        errorMessage = 'Unable to detect your location. Please enter your ZIP code to search.';
+        errorMessage = "We couldn't find your location. Enter your ZIP code to see breeders and puppies near you.";
     }
     // Show inline banner only — no toast for geolocation errors (banner is sufficient)
     this.geolocationError = errorMessage;
@@ -267,11 +274,12 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
 
     const radiusKm = this.radius * 1.60934; // miles → km
+    this.searchVersion++;
 
     const breeders$ = (this.searchMode === 'breeders' || this.searchMode === 'both')
       ? this.searchService.searchBreeders(
           coordinates.latitude, coordinates.longitude, this.radius,
-          this.selectedBreed?.id, this.selectedAnimalKind || undefined
+          this.selectedBreed?.id, this.selectedAnimalKind || undefined, this.onlyWithOffspring
         ).pipe(catchError(() => of([])))
       : of([]);
 
@@ -329,7 +337,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
             ? ` and ${this.serviceResults.length} service provider${this.serviceResults.length !== 1 ? 's' : ''}`
             : '';
           this.toastService.success(`Found ${breederMsg}${serviceMsg}`);
-          if (window.innerWidth <= 768) this.mobileActiveTab = 'list';
+          if (window.innerWidth <= 768 && this.viewMode === 'map') this.mobileActiveTab = 'list';
         }
 
         this.saveSearchState();
@@ -369,8 +377,10 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   /**
    * Set the active tab on mobile (map or list)
    */
-  setMobileTab(tab: 'map' | 'list'): void {
+  setMobileTab(tab: 'map' | 'list' | 'offspring'): void {
     this.mobileActiveTab = tab;
+    this.viewMode = tab === 'offspring' ? 'offspring' : 'map';
+    this.saveSearchState();
     // Invalidate map size when switching back to map tab
     if (tab === 'map') {
       setTimeout(() => {
@@ -378,6 +388,18 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           (this.mapComponent as any).map.invalidateSize();
         }
       }, 50);
+    }
+  }
+
+  /** Desktop switch between the map view and the Offspring view. */
+  setViewMode(mode: 'map' | 'offspring'): void {
+    if (this.viewMode === mode) return;
+    this.viewMode = mode;
+    this.mobileActiveTab = mode === 'offspring' ? 'offspring' : (this.hasSearched ? 'list' : 'map');
+    this.saveSearchState();
+    if (mode === 'map') {
+      // The map was hidden; let Leaflet re-measure its container
+      setTimeout(() => (this.mapComponent as any)?.map?.invalidateSize(), 50);
     }
   }
 
@@ -470,6 +492,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleOnlyWithOffspring(): void {
+    this.onlyWithOffspring = !this.onlyWithOffspring;
+    if (this.hasSearched && this.zipCode) {
+      this.onSearch();
+    }
+  }
+
   // ─── Mobile filter drawer ────────────────────────────────────────────────
 
   openMobileFilters(): void {
@@ -493,12 +522,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.selectedBreed = null;
     this.selectedAnimalKind = '';
     this.radius = 40;
+    this.onlyWithOffspring = false;
     this.drawerBreedTerm = '';
     this.drawerBreedSuggestions = [];
   }
 
   hasActiveFilters(): boolean {
-    return !!this.selectedBreed || !!this.selectedAnimalKind || this.radius !== 40;
+    return !!this.selectedBreed || !!this.selectedAnimalKind || this.radius !== 40 || this.onlyWithOffspring;
   }
 
   radiusChange(miles: number): void {
@@ -543,6 +573,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       selectedBreed: this.selectedBreed,
       selectedAnimalKind: this.selectedAnimalKind,
       radius: this.radius,
+      onlyWithOffspring: this.onlyWithOffspring,
       searchMode: this.searchMode,
       mapCenter: this.mapCenter,
       searchResults: this.searchResults,
@@ -550,6 +581,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       breederMarkers: this.breederMarkers,
       hasSearched: this.hasSearched,
       mobileActiveTab: this.mobileActiveTab,
+      viewMode: this.viewMode,
+      searchVersion: this.searchVersion,
       drawerBreedTerm: this.drawerBreedTerm,
     };
     sessionStorage.setItem('search_page_state', JSON.stringify(state));
@@ -564,6 +597,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.selectedBreed = state.selectedBreed ?? null;
       this.selectedAnimalKind = state.selectedAnimalKind ?? '';
       this.radius = state.radius ?? 40;
+      this.onlyWithOffspring = !!state.onlyWithOffspring;
       this.searchMode = this.serviceProvidersEnabled ? (state.searchMode ?? 'both') : 'breeders';
       this.mapCenter = state.mapCenter ?? { latitude: 39.8283, longitude: -98.5795 };
       this.searchResults = state.searchResults ?? [];
@@ -571,6 +605,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       this.breederMarkers = state.breederMarkers ?? [];
       this.hasSearched = state.hasSearched ?? false;
       this.mobileActiveTab = state.mobileActiveTab ?? 'list';
+      this.viewMode = state.viewMode === 'offspring' ? 'offspring' : 'map';
+      this.searchVersion = state.searchVersion ?? 0;
       this.drawerBreedTerm = state.drawerBreedTerm ?? '';
       this.cdr.detectChanges();
       return this.hasSearched;

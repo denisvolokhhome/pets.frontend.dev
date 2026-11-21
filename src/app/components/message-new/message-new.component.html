@@ -2,7 +2,9 @@
 <div class="flex overflow-hidden" style="height: calc(100vh - 140px);">
   
   <!-- Left Sidebar: Threads List -->
-  <div class="threads-sidebar w-72 bg-white border-r border-gray-200 flex flex-col">
+  <!-- On mobile only one pane shows: the list, or the open conversation. -->
+  <div class="threads-sidebar w-72 bg-white border-r border-gray-200 flex flex-col"
+       [class.has-open-conversation]="threadId || breederId">
     <!-- Threads Header -->
     <div class="p-3 border-b border-gray-200 flex-shrink-0">
       <h2 class="text-base font-semibold text-gray-900">Conversations</h2>
@@ -47,7 +49,11 @@
   </div>
 
   <!-- Right Side: Message Thread -->
-  <div class="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+  <div class="conversation-pane flex-1 flex flex-col min-w-0 bg-white overflow-hidden"
+       [class.has-open-conversation]="threadId || breederId">
+    <button type="button" class="mobile-back-to-list" (click)="closeConversation()" aria-label="Back to conversations">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i> Conversations
+    </button>
     <!-- Loading State (only show while loading offspring context) -->
     <div *ngIf="isLoading" class="flex-1 flex items-center justify-center">
       <i class="pi pi-spin pi-spinner text-3xl text-gray-500"></i>
@@ -60,15 +66,31 @@
     </div>
 
     <!-- Message Thread (show when not loading and has thread/breeder) -->
-    <app-message-thread
-      *ngIf="!isLoading && (threadId || breederId)"
-      class="flex-1 flex flex-col overflow-hidden"
-      [breederId]="breederId"
-      [breederName]="breederName"
-      [threadId]="threadId"
-      [offspringContext]="offspringContext"
-      [initialMessage]="initialMessage"
-      (messageSent)="onMessageSent($event)">
-    </app-message-thread>
+    <!-- Keyed on conversationKey so switching conversations re-creates the thread
+         (it reads threadId/breederId once, and polls the thread it started with). -->
+    @if (!isLoading && (threadId || breederId)) {
+      <header class="conversation-header" data-testid="conversation-header">
+        <span class="conversation-avatar" aria-hidden="true">{{ conversationName.charAt(0).toUpperCase() }}</span>
+        <div class="conversation-title">
+          <span class="conversation-eyebrow">{{ threadId ? 'Conversation with' : 'New message to' }}</span>
+          <h2 class="conversation-name">{{ conversationName }}</h2>
+        </div>
+        <a *ngIf="canViewPartnerOffspring" class="ui-btn ui-btn--ghost ui-btn--sm"
+           [routerLink]="['/breeder', conversationPartnerId, 'offsprings']">
+          <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> View their offspring
+        </a>
+      </header>
+      @for (key of [conversationKey]; track key) {
+        <app-message-thread
+          class="flex-1 flex flex-col overflow-hidden"
+          [breederId]="breederId"
+          [breederName]="breederName"
+          [threadId]="threadId"
+          [offspringContext]="offspringContext"
+          [initialMessage]="initialMessage"
+          (messageSent)="onMessageSent($event)">
+        </app-message-thread>
+      }
+    }
   </div>
 </div>

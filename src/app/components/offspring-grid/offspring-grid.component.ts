@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { OffspringService, OffspringRead } from 'src/app/services/offspring.service';
@@ -17,6 +17,11 @@ import { environment } from 'src/environments/environment';
 })
 export class OffspringGridComponent implements OnInit {
   @Input() breederId!: string;
+  /** Shown inside a modal on the map: no page chrome, no shared filter memory */
+  @Input() embedded = false;
+  /** Offer "Ask about upcoming litters" when the breeder has nothing listed */
+  @Input() showContact = false;
+  @Output() contact = new EventEmitter<void>();
 
   offsprings: OffspringRead[] = [];
   isLoading: boolean = true;
@@ -80,7 +85,7 @@ export class OffspringGridComponent implements OnInit {
     } else {
       this.loadFiltersFromSession();
       this.loadOffsprings();
-      this.loadBreederInfo();
+      if (!this.embedded) this.loadBreederInfo();
     }
   }
 
@@ -133,7 +138,7 @@ export class OffspringGridComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading offsprings:', error);
-        this.toastr.error(error.message || 'Failed to load offsprings', 'Error');
+        this.toastr.error(error.message || 'Failed to load offspring', 'Error');
         this.offsprings = [];
         this.totalOffsprings = 0;
         this.isLoading = false;
@@ -228,7 +233,7 @@ export class OffspringGridComponent implements OnInit {
     this.currentPage = event.page;
     this.pageSize = event.rows;
     this.loadOffsprings();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!this.embedded) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /**
@@ -261,6 +266,9 @@ export class OffspringGridComponent implements OnInit {
    * Save filter selections to session storage
    */
   private saveFiltersToSession(): void {
+    // Filters are remembered for the standalone page only; in the map modal
+    // each breeder starts unfiltered.
+    if (this.embedded) return;
     const filters = {
       breedId: this.selectedBreedId,
       gender: this.selectedGender,
@@ -273,6 +281,7 @@ export class OffspringGridComponent implements OnInit {
    * Load filter selections from session storage
    */
   private loadFiltersFromSession(): void {
+    if (this.embedded) return;
     const savedFilters = sessionStorage.getItem('offspring_filters');
     if (savedFilters) {
       try {
