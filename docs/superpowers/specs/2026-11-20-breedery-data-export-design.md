@@ -96,8 +96,9 @@ dependency):
 Job (`app/services/data_export_service.py`): opens its own DB session
 (`async_session_maker`), marks `running`, queries all data for the user, writes the ZIP
 to a private directory `settings.export_path` (new setting, default `private/exports`).
-It must be outside `storage/` entirely, because `app/main.py` mounts `StaticFiles` on the
-parent of `storage_path`. When deployed, it is `/app/private/exports` on a new named volume
+It must be outside the directory `app/main.py` serves with `StaticFiles`, which is the
+**parent** of `storage_path` (`/app` in production). Startup refuses an export dir inside it
+(`assert_export_dir_private`). When deployed, it is `/var/lib/breedly/exports` on a new named volume
 (`backend_exports`). Add the volume and the `EXPORT_PATH` env var to **both**
 `pets.backend.dev/delivery/docker-compose.yml` and `pets.frontend.dev/delivery/docker-compose.yml`,
 because each Jenkinsfile overwrites the shared compose file on the server. Then marks `ready` with size and
