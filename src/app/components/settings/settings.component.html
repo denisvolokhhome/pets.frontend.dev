@@ -43,6 +43,13 @@
         (click)="navigateToSection('waitlist')">
         Waitlist
       </button>
+      <button 
+        *ngIf="isBreeder"
+        class="sidebar-nav-item" 
+        [class.active]="isActive('export')"
+        (click)="navigateToSection('export')">
+        Export data
+      </button>
       <!-- Notifications settings temporarily disabled
       <button 
         *ngIf="isBreeder"
