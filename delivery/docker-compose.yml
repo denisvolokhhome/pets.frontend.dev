@@ -84,7 +84,7 @@ services:
       # File Storage
       STORAGE_PATH: /app/storage
       STORAGE_URL: /storage
-      EXPORT_PATH: /app/private/exports
+      EXPORT_PATH: /var/lib/breedly/exports
       
       # OAuth
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_CLIENT_ID}
@@ -128,7 +128,7 @@ services:
       SMTP_TLS: ${SMTP_TLS}
     volumes:
       - backend_storage:/app/storage
-      - backend_exports:/app/private/exports
+      - backend_exports:/var/lib/breedly/exports
     depends_on:
       postgres:
         condition: service_healthy

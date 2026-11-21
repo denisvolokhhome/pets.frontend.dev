@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { EMPTY, Subject, Subscription, timer } from 'rxjs';
+import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { DataExport } from '../../../models/data-export';
 import { DataExportService } from '../../../services/data-export.service';
@@ -23,17 +23,20 @@ export class ExportSettingsComponent implements OnInit, OnDestroy {
   isDownloading = false;
   downloadError = '';
   private poll?: Subscription;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(private exports: DataExportService) {}
 
   ngOnInit(): void {
-    this.exports.latest().subscribe({
+    this.exports.latest().pipe(takeUntil(this.destroy$)).subscribe({
       next: e => this.apply(e),
       error: () => { this.loadError = true; this.state = 'none'; },
     });
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.stopPolling();
   }
 
@@ -41,7 +44,7 @@ export class ExportSettingsComponent implements OnInit, OnDestroy {
     if (this.isStarting) return;
     this.isStarting = true;
     this.downloadError = '';
-    this.exports.start().subscribe({
+    this.exports.start().pipe(takeUntil(this.destroy$)).subscribe({
       next: e => { this.isStarting = false; this.apply(e); },
       error: () => { this.isStarting = false; this.loadError = true; },
     });
@@ -51,7 +54,7 @@ export class ExportSettingsComponent implements OnInit, OnDestroy {
     if (!this.current || this.isDownloading) return;
     this.isDownloading = true;
     this.downloadError = '';
-    this.exports.downloadLink(this.current.id).subscribe({
+    this.exports.downloadLink(this.current.id).pipe(takeUntil(this.destroy$)).subscribe({
       next: ({ url }) => { this.isDownloading = false; this.navigate(`${environment.API_HOST}${url}`); },
       error: err => {
         this.isDownloading = false;
@@ -90,10 +93,14 @@ export class ExportSettingsComponent implements OnInit, OnDestroy {
   }
 
   private startPolling(): void {
-    if (this.poll) return;
+    if (this.poll || this.destroy$.isStopped) return;
     this.poll = timer(POLL_MS, POLL_MS)
-      .pipe(switchMap(() => this.exports.latest()))
-      .subscribe({ next: e => this.apply(e), error: () => {} });
+      .pipe(
+        // A failed poll (e.g. a 502 during a deploy) is skipped; the next tick tries again
+        switchMap(() => this.exports.latest().pipe(catchError(() => EMPTY))),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(e => this.apply(e));
   }
 
   private stopPolling(): void {

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { Subject, of, throwError } from 'rxjs';
 import { ExportSettingsComponent } from './export-settings.component';
 import { DataExportService } from '../../../services/data-export.service';
 import { DataExport } from '../../../models/data-export';
@@ -105,5 +105,30 @@ describe('ExportSettingsComponent', () => {
     const calls = svc.latest.calls.count();
     tick(15000);
     expect(svc.latest.calls.count()).toBe(calls);
+  }));
+
+  it('does not start polling if destroyed before the first response arrives', fakeAsync(() => {
+    const pending = new Subject<DataExport | null>();
+    svc.latest.and.returnValue(pending.asObservable());
+    create();
+    component.ngOnDestroy();
+    svc.latest.and.returnValue(of(exp({ status: 'running' })));
+    pending.next(exp({ status: 'running' }));
+    const calls = svc.latest.calls.count();
+    tick(15000);
+    expect(svc.latest.calls.count()).toBe(calls);
+  }));
+
+  it('keeps polling after a failed poll', fakeAsync(() => {
+    svc.latest.and.returnValues(
+      of(exp({ status: 'running' })),
+      throwError(() => ({ status: 502 })),
+      of(exp({})),
+    );
+    create();
+    tick(3000);
+    expect(component.state).toBe('preparing');
+    tick(3000);
+    expect(component.state).toBe('ready');
   }));
 });
