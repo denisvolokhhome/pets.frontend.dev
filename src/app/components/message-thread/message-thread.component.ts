@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { DataService } from '../../services/data.service';
 import { ReviewPromptComponent } from '../review-prompt/review-prompt.component';
+import { DocumentsCard, parseDocumentsCard, SharedDocumentsCardComponent } from '../shared-documents-card/shared-documents-card.component';
 import { Subject, takeUntil, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { formatPrice } from 'src/app/utils/format-utils';
@@ -62,7 +63,8 @@ export interface OffspringContext {
     CardModule,
     AvatarModule,
     BadgeModule,
-    ReviewPromptComponent
+    ReviewPromptComponent,
+    SharedDocumentsCardComponent
   ],
   templateUrl: './message-thread.component.html',
   styleUrls: ['./message-thread.component.css']
@@ -189,6 +191,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           }
           
           this.isLoading = false;
+          this.refreshDocumentLinks();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -400,6 +403,38 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Signed links for documents shared in this thread (null until loaded). */
+  documentLinks: Record<number, string> | null = null;
+  private documentLinksLoadedAt = 0;
+  private documentCardCount = 0;
+  private static readonly DOCUMENT_LINKS_MAX_AGE_MS = 10 * 60 * 1000; // links live 15 min
+
+  documentsCard(message: ThreadMessage): DocumentsCard | null {
+    return parseDocumentsCard(message.message);
+  }
+
+  /** Fetch links when a documents card appears, when a new one arrives, or before they expire. */
+  private refreshDocumentLinks(): void {
+    if (!this.threadId) return;
+    const cards = this.messages.filter(m => parseDocumentsCard(m.message)).length;
+    if (cards === 0) return;
+    const stale = Date.now() - this.documentLinksLoadedAt > MessageThreadComponent.DOCUMENT_LINKS_MAX_AGE_MS;
+    if (this.documentLinks && cards === this.documentCardCount && !stale) return;
+    this.documentCardCount = cards;
+    this.documentLinksLoadedAt = Date.now();
+    this.messageService.getThreadDocuments(this.threadId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (docs) => {
+          this.documentLinks = Object.fromEntries(docs.map(d => [d.id, d.url]));
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.documentLinksLoadedAt = 0; // retry on the next poll
+        }
+      });
+  }
+
   shareDocuments(): void {
     if (!this.threadId || this.isSharingDocuments) return;
     this.showShareDocumentsConfirm = false;
@@ -419,6 +454,7 @@ export class MessageThreadComponent implements OnInit, OnDestroy {
           });
           this.toastService.success('Documents shared successfully', 'Shared');
           this.isSharingDocuments = false;
+          this.refreshDocumentLinks();
         },
         error: (error) => {
           this.toastService.error(error.message || 'Failed to share documents', 'Error');

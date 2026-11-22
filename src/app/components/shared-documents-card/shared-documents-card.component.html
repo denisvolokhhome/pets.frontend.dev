@@ -1,0 +1,22 @@
+<div class="docs-card">
+  <div class="docs-card__head">
+    <i class="bi bi-folder2-open" aria-hidden="true"></i>
+    <span class="docs-card__title">Documents shared</span>
+    <span *ngIf="card.offspring_name" class="docs-card__for">· {{ card.offspring_name }}</span>
+  </div>
+  <ul class="docs-card__list">
+    <li *ngFor="let doc of card.documents" class="docs-card__item">
+      <i class="bi" [ngClass]="icon(doc)" aria-hidden="true"></i>
+      <span class="docs-card__name">
+        <span class="docs-card__file">{{ doc.file_name }}</span>
+        <span *ngIf="size(doc.file_size)" class="docs-card__size">{{ size(doc.file_size) }}</span>
+      </span>
+      <ng-container *ngIf="links; else loading">
+        <a *ngIf="url(doc.id) as href; else gone" class="docs-card__view" [href]="href" target="_blank"
+           rel="noopener" [attr.data-doc-id]="doc.id" [attr.aria-label]="'View ' + doc.file_name">View</a>
+        <ng-template #gone><span class="docs-card__gone">No longer available</span></ng-template>
+      </ng-container>
+      <ng-template #loading><span class="docs-card__gone">Loading…</span></ng-template>
+    </li>
+  </ul>
+</div>

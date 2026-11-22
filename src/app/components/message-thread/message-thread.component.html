@@ -70,6 +70,12 @@
                  [class.items-end]="isSentByCurrentUser(message)"
                  [class.items-start]="!isSentByCurrentUser(message)">
               
+              <!-- Documents Card -->
+              <ng-container *ngIf="documentsCard(message) as docsCard; else notDocuments">
+                <app-shared-documents-card [card]="docsCard" [links]="documentLinks"></app-shared-documents-card>
+              </ng-container>
+
+              <ng-template #notDocuments>
               <!-- Location Card -->
               <ng-container *ngIf="isLocationMessage(message); else regularMessage">
                 <ng-container *ngIf="parseLocationData(message) as loc">
@@ -115,6 +121,7 @@
                   [style.color]="isSentByCurrentUser(message) ? 'white' : ''">
                   <p class="whitespace-pre-wrap break-words text-sm">{{ message.message }}</p>
                 </div>
+              </ng-template>
               </ng-template>
               
               <div class="flex items-center gap-1 mt-1 px-1">

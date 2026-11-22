@@ -1,0 +1,60 @@
+:host { display: block; max-width: 100%; min-width: 0; }
+
+/* Fluid: fills the chat bubble column up to 18rem, never forces horizontal scroll */
+.docs-card {
+  width: 100%;
+  max-width: 18rem;
+  border: 1px solid var(--n-200);
+  border-radius: 0.75rem;
+  background: var(--cream);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(77, 58, 38, 0.07);
+}
+
+.docs-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--oat);
+  border-bottom: 1px solid var(--n-200);
+  font-size: 0.875rem;
+}
+
+.docs-card__head .bi { color: var(--pine); }
+.docs-card__title { font-weight: 600; color: var(--ink); white-space: nowrap; }
+/* width: 0 + flex-grow: long names truncate instead of widening the card */
+.docs-card__for { flex: 1 1 0; width: 0; color: var(--stone); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.docs-card__list { list-style: none; margin: 0; padding: 0; }
+
+.docs-card__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.docs-card__item + .docs-card__item { border-top: 1px solid var(--n-100); }
+.docs-card__item > .bi { color: var(--clay); flex-shrink: 0; }
+
+.docs-card__name { display: flex; flex-direction: column; flex: 1 1 0; width: 0; min-width: 0; }
+.docs-card__file { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.docs-card__size { color: var(--stone); font-size: 0.75rem; }
+
+.docs-card__view {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--clay);
+  color: var(--cream);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.docs-card__view:hover { background: var(--clay-hover); }
+.docs-card__gone { flex-shrink: 0; color: var(--stone); font-size: 0.75rem; }
