@@ -4,6 +4,8 @@ import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { map } from 'rxjs';
+import { openWithFreshLink } from '../shared/fresh-link';
 
 export interface OffspringDocument {
   id: number;
@@ -43,7 +45,7 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
     if (!this.offspringId) return;
     this.isLoading = true;
     this.dataService.getOffspringDocuments(this.offspringId).subscribe({
-      next: (docs) => { this.documents = docs; this.isLoading = false; this.cdr.detectChanges(); },
+      next: (docs) => { this.documents = docs; this.markFresh(docs); this.isLoading = false; this.cdr.detectChanges(); },
       error: () => { this.isLoading = false; this.cdr.detectChanges(); }
     });
   }
@@ -58,7 +60,7 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
 
     this.isUploading = true;
     this.dataService.uploadOffspringDocument(this.offspringId, file).subscribe({
-      next: (doc) => { this.documents.push(doc); this.isUploading = false; input.value = ''; this.cdr.detectChanges(); },
+      next: (doc) => { this.documents.push(doc); this.markFresh([doc]); this.isUploading = false; input.value = ''; this.cdr.detectChanges(); },
       error: () => { this.isUploading = false; input.value = ''; this.cdr.detectChanges(); }
     });
   }
@@ -69,6 +71,29 @@ export class OffspringDocumentsComponent implements OnInit, OnChanges {
       next: () => { this.documents = this.documents.filter(d => d.id !== doc.id); this.cdr.detectChanges(); },
       error: () => {}
     });
+  }
+
+  /** When each document's signed link was issued (links expire after 15 minutes). */
+  private linkIssuedAt = new Map<number, number>();
+
+  private markFresh(docs: OffspringDocument[]): void {
+    const now = Date.now();
+    docs.forEach(d => this.linkIssuedAt.set(d.id, now));
+  }
+
+  /** Re-sign the link first if this page has been open a while (see openWithFreshLink). */
+  openDoc(event: MouseEvent, doc: OffspringDocument): void {
+    if (!this.offspringId) return;
+    const id = this.offspringId;
+    openWithFreshLink(event, this.linkIssuedAt.get(doc.id) ?? 0, () =>
+      this.dataService.getOffspringDocuments(id).pipe(map((docs: OffspringDocument[]) => {
+        this.documents = docs;
+        this.markFresh(docs);
+        this.cdr.detectChanges();
+        const fresh = docs.find(d => d.id === doc.id);
+        return fresh ? this.getDocUrl(fresh) : null;
+      })),
+      () => this.toastService.error('This document is no longer available.'));
   }
 
   getDocUrl(doc: OffspringDocument): string {
