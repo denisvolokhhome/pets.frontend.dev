@@ -198,6 +198,14 @@
   border-top: 1px solid var(--n-200);
 }
 
+.auth-legal-text {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--stone);
+  text-align: center;
+}
+
 .auth-footer-text {
   font-family: var(--font-secondary);
   font-size: 0.875rem;
