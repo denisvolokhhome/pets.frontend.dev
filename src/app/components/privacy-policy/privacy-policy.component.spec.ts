@@ -26,4 +26,24 @@ describe('PrivacyPolicyComponent', () => {
       expect(doc).not.toContain('removes the entry');
     }
   });
+
+  it('says Breedly is free and promises 60 days notice before any charge', () => {
+    const page = squash(fixture.nativeElement.textContent || '');
+    expect(page).toContain('Breedly is free.');
+    expect(page).toContain('at least 60 days in advance');
+  });
+
+  it('only promises deletion timelines the team actually meets', () => {
+    const page = squash(fixture.nativeElement.textContent || '');
+    expect(page).toContain('within 30 days of your request');
+    expect(page).not.toContain('90 days');
+    expect(page).not.toContain('12 months');
+  });
+
+  it('the downloaded text is built from the page itself', () => {
+    const text = (fixture.componentInstance as any).getPolicyText() as string;
+    expect(text.startsWith('PRIVACY POLICY\nLast Updated: November 22, 2026')).toBeTrue();
+    expect(text).toContain('3.4 What We Do Not Collect');
+    expect(text).not.toContain('Download Privacy Policy');
+  });
 });
