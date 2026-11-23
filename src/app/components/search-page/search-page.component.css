@@ -1012,3 +1012,4 @@
   .offspring-view-pills { display: flex; }
   .offspring-view { overflow: visible; }
 }
+.search-logo-icon { color: var(--clay); }

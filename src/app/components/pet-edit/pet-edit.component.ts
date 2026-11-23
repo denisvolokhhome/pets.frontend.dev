@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IBreed } from 'src/app/models/breed';
 import { ILocation } from 'src/app/models/location';
 import { IPet } from 'src/app/models/pet';
-import { getPetTypeLabel, getPetTypeIcon } from 'src/app/models/pet-type';
+import { getPetTypeLabel, getPetTypeIconClass } from 'src/app/models/pet-type';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
 import { DatePipe } from '@angular/common';
@@ -206,15 +206,9 @@ export class PetEditComponent implements OnInit, OnChanges {
     return 'Not specified';
   }
 
-  getPetTypeIcon(): string {
-    if (!this.pet || !this.breeds) return '🐾';
-    
-    const breed = this.breeds.find(b => b.id === this.pet.breed_id);
-    if (breed && breed.kind) {
-      return getPetTypeIcon(breed.kind);
-    }
-    
-    return '🐾';
+  getPetTypeIconClass(): string {
+    const breed = this.pet && this.breeds?.find(b => b.id === this.pet.breed_id);
+    return getPetTypeIconClass(breed?.kind);
   }
 
   ngOnInit(): void {

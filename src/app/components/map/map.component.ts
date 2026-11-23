@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewIni
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { BreederMarker, Coordinates } from '../../models/search';
-import { getPetTypeIcon } from '../../models/pet-type';
+import { getPetTypeIconClass } from '../../models/pet-type';
 
 @Component({
   standalone: false,
@@ -36,9 +36,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
       }
     });
 
-    // Build emoji string from kinds
-    const emojis = Array.from(kinds).map(k => getPetTypeIcon(k)).join('');
-    const label = emojis || '🐾';
+    // One icon per kind (paw when unknown); kinds are fixed class names, never user text
+    const label = (kinds.size ? Array.from(kinds) : [''])
+      .map(k => `<span class="${getPetTypeIconClass(k)}"></span>`)
+      .join('');
 
     return L.divIcon({
       className: 'animal-kind-marker',

@@ -82,7 +82,7 @@
           [title]="type.label"
           [disabled]="isLoading"
           [attr.aria-pressed]="filterValues.petType === type.value">
-          <span class="pet-type-icon-small">{{ type.icon }}</span>
+          <span class="pet-type-icon-small" [ngClass]="type.iconClass" aria-hidden="true"></span>
           <span class="pet-type-label-small">{{ type.label }}</span>
         </button>
       </div>
