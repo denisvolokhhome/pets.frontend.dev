@@ -2094,3 +2094,19 @@ button.ui-cell-sub {
   color: var(--n-500);
 }
 
+
+/* Pet icons (dog / cat / paw). Drawn as a mask so they take the surrounding
+   text colour, e.g. white inside an active pill. Size follows font-size. */
+.pet-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.22em;
+  background-color: currentColor;
+  -webkit-mask: var(--pet-icon-src) center / contain no-repeat;
+  mask: var(--pet-icon-src) center / contain no-repeat;
+}
+.pet-icon--dog { --pet-icon-src: url('/assets/icons/pets/dog.png'); }
+.pet-icon--cat { --pet-icon-src: url('/assets/icons/pets/cat.png'); }
+.pet-icon--paw { --pet-icon-src: url('/assets/icons/pets/paw.png'); }

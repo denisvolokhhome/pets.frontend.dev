@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo"><span aria-hidden="true">🐾</span> {{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</h1>
+      <h1 class="search-logo"><span class="pet-icon pet-icon--paw search-logo-icon" aria-hidden="true"></span> {{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -108,7 +108,7 @@
             class="filter-pill"
             [class.active]="selectedAnimalKind === pt.value"
             (click)="onAnimalKindChange(pt.value)">
-            <span aria-hidden="true">{{ pt.icon }}</span>
+            <span [ngClass]="pt.iconClass" aria-hidden="true"></span>
             <span>{{ pt.label }}</span>
           </button>
         </div>
@@ -207,7 +207,7 @@
         class="kind-pill"
         [class.active]="selectedAnimalKind === pt.value"
         (click)="onAnimalKindChange(pt.value)">
-        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-icon" [ngClass]="pt.iconClass" aria-hidden="true"></span>
         <span class="kind-label">{{ pt.label }}</span>
       </button>
     </div>
@@ -264,7 +264,7 @@
         class="kind-pill"
         [class.active]="selectedAnimalKind === pt.value"
         (click)="onAnimalKindChange(pt.value)">
-        <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+        <span class="kind-icon" [ngClass]="pt.iconClass" aria-hidden="true"></span>
         <span class="kind-label">{{ pt.label }}</span>
       </button>
     </div>
@@ -333,7 +333,7 @@
           class="kind-pill"
           [class.active]="selectedAnimalKind === pt.value"
           (click)="onAnimalKindChange(pt.value)">
-          <span class="kind-icon" aria-hidden="true">{{ pt.icon }}</span>
+          <span class="kind-icon" [ngClass]="pt.iconClass" aria-hidden="true"></span>
           <span class="kind-label">{{ pt.label }}</span>
         </button>
         <span class="kind-divider" aria-hidden="true"></span>

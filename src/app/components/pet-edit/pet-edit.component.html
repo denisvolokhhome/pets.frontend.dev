@@ -21,7 +21,7 @@
       <div class="info-item">
         <span class="info-label">Kind</span>
         <span class="info-value">
-          <span class="pet-type-icon">{{ getPetTypeIcon() }}</span>
+          <span class="pet-type-icon" [ngClass]="getPetTypeIconClass()" aria-hidden="true"></span>
           {{ getPetTypeLabel() }}
         </span>
       </div>

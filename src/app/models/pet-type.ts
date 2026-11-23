@@ -5,7 +5,7 @@
 export interface IPetType {
   value: string;   // matches IBreed.kind — 'dog' | 'cat'
   label: string;
-  icon: string;    // emoji icon displayed in the tile
+  iconClass: string;  // CSS classes for the pet icon (see .pet-icon in styles.css)
 }
 
 /**
@@ -13,8 +13,8 @@ export interface IPetType {
  * Cow and Horse are hidden — dogs and cats only for now.
  */
 export const PET_TYPES: IPetType[] = [
-  { value: 'dog', label: 'Dog', icon: '🐕' },
-  { value: 'cat', label: 'Cat', icon: '🐈' },
+  { value: 'dog', label: 'Dog', iconClass: 'pet-icon pet-icon--dog' },
+  { value: 'cat', label: 'Cat', iconClass: 'pet-icon pet-icon--cat' },
 ];
 
 /**
@@ -31,9 +31,12 @@ export function getPetTypeLabel(value: string): string {
   return getPetTypeByValue(value)?.label || value;
 }
 
+/** Icon used when the pet type is unknown. */
+export const PAW_ICON_CLASS = 'pet-icon pet-icon--paw';
+
 /**
- * Get pet type icon by value
+ * CSS classes for a pet type's icon, falling back to a paw.
  */
-export function getPetTypeIcon(value: string): string {
-  return getPetTypeByValue(value)?.icon || '🐾';
+export function getPetTypeIconClass(value: string | null | undefined): string {
+  return (value && getPetTypeByValue(value)?.iconClass) || PAW_ICON_CLASS;
 }
