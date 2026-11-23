@@ -4,6 +4,8 @@ import { DataService } from 'src/app/services/data.service';
 import { environment } from 'src/environments/environment';
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { map } from 'rxjs';
+import { openWithFreshLink } from '../shared/fresh-link';
 
 export interface PetDocument {
   id: number;
@@ -48,7 +50,7 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
     if (!this.petId) return;
     this.isLoading = true;
     this.dataService.getPetDocuments(this.petId).subscribe({
-      next: (docs) => { this.documents = docs; this.isLoading = false; this.cdr.detectChanges(); },
+      next: (docs) => { this.documents = docs; this.markFresh(docs); this.isLoading = false; this.cdr.detectChanges(); },
       error: () => { this.isLoading = false; this.cdr.detectChanges(); }
     });
   }
@@ -74,6 +76,7 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
     this.dataService.uploadPetDocument(this.petId, file).subscribe({
       next: (doc) => {
         this.documents.push(doc);
+        this.markFresh([doc]);
         this.isUploading = false;
         input.value = '';
         this.cdr.detectChanges();
@@ -92,6 +95,29 @@ export class PetDocumentsComponent implements OnInit, OnChanges {
       next: () => { this.documents = this.documents.filter(d => d.id !== doc.id); this.cdr.detectChanges(); },
       error: () => {}
     });
+  }
+
+  /** When each document's signed link was issued (links expire after 15 minutes). */
+  private linkIssuedAt = new Map<number, number>();
+
+  private markFresh(docs: PetDocument[]): void {
+    const now = Date.now();
+    docs.forEach(d => this.linkIssuedAt.set(d.id, now));
+  }
+
+  /** Re-sign the link first if this page has been open a while (see openWithFreshLink). */
+  openDoc(event: MouseEvent, doc: PetDocument): void {
+    if (!this.petId) return;
+    const id = this.petId;
+    openWithFreshLink(event, this.linkIssuedAt.get(doc.id) ?? 0, () =>
+      this.dataService.getPetDocuments(id).pipe(map((docs: PetDocument[]) => {
+        this.documents = docs;
+        this.markFresh(docs);
+        this.cdr.detectChanges();
+        const fresh = docs.find(d => d.id === doc.id);
+        return fresh ? this.getDocUrl(fresh) : null;
+      })),
+      () => this.toastService.error('This document is no longer available.'));
   }
 
   getDocUrl(doc: PetDocument): string {

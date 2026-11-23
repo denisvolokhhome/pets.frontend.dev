@@ -30,14 +30,14 @@
         <i class="bi text-lg" [ngClass]="isPdf(doc) ? 'bi-file-earmark-pdf text-red-600' : 'bi-file-earmark-image text-blue-600'"></i>
       </div>
       <div class="flex-1 min-w-0">
-        <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer"
+        <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer" (click)="openDoc($event, doc)"
            class="text-sm font-medium text-gray-800 hover:text-blue-600 truncate block no-underline">
           {{ doc.file_name }}
         </a>
         <span class="text-xs text-gray-500">{{ formatSize(doc.file_size) }}</span>
       </div>
       <div class="flex-shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-        <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer"
+        <a [href]="getDocUrl(doc)" target="_blank" rel="noopener noreferrer" (click)="openDoc($event, doc)"
            class="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-blue-100 hover:text-blue-600 transition-colors"
            title="Open"
            aria-label="Open document">

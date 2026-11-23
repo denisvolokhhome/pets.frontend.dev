@@ -177,10 +177,17 @@
           <label class="terms-label">
             <input type="checkbox" formControlName="acceptTerms" class="terms-checkbox" />
             <span class="terms-text">
-              I agree to the <a href="/privacy-policy" target="_blank" class="terms-link">Privacy Policy</a>
-              and <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a>
+              I agree to the <a href="/privacy-policy" target="_blank" class="terms-link">Privacy Policy</a><ng-container *ngIf="selectedAccountType === 'breeder'">,
+              <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a>
+              and <a href="/breeder-agreement" target="_blank" class="terms-link">Breeder Agreement</a></ng-container><ng-container *ngIf="selectedAccountType !== 'breeder'">
+              and <a href="/terms-of-use" target="_blank" class="terms-link">Terms of Use</a></ng-container>
             </span>
           </label>
+          <p class="terms-free-note">
+            <i class="bi bi-gift" aria-hidden="true"></i>
+            Breedly is free to use. If that ever changes, we'll email you at least 60 days before, and you'll
+            never be charged unless you choose a paid plan.
+          </p>
           <small *ngIf="showError('acceptTerms')" class="error-text">
             <i class="bi bi-x-circle"></i> You must accept the Privacy Policy and Terms of Use
           </small>

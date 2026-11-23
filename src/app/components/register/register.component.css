@@ -492,6 +492,8 @@
 
 /* ── Terms ── */
 .terms-checkbox-group { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+.terms-free-note { margin: 0; font-size: 0.8125rem; line-height: 1.5; color: var(--stone); }
+.terms-free-note i { color: var(--pine); margin-right: 0.25rem; }
 
 .terms-label {
   display: flex;
