@@ -16,6 +16,8 @@
 }
 
 :host ::ng-deep .marker-label {
+  gap: 2px;
+  color: var(--clay);
   display: inline-flex;
   align-items: center;
   justify-content: center;

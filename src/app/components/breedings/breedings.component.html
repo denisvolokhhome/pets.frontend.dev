@@ -85,8 +85,8 @@
         <label class="drawer-filter-label">Animal Type</label>
         <div class="drawer-pills">
           <button class="drawer-pill" [class.active]="!mobileFilters.petType" (click)="mobileFilters.petType = ''; applyMobileFilters()">All</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()"><span aria-hidden="true">🐕</span> Dog</button>
-          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()"><span aria-hidden="true">🐈</span> Cat</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Dog'" (click)="mobileFilters.petType = 'Dog'; applyMobileFilters()"><span class="pet-icon pet-icon--dog" aria-hidden="true"></span> Dog</button>
+          <button class="drawer-pill" [class.active]="mobileFilters.petType === 'Cat'" (click)="mobileFilters.petType = 'Cat'; applyMobileFilters()"><span class="pet-icon pet-icon--cat" aria-hidden="true"></span> Cat</button>
         </div>
       </div>
     </div>
