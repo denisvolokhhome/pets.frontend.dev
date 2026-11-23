@@ -93,6 +93,15 @@ export interface ThreadResponse {
   };
 }
 
+export interface ThreadDocument {
+  id: number;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  /** host-relative, signed, valid for 15 minutes */
+  url: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -238,6 +247,14 @@ export class MessageService {
     const headers = this.getAuthHeaders();
     return this.http
       .post<any>(`${this.apiUrl}/messages/threads/${threadId}/share-location`, {}, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  /** Documents the breeder shared in this thread, with short-lived signed download URLs. */
+  getThreadDocuments(threadId: string): Observable<ThreadDocument[]> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .get<ThreadDocument[]>(`${this.apiUrl}/messages/threads/${threadId}/documents`, { headers })
       .pipe(catchError(this.handleError));
   }
 
