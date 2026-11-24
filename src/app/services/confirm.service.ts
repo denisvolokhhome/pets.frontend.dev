@@ -23,6 +23,11 @@ export class ConfirmService {
   private readonly requestSubject = new BehaviorSubject<ConfirmRequest | null>(null);
   readonly request$ = this.requestSubject.asObservable();
 
+  /** True while a confirm dialog is waiting for an answer (lets overlays ignore its Escape). */
+  get isOpen(): boolean {
+    return this.requestSubject.value !== null;
+  }
+
   confirm(options: ConfirmOptions): Promise<boolean> {
     // Only one dialog at a time; a new request cancels a pending one.
     this.requestSubject.value?.resolve(false);

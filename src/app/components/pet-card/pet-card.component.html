@@ -29,6 +29,9 @@
       <button type="button" class="ui-icon-btn" (click)="onOpenDocuments($event)" title="Documents" aria-label="Documents">
         <i class="bi bi-file-earmark-text"></i>
       </button>
+      <button *ngIf="isFemale" type="button" class="ui-icon-btn" (click)="onOpenHeatHistory($event)" title="Heat history" [attr.aria-label]="'Heat history for ' + pet.name">
+        <i class="bi bi-droplet" aria-hidden="true"></i>
+      </button>
       <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="deletePet($event)" title="Remove" aria-label="Remove pet">
         <i class="bi bi-trash"></i>
       </button>

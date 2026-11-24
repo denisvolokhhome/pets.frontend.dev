@@ -11,6 +11,7 @@ export interface NotificationPreference {
   favorite_added: boolean;
   breeding_reminder: boolean;
   waitlist_update: boolean;
+  application_update: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -20,6 +21,7 @@ export interface NotificationPreferenceUpdate {
   favorite_added?: boolean;
   breeding_reminder?: boolean;
   waitlist_update?: boolean;
+  application_update?: boolean;
 }
 
 @Injectable({

@@ -981,35 +981,71 @@
   .mode-btn { padding: 0.375rem 0.625rem; font-size: 0.8125rem; }
 }
 
-/* ─── View switch: Map | Offspring ─────────────────────────────────────── */
-.view-switch-bar {
-  display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--n-200);
-  flex-shrink: 0;
-}
-.view-switch-pills { display: flex; gap: 0.5rem; margin-right: auto; }
+/* ─── View switch: Map | Offspring (desktop header) ─────────────────────── */
+/* Same segmented look as the radius group in app-search-controls */
 .view-switch {
-  display: inline-flex; padding: 3px; gap: 2px;
-  background: var(--n-100); border-radius: 999px;
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 2px;
+  height: 38px; padding: 3px; box-sizing: border-box;
+  border: 1px solid var(--n-300); border-radius: 999px;
+  background: var(--color-surface);
 }
 .view-switch-btn {
   display: inline-flex; align-items: center; gap: 0.375rem;
-  padding: 0.375rem 0.875rem; min-height: 36px;
+  height: 30px; min-height: 0; min-width: 0; margin: 0; padding: 0 0.75rem;
   border: none; border-radius: 999px; background: transparent;
-  font-size: 0.875rem; font-weight: 500; color: var(--stone); cursor: pointer;
+  font-size: 0.8125rem; font-weight: 500; color: var(--stone); cursor: pointer;
+  white-space: nowrap;
+  transition-property: color, background-color; transition-duration: 0.15s;
 }
-.view-switch-btn.active { background: var(--color-surface); color: var(--ink); box-shadow: 0 1px 3px rgba(48, 38, 28, 0.12); }
+.view-switch-btn:hover:not(.active) { background: var(--n-100); color: var(--ink); }
+.view-switch-btn.active { background: var(--secondary-strong); color: white; }
+.view-switch-btn:focus-visible { outline: 2px solid var(--secondary-color); outline-offset: 1px; }
+
+/* ─── Header filters: animal kind + Has offspring, inline with ZIP / breed ─ */
+.header-filters {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.header-filters .kind-pill { margin: 0; min-width: 38px; justify-content: center; min-height: 38px; padding: 0.375rem 0.75rem; border-radius: 999px; font-weight: 500; }
+.header-filters .kind-divider { margin: 0.375rem 0.125rem; }
+
+/* Results-panel pills are the mobile copy; desktop uses the header */
+.results-kind-pills { display: none; }
+
+/* Narrower desktops: collapse the least useful text first so the row never wraps.
+   The heading goes first (the Map/Offspring switch already names the view),
+   then Dog/Cat labels (icons are clear), then the view-switch labels. */
+@media (max-width: 1600px) {
+  .search-logo-text {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+  }
+}
+@media (max-width: 1440px) {
+  .header-filters .kind-pill--kind .kind-label { display: none; }
+  .search-header-bar { gap: 0.625rem; }
+}
+@media (max-width: 1280px) {
+  .view-switch-label { display: none; }
+  .view-switch-btn { padding: 0 0.625rem; }
+}
+@media (max-width: 1024px) {
+  .header-filters .kind-label { display: none; }
+  .header-filters .kind-pill { padding: 0.375rem 0.5rem; }
+  .search-header-bar { gap: 0.5rem; padding: 0.5rem 0.75rem; }
+}
 
 .search-content.view-hidden { display: none; }
 
 .offspring-view { flex: 1; overflow-y: auto; background: var(--oat); }
-.offspring-view-pills { display: none; }  /* desktop: pills sit in the view-switch bar */
+.offspring-view-pills { display: none; }  /* desktop: pills sit in the header */
 
 @media (max-width: 768px) {
-  .view-switch-bar { display: none; }  /* mobile uses the third tab */
   .offspring-view-pills { display: flex; }
+  .results-kind-pills { display: flex; }
   .offspring-view { overflow: visible; }
 }
 .search-logo-icon { color: var(--clay); }

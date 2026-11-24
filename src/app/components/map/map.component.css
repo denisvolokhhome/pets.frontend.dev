@@ -81,6 +81,30 @@
   font-style: italic;
 }
 
+/* Popup Contact button */
+:host ::ng-deep .popup-contact-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 12px;
+  min-height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: var(--secondary-strong);
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+:host ::ng-deep .popup-contact-btn:hover { background: var(--secondary-strong-hover); }
+:host ::ng-deep .popup-contact-btn:focus-visible { outline: 2px solid var(--secondary-color); outline-offset: 2px; }
+
 /* Popup rating styles */
 :host ::ng-deep .popup-rating {
   display: flex;

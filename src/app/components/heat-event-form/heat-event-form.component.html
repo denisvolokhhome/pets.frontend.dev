@@ -1,0 +1,96 @@
+<div class="hef-overlay" (click)="close()">
+  <form class="hef-modal" role="dialog" aria-modal="true" [attr.aria-labelledby]="uid + '-title'"
+        (click)="$event.stopPropagation()" (ngSubmit)="save()" novalidate>
+    <div class="hef-header">
+      <h3 [id]="uid + '-title'" tabindex="-1">{{ title }}</h3>
+      <button type="button" class="ui-icon-btn" (click)="close()" [disabled]="isBusy" aria-label="Close"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+    </div>
+
+    <div class="hef-body">
+      <!-- Kind switch: create only -->
+      <div *ngIf="!isEdit" class="hef-kind" role="radiogroup" aria-label="Event type">
+        <button type="button" role="radio" class="hef-kind__btn" [class.is-active]="kind === 'cycle'"
+                [attr.aria-checked]="kind === 'cycle'" (click)="setKind('cycle')">
+          <i class="bi bi-droplet" aria-hidden="true"></i> Heat cycle
+        </button>
+        <button type="button" role="radio" class="hef-kind__btn" [class.is-active]="kind === 'reminder'"
+                [attr.aria-checked]="kind === 'reminder'" (click)="setKind('reminder')">
+          <i class="bi bi-bell" aria-hidden="true"></i> Reminder
+        </button>
+      </div>
+
+      <div *ngIf="serverError" class="hef-alert" role="alert">
+        <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+        <span>{{ serverError }}</span>
+      </div>
+
+      <!-- Dog -->
+      <div class="field-group">
+        <label class="field-label" [for]="uid + '-pet'">Dog *</label>
+        <ng-container *ngIf="petLocked; else petSelect">
+          <input [id]="uid + '-pet'" type="text" class="field-input" [value]="lockedPetName" readonly aria-readonly="true" />
+        </ng-container>
+        <ng-template #petSelect>
+          <select [id]="uid + '-pet'" class="field-select" name="pet" [(ngModel)]="selectedPetId"
+                  [class.field-error]="errors['pet']" [attr.aria-invalid]="!!errors['pet']">
+            <option value="" disabled>Choose a dog…</option>
+            <option *ngFor="let p of petOptions" [value]="p.id">{{ p.name }}</option>
+          </select>
+          <span *ngIf="kind === 'cycle' && petOptions.length === 0" class="field-hint">
+            Heat cycles can be recorded for female dogs. Add a female dog on the Pets page first.
+          </span>
+        </ng-template>
+        <span class="error-msg" *ngIf="errors['pet']">{{ errors['pet'] }}</span>
+      </div>
+
+      <!-- Heat cycle fields -->
+      <ng-container *ngIf="kind === 'cycle'">
+        <div class="hef-row">
+          <div class="field-group">
+            <label class="field-label" [for]="uid + '-start'">Start date *</label>
+            <input [id]="uid + '-start'" type="date" class="field-input" name="startDate" [(ngModel)]="startDate"
+                   [class.field-error]="errors['start']" [attr.aria-invalid]="!!errors['start']" required />
+            <span class="error-msg" *ngIf="errors['start']">{{ errors['start'] }}</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" [for]="uid + '-end'">End date</label>
+            <input [id]="uid + '-end'" type="date" class="field-input" name="endDate" [(ngModel)]="endDate"
+                   [min]="startDate" [class.field-error]="errors['end']" [attr.aria-invalid]="!!errors['end']"
+                   [attr.aria-describedby]="uid + '-end-hint'" />
+            <span class="error-msg" *ngIf="errors['end']">{{ errors['end'] }}</span>
+            <span *ngIf="!errors['end']" class="field-hint" [id]="uid + '-end-hint'">Leave empty while the cycle is in progress.</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" [for]="uid + '-notes'">Notes</label>
+          <textarea [id]="uid + '-notes'" class="field-textarea" rows="3" name="notes" maxlength="2000" [(ngModel)]="notes"></textarea>
+        </div>
+      </ng-container>
+
+      <!-- Reminder fields -->
+      <ng-container *ngIf="kind === 'reminder'">
+        <div class="field-group">
+          <label class="field-label" [for]="uid + '-on'">Date *</label>
+          <input [id]="uid + '-on'" type="date" class="field-input" name="remindOn" [(ngModel)]="remindOn"
+                 [class.field-error]="errors['remindOn']" [attr.aria-invalid]="!!errors['remindOn']" required />
+          <span class="error-msg" *ngIf="errors['remindOn']">{{ errors['remindOn'] }}</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label" [for]="uid + '-note'">Note</label>
+          <textarea [id]="uid + '-note'" class="field-textarea" rows="3" name="note" maxlength="2000" [(ngModel)]="note"
+                    placeholder="e.g. Progesterone test, vet check"></textarea>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="hef-footer">
+      <button *ngIf="isEdit" type="button" class="ui-btn ui-btn--danger hef-delete" (click)="remove()" [disabled]="isDeleting || isSubmitting">
+        <i class="bi bi-trash" aria-hidden="true"></i> {{ isDeleting ? 'Deleting…' : 'Delete' }}
+      </button>
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="close()" [disabled]="isBusy">Cancel</button>
+      <button type="submit" class="ui-btn ui-btn--primary" [disabled]="isSubmitting || isDeleting">
+        {{ isSubmitting ? 'Saving…' : (isEdit ? 'Save' : 'Add') }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -73,6 +73,27 @@
           </div>
         </div>
 
+        <div class="preference-item">
+          <div class="preference-info">
+            <label class="preference-label">
+              <i class="bi bi-clipboard-check"></i>
+              Litter applications
+            </label>
+            <p class="preference-description">
+              Get notified (in the app and by email) when a family applies for one of your litters or puppies
+            </p>
+          </div>
+          <div class="preference-toggle">
+            <label class="switch">
+              <input
+                type="checkbox"
+                formControlName="application_update"
+                [disabled]="isLoading">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
         <div class="preference-item" *ngIf="waitlistEnabled">
           <div class="preference-info">
             <label class="preference-label">

@@ -14,6 +14,9 @@ import { environment } from 'src/environments/environment';
 import { ImportWizardComponent, IMPORT_WIZARD_MODAL_ID } from '../import-wizard/import-wizard.component';
 import { formatDisplayDate } from 'src/app/utils/format-utils';
 import { calculatePetAge } from 'src/app/utils/pet-utils';
+import { HeatHistoryComponent } from '../heat-history/heat-history.component';
+
+export const HEAT_HISTORY_MODAL_ID = 'petHeatHistoryModal';
 
 @Component({
   standalone: false,
@@ -72,6 +75,11 @@ export class PetsComponent implements OnInit {
   petId: string = '';
   selectedPetForBreeding: IPet | null = null;
   selectedPetForDocuments: IPet | null = null;
+  selectedPetForHeat: IPet | null = null;
+  /** Standalone heat history, rendered with ngComponentOutlet inside its modal. */
+  readonly heatHistoryComponent = HeatHistoryComponent;
+  readonly heatHistoryModalId = HEAT_HISTORY_MODAL_ID;
+  heatHistoryInputs: Record<string, unknown> = {};
   isLoading: boolean = true;
   locationsLoaded: boolean = false;
   apiHost = environment.API_HOST;
@@ -324,6 +332,22 @@ export class PetsComponent implements OnInit {
   openPetDocuments(emittedPet: IPet): void {
     this.selectedPetForDocuments = emittedPet;
     this.ModalService.open('petDocumentsModal');
+  }
+
+  /** Heat history is for female dogs only. */
+  isFemale(pet: IPet | null | undefined): boolean {
+    return (pet?.gender || '').toLowerCase() === 'female';
+  }
+
+  openHeatHistory(emittedPet: IPet): void {
+    if (!this.isFemale(emittedPet)) return;
+    this.selectedPetForHeat = emittedPet;
+    this.heatHistoryInputs = {
+      petId: String(emittedPet.id),
+      petName: emittedPet.name,
+      modalId: HEAT_HISTORY_MODAL_ID,
+    };
+    this.ModalService.open(HEAT_HISTORY_MODAL_ID);
   }
 
   onPetUpdated(): void {

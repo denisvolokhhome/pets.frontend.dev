@@ -175,6 +175,16 @@
     </p>
   </div>
 
+  <!-- Applications Section (#applications: target of new-application notifications) -->
+  <div class="section-card" id="applications">
+    <app-litter-applications
+      [breedingId]="breeding.id"
+      [puppies]="breeding.puppies"
+      [voided]="breeding.status === 'Voided'"
+      (changed)="refreshBreeding()">
+    </app-litter-applications>
+  </div>
+
   <!-- Application Form Section -->
   <div class="section-card">
     <div class="section-header">
@@ -197,8 +207,16 @@
       </div>
     </div>
 
+    <app-litter-applications-toggle
+      *ngIf="hasApplicationForm"
+      [breedingId]="breeding.id"
+      [form]="breeding.application_form"
+      [voided]="breeding.status === 'Voided'"
+      (formChange)="breeding.application_form = $event">
+    </app-litter-applications-toggle>
+
     <div *ngIf="hasApplicationForm" class="form-preview">
-      <p class="form-preview-hint">Pet seekers will see this form before contacting you about an offspring.</p>
+      <p class="form-preview-hint">Families fill in this form when they apply for this litter or ask about a puppy.</p>
       <div class="form-field-preview" *ngFor="let field of breeding.application_form.form_fields; let i = index">
         <span class="field-num">{{ i + 1 }}.</span>
         <span class="field-label">{{ field.label }}</span>

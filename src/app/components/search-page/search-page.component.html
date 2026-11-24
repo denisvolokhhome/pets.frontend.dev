@@ -3,7 +3,7 @@
   <!-- ===== DESKTOP Header Bar ===== -->
   <div class="search-header-bar desktop-header">
     <div class="search-header-left">
-      <h1 class="search-logo"><span class="pet-icon pet-icon--paw search-logo-icon" aria-hidden="true"></span> {{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</h1>
+      <h1 class="search-logo"><span class="pet-icon pet-icon--paw search-logo-icon" aria-hidden="true"></span> <span class="search-logo-text">{{ viewMode === 'offspring' ? 'Offspring Near You' : 'Find Breeders' + (serviceProvidersEnabled ? ' & Services' : '') }}</span></h1>
     </div>
     <div class="search-header-controls">
       <app-search-controls
@@ -13,6 +13,47 @@
         [selectedAnimalKind]="selectedAnimalKind"
         (animalKindChange)="onAnimalKindChange($event)"
         (search)="onSearch()">
+        <!-- Animal kind + availability filters, inline with ZIP / breed -->
+        <div class="header-filters" *ngIf="searchMode !== 'services'" role="group" aria-label="Filters">
+          <button
+            *ngFor="let pt of petTypes"
+            type="button"
+            class="kind-pill kind-pill--kind"
+            [class.active]="selectedAnimalKind === pt.value"
+            [attr.aria-pressed]="selectedAnimalKind === pt.value"
+            [attr.title]="pt.label"
+            [attr.aria-label]="pt.label"
+            (click)="onAnimalKindChange(pt.value)">
+            <span class="kind-icon" [ngClass]="pt.iconClass" aria-hidden="true"></span>
+            <span class="kind-label">{{ pt.label }}</span>
+          </button>
+          <ng-container *ngIf="viewMode === 'map'">
+            <span class="kind-divider" aria-hidden="true"></span>
+            <button
+              type="button"
+              class="kind-pill"
+              data-testid="only-with-offspring"
+              title="Only breeders with offspring"
+              aria-label="Has offspring"
+              [class.active]="onlyWithOffspring"
+              [attr.aria-pressed]="onlyWithOffspring"
+              (click)="toggleOnlyWithOffspring()">
+              <i class="bi bi-check2-circle kind-icon" aria-hidden="true"></i>
+              <span class="kind-label">Has offspring</span>
+            </button>
+          </ng-container>
+        </div>
+        <!-- View switcher: map + breeders, or offspring grouped by breeder -->
+        <div class="view-switch" searchControlsTrailing *ngIf="searchMode !== 'services'" role="group" aria-label="Choose a view">
+          <button type="button" class="view-switch-btn" [class.active]="viewMode === 'map'"
+                  [attr.aria-pressed]="viewMode === 'map'" title="Map" (click)="setViewMode('map')">
+            <i class="bi bi-map" aria-hidden="true"></i> <span class="view-switch-label">Map</span>
+          </button>
+          <button type="button" class="view-switch-btn" [class.active]="viewMode === 'offspring'"
+                  [attr.aria-pressed]="viewMode === 'offspring'" title="Offspring" data-testid="view-offspring" (click)="setViewMode('offspring')">
+            <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> <span class="view-switch-label">Offspring</span>
+          </button>
+        </div>
       </app-search-controls>
     </div>
   </div>
@@ -199,30 +240,6 @@
     </div>
   </div>
 
-  <!-- View switcher (desktop): map + breeders, or offspring grouped by breeder -->
-  <div class="view-switch-bar" *ngIf="searchMode !== 'services' && !isMapFullscreen">
-    <div class="view-switch-pills" *ngIf="viewMode === 'offspring'">
-      <button
-        *ngFor="let pt of petTypes"
-        class="kind-pill"
-        [class.active]="selectedAnimalKind === pt.value"
-        (click)="onAnimalKindChange(pt.value)">
-        <span class="kind-icon" [ngClass]="pt.iconClass" aria-hidden="true"></span>
-        <span class="kind-label">{{ pt.label }}</span>
-      </button>
-    </div>
-    <div class="view-switch" role="group" aria-label="Choose a view">
-      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'map'"
-              [attr.aria-pressed]="viewMode === 'map'" (click)="setViewMode('map')">
-        <i class="bi bi-map" aria-hidden="true"></i> Map
-      </button>
-      <button type="button" class="view-switch-btn" [class.active]="viewMode === 'offspring'"
-              [attr.aria-pressed]="viewMode === 'offspring'" data-testid="view-offspring" (click)="setViewMode('offspring')">
-        <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Offspring
-      </button>
-    </div>
-  </div>
-
   <!-- Mobile Tab Switcher (visible on mobile only) -->
   <div class="mobile-tabs" role="tablist" aria-label="View switcher">
     <button
@@ -287,7 +304,9 @@
         [center]="mapCenter"
         [markers]="breederMarkers"
         [radius]="radius"
+        [showContact]="!authService.isBreeder"
         (markerClick)="onMarkerClick($event)"
+        (contactClick)="onMarkerContact($event)"
         (markerHover)="onMarkerHover($event)">
       </app-map>
 
@@ -326,8 +345,8 @@
         </h3>
       </div>
 
-      <!-- Animal Kind Filter Pills (breeders only) -->
-      <div class="animal-kind-pills" *ngIf="searchMode !== 'services'">
+      <!-- Animal Kind Filter Pills (breeders only; mobile — desktop has them in the header) -->
+      <div class="animal-kind-pills results-kind-pills" *ngIf="searchMode !== 'services'">
         <button
           *ngFor="let pt of petTypes"
           class="kind-pill"
@@ -438,4 +457,10 @@
       </div>
     </div>
   </div>
+
+  <!-- Guest sign-in before contacting a breeder from a map popup -->
+  <app-guest-prompt-modal
+    [(visible)]="showGuestModal"
+    (authSuccess)="onGuestAuthSuccess()">
+  </app-guest-prompt-modal>
 </div>

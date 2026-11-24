@@ -42,7 +42,7 @@ describe('PrivacyPolicyComponent', () => {
 
   it('the downloaded text is built from the page itself', () => {
     const text = (fixture.componentInstance as any).getPolicyText() as string;
-    expect(text.startsWith('PRIVACY POLICY\nLast Updated: November 22, 2026')).toBeTrue();
+    expect(text.startsWith('PRIVACY POLICY\nLast Updated: November 24, 2026')).toBeTrue();
     expect(text).toContain('3.4 What We Do Not Collect');
     expect(text).not.toContain('Download Privacy Policy');
   });
