@@ -164,6 +164,7 @@
           (editingPet)="editPet($event)"
           (quickBreeding)="openQuickBreeding($event)"
           (openDocuments)="openPetDocuments($event)"
+          (openHeatHistory)="openHeatHistory($event)"
           *ngFor="let pet of filteredPets | searchPets : term; let i = index"
           [pet]="pet"
           [breedName]="getBreedName(pet)"
@@ -236,7 +237,7 @@
               <th pSortableColumn="weight">Weight <p-sortIcon field="weight"></p-sortIcon></th>
               <th pSortableColumn="location_name">Location <p-sortIcon field="location_name"></p-sortIcon></th>
               <th>Health</th>
-              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 10rem; text-align: right">Actions</th>
+              <th pFrozenColumn [frozen]="true" alignFrozen="right" style="width: 12rem; text-align: right">Actions</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-pet>
@@ -288,6 +289,9 @@
                   </button>
                   <button type="button" class="ui-icon-btn" title="Documents" aria-label="Documents" (click)="openPetDocuments(pet)">
                     <i class="bi bi-file-earmark-text"></i>
+                  </button>
+                  <button *ngIf="isFemale(pet)" type="button" class="ui-icon-btn" title="Heat history" [attr.aria-label]="'Heat history for ' + pet.name" (click)="openHeatHistory(pet)">
+                    <i class="bi bi-droplet" aria-hidden="true"></i>
                   </button>
                   <button type="button" class="ui-icon-btn ui-icon-btn--danger" title="Remove" aria-label="Remove" (click)="deletePet(pet.id)">
                     <i class="bi bi-trash"></i>
@@ -381,6 +385,18 @@
     [petId]="selectedPetForDocuments.id"
     [petName]="selectedPetForDocuments.name">
   </app-pet-documents>
+</div>
+
+<div
+  app-modal
+  [title]="selectedPetForHeat ? 'Heat history · ' + selectedPetForHeat.name : 'Heat history'"
+  modalSize="medium"
+  [modalId]="heatHistoryModalId"
+  aria-labelledby="PetHeatHistoryModal"
+>
+  <ng-container *ngIf="selectedPetForHeat">
+    <ng-container *ngComponentOutlet="heatHistoryComponent; inputs: heatHistoryInputs"></ng-container>
+  </ng-container>
 </div>
 
 <!-- Import Wizard (opened via ModalService) -->

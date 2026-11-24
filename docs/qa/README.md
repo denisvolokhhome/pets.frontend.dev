@@ -14,6 +14,7 @@ accounts and data created in earlier ones.
 | 6 | [06-account-and-security.md](06-account-and-security.md) | Guest → account flow, password reset, sign-in redirects, session expiry, logout | 20 min |
 | 7 | [07-subscription-billing.md](07-subscription-billing.md) | Plan limits, upgrade with Stripe test card | 15 min |
 | 8 | [08-mobile-checklist.md](08-mobile-checklist.md) | The key screens again on a phone-sized screen | 20 min |
+| 9 | [09-litter-applications-heat-calendar.md](09-litter-applications-heat-calendar.md) | Litter applications, waitlist & puppy assignment, heat history, calendar | 30 min |
 
 ---
 

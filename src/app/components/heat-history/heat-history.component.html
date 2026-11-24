@@ -1,0 +1,133 @@
+<div class="hh">
+  <div class="hh-top">
+    <p class="hh-intro">Private record of {{ petName || 'this dog' }}'s heat cycles and your reminders. Only you can see it.</p>
+    <button type="button" class="ui-link hh-cal-link" (click)="viewInCalendar()">
+      <i class="bi bi-calendar3" aria-hidden="true"></i> View in calendar
+    </button>
+  </div>
+
+  <div *ngIf="isLoading && !cycles.length && !reminders.length" class="hh-state" role="status" aria-live="polite">Loading heat history…</div>
+  <div *ngIf="loadError" class="hh-error" role="alert">
+    <span>{{ loadError }}</span>
+    <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="load()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!loadError && !(isLoading && !cycles.length && !reminders.length)">
+    <!-- Current status -->
+    <section *ngIf="openCycle as open" class="hh-banner" aria-label="Current heat cycle">
+      <div class="hh-banner__main">
+        <i class="bi bi-droplet-fill hh-banner__icon" aria-hidden="true"></i>
+        <div>
+          <p class="hh-banner__title">In heat since {{ formatDate(open.start_date) }} · day {{ dayOfCycle(open) }}</p>
+          <p *ngIf="open.notes" class="hh-banner__notes">{{ open.notes }}</p>
+        </div>
+      </div>
+      <div class="hh-banner__actions" *ngIf="!showEndPicker">
+        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" (click)="openEndPicker()">
+          <i class="bi bi-check2-circle" aria-hidden="true"></i> End cycle
+        </button>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="editCycle(open)">
+          <i class="bi bi-pencil" aria-hidden="true"></i> Edit
+        </button>
+      </div>
+      <div *ngIf="showEndPicker" class="hh-end">
+        <label class="hh-end__label" for="hh-end-date">End date</label>
+        <div class="hh-end__row">
+          <input id="hh-end-date" type="date" class="hh-end__input" [(ngModel)]="endDateValue"
+                 [min]="open.start_date" [attr.aria-invalid]="!!endError" />
+          <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" (click)="confirmEnd()" [disabled]="isEnding">
+            {{ isEnding ? 'Saving…' : 'Save' }}
+          </button>
+          <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="cancelEnd()">Cancel</button>
+        </div>
+        <span *ngIf="endError" class="hh-end__error" role="alert">{{ endError }}</span>
+      </div>
+    </section>
+
+    <!-- Cycles -->
+    <section class="hh-section" aria-labelledby="hh-cycles-title">
+      <div class="hh-section__head">
+        <h3 id="hh-cycles-title" class="hh-section__title">Heat cycles</h3>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="addCycle()" [disabled]="!!openCycle"
+                [attr.aria-describedby]="openCycle ? 'hh-add-hint' : null">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i> Add cycle
+        </button>
+      </div>
+      <p *ngIf="openCycle" id="hh-add-hint" class="hh-hint">End the current cycle before adding a new one.</p>
+
+      <p *ngIf="!cycles.length" class="hh-empty">No heat cycles recorded yet.</p>
+      <ul *ngIf="cycles.length" class="hh-list">
+        <li *ngFor="let c of cycles" class="hh-item">
+          <div class="hh-item__main">
+            <p class="hh-item__title">
+              {{ formatRange(c.start_date, c.end_date) }}
+              <span *ngIf="c.in_progress" class="ui-badge ui-badge--warning">In progress</span>
+            </p>
+            <p class="hh-item__sub">
+              {{ cycleLength(c) }} {{ cycleLength(c) === 1 ? 'day' : 'days' }}{{ c.in_progress ? ' so far' : '' }}
+            </p>
+            <p *ngIf="c.notes" class="hh-item__notes">{{ c.notes }}</p>
+          </div>
+          <div class="ui-row-actions">
+            <button type="button" class="ui-icon-btn" (click)="editCycle(c)"
+                    [attr.aria-label]="'Edit cycle starting ' + formatDate(c.start_date)" title="Edit">
+              <i class="bi bi-pencil" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="deleteCycle(c)"
+                    [attr.aria-label]="'Delete cycle starting ' + formatDate(c.start_date)" title="Delete">
+              <i class="bi bi-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Reminders -->
+    <section class="hh-section" aria-labelledby="hh-rem-title">
+      <div class="hh-section__head">
+        <h3 id="hh-rem-title" class="hh-section__title">Reminders</h3>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="addReminder()">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i> Add reminder
+        </button>
+      </div>
+      <p *ngIf="!reminders.length" class="hh-empty">No reminders. Add one for a vet check, a progesterone test or a planned breeding.</p>
+      <ul *ngIf="reminders.length" class="hh-list">
+        <li *ngFor="let r of sortedReminders" class="hh-item" [class.hh-item--past]="isPast(r)">
+          <div class="hh-item__main">
+            <p class="hh-item__title">
+              <i class="bi bi-bell" aria-hidden="true"></i>
+              {{ formatDate(r.remind_on) }}
+              <span *ngIf="r.remind_on === today" class="ui-badge ui-badge--info">Today</span>
+              <span *ngIf="isPast(r)" class="ui-badge ui-badge--neutral">Past</span>
+            </p>
+            <p *ngIf="r.note" class="hh-item__notes">{{ r.note }}</p>
+          </div>
+          <div class="ui-row-actions">
+            <button type="button" class="ui-icon-btn" (click)="editReminder(r)"
+                    [attr.aria-label]="'Edit reminder on ' + formatDate(r.remind_on)" title="Edit">
+              <i class="bi bi-pencil" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="ui-icon-btn ui-icon-btn--danger" (click)="deleteReminder(r)"
+                    [attr.aria-label]="'Delete reminder on ' + formatDate(r.remind_on)" title="Delete">
+              <i class="bi bi-trash" aria-hidden="true"></i>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </ng-container>
+</div>
+
+<app-heat-event-form
+  *ngIf="formOpen"
+  [mode]="formMode"
+  [kind]="formKind"
+  [petId]="petId"
+  [lockPet]="true"
+  [pets]="formPets"
+  [cycle]="formCycle"
+  [reminder]="formReminder"
+  (saved)="onFormDone()"
+  (deleted)="onFormDone()"
+  (closed)="formOpen = false">
+</app-heat-event-form>

@@ -6,6 +6,7 @@ import { BadgeModule } from 'primeng/badge';
 import { NotificationService, Notification } from '../../services/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { LitterApplicationService } from '../../services/litter-application.service';
 import { Subject, takeUntil, interval } from 'rxjs';
 
 @Component({
@@ -37,7 +38,8 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private toastService: ToastService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private litterApplicationService: LitterApplicationService
   ) {}
 
   ngOnInit(): void {
@@ -232,6 +234,25 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
         break;
       case 'waitlist_entry_seeker':
         this.router.navigate(['/my-waitlists']);
+        break;
+      case 'litter_application':
+        // related_id is the application; open its litter's Applications section
+        this.litterApplicationService.getApplication(notification.related_id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: app => this.router.navigate(['/breeding', app.breeding_id], { fragment: 'applications' }),
+            error: error => {
+              // Application gone or not ours: show the message instead, like a notification without a target
+              console.error('Error loading litter application:', error);
+              this.selectedNotification = notification;
+              this.cdr.markForCheck();
+            }
+          });
+        break;
+      case 'litter_application_family':
+        // A family's own application update: the message says it all (the list is breeder-only)
+        this.selectedNotification = notification;
+        this.cdr.markForCheck();
         break;
       default:
         console.warn('Unknown notification type:', notification.related_type);

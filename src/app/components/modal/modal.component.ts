@@ -1,6 +1,7 @@
 import { ModalService } from './../../services/modal.service';
 import { Component, Input, OnInit, OnDestroy, HostListener, ElementRef, HostBinding } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ConfirmService } from '../../services/confirm.service';
 
 @Component({
   standalone: false,
@@ -23,7 +24,8 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public ModalService: ModalService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private confirmService: ConfirmService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +65,8 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event: KeyboardEvent): void {
+    // A confirm dialog on top owns Escape: it closes itself, not this modal.
+    if (this.confirmService.isOpen) return;
     if (this.isVisible) {
       event.preventDefault();
       this.closeModal();

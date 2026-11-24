@@ -9,7 +9,7 @@ import { downloadTextFile, policyTextFromPage } from '../shared/policy-text';
   styleUrls: ['./privacy-policy.component.css']
 })
 export class PrivacyPolicyComponent {
-  lastUpdated = 'November 22, 2026';
+  lastUpdated = 'November 24, 2026';
 
   constructor(private el: ElementRef<HTMLElement>) {}
 

@@ -51,6 +51,8 @@ import { CookiePolicyComponent } from './components/cookie-policy/cookie-policy.
 import { AcceptableUsePolicyComponent } from './components/acceptable-use-policy/acceptable-use-policy.component';
 import { BreederAgreementComponent } from './components/breeder-agreement/breeder-agreement.component';
 import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
+import { LitterPublicComponent } from './components/litter-public/litter-public.component';
+import { BreederCalendarComponent } from './components/breeder-calendar/breeder-calendar.component';
 
 const routes: Routes = [
   { path: '', component: HomeNextComponent },
@@ -86,10 +88,12 @@ const routes: Routes = [
   { path: 'offsprings/:id', component: OffspringDetailComponent, canActivate: [BreederGuard] },
   { path: 'breeder/:id/offsprings', component: OffspringGridComponent },
   { path: 'offspring/:id', component: OffspringDetailComponent }, // Public offspring detail
+  { path: 'litter/:id', component: LitterPublicComponent }, // Public litter page (Apply for this litter)
   { path: 'waitlist', component: WaitlistComponent, canActivate: [WaitlistGuard, BreederGuard] },
   { path: 'my-waitlists', component: MyWaitlistsComponent, canActivate: [WaitlistGuard, PetSeekerGuard] },
   { path: 'favorites/offsprings', component: FavoritesListComponent, canActivate: [PetSeekerGuard] },
   { path: 'genealogy', component: GenealogyComponent, canActivate: [BreederGuard] },
+  { path: 'calendar', component: BreederCalendarComponent, canActivate: [BreederGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [ServiceProviderGuard] },
   { path: 'messages', component: MessagesListComponent, canActivate: [AuthGuard] },
   { path: 'messages/new', component: MessageNewComponent, canActivate: [AuthGuard] },

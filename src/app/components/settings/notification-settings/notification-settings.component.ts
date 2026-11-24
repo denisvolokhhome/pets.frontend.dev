@@ -26,7 +26,8 @@ export class NotificationSettingsComponent implements OnInit {
       message_received: [true],
       favorite_added: [false],
       breeding_reminder: [true],
-      waitlist_update: [true]
+      waitlist_update: [true],
+      application_update: [true]
     });
   }
 
@@ -44,7 +45,8 @@ export class NotificationSettingsComponent implements OnInit {
           message_received: preferences.message_received,
           favorite_added: preferences.favorite_added,
           breeding_reminder: preferences.breeding_reminder,
-          waitlist_update: preferences.waitlist_update ?? true
+          waitlist_update: preferences.waitlist_update ?? true,
+          application_update: preferences.application_update ?? true
         });
         this.isLoading = false;
       },
@@ -68,7 +70,8 @@ export class NotificationSettingsComponent implements OnInit {
     const preferences: NotificationPreferenceUpdate = {
       message_received: this.preferencesForm.value.message_received,
       favorite_added: this.preferencesForm.value.favorite_added,
-      breeding_reminder: this.preferencesForm.value.breeding_reminder
+      breeding_reminder: this.preferencesForm.value.breeding_reminder,
+      application_update: this.preferencesForm.value.application_update
     };
     if (this.waitlistEnabled) {
       preferences.waitlist_update = this.preferencesForm.value.waitlist_update;

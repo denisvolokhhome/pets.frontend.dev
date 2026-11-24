@@ -1,0 +1,38 @@
+<div class="apply-toggle">
+  <div class="apply-toggle-row" *ngIf="!voided">
+    <label class="switch">
+      <input type="checkbox"
+             data-testid="accept-litter-applications"
+             [checked]="accepting"
+             [disabled]="isSaving"
+             (change)="toggle($event)" />
+      <span class="switch-track"><span class="switch-thumb"></span></span>
+      <span class="switch-label">Accept applications for this litter</span>
+    </label>
+    <span [class]="accepting ? 'ui-badge ui-badge--success' : 'ui-badge ui-badge--neutral'">
+      {{ accepting ? 'Open' : 'Closed' }}
+    </span>
+  </div>
+
+  <p class="apply-toggle-hint" *ngIf="!voided && accepting">
+    Families can apply from the public litter page, even before puppies are listed.
+  </p>
+  <p class="apply-toggle-hint" *ngIf="!voided && !accepting">
+    The litter page doesn't take new applications. Applications already sent stay in the list below,
+    and families can still apply from a published puppy's page.
+  </p>
+  <p class="apply-toggle-hint" *ngIf="voided">
+    This litter is voided, so it can't take applications. Past applications stay available.
+  </p>
+
+  <div class="apply-toggle-actions" *ngIf="!voided">
+    <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="copyLink()">
+      <i class="bi bi-link-45deg"></i>
+      Copy link
+    </button>
+    <a class="ui-btn ui-btn--ghost ui-btn--sm" [routerLink]="publicPath" target="_blank" rel="noopener">
+      <i class="bi bi-box-arrow-up-right"></i>
+      View public page
+    </a>
+  </div>
+</div>

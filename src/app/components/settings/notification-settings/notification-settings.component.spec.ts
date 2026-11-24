@@ -19,7 +19,7 @@ describe('NotificationSettingsComponent waitlist toggle', () => {
     prefs = jasmine.createSpyObj('NotificationPreferenceService', ['getPreferences', 'updatePreferences']);
     prefs.getPreferences.and.returnValue(of({
       id: 'p', user_id: 'u', message_received: true, favorite_added: false,
-      breeding_reminder: true, waitlist_update: false, created_at: '', updated_at: ''
+      breeding_reminder: true, waitlist_update: false, application_update: true, created_at: '', updated_at: ''
     }));
     prefs.updatePreferences.and.returnValue(of({} as any));
     TestBed.configureTestingModule({

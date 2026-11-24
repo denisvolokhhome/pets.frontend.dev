@@ -435,6 +435,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
         this.showGuestModal = true;
         return;
       }
+      // Same rule as after a guest signs in: breeders and service accounts don't message breeders
+      const user = this.authService.currentUser;
+      if (user && (user.is_breeder || user.account_type === 'service')) return;
       this.openBreederConversation(breeder);
       return;
     }
