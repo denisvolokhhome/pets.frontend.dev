@@ -1,7 +1,7 @@
 <div class="modal-overlay" (click)="onCancel()">
   <div class="form-modal" (click)="$event.stopPropagation()">
     <div class="form-modal-header">
-      <h3>Apply for {{ offspringName }}</h3>
+      <h3>{{ headerText }}</h3>
       <button type="button" class="ui-icon-btn" (click)="onCancel()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
     </div>
 
@@ -11,7 +11,7 @@
       </div>
 
       <ng-container *ngIf="!isLoading">
-        <p class="form-intro">Please fill out the breeder's application form. Your answers will be included in your first message.</p>
+        <p class="form-intro">{{ intro || "Please fill out the breeder's application form. Your answers will be included in your first message." }}</p>
 
         <div class="field-group" *ngFor="let field of fields">
           <label class="field-label">
@@ -39,13 +39,15 @@
 
           <span class="error-msg" *ngIf="validationErrors[field.id]">{{ validationErrors[field.id] }}</span>
         </div>
+
+        <p class="submit-error" *ngIf="submitError" role="alert">{{ submitError }}</p>
       </ng-container>
     </div>
 
     <div class="form-modal-footer">
-      <button type="button" class="ui-btn ui-btn--secondary" (click)="onCancel()">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
       <button type="button" class="ui-btn ui-btn--primary" (click)="onSubmit()" [disabled]="isLoading || isSubmitting">
-        {{ isSubmitting ? 'Submitting…' : 'Submit & Message Breeder' }}
+        {{ isSubmitting ? 'Submitting…' : (submitLabel || 'Submit & Message Breeder') }}
       </button>
     </div>
   </div>

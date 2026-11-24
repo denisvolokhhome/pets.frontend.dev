@@ -19,6 +19,7 @@ import { formatDisplayDate, statusBadgeClass, rememberPostSignupRedirect } from 
 import { ConfirmService } from 'src/app/services/confirm.service';
 import { canJoinWaitlist } from 'src/app/models/waitlist';
 import { JoinWaitlistModalComponent } from '../join-waitlist-modal/join-waitlist-modal.component';
+import { LitterApplicationService } from 'src/app/services/litter-application.service';
 
 @Component({
   standalone: true,
@@ -75,7 +76,8 @@ export class OffspringDetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private genealogyService: GenealogyService,
-    private dataService: DataService
+    private dataService: DataService,
+    private litterApplicationService: LitterApplicationService
   ) {}
 
   ngOnInit(): void {
@@ -419,6 +421,17 @@ export class OffspringDetailComponent implements OnInit {
   onApplicationFormSubmitted(submission: ApplicationFormSubmission): void {
     this.showApplicationForm = false;
     if (!this.offspring) return;
+
+    // Store the application for the breeder's Applications list. Fire and forget:
+    // the message below is still the main channel, so a failure (e.g. a duplicate) is ignored.
+    if (this.offspring.breeding_id) {
+      this.litterApplicationService.submitApplication(this.offspring.breeding_id, {
+        answers: submission.responses,
+        offspring_id: this.offspring.id
+      }).subscribe({
+        error: err => console.warn('Could not store the application:', err?.error?.detail || err?.message)
+      });
+    }
 
     // Navigate to messaging with the form response pre-filled as the initial message
     this.messageService.checkOffspringThread(this.offspring.id).subscribe({

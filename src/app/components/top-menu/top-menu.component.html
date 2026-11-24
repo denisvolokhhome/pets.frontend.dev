@@ -153,6 +153,11 @@
                   <i class="bi bi-hourglass-split mr-2"></i>My waitlists
                 </a>
               </li>
+              <li *ngIf="isBreeder">
+                <a href="/calendar" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
+                  <i class="bi bi-calendar3 mr-2"></i>Calendar
+                </a>
+              </li>
               <li *ngIf="waitlistEnabled && isBreeder">
                 <a href="/waitlist" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
                   <i class="bi bi-hourglass-split mr-2"></i>Waitlist

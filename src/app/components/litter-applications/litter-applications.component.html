@@ -1,0 +1,175 @@
+<div class="apps-card" data-testid="litter-applications">
+  <div class="apps-header">
+    <h2 class="apps-title">
+      Applications
+      <span class="apps-count" *ngIf="!isLoading && !loadError">{{ applications.length }}</span>
+    </h2>
+    <button type="button" class="ui-icon-btn" (click)="load()" [disabled]="isLoading" aria-label="Refresh applications" title="Refresh">
+      <i class="bi bi-arrow-clockwise"></i>
+    </button>
+  </div>
+
+  <div class="apps-state" *ngIf="isLoading">Loading applications…</div>
+
+  <div class="apps-state apps-state--error" *ngIf="!isLoading && loadError">
+    <span>{{ loadError }}</span>
+    <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="load()">Try again</button>
+  </div>
+
+  <div class="apps-empty" *ngIf="!isLoading && !loadError && applications.length === 0">
+    <i class="bi bi-inbox apps-empty-icon"></i>
+    <p class="apps-empty-title">No applications yet</p>
+    <p class="apps-empty-text">
+      Applications appear here when families apply from the litter page or from a puppy's page.
+      Turn on "Accept applications for this litter" in the Application Form section and share the link.
+    </p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !loadError && applications.length > 0">
+    <div class="apps-filters" role="tablist" aria-label="Filter by status">
+      <button type="button" *ngFor="let f of filters"
+              class="apps-chip" [class.apps-chip--active]="filter === f"
+              role="tab" [attr.aria-selected]="filter === f"
+              (click)="filter = f">
+        {{ filterLabel(f) }}
+        <span class="apps-chip-count">{{ count(f) }}</span>
+      </button>
+    </div>
+
+    <p class="apps-filter-empty" *ngIf="visible.length === 0">No {{ filterLabel(filter).toLowerCase() }} applications.</p>
+
+    <div class="apps-table-wrap" *ngIf="visible.length > 0">
+      <table class="ui-table apps-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Submitted</th>
+            <th>Source</th>
+            <th>Status</th>
+            <th>Assigned puppy</th>
+            <th class="apps-actions-th">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of visible; trackBy: trackById">
+            <td class="apps-cell-applicant" data-label="Applicant">
+              <div class="ui-cell-title">{{ app.applicant_name || 'Unknown applicant' }}</div>
+              <div class="ui-cell-sub" *ngIf="app.applicant_email">
+                <a class="ui-link apps-applicant-email" [href]="'mailto:' + app.applicant_email" [title]="app.applicant_email">{{ app.applicant_email }}</a>
+              </div>
+            </td>
+            <td data-label="Submitted" class="apps-nowrap">{{ app.created_at | date:'mediumDate' }}</td>
+            <td data-label="Source">{{ sourceLabel(app) }}</td>
+            <td data-label="Status">
+              <div class="apps-status-cell">
+              <div class="apps-status">
+                <span [class]="statusBadge[app.status]">{{ statusLabels[app.status] }}</span>
+                <select #statusSelect class="apps-select"
+                        [value]="app.status"
+                        [disabled]="app.status === 'assigned' || busy[app.id]"
+                        [attr.aria-label]="'Change status for ' + (app.applicant_name || 'applicant')"
+                        [title]="app.status === 'assigned' ? 'Undo the puppy assignment before changing the status' : 'Change status'"
+                        (change)="changeStatus(app, $any(statusSelect.value), statusSelect)">
+                  <option *ngIf="app.status === 'assigned'" value="assigned">Assigned</option>
+                  <option *ngFor="let s of manualStatuses" [value]="s" [selected]="s === app.status">{{ statusLabels[s] }}</option>
+                </select>
+              </div>
+              <div class="apps-hint" *ngIf="app.status === 'assigned'">Undo the assignment first.</div>
+              </div>
+            </td>
+            <td data-label="Assigned puppy">
+              <span *ngIf="app.assigned_offspring; else noPuppy">{{ puppyName(app.assigned_offspring) }}</span>
+              <ng-template #noPuppy><span class="ui-muted">—</span></ng-template>
+            </td>
+            <td class="apps-actions-td">
+              <div class="ui-row-actions apps-row-actions">
+                <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="openView(app)">
+                  <i class="bi bi-eye"></i> View
+                </button>
+                <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm"
+                        *ngIf="canAssign(app)" [disabled]="busy[app.id]" (click)="openAssign(app)">
+                  <i class="bi bi-person-check"></i> Assign puppy
+                </button>
+                <button type="button" class="ui-btn ui-btn--danger ui-btn--sm"
+                        *ngIf="app.status === 'assigned'" [disabled]="busy[app.id]" (click)="unassign(app)">
+                  <i class="bi bi-arrow-counterclockwise"></i> Undo assignment
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+</div>
+
+<!-- View application -->
+<div class="apps-overlay" *ngIf="viewing" (click)="closeView()">
+  <div class="apps-modal" role="dialog" aria-modal="true" aria-labelledby="apps-view-title" (click)="$event.stopPropagation()">
+    <div class="apps-modal-header">
+      <div class="apps-modal-heading">
+        <h3 id="apps-view-title" tabindex="-1">{{ viewing.applicant_name || 'Unknown applicant' }}</h3>
+        <a class="ui-link apps-email" *ngIf="viewing.applicant_email" [href]="'mailto:' + viewing.applicant_email">{{ viewing.applicant_email }}</a>
+      </div>
+      <button type="button" class="ui-icon-btn" (click)="closeView()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="apps-modal-body">
+      <dl class="apps-meta">
+        <div><dt>Status</dt><dd><span [class]="statusBadge[viewing.status]">{{ statusLabels[viewing.status] }}</span></dd></div>
+        <div><dt>Submitted</dt><dd>{{ viewing.created_at | date:'medium' }}</dd></div>
+        <div><dt>Source</dt><dd>{{ sourceLabel(viewing) }}</dd></div>
+        <div *ngIf="viewing.requested_offspring"><dt>Requested puppy</dt><dd>{{ puppyName(viewing.requested_offspring) }}</dd></div>
+        <div *ngIf="viewing.assigned_offspring"><dt>Assigned puppy</dt><dd>{{ puppyName(viewing.assigned_offspring) }}</dd></div>
+        <div *ngIf="viewing.assigned_at"><dt>Assigned on</dt><dd>{{ viewing.assigned_at | date:'medium' }}</dd></div>
+        <div *ngIf="viewing.updated_at && viewing.updated_at !== viewing.created_at"><dt>Last updated</dt><dd>{{ viewing.updated_at | date:'medium' }}</dd></div>
+      </dl>
+
+      <h4 class="apps-answers-title">Answers</h4>
+      <p class="ui-muted" *ngIf="!viewing.answers?.length">No answers were given.</p>
+      <div class="apps-answer" *ngFor="let a of viewing.answers">
+        <div class="apps-answer-label">{{ a.label }}</div>
+        <div class="apps-answer-value">{{ a.value || '—' }}</div>
+      </div>
+    </div>
+    <div class="apps-modal-footer">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="closeView()">Close</button>
+      <button type="button" class="ui-btn ui-btn--primary" *ngIf="canAssign(viewing)" (click)="openAssign(viewing)">
+        <i class="bi bi-person-check"></i> Assign puppy
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Assign puppy -->
+<div class="apps-overlay" *ngIf="assigning" (click)="closeAssign()">
+  <div class="apps-modal apps-modal--sm" role="dialog" aria-modal="true" aria-labelledby="apps-assign-title" (click)="$event.stopPropagation()">
+    <div class="apps-modal-header">
+      <div class="apps-modal-heading">
+        <h3 id="apps-assign-title" tabindex="-1">Assign a puppy</h3>
+        <span class="ui-cell-sub">to {{ assigning.applicant_name || 'this applicant' }}</span>
+      </div>
+      <button type="button" class="ui-icon-btn" (click)="closeAssign()" [disabled]="isAssigning" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="apps-modal-body">
+      <p class="apps-assign-intro">The puppy will be marked Reserved. You can undo this later.</p>
+      <p class="ui-muted" *ngIf="availablePuppies.length === 0">No puppies in this litter are available right now.</p>
+      <div class="apps-pick-list" role="radiogroup" aria-label="Available puppies">
+        <label class="apps-pick" *ngFor="let p of availablePuppies" [class.apps-pick--active]="assignPick === p.id">
+          <input type="radio" name="assign-puppy" [value]="p.id" [(ngModel)]="assignPick" [disabled]="isAssigning" />
+          <span class="apps-pick-name">{{ puppyName(p) }}</span>
+          <span class="apps-pick-meta">
+            <span *ngIf="p.gender">{{ p.gender }}</span>
+            <span class="apps-pick-requested" *ngIf="assigning.requested_offspring?.id === p.id">Requested</span>
+          </span>
+        </label>
+      </div>
+      <p class="apps-error" *ngIf="assignError" role="alert">{{ assignError }}</p>
+    </div>
+    <div class="apps-modal-footer">
+      <button type="button" class="ui-btn ui-btn--secondary" (click)="closeAssign()" [disabled]="isAssigning">Cancel</button>
+      <button type="button" class="ui-btn ui-btn--primary" (click)="confirmAssign()" [disabled]="!assignPick || isAssigning">
+        {{ isAssigning ? 'Assigning…' : 'Assign puppy' }}
+      </button>
+    </div>
+  </div>
+</div>

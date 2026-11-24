@@ -1,0 +1,205 @@
+<div class="cal-page">
+  <app-page-header [config]="headerConfig">
+    <button type="button" class="ui-btn ui-btn--primary" (click)="addEvent()" [disabled]="hasLoaded && !pets.length">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Add event</span>
+    </button>
+  </app-page-header>
+
+  <!-- No dogs yet -->
+  <div *ngIf="hasLoaded && !loadError && !pets.length" class="cal-empty">
+    <i class="bi bi-calendar-heart cal-empty__icon" aria-hidden="true"></i>
+    <h2 class="cal-empty__title">Add your dogs first</h2>
+    <p>The calendar tracks heat cycles and reminders for your dogs. Add a dog on the Pets page to get started.</p>
+    <a routerLink="/pets" class="ui-btn ui-btn--primary"><i class="bi bi-plus-lg" aria-hidden="true"></i> Go to Pets</a>
+  </div>
+
+  <div *ngIf="loadError" class="cal-error" role="alert">
+    <span>{{ loadError }}</span>
+    <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="load()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!hasLoaded || pets.length">
+    <!-- Toolbar -->
+    <div class="cal-toolbar">
+      <div class="cal-nav">
+        <button type="button" class="ui-icon-btn cal-nav__btn" (click)="prevMonth()" aria-label="Previous month" title="Previous month">
+          <i class="bi bi-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="goToday()" [disabled]="isCurrentMonth && selectedDate === today">Today</button>
+        <button type="button" class="ui-icon-btn cal-nav__btn" (click)="nextMonth()" aria-label="Next month" title="Next month">
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+        <h2 class="cal-month" aria-live="polite">{{ monthLabel }}</h2>
+        <span *ngIf="isLoading" class="cal-loading" role="status">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i><span class="sr-only">Loading</span>
+        </span>
+      </div>
+      <div class="cal-filter">
+        <label for="cal-dog-filter" class="cal-filter__label">Dog</label>
+        <select id="cal-dog-filter" class="cal-filter__select" [(ngModel)]="petFilter" (ngModelChange)="onPetFilterChange()">
+          <option value="">All dogs</option>
+          <option *ngFor="let p of pets; trackBy: trackPet" [value]="p.id">{{ p.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cal-layout">
+      <div class="cal-main">
+        <!-- Dogs in heat during the visible range (also cycles that started earlier) -->
+        <div *ngIf="inHeat.length" class="cal-inheat">
+          <span class="cal-inheat__label" id="cal-inheat-label">In heat:</span>
+          <ul class="cal-inheat__list" aria-labelledby="cal-inheat-label">
+            <li *ngFor="let s of inHeat; trackBy: trackSpan">
+              <button type="button" class="cal-inheat__item" (click)="openHeatSpan(s)"
+                      [disabled]="openingEventId === 'in-heat-' + s.cycle_id"
+                      [attr.aria-label]="s.pet_name + ' in heat ' + heatSpanLabel(s) + '. Open to edit.'">
+                <span class="cal-dot" [style.background-color]="colorFor(s.pet_id).dot" aria-hidden="true"></span>
+                <span class="cal-inheat__name">{{ s.pet_name }}</span>
+                <span class="cal-inheat__dates">{{ heatSpanLabel(s) }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Full month grid (tablet / desktop) -->
+        <div class="cal-grid cal-grid--full" role="group" [attr.aria-label]="monthLabel" [class.is-loading]="isLoading">
+          <div class="cal-grid__row cal-grid__head" aria-hidden="true">
+            <div *ngFor="let w of weekdays" class="cal-grid__weekday">{{ w }}</div>
+          </div>
+          <div class="cal-grid__body">
+            <div *ngFor="let day of grid; trackBy: trackDay"
+                 class="cal-cell"
+                 [class.cal-cell--out]="!day.inMonth"
+                 [class.cal-cell--today]="day.date === today"
+                 [class.cal-cell--selected]="day.date === selectedDate"
+                 (click)="selectDay(day)">
+              <button type="button" class="cal-cell__day"
+                      data-grid="full" [attr.data-date]="day.date"
+                      [attr.tabindex]="day.date === selectedDate ? 0 : -1"
+                      [attr.aria-label]="dayAriaLabel(day)"
+                      [attr.aria-current]="day.date === today ? 'date' : null"
+                      [attr.aria-pressed]="day.date === selectedDate"
+                      (click)="$event.stopPropagation(); selectDay(day)"
+                      (keydown)="onDayKeydown($event, day)">
+                {{ day.day }}
+              </button>
+              <ul class="cal-chips" *ngIf="eventsFor(day.date).length">
+                <li *ngFor="let e of eventsFor(day.date) | slice:0:(eventsFor(day.date).length > maxChips ? maxChips - 1 : maxChips); trackBy: trackEvent">
+                  <button type="button" class="cal-chip"
+                          [style.border-left-color]="colorFor(e.pet_id).dot"
+                          [style.background-color]="colorFor(e.pet_id).soft"
+                          [class.cal-chip--open]="e.type === 'heat_start' && e.in_progress"
+                          [attr.aria-label]="eventAriaLabel(e)"
+                          [title]="e.pet_name + ' · ' + eventLabels[e.type] + (e.note ? ' — ' + e.note : '')"
+                          (click)="openEvent(e, $event)">
+                    <i class="bi cal-chip__icon" [ngClass]="eventIcon(e)" aria-hidden="true"></i>
+                    <span class="cal-chip__name">{{ e.pet_name }}</span>
+                    <span class="cal-chip__type">{{ eventLabels[e.type] }}</span>
+                    <i *ngIf="e.type === 'heat_start' && e.in_progress" class="bi bi-hourglass-split cal-chip__open" aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li *ngIf="eventsFor(day.date).length > maxChips">
+                  <button type="button" class="cal-more" (click)="$event.stopPropagation(); selectDay(day)"
+                          [attr.aria-label]="'Show all ' + eventsFor(day.date).length + ' entries on ' + formatLong(day.date)">
+                    +{{ eventsFor(day.date).length - (maxChips - 1) }} more
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compact grid (phones) -->
+        <div class="cal-grid cal-grid--compact" role="group" [attr.aria-label]="monthLabel" [class.is-loading]="isLoading">
+          <div class="cal-grid__row cal-grid__head" aria-hidden="true">
+            <div *ngFor="let w of weekdaysNarrow; let i = index" class="cal-grid__weekday">{{ w }}</div>
+          </div>
+          <div class="cal-grid__body">
+            <div *ngFor="let day of grid; trackBy: trackDay">
+              <button type="button" class="cal-mini"
+                      data-grid="compact" [attr.data-date]="day.date"
+                      [class.cal-mini--out]="!day.inMonth"
+                      [class.cal-mini--today]="day.date === today"
+                      [class.cal-mini--selected]="day.date === selectedDate"
+                      [attr.tabindex]="day.date === selectedDate ? 0 : -1"
+                      [attr.aria-label]="dayAriaLabel(day)"
+                      [attr.aria-current]="day.date === today ? 'date' : null"
+                      [attr.aria-pressed]="day.date === selectedDate"
+                      (click)="selectDay(day)"
+                      (keydown)="onDayKeydown($event, day)">
+                <span class="cal-mini__num">{{ day.day }}</span>
+                <span class="cal-mini__dots" aria-hidden="true">
+                  <span *ngFor="let d of dotsFor(day.date) | slice:0:maxDots" class="cal-dot" [style.background-color]="d.dot"></span>
+                  <span *ngIf="dotsFor(day.date).length > maxDots" class="cal-mini__plus">+</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p *ngIf="hasLoaded && !isLoading && !loadError && monthEventCount === 0" class="cal-note">
+          <i class="bi bi-info-circle" aria-hidden="true"></i>
+          No heat cycles or reminders in {{ monthLabel }}{{ filteredPetName ? ' for ' + filteredPetName : '' }}.
+        </p>
+
+        <!-- Legend -->
+        <div *ngIf="pets.length" class="cal-legend" aria-label="Dog colours">
+          <span *ngFor="let p of legendPets; trackBy: trackPet" class="cal-legend__item">
+            <span class="cal-dot" [style.background-color]="colorFor(p.id).dot" aria-hidden="true"></span>
+            {{ p.name }}
+          </span>
+          <span class="cal-legend__types">
+            <span><i class="bi bi-droplet-fill" aria-hidden="true"></i> Heat start</span>
+            <span><i class="bi bi-droplet-half" aria-hidden="true"></i> Heat end</span>
+            <span><i class="bi bi-bell" aria-hidden="true"></i> Reminder</span>
+            <span><i class="bi bi-hourglass-split" aria-hidden="true"></i> In progress</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Selected day -->
+      <aside class="cal-day" aria-labelledby="cal-day-title">
+        <div class="cal-day__head">
+          <h3 id="cal-day-title" class="cal-day__title">{{ formatLong(selectedDate) }}</h3>
+          <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="addEvent(selectedDate)"
+                  [attr.aria-label]="'Add event on ' + formatLong(selectedDate)">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add event
+          </button>
+        </div>
+        <p *ngIf="!selectedEvents.length" class="cal-day__empty">Nothing on this day.</p>
+        <ul *ngIf="selectedEvents.length" class="cal-day__list">
+          <li *ngFor="let e of selectedEvents; trackBy: trackEvent">
+            <button type="button" class="cal-entry" (click)="openEvent(e)" [attr.aria-label]="eventAriaLabel(e)"
+                    [disabled]="openingEventId === e.id"
+                    [style.border-left-color]="colorFor(e.pet_id).dot">
+              <span class="cal-entry__top">
+                <span class="cal-dot" [style.background-color]="colorFor(e.pet_id).dot" aria-hidden="true"></span>
+                <span class="cal-entry__name">{{ e.pet_name }}</span>
+                <span *ngIf="e.type === 'heat_start' && e.in_progress" class="ui-badge ui-badge--warning">In progress</span>
+              </span>
+              <span class="cal-entry__type">
+                <i class="bi" [ngClass]="eventIcon(e)" aria-hidden="true"></i> {{ eventLabels[e.type] }}
+              </span>
+              <span *ngIf="e.note" class="cal-entry__note">{{ e.note }}</span>
+            </button>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </ng-container>
+</div>
+
+<app-heat-event-form
+  *ngIf="formOpen"
+  [mode]="formMode"
+  [kind]="formKind"
+  [petId]="formPetId"
+  [date]="formDate"
+  [pets]="pets"
+  [cycle]="formCycle"
+  [reminder]="formReminder"
+  (saved)="onFormDone()"
+  (deleted)="onFormDone()"
+  (closed)="formOpen = false">
+</app-heat-event-form>

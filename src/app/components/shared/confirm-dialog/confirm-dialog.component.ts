@@ -23,8 +23,12 @@ export class ConfirmDialogComponent implements AfterViewChecked {
     }
   }
 
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscape(event: KeyboardEvent): void {
+    if (!this.confirmService.isOpen) return;
+    // Escape answers only this dialog: keep later document listeners (a hosting modal) from closing too.
+    event.stopImmediatePropagation();
+    event.preventDefault();
     this.confirmService.answer(false);
   }
 }

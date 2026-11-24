@@ -1,0 +1,73 @@
+/* Above app-modal (9999) so it can open from inside the Pets page's heat-history
+   modal; below the confirm dialog (20000) so Delete can be confirmed. */
+.hef-overlay {
+  position: fixed; inset: 0; background: rgba(48, 38, 28, 0.5);
+  display: flex; align-items: center; justify-content: center; z-index: 10050;
+  padding: 1rem;
+}
+.hef-modal {
+  background: var(--color-surface); border-radius: 12px; width: 100%; max-width: 500px;
+  max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: var(--shadow-lg); margin: 0;
+}
+.hef-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem; border-bottom: 1px solid var(--n-200);
+}
+.hef-header h3 {
+  margin: 0; font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; color: var(--ink);
+}
+.hef-header h3:focus { outline: none; }
+.hef-body { padding: 1.25rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+
+.hef-kind {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem;
+  padding: 0.25rem; background: var(--linen); border-radius: 10px;
+}
+.hef-kind__btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 44px; min-width: 0; margin: 0; padding: 0 0.75rem; border: 0; border-radius: 8px; background: transparent;
+  color: var(--stone); font-weight: 500; cursor: pointer;
+  transition-property: background-color, color, box-shadow; transition-duration: 0.15s;
+}
+.hef-kind__btn:hover { color: var(--ink); }
+.hef-kind__btn.is-active { background: var(--cream); color: var(--ink); box-shadow: var(--shadow-sm); }
+.hef-kind__btn:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+
+.hef-alert {
+  display: flex; gap: 0.5rem; align-items: flex-start;
+  padding: 0.75rem 1rem; border-radius: 8px;
+  background: var(--error-softer); color: var(--error-700); border: 1px solid var(--error-300);
+  font-size: 0.9375rem;
+}
+.hef-alert i { margin-top: 0.125rem; }
+
+.hef-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.field-group { display: flex; flex-direction: column; gap: 0.375rem; min-width: 0; }
+.field-label { font-size: 0.9375rem; font-weight: 500; color: var(--n-700); }
+.field-hint { font-size: 0.8125rem; color: var(--stone); }
+.field-input, .field-textarea, .field-select {
+  width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--n-300); border-radius: 6px;
+  font-size: 16px; font-family: inherit; box-sizing: border-box; background: var(--color-surface); color: var(--ink);
+}
+.field-input, .field-select { min-height: 44px; }
+.field-input[readonly] { background: var(--n-50); color: var(--n-700); }
+.field-input:focus, .field-textarea:focus, .field-select:focus {
+  outline: none; border-color: var(--harbor); box-shadow: 0 0 0 2px var(--mist);
+}
+.field-textarea { resize: vertical; }
+.field-error { border-color: var(--error-400) !important; }
+.error-msg { font-size: 0.8125rem; color: var(--error); margin: 0; }
+
+.hef-footer {
+  display: flex; justify-content: flex-end; gap: 0.75rem; flex-wrap: wrap;
+  padding: 0.75rem 1.25rem; border-top: 1px solid var(--n-200); background: var(--n-50);
+}
+.hef-delete { margin-right: auto; }
+
+@media (max-width: 640px) {
+  .hef-overlay { align-items: flex-end; padding: 0; }
+  .hef-modal { max-width: none; border-radius: 16px 16px 0 0; max-height: 92vh; }
+  .hef-row { grid-template-columns: 1fr; }
+}

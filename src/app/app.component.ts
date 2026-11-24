@@ -43,6 +43,7 @@ export class AppComponent {
     // Dynamic public routes
     if (this.route?.startsWith('/breeder/')) return true;
     if (this.route?.startsWith('/offspring/')) return true;
+    if (this.route?.startsWith('/litter/')) return true;
     return false;
   }
 }

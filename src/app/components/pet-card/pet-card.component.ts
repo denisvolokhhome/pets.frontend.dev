@@ -23,6 +23,7 @@ export class PetCardComponent {
   @Output() editingPet = new EventEmitter();
   @Output() quickBreeding = new EventEmitter();
   @Output() openDocuments = new EventEmitter();
+  @Output() openHeatHistory = new EventEmitter<IPet>();
 
 
   apiurl = environment.API_URL;
@@ -66,6 +67,15 @@ export class PetCardComponent {
   onOpenDocuments(event: any): void {
     event.stopPropagation();
     this.openDocuments.emit(this.pet);
+  }
+
+  get isFemale(): boolean {
+    return (this.pet?.gender || '').toLowerCase() === 'female';
+  }
+
+  onOpenHeatHistory(event: Event): void {
+    event.stopPropagation();
+    this.openHeatHistory.emit(this.pet);
   }
 
   formatDate(value: string): string {

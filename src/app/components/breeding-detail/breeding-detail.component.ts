@@ -91,6 +91,15 @@ export class BreedingDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * `#applications` (from a new-application notification): the router's anchorScrolling
+   * runs before the async load renders the card, so scroll once the page is in the DOM.
+   */
+  private scrollToFragmentIfAsked(): void {
+    if (this.route.snapshot?.fragment !== 'applications') return;
+    setTimeout(() => document.getElementById('applications')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+
   /** Same rule as the Add Offspring button. */
   canAddOffspring(): boolean {
     return !!this.breeding && this.breeding.status !== 'Voided' && this.breeding.parent_pets?.length > 0;
@@ -105,6 +114,7 @@ export class BreedingDetailComponent implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
         this.openAddOffspringIfAsked();
+        this.scrollToFragmentIfAsked();
       },
       error: (error) => {
         console.error('Error loading breeding details:', error);

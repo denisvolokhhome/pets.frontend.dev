@@ -94,6 +94,19 @@
         <span *ngIf="!isCollapsed">Genealogy</span>
       </a>
     </li>
+    <li class="mb-2" *ngIf="isBreeder">
+      <a
+        [routerLink]="['/calendar']"
+        routerLinkActive="side-link--active"
+        #rlaCalendar="routerLinkActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        [attr.aria-current]="rlaCalendar.isActive ? 'page' : null"
+        class="side-link"
+        [title]="isCollapsed ? 'Calendar' : ''">
+        <i class="bi bi-calendar3 text-xl"></i>
+        <span *ngIf="!isCollapsed">Calendar</span>
+      </a>
+    </li>
     
     <!-- Messages - available for all authenticated users -->
     <li class="mb-2" *ngIf="isBreeder && waitlistEnabled">

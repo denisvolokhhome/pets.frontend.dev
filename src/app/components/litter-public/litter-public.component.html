@@ -1,0 +1,159 @@
+<div class="lp-page">
+  <!-- Loading -->
+  <div class="lp-state" *ngIf="isLoading">
+    <div class="lp-spinner" aria-hidden="true"></div>
+    <p>Loading litter…</p>
+  </div>
+
+  <!-- Not found -->
+  <div class="lp-state lp-state--card" *ngIf="!isLoading && notFound" data-testid="litter-not-found">
+    <i class="bi bi-search lp-state-icon"></i>
+    <h1 class="lp-state-title">This litter isn't available</h1>
+    <p>The link may be old, or the breeder has taken this litter down.</p>
+    <a class="ui-btn ui-btn--primary" routerLink="/search-pets">Browse available puppies</a>
+  </div>
+
+  <!-- Other error -->
+  <div class="lp-state lp-state--card" *ngIf="!isLoading && loadError">
+    <i class="bi bi-wifi-off lp-state-icon"></i>
+    <h1 class="lp-state-title">We couldn't load this litter</h1>
+    <p>Please check your connection and try again.</p>
+    <button type="button" class="ui-btn ui-btn--primary" (click)="load()">Try again</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && litter as l">
+    <!-- Hero -->
+    <section class="lp-hero">
+      <div class="lp-hero-text">
+        <div class="lp-eyebrow">
+          <span [class]="stageBadge">{{ stageLabel }}</span>
+          <span class="lp-date" *ngIf="l.date_of_litter">
+            <i class="bi bi-calendar3"></i>
+            {{ isBorn ? '' : 'Expected ' }}{{ l.date_of_litter | date:'MMMM d, y' }}
+          </span>
+        </div>
+        <h1 class="lp-title">{{ title }}</h1>
+        <p class="lp-breeder">
+          by <a class="ui-link lp-breeder-link" [routerLink]="['/breeder', l.breeder.id, 'offsprings']">{{ l.breeder.name }}</a>
+        </p>
+        <p class="lp-description" *ngIf="l.description">{{ l.description }}</p>
+      </div>
+
+      <!-- Apply panel -->
+      <aside class="lp-apply" *ngIf="hasForm || submitted" data-testid="litter-apply-panel">
+        <ng-container *ngIf="submitted; else notSubmitted">
+          <div class="lp-apply-success" role="status">
+            <i class="bi bi-check-circle-fill lp-success-icon"></i>
+            <div>
+              <h2 class="lp-apply-title">Application sent</h2>
+              <p class="lp-apply-text">{{ l.breeder.name }} will be in touch.</p>
+            </div>
+          </div>
+          <a class="ui-btn ui-btn--secondary lp-apply-btn" [routerLink]="['/breeder', l.breeder.id, 'offsprings']">
+            See {{ l.breeder.name }}'s other puppies
+          </a>
+        </ng-container>
+
+        <ng-template #notSubmitted>
+          <ng-container *ngIf="isOwnLitter; else visitor">
+            <h2 class="lp-apply-title">This is your litter</h2>
+            <p class="lp-apply-text">
+              This is how families see it.
+              {{ l.accepting_applications ? 'Applications are open.' : 'Applications are closed.' }}
+            </p>
+            <a class="ui-btn ui-btn--secondary lp-apply-btn" [routerLink]="['/breeding', l.id]">Manage applications</a>
+          </ng-container>
+
+          <ng-template #visitor>
+            <ng-container *ngIf="l.accepting_applications; else closed">
+              <ng-container *ngIf="!isBreeder; else breederNote">
+                <h2 class="lp-apply-title">Interested in a puppy?</h2>
+                <p class="lp-apply-text">Apply for this litter and {{ l.breeder.name }} will review your application.</p>
+                <button type="button" class="ui-btn ui-btn--primary lp-apply-btn" data-testid="apply-litter" (click)="apply()">
+                  Apply for this litter
+                </button>
+              </ng-container>
+              <ng-template #breederNote>
+                <h2 class="lp-apply-title">Applications are open</h2>
+                <p class="lp-apply-text">Families can apply for this litter. Breeder accounts can't apply.</p>
+              </ng-template>
+            </ng-container>
+            <ng-template #closed>
+              <p class="lp-closed" data-testid="applications-closed">
+                <i class="bi bi-lock"></i>
+                Applications are closed
+              </p>
+            </ng-template>
+          </ng-template>
+        </ng-template>
+      </aside>
+    </section>
+
+    <!-- Parents -->
+    <section class="lp-section" *ngIf="l.parents.length">
+      <h2 class="lp-section-title">Parents</h2>
+      <div class="lp-parents">
+        <div class="lp-parent" *ngFor="let p of l.parents">
+          <div class="lp-photo lp-photo--parent">
+            <img *ngIf="imageSrc(p.image_url) as src; else parentPlaceholder" [src]="src" [alt]="p.name" loading="lazy" />
+            <ng-template #parentPlaceholder><i class="bi bi-image" aria-hidden="true"></i></ng-template>
+          </div>
+          <div class="lp-parent-info">
+            <span class="lp-parent-role">{{ (p.gender || '').toLowerCase() === 'male' ? 'Sire' : (p.gender || '').toLowerCase() === 'female' ? 'Dam' : 'Parent' }}</span>
+            <span class="lp-parent-name">{{ p.name }}</span>
+            <span class="lp-parent-meta" *ngIf="p.breed_name">{{ p.breed_name }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Puppies -->
+    <section class="lp-section">
+      <h2 class="lp-section-title">
+        Puppies
+        <span class="lp-count" *ngIf="l.puppies.length">{{ l.puppies.length }}</span>
+      </h2>
+      <p class="lp-muted" *ngIf="!l.puppies.length">
+        {{ isBorn ? 'No puppies are listed yet.' : 'Puppies will be listed here once they arrive.' }}
+        <ng-container *ngIf="canApply"> You can already apply for this litter.</ng-container>
+      </p>
+      <div class="lp-puppies" *ngIf="l.puppies.length">
+        <a class="lp-puppy" *ngFor="let p of l.puppies" [routerLink]="['/offspring', p.id]">
+          <div class="lp-photo lp-photo--puppy">
+            <img *ngIf="imageSrc(p.image_url) as src; else puppyPlaceholder" [src]="src" [alt]="puppyName(p)" loading="lazy" />
+            <ng-template #puppyPlaceholder><i class="bi bi-image" aria-hidden="true"></i></ng-template>
+          </div>
+          <div class="lp-puppy-body">
+            <div class="lp-puppy-row">
+              <span class="lp-puppy-name">{{ puppyName(p) }}</span>
+              <span [class]="puppyBadge(p)">{{ p.status }}</span>
+            </div>
+            <div class="lp-puppy-row lp-puppy-meta">
+              <span *ngIf="p.gender"><i class="bi" [ngClass]="genderIcon(p.gender)"></i> {{ p.gender }}</span>
+              <span class="lp-price" *ngIf="price(p)">{{ price(p) }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </ng-container>
+</div>
+
+<app-guest-prompt-modal
+  [visible]="showGuestModal"
+  (visibleChange)="onGuestModalVisible($event)"
+  (authSuccess)="onAuthSuccess()">
+</app-guest-prompt-modal>
+
+<app-application-form-modal
+  *ngIf="showForm && litter"
+  [breedingId]="litter.id"
+  [fields]="litter.application_form"
+  subjectName="this litter"
+  heading="Apply for this litter"
+  [intro]="'Your answers go to ' + litter.breeder.name + ', who will contact you about this litter.'"
+  submitLabel="Send application"
+  [submitHandler]="submitApplication"
+  (submitted)="onSubmitted()"
+  (cancelled)="onFormCancelled()">
+</app-application-form-modal>
