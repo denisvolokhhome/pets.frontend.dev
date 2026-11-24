@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, AfterViewInit, OnChanges, SimpleChanges, NgZone } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import { BreederMarker, Coordinates } from '../../models/search';
@@ -14,9 +14,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
   @Input() center: Coordinates = { latitude: 39.8283, longitude: -98.5795 };
   @Input() markers: BreederMarker[] = [];
   @Input() radius: number = 40;
+  /** Show a Contact button in marker popups */
+  @Input() showContact: boolean = true;
 
   @Output() markerClick = new EventEmitter<string>();
   @Output() markerHover = new EventEmitter<string>();
+  /** Contact button clicked in a marker popup; emits the marker id (user_id) */
+  @Output() contactClick = new EventEmitter<string>();
+
+  constructor(private ngZone: NgZone) {}
 
   private map!: L.Map;
   private markerClusterGroup!: L.MarkerClusterGroup;
@@ -48,6 +54,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
       iconAnchor: [20, 32],
       popupAnchor: [0, -30]
     });
+  }
+
+  /** Escape user-provided text before it goes into popup HTML */
+  private escapeHtml(text: string): string {
+    return String(text ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   /**
@@ -91,7 +107,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.isInitialized) {
-      if (changes['markers']) {
+      if (changes['markers'] || changes['showContact']) {
         this.updateMarkers();
       }
       if (changes['radius'] || changes['center']) {
@@ -190,17 +206,32 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges
       });
 
       // Add popup with breeder info (approximate location notice)
+      const b = breederMarker.breeder;
       marker.bindPopup(`
         <div class="breeder-popup">
-          <h4>${breederMarker.breeder.breeder_name}</h4>
-          ${this.buildPopupRatingHtml(breederMarker.breeder.rating, breederMarker.breeder.review_count)}
-          <p>~${breederMarker.breeder.distance.toFixed(1)} miles away</p>
+          <h4>${this.escapeHtml(b.breeder_name)}</h4>
+          ${this.buildPopupRatingHtml(b.rating, b.review_count)}
+          <p>~${b.distance.toFixed(1)} miles away</p>
           <p class="approx-notice">📍 Approximate location</p>
-          ${breederMarker.breeder.available_breeds.length > 0 
-            ? `<p>Breeds: ${breederMarker.breeder.available_breeds.map(b => b.breed_name).join(', ')}</p>` 
+          ${b.available_breeds.length > 0
+            ? `<p>Breeds: ${b.available_breeds.map(br => this.escapeHtml(br.breed_name)).join(', ')}</p>`
+            : ''}
+          ${this.showContact
+            ? '<button type="button" class="popup-contact-btn"><i class="bi bi-chat-dots" aria-hidden="true"></i> Contact</button>'
             : ''}
         </div>
       `);
+
+      // Wire the popup's Contact button each time the popup opens
+      marker.on('popupopen', (e: L.PopupEvent) => {
+        const btn = e.popup.getElement()?.querySelector<HTMLButtonElement>('.popup-contact-btn');
+        if (btn) {
+          btn.onclick = (ev) => {
+            ev.stopPropagation();
+            this.ngZone.run(() => this.contactClick.emit(breederMarker.id));
+          };
+        }
+      });
 
       this.markerClusterGroup.addLayer(marker);
       this.markerMap.set(breederMarker.id, marker);

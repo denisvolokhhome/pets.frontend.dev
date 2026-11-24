@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject, Subscription, forkJoin, of } from 'rxjs';
-import { debounceTime, switchMap, catchError } from 'rxjs/operators';
+import { debounceTime, switchMap, catchError, filter, take } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
 import { SearchService } from '../../services/search.service';
 import { ServiceProviderService } from '../../services/service-provider.service';
 import { ToastService } from '../../services/toast.service';
@@ -54,6 +56,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   showContactServiceProvider = false;
   selectedServiceProvider: any = null;
 
+  // Contact a breeder from a map popup (guests sign in first)
+  showGuestModal = false;
+  private pendingContactBreeder: BreederSearchResult | null = null;
+  private pendingContactSub?: Subscription;
+
   // UI state
   isLoading: boolean = false;
   error: string | null = null;
@@ -81,7 +88,9 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private serviceProviderService: ServiceProviderService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -111,6 +120,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.drawerBreedSub?.unsubscribe();
+    this.pendingContactSub?.unsubscribe();
   }
 
   /**
@@ -411,6 +421,46 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.highlightedBreederId = breederId;
     // On mobile, switch to list tab so the card is visible
     this.mobileActiveTab = 'list';
+  }
+
+  /**
+   * Contact button in a map popup. Breeders open a conversation (guests sign
+   * in first, same as the card's Contact); service providers open their modal.
+   */
+  onMarkerContact(id: string): void {
+    const breeder = this.searchResults.find(b => b.user_id === id);
+    if (breeder) {
+      if (!localStorage.getItem('id_token')) {
+        this.pendingContactBreeder = breeder;
+        this.showGuestModal = true;
+        return;
+      }
+      this.openBreederConversation(breeder);
+      return;
+    }
+    const sp = this.serviceResults.find((s: any) => s.user_id === id);
+    if (sp) this.openContactServiceProvider(sp);
+  }
+
+  onGuestAuthSuccess(): void {
+    this.showGuestModal = false;
+    const breeder = this.pendingContactBreeder;
+    if (!breeder) return;
+    this.pendingContactBreeder = null;
+    // The user's profile loads a moment after the token; breeders and
+    // service accounts stay on the map (same rule as the breeder card).
+    this.pendingContactSub?.unsubscribe();
+    this.pendingContactSub = this.authService.currentUser$
+      .pipe(filter(user => !!user), take(1))
+      .subscribe(user => {
+        if (!user!.is_breeder && user!.account_type !== 'service') this.openBreederConversation(breeder);
+      });
+  }
+
+  private openBreederConversation(breeder: BreederSearchResult): void {
+    this.router.navigate(['/messages/new'], {
+      queryParams: { breederId: breeder.user_id, breederName: breeder.breeder_name }
+    });
   }
 
   /**

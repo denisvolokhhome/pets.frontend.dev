@@ -53,9 +53,12 @@
       </div>
     </div>
 
-    <!-- Radius Quick Select -->
+    <!-- Extra filters projected by the host page (e.g. animal kind pills) -->
+    <ng-content></ng-content>
+
+    <!-- Radius: segmented button group -->
     <div class="form-group radius-group">
-      <div class="radius-quick-select">
+      <div class="radius-quick-select" role="group" aria-label="Search radius">
         <button
           *ngFor="let miles of quickSelectRadii"
           type="button"
@@ -68,15 +71,19 @@
       </div>
     </div>
 
+    <!-- Host-page controls that sit just before Search (e.g. view switch) -->
+    <ng-content select="[searchControlsTrailing]"></ng-content>
+
     <!-- Search Button -->
     <div class="form-group search-btn-group">
       <button
         type="button"
         class="btn btn-primary search-btn"
+        aria-label="Search"
         (click)="onSearch()"
         [disabled]="!!zipError || !!radiusError">
-        <i class="bi bi-search"></i>
-        Search
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <span class="search-btn-label">Search</span>
       </button>
     </div>
   </div>
