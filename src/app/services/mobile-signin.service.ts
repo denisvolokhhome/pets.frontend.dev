@@ -2,29 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
-export interface MobileSigninCode {
-  id: string;
-  /** What the QR encodes: https://<site>/m#<code> (the code is in the fragment, never sent to a server) */
-  url: string;
-  expires_at: string;
-  expires_in: number;
-}
-
-export type MobileSigninStatus = 'pending' | 'used' | 'already_signed_in' | 'expired';
-
-export interface MobileSigninPreview {
-  display_name: string;
-  masked_email: string;
-  same_account: boolean;
-  target_path: string | null;
-}
-
-export interface MobileSigninRedeemed {
-  access_token: string;
-  token_type: string;
-  target_path: string;
-}
+import { MobileSigninCode, MobileSigninPreview, MobileSigninRedeemed, MobileSigninStatus } from '../models/mobile-signin';
 
 /** "Instant mobile switch": QR code on desktop → phone signed in as the same user. */
 @Injectable({ providedIn: 'root' })

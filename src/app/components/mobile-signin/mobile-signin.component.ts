@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { MobileSigninPreview, MobileSigninService } from '../../services/mobile-signin.service';
+import { MobileSigninService } from '../../services/mobile-signin.service';
+import { MobileSigninPreview } from '../../models/mobile-signin';
 
 type PageState = 'loading' | 'confirm' | 'signing-in' | 'error';
 
@@ -44,7 +45,8 @@ export class MobileSigninComponent implements OnInit {
     try {
       if (localStorage.getItem('id_token')) {
         const me = await firstValueFrom(this.auth.IsLoggedIn());
-        this.currentName = me ? (me.is_breeder && me.breedery_name) || me.name || me.email : null;
+        // Never show a full email on this screen: fall back to a masked one
+        this.currentName = me ? (me.is_breeder && me.breedery_name) || me.name || this.mask(me.email) : null;
       }
       const preview = await firstValueFrom(this.service.preview(this.code));
       if (preview.same_account) {
@@ -73,6 +75,12 @@ export class MobileSigninComponent implements OnInit {
       this.fail(this.message(err));
       this.cdr.markForCheck();
     }
+  }
+
+  private mask(email?: string): string | null {
+    if (!email || !email.includes('@')) return null;
+    const [local, domain] = email.split('@');
+    return `${local.slice(0, 1)}•••@${domain}`;
   }
 
   private message(err: any): string {

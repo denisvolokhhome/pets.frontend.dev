@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MOBILE_SIGNIN_PATH } from './models/mobile-signin';
 
 @Component({
   standalone: false,
@@ -38,7 +39,7 @@ export class AppComponent {
    * Public pages should have a friendly design without sidebar
    */
   isPublicPage(): boolean {
-    const publicRoutes = ['', '/', '/home-next', '/home-old', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', '/m', '/search-pets', '/privacy-policy', '/terms-of-use', '/cookie-policy', '/acceptable-use-policy', '/breeder-agreement', '/refund-policy'];
+    const publicRoutes = ['', '/', '/home-next', '/home-old', '/login', '/register', '/register/pet-seeker', '/register/from-message', '/reset-password', '/verify-email', '/auth/callback', MOBILE_SIGNIN_PATH, '/search-pets', '/privacy-policy', '/terms-of-use', '/cookie-policy', '/acceptable-use-policy', '/breeder-agreement', '/refund-policy'];
     if (publicRoutes.includes(this.route)) return true;
     // Dynamic public routes
     if (this.route?.startsWith('/breeder/')) return true;

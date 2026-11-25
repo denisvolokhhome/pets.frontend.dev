@@ -11,6 +11,7 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { ToastService } from './toast.service';
 import { environment } from 'src/environments/environment';
+import { MOBILE_SIGNIN_PATH } from '../models/mobile-signin';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -34,8 +35,10 @@ export class AuthInterceptor implements HttpInterceptor {
           // only the first one (token still present) signs the user out.
           if (error.status === 401 && localStorage.getItem('id_token')) {
             // Toast after navigation so the layout swap doesn't drop it
-            this.authService.handleSessionExpired().then(redirected => {
-              if (redirected !== false) this.toastService.warning('Please sign in again.', 'Session expired');
+            // On the QR sign-in page the stale session is dropped silently (see handleSessionExpired)
+            const onQrSignin = window.location.pathname === MOBILE_SIGNIN_PATH;
+            this.authService.handleSessionExpired().then(() => {
+              if (!onQrSignin) this.toastService.warning('Please sign in again.', 'Session expired');
             });
           }
           return throwError(() => error);
