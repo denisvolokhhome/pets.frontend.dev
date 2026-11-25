@@ -1,0 +1,32 @@
+.msi-page {
+  min-height: calc(100vh - 120px); display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1rem; background: var(--oat);
+}
+.msi-card {
+  width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  padding: 2rem 1.5rem; text-align: center;
+  background: var(--cream); border: 1px solid var(--n-200); border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(48, 38, 28, 0.08);
+}
+.msi-logo {
+  width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--clay); color: white; font-size: 1.5rem;
+}
+.msi-title { margin: 0.25rem 0 0; font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); }
+.msi-text { margin: 0; font-size: 1rem; color: var(--ink); overflow-wrap: anywhere; }
+.msi-email { color: var(--stone); }
+.msi-muted { margin: 0; color: var(--stone); }
+.msi-switch {
+  margin: 0.25rem 0 0; padding: 0.625rem 0.75rem; display: flex; gap: 0.5rem; align-items: flex-start; text-align: left;
+  background: var(--warning-soft); border-radius: 8px; font-size: 0.875rem; color: var(--ink);
+}
+.msi-btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
+.msi-cancel { font-size: 0.9375rem; color: var(--stone); text-decoration: underline; }
+.msi-hint { margin: 0.5rem 0 0; font-size: 0.8125rem; color: var(--stone); }
+.msi-center { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 1rem 0; }
+.msi-spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid var(--n-200); border-top-color: var(--clay); animation: msi-spin 0.8s linear infinite;
+}
+@keyframes msi-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .msi-spinner { animation: none; } }
