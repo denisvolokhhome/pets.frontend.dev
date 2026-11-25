@@ -1,0 +1,35 @@
+<main class="msi-page">
+  <div class="msi-card">
+    <div class="msi-logo" aria-hidden="true"><i class="bi bi-phone"></i></div>
+
+    <ng-container [ngSwitch]="state">
+      <div *ngSwitchCase="'loading'" class="msi-center" role="status">
+        <div class="msi-spinner"></div>
+        <p class="msi-muted">Checking your code…</p>
+      </div>
+
+      <ng-container *ngSwitchCase="'error'">
+        <h1 class="msi-title">Couldn't sign you in</h1>
+        <p class="msi-text" role="alert">{{ errorMessage }}</p>
+        <a routerLink="/login" class="ui-btn ui-btn--primary msi-btn">Sign in with email</a>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <h1 class="msi-title">Sign in to Breedly</h1>
+        <p class="msi-text">
+          as <strong>{{ preview?.display_name }}</strong><span class="msi-email" *ngIf="preview?.masked_email">&nbsp;({{ preview?.masked_email }})</span>
+        </p>
+        <p class="msi-switch" *ngIf="currentName">
+          <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+          This phone is signed in as <strong>{{ currentName }}</strong>. Continuing will switch accounts.
+        </p>
+        <button type="button" class="ui-btn ui-btn--primary msi-btn" (click)="onContinue()"
+                [disabled]="state === 'signing-in'">
+          {{ state === 'signing-in' ? 'Signing in…' : 'Continue' }}
+        </button>
+        <a routerLink="/" class="msi-cancel">Not you? Cancel</a>
+        <p class="msi-hint">Only continue if you just scanned this code on your own computer.</p>
+      </ng-container>
+    </ng-container>
+  </div>
+</main>

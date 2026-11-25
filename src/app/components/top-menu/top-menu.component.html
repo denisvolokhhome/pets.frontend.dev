@@ -83,6 +83,7 @@
           
           <!-- Auth links (logged in) -->
           <div class="flex items-center gap-3" *ngIf="checkToken">
+            <app-mobile-switch></app-mobile-switch>
             <a href="/search-pets" class="map-nav-btn" title="Search Breeders Map" aria-label="Open breeder search map">
               <i class="bi bi-map"></i>
             </a>

@@ -90,6 +90,7 @@ import { OffspringCardComponent } from './components/offspring-card/offspring-ca
 import { JoinWaitlistModalComponent } from './components/join-waitlist-modal/join-waitlist-modal.component';
 import { LitterApplicationsComponent } from './components/litter-applications/litter-applications.component';
 import { LitterApplicationsToggleComponent } from './components/litter-applications/litter-applications-toggle.component';
+import { MobileSwitchComponent } from './components/mobile-switch/mobile-switch.component';
 import { OffspringGridComponent } from './components/offspring-grid/offspring-grid.component';
 import { BreederOffspringModalComponent } from './components/breeder-offspring-modal/breeder-offspring-modal.component';
 import { OffspringGroupsComponent } from './components/offspring-groups/offspring-groups.component';
@@ -224,6 +225,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
     JoinWaitlistModalComponent,
     LitterApplicationsComponent,
     LitterApplicationsToggleComponent,
+    MobileSwitchComponent,
     AppRoutingModule,
     FormsModule,
     DragDropModule,

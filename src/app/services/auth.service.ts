@@ -158,6 +158,11 @@ export class AuthService {
     localStorage.removeItem('id_token');
     this.isLoggedInSubject.next(false);
     this.currentUserSubject.next(null);
+    // The QR sign-in page (/m) is signing this phone in right now: just drop the stale
+    // session and stay, instead of bouncing to /login and losing the one-time code.
+    if (window.location.pathname === '/m') {
+      return Promise.resolve(false);
+    }
     return this.router.navigate(['/login']);
   }
 

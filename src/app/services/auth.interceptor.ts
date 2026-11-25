@@ -34,9 +34,9 @@ export class AuthInterceptor implements HttpInterceptor {
           // only the first one (token still present) signs the user out.
           if (error.status === 401 && localStorage.getItem('id_token')) {
             // Toast after navigation so the layout swap doesn't drop it
-            this.authService.handleSessionExpired().then(() =>
-              this.toastService.warning('Please sign in again.', 'Session expired')
-            );
+            this.authService.handleSessionExpired().then(redirected => {
+              if (redirected !== false) this.toastService.warning('Please sign in again.', 'Session expired');
+            });
           }
           return throwError(() => error);
         })
