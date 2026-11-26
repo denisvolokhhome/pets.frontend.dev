@@ -104,9 +104,10 @@
 
       <!-- Mobile menu -->
       <div 
-        class="lg:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out"
-        [class.max-h-0]="!isMobileMenuOpen"
-        [class.max-h-96]="isMobileMenuOpen"
+        class="lg:hidden transition-[max-height] duration-300 ease-in-out"
+        [class.overflow-hidden]="!isMobileMenuOpen"
+        [class.overflow-y-auto]="isMobileMenuOpen"
+        [style.max-height]="isMobileMenuOpen ? 'calc(100dvh - 6rem)' : '0px'"
         id="navbarNav">
         <div class="py-4 space-y-2 border-t border-gray-200">
           <!-- Auth links (not logged in) - Mobile -->
@@ -150,7 +151,9 @@
                 </a>
               </li>
               <li>
-                <a href="/dashboard" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">Dashboard</a>
+                <a href="/dashboard" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
+                  <i class="bi bi-speedometer2 mr-2" aria-hidden="true"></i>Dashboard
+                </a>
               </li>
               <li *ngIf="waitlistEnabled && isPetSeeker">
                 <a href="/my-waitlists" class="block px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-linen rounded-lg transition-colors">
@@ -173,8 +176,9 @@
                 </a>
               </li>
             </ul>
-            <div class="px-3 py-2">
-              <app-profile-menu></app-profile-menu>
+            <!-- Inline account block: the desktop dropdown would be clipped by this panel -->
+            <div class="mt-2 pt-2 border-t border-gray-200">
+              <app-profile-menu variant="inline"></app-profile-menu>
             </div>
           </div>
         </div>

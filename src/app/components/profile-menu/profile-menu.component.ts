@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -12,6 +12,9 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./profile-menu.component.css']
 })
 export class ProfileMenuComponent implements OnInit {
+  /** 'dropdown': avatar button with a popover (desktop header).
+   *  'inline': avatar, name and Log out laid out in place (mobile menu panel, which clips popovers). */
+  @Input() variant: 'dropdown' | 'inline' = 'dropdown';
   isOpen = false;
   user: IUser | null = null;
   apihost = environment.API_HOST;
