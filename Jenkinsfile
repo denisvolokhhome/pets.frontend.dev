@@ -58,9 +58,10 @@ pipeline {
                     remote.password = VM_CREDS_PSW
                     remote.allowAnyHosts = true
 
-                    echo "Copying docker-compose.yml to dev server..."
-                    sshCommand remote: remote, command: 'mkdir -p /home/breedly/breedly-app'
-                    sshPut remote: remote, from: 'delivery/docker-compose.yml', into: '/home/breedly/breedly-app/'
+                    // docker-compose.yml on the server is owned by the backend repo (pets.backend.dev/delivery/docker-compose.yml)
+                    // and uploaded by the backend pipeline. Never upload a compose file from here: a second, diverging copy
+                    // made every frontend deploy recreate postgres and backend with the wrong config.
+                    sshCommand remote: remote, command: 'test -f /home/breedly/breedly-app/docker-compose.yml || { echo "docker-compose.yml missing on dev server - run the backend dev pipeline first"; exit 1; }'
 
                     echo "Logging into Harbor on dev server..."
                     sshCommand remote: remote, command: "echo '${HARBOR_PASS}' | docker login ${HARBOR_REGISTRY} -u '${HARBOR_USER}' --password-stdin"
@@ -69,7 +70,7 @@ pipeline {
                     sshCommand remote: remote, command: 'cd /home/breedly/breedly-app && docker compose pull frontend'
 
                     echo "Restarting frontend service..."
-                    sshCommand remote: remote, command: 'cd /home/breedly/breedly-app && docker compose up -d frontend'
+                    sshCommand remote: remote, command: 'cd /home/breedly/breedly-app && docker compose up -d --no-deps frontend'
 
                     echo "Waiting for services to stabilize..."
                     sshCommand remote: remote, command: 'sleep 10 && cd /home/breedly/breedly-app && docker compose ps'
