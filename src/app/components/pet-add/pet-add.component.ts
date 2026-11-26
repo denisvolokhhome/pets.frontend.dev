@@ -42,6 +42,9 @@ export class PetAddComponent implements OnInit {
   /** Emitted after a pet (and its photos) is saved so the host can refresh. */
   @Output() petAdded = new EventEmitter<void>();
 
+  /** True while the create request and photo uploads are in flight; blocks repeat submits. */
+  isSaving = false;
+
   private savedPetName = '';
   private failedImageUploads = 0;
 
@@ -171,6 +174,9 @@ export class PetAddComponent implements OnInit {
   // ── Submit ───────────────────────────────────────────────────────────────────
 
   submit(): void {
+    if (this.isSaving) return;
+    this.isSaving = true;
+
     const dateSendingToServer = new DatePipe('en-US')
       .transform(this.form.value.pet_dob, 'yyyy-MM-dd');
 
@@ -201,6 +207,7 @@ export class PetAddComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.isSaving = false;
         console.error('Error creating pet:', error);
         this.toastService.error(error.message || 'Failed to create pet. Please try again.', 'Could not add pet');
       }
@@ -227,6 +234,8 @@ export class PetAddComponent implements OnInit {
   // ── Reset ────────────────────────────────────────────────────────────────────
 
   resetForm(): void {
+    this.isSaving = false;
+
     // reset() keeps validators, so required fields stay invalid until filled again
     this.addPetForm.resetForm();
     this.form.reset();

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { WaitlistService } from '../../services/waitlist.service';
 import { DataService } from '../../services/data.service';
@@ -41,6 +42,8 @@ export class WaitlistComponent implements OnInit {
 
   depositEntry: IWaitlistEntry | null = null;
   showManual = false;
+  /** True while a waitlist mutation is in flight; blocks repeat clicks on action buttons. */
+  busy = false;
 
   constructor(
     private waitlistService: WaitlistService,
@@ -98,11 +101,22 @@ export class WaitlistComponent implements OnInit {
 
   // ── Requests ──
 
-  approve(e: IWaitlistEntry): void {
-    this.waitlistService.approve(e.id).subscribe({
-      next: () => { this.toastr.success(`${e.display_name} added to the waitlist.`, 'Waitlist'); this.load(); },
-      error: () => this.toastr.error('Could not approve this request.', 'Error')
+  /** Runs one mutation at a time, so a double-click cannot send the same request twice. */
+  private act(request: () => Observable<unknown>, onSuccess: () => void, errorMessage: string): void {
+    if (this.busy) return;
+    this.busy = true;
+    request().subscribe({
+      next: () => { this.busy = false; onSuccess(); },
+      error: () => { this.busy = false; this.toastr.error(errorMessage, 'Error'); }
     });
+  }
+
+  approve(e: IWaitlistEntry): void {
+    this.act(
+      () => this.waitlistService.approve(e.id),
+      () => { this.toastr.success(`${e.display_name} added to the waitlist.`, 'Waitlist'); this.load(); },
+      'Could not approve this request.'
+    );
   }
 
   async decline(e: IWaitlistEntry): Promise<void> {
@@ -113,10 +127,11 @@ export class WaitlistComponent implements OnInit {
       danger: true
     });
     if (!ok) return;
-    this.waitlistService.decline(e.id).subscribe({
-      next: () => { this.toastr.success('Request declined.', 'Waitlist'); this.load(); },
-      error: () => this.toastr.error('Could not decline this request.', 'Error')
-    });
+    this.act(
+      () => this.waitlistService.decline(e.id),
+      () => { this.toastr.success('Request declined.', 'Waitlist'); this.load(); },
+      'Could not decline this request.'
+    );
   }
 
   // ── General list row actions ──
@@ -149,10 +164,11 @@ export class WaitlistComponent implements OnInit {
   }
 
   confirmMove(e: IWaitlistEntry): void {
-    this.waitlistService.move(e.id, this.moveBreedingId).subscribe({
-      next: () => { this.panel = null; this.toastr.success('Entry moved.', 'Waitlist'); this.load(); },
-      error: () => this.toastr.error('Could not move this entry.', 'Error')
-    });
+    this.act(
+      () => this.waitlistService.move(e.id, this.moveBreedingId),
+      () => { this.panel = null; this.toastr.success('Entry moved.', 'Waitlist'); this.load(); },
+      'Could not move this entry.'
+    );
   }
 
   openHistory(e: IWaitlistEntry): void {
@@ -179,27 +195,29 @@ export class WaitlistComponent implements OnInit {
   }
 
   withdraw(e: IWaitlistEntry, outcome?: 'refunded' | 'forfeited'): void {
-    this.waitlistService.withdraw(e.id, outcome).subscribe({
-      next: () => { this.panel = null; this.toastr.success('Entry withdrawn.', 'Waitlist'); this.load(); },
-      error: () => this.toastr.error('Could not withdraw this entry.', 'Error')
-    });
+    this.act(
+      () => this.waitlistService.withdraw(e.id, outcome),
+      () => { this.panel = null; this.toastr.success('Entry withdrawn.', 'Waitlist'); this.load(); },
+      'Could not withdraw this entry.'
+    );
   }
 
   // ── Deposits to settle (withdrawn entries) ──
 
   settleDeposit(e: IWaitlistEntry, outcome: 'refunded' | 'forfeited'): void {
-    this.waitlistService.updateDeposit(e.id, {
-      deposit_status: outcome,
-      deposit_amount: e.deposit_amount,
-      deposit_received_on: e.deposit_received_on,
-      deposit_method: e.deposit_method
-    }).subscribe({
-      next: () => {
+    this.act(
+      () => this.waitlistService.updateDeposit(e.id, {
+        deposit_status: outcome,
+        deposit_amount: e.deposit_amount,
+        deposit_received_on: e.deposit_received_on,
+        deposit_method: e.deposit_method
+      }),
+      () => {
         this.toastr.success(outcome === 'refunded' ? 'Deposit marked refunded.' : 'Deposit marked kept.', 'Waitlist');
         this.load();
       },
-      error: () => this.toastr.error('Could not update the deposit.', 'Error')
-    });
+      'Could not update the deposit.'
+    );
   }
 
   // ── Modals ──

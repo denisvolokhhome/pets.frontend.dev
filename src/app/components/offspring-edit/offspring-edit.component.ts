@@ -40,6 +40,8 @@ export class OffspringEditComponent implements OnInit, OnChanges {
   imagePreviews: string[] = [];
   imageFiles: File[] = [];
   existingImages: OffspringImage[] = [];
+  /** True while a photo reorder request is in flight; blocks overlapping reorders. */
+  isReordering = false;
   rotatingImageId: string | null = null;
   readonly MAX_PHOTOS = 5;
   
@@ -231,7 +233,7 @@ export class OffspringEditComponent implements OnInit, OnChanges {
   }
 
   moveImageUp(index: number): void {
-    if (index > 0 && this.offspring) {
+    if (index > 0 && this.offspring && !this.isReordering) {
       const temp = this.existingImages[index];
       this.existingImages[index] = this.existingImages[index - 1];
       this.existingImages[index - 1] = temp;
@@ -240,7 +242,7 @@ export class OffspringEditComponent implements OnInit, OnChanges {
   }
 
   moveImageDown(index: number): void {
-    if (index < this.existingImages.length - 1 && this.offspring) {
+    if (index < this.existingImages.length - 1 && this.offspring && !this.isReordering) {
       const temp = this.existingImages[index];
       this.existingImages[index] = this.existingImages[index + 1];
       this.existingImages[index + 1] = temp;
@@ -252,13 +254,16 @@ export class OffspringEditComponent implements OnInit, OnChanges {
     if (!this.offspring) return;
 
     const imageIds = this.existingImages.map(img => img.id);
+    this.isReordering = true;
     this.offspringService.reorderImages(this.offspring.id, imageIds).subscribe({
       next: (updatedImages) => {
+        this.isReordering = false;
         this.existingImages = updatedImages;
         this.toastr.success('Images reordered successfully', 'Success');
         this.cdr.detectChanges();
       },
       error: (error) => {
+        this.isReordering = false;
         console.error('Error reordering images:', error);
         this.toastr.error('Failed to reorder images', 'Error');
       }

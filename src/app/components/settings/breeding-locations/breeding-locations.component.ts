@@ -17,6 +17,8 @@ export class BreedingLocationsComponent implements OnInit {
   editingLocation: ILocation | null = null;
   locationForm: FormGroup;
   isLoading: boolean = false;
+  /** True while a location save/delete is in flight; kept apart from isLoading so a list reload cannot re-enable Save. */
+  isSaving: boolean = false;
   saveSuccess: boolean = false;
   saveError: string | null = null;
   showDeleteConfirm: boolean = false;
@@ -139,6 +141,7 @@ export class BreedingLocationsComponent implements OnInit {
   }
 
   async saveLocation(): Promise<void> {
+    if (this.isSaving) return;
     if (this.locationForm.invalid) {
       // Mark all fields as touched to show validation errors
       Object.keys(this.locationForm.controls).forEach(key => {
@@ -148,7 +151,7 @@ export class BreedingLocationsComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isSaving = true;
     this.saveSuccess = false;
     this.saveError = null;
 
@@ -159,7 +162,7 @@ export class BreedingLocationsComponent implements OnInit {
       this.dataService.updateLocation(this.editingLocation.id!, locationData).subscribe({
         next: (response) => {
           this.saveSuccess = true;
-          this.isLoading = false;
+          this.isSaving = false;
           this.showForm = false;
           this.toastr.success('Location updated successfully', 'Success');
           this.loadLocations();
@@ -172,7 +175,7 @@ export class BreedingLocationsComponent implements OnInit {
           this.saveError = error.error?.detail || 'Failed to update location';
           const errorMessage = error.error?.detail || 'Failed to update location';
           this.toastr.error(errorMessage, 'Error');
-          this.isLoading = false;
+          this.isSaving = false;
         }
       });
     } else {
@@ -180,7 +183,7 @@ export class BreedingLocationsComponent implements OnInit {
       this.dataService.createLocation(locationData).subscribe({
         next: (response) => {
           this.saveSuccess = true;
-          this.isLoading = false;
+          this.isSaving = false;
           this.showForm = false;
           this.toastr.success('Location created successfully', 'Success');
           this.loadLocations();
@@ -193,7 +196,7 @@ export class BreedingLocationsComponent implements OnInit {
           this.saveError = error.error?.detail || 'Failed to create location';
           const errorMessage = error.error?.detail || 'Failed to create location';
           this.toastr.error(errorMessage, 'Error');
-          this.isLoading = false;
+          this.isSaving = false;
         }
       });
     }
@@ -256,17 +259,17 @@ export class BreedingLocationsComponent implements OnInit {
   }
 
   async deleteLocation(): Promise<void> {
-    if (!this.locationToDelete) {
+    if (!this.locationToDelete || this.isSaving) {
       return;
     }
 
-    this.isLoading = true;
+    this.isSaving = true;
     this.saveError = null;
     this.deleteErrorPets = [];
 
     this.dataService.deleteLocation(this.locationToDelete.id!).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isSaving = false;
         this.showDeleteConfirm = false;
         this.locationToDelete = null;
         this.deleteErrorPets = [];
@@ -281,7 +284,7 @@ export class BreedingLocationsComponent implements OnInit {
         console.error('Error.error.detail:', error.error?.detail);
         console.error('Error.error.error_code:', error.error?.error_code);
         
-        this.isLoading = false;
+        this.isSaving = false;
         
         // Check for 409 conflict - either by status code or error_code field
         const is409Error = error.status === 409 || error.error?.error_code === 'HTTP_409';

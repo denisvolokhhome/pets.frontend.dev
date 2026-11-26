@@ -173,7 +173,7 @@
       </div>
       <div class="form-card-footer">
         <button class="btn-cancel" type="button" (click)="toggleAddForm()">Cancel</button>
-        <button class="btn-save" type="button" (click)="onAddService()" [disabled]="hasNoLocations">
+        <button class="btn-save" type="button" (click)="onAddService()" [disabled]="hasNoLocations || isSaving">
           <i class="bi bi-check-lg"></i> Create Service
         </button>
       </div>
@@ -253,7 +253,7 @@
       </div>
       <div class="form-card-footer">
         <button class="btn-cancel" type="button" (click)="cancelEdit()">Cancel</button>
-        <button class="btn-save" type="button" (click)="onUpdateService()">
+        <button class="btn-save" type="button" (click)="onUpdateService()" [disabled]="isSaving">
           <i class="bi bi-check-lg"></i> Save Changes
         </button>
       </div>

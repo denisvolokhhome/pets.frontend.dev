@@ -33,6 +33,8 @@ export class ServicesComponent implements OnInit {
 
   // UI state
   isLoading = true;
+  /** True while a create/update request is in flight; blocks repeat saves. */
+  isSaving = false;
   searchTerm = '';
   showAddForm = false;
   editingService: IService | null = null;
@@ -114,6 +116,7 @@ export class ServicesComponent implements OnInit {
   // ── CRUD operations ───────────────────────────────────────────────────────
 
   onAddService(): void {
+    if (this.isSaving) return;
     if (!this.newService.category_id || !this.newService.title.trim()) {
       this.toast.error('Category and title are required.');
       return;
@@ -123,14 +126,17 @@ export class ServicesComponent implements OnInit {
       return;
     }
 
+    this.isSaving = true;
     this.serviceProviderService.createService(this.newService).subscribe({
       next: () => {
+        this.isSaving = false;
         this.toast.success('Service created successfully.');
         this.resetNewServiceForm();
         this.showAddForm = false;
         this.loadServices();
       },
       error: (err) => {
+        this.isSaving = false;
         console.error('Error creating service:', err);
         this.toast.error(err.message || 'Failed to create service.');
       }
@@ -153,20 +159,23 @@ export class ServicesComponent implements OnInit {
   }
 
   onUpdateService(): void {
-    if (!this.editingService) return;
+    if (!this.editingService || this.isSaving) return;
     if (!this.editForm.title?.trim()) {
       this.toast.error('Title is required.');
       return;
     }
 
+    this.isSaving = true;
     this.serviceProviderService.updateService(this.editingService.id, this.editForm).subscribe({
       next: () => {
+        this.isSaving = false;
         this.toast.success('Service updated successfully.');
         this.editingService = null;
         this.editForm = {};
         this.loadServices();
       },
       error: (err) => {
+        this.isSaving = false;
         console.error('Error updating service:', err);
         this.toast.error(err.message || 'Failed to update service.');
       }

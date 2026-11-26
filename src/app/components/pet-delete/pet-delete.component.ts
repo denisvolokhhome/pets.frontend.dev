@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { ModalService } from 'src/app/services/modal.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   standalone: false,
@@ -13,8 +14,12 @@ export class PetDeleteComponent implements OnInit{
 
   constructor(
     private dataService: DataService,
-    public modalService: ModalService
+    public modalService: ModalService,
+    private toastService: ToastService
   ){}
+
+  /** True while the delete request is in flight; blocks repeat clicks on Remove. */
+  isDeleting = false;
 
   @Input() pet_id: string = '';
 
@@ -26,12 +31,20 @@ export class PetDeleteComponent implements OnInit{
   });
 
   submit() {
-    console.log(this.pet_id);
+    if (this.isDeleting) return;
+    this.isDeleting = true;
 
-    this.dataService.deletePet(this.pet_id as string).subscribe(()=> {
-      this.modalService.close('deletePetModal');
-      window.location.reload();
-    })
+    this.dataService.deletePet(this.pet_id as string).subscribe({
+      next: () => {
+        this.modalService.close('deletePetModal');
+        window.location.reload();
+      },
+      error: (error) => {
+        this.isDeleting = false;
+        console.error('Error deleting pet:', error);
+        this.toastService.error(error?.message || 'Failed to remove pet. Please try again.', 'Could not remove pet');
+      }
+    });
   }
 
   modalClose() {

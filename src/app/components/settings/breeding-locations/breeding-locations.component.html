@@ -228,10 +228,10 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="ui-btn ui-btn--primary" [disabled]="isLoading">
-          {{ isLoading ? 'Saving…' : 'Save Location' }}
+        <button type="submit" class="ui-btn ui-btn--primary" [disabled]="isSaving">
+          {{ isSaving ? 'Saving…' : 'Save Location' }}
         </button>
-        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelForm()" [disabled]="isLoading">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelForm()" [disabled]="isSaving">
           Cancel
         </button>
       </div>
@@ -268,10 +268,10 @@
           *ngIf="deleteErrorPets.length === 0"
           class="ui-btn ui-btn--danger-solid" 
           (click)="deleteLocation()" 
-          [disabled]="isLoading">
-          {{ isLoading ? 'Deleting…' : 'Delete' }}
+          [disabled]="isSaving">
+          {{ isSaving ? 'Deleting…' : 'Delete' }}
         </button>
-        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelDelete()" [disabled]="isLoading">
+        <button type="button" class="ui-btn ui-btn--secondary" (click)="cancelDelete()" [disabled]="isSaving">
           {{ deleteErrorPets.length > 0 ? 'Close' : 'Cancel' }}
         </button>
       </div>

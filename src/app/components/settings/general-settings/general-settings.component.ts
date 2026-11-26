@@ -184,14 +184,14 @@ export class GeneralSettingsComponent implements OnInit {
 
   sendPasswordReset(): void {
     if (this.resetEmailSent || !this.currentUser?.email) return;
+    // Set before the request (both outcomes end in "sent") so repeat clicks can't send several emails.
+    this.resetEmailSent = true;
     this.authService.forgotPassword(this.currentUser.email).subscribe({
       next: () => {
-        this.resetEmailSent = true;
         this.toastr.success('Password reset email sent. Check your inbox.', 'Email Sent');
         this.cdr.detectChanges();
       },
       error: () => {
-        this.resetEmailSent = true;
         this.toastr.success('If the account exists, a reset email has been sent.', 'Email Sent');
         this.cdr.detectChanges();
       }
