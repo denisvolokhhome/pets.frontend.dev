@@ -25,6 +25,7 @@ RUN npm run build -- --configuration ${NG_CONFIG}
 # Runtime stage with nginx
 FROM nginx:alpine
 COPY deploy/nginx.conf /etc/nginx/nginx.conf
+COPY deploy/security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=builder /app/dist/pets.frontend.dev /usr/share/nginx/html
 EXPOSE 80
 
