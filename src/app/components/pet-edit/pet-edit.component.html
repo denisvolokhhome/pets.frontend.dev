@@ -158,7 +158,7 @@
                     type="button" 
                     class="photo-overlay-btn" 
                     (click)="moveImageUp(i)"
-                    [disabled]="i === 0"
+                    [disabled]="i === 0 || isReordering"
                     title="Move left"
                     [attr.aria-label]="'Move image left'">
                     <i class="bi bi-arrow-left"></i>
@@ -176,7 +176,7 @@
                     type="button" 
                     class="photo-overlay-btn" 
                     (click)="moveImageDown(i)"
-                    [disabled]="i === existingImages.length - 1"
+                    [disabled]="i === existingImages.length - 1 || isReordering"
                     title="Move right"
                     [attr.aria-label]="'Move image right'">
                     <i class="bi bi-arrow-right"></i>
@@ -285,6 +285,6 @@
 
   <div class="modal-footer-modern">
     <button type="button" class="ui-btn ui-btn--secondary" (click)="modalClose()">Cancel</button>
-    <button type="submit" class="ui-btn ui-btn--primary" [disabled]="!form.valid">Save</button>
+    <button type="submit" class="ui-btn ui-btn--primary" [disabled]="!form.valid || isSaving">{{ isSaving ? 'Saving…' : 'Save' }}</button>
   </div>
 </form>

@@ -107,6 +107,8 @@ the partial file. Heavy ZIP writing runs in a thread (`asyncio.to_thread`) so th
 loop isn't blocked. Images/PDFs are added with `ZIP_STORED` (already compressed); CSVs
 with `ZIP_DEFLATED`.
 
+> **Superseded 2026-11-26:** `pets.frontend.dev/delivery/docker-compose.yml` was removed. The dev stack compose lives only in `pets.backend.dev/delivery/docker-compose.yml`; the frontend pipeline no longer uploads a compose file and restarts only `frontend` (`--no-deps`). Make deployed-stack changes in the backend repo only.
+
 Cleanup: on each `POST` and `GET latest`, expired ready exports for that user have
 their files deleted. There is no `expired` status value: the API derives
 `is_expired` from `expires_at`; plus a startup sweep that deletes all

@@ -67,3 +67,20 @@ Use a breeder with pets, a breeding, a sold puppy, photos and at least one docum
 | 26 | Unzip it. | `README.txt`, CSVs (locations, pets, breedings, breeding_pets, matings, progesterone_tests, milestones, offspring) open correctly in Excel (accents intact); sold puppies and deleted pets are in the sheets; `photos/` and `documents/` contain the files, in folders by pet/puppy name. | |
 | 27 | Copy the download link from the browser's downloads list and open it in a private window after a minute or two. | It still works within the hour after the first download; a link that was never used stops working after 60 seconds. | |
 | 28 | Click **Create a new export**. | A new archive is prepared; the old one is gone. | |
+
+## Continue on your phone (QR sign-in)
+
+Use a desktop browser signed in as Ellie (breeder) and a real phone (or a second browser at phone width).
+
+| # | Action | Expected result | Pass |
+|---|--------|-----------------|------|
+| 29 | On desktop, open a breeding page and click the **phone icon** left of the map icon. | Popup **Continue on your phone**: three numbered steps, a QR code, "Expires in 2:00 · a new code appears automatically", and the "don't share this code" note. No copy-link button. | |
+| 30 | Make the window 900px wide, then 700px wide. | 900px: the phone icon sits next to the ☰ button. 700px: no phone icon. | |
+| 31 | Scan the QR with the phone camera (phone signed out of Breedly). | The phone opens **Sign in to Breedly as Ellie's breedery (e•••@…)** — the full email is not shown, and the address bar shows just `/m`. | |
+| 32 | Tap **Continue**. | The phone is signed in and opens the same breeding page. Within a few seconds the desktop popup shows **Signed in on your phone** and closes itself. | |
+| 33 | Scan the same QR again from a photo/screenshot. | "This code has expired or was already used. Generate a new one on your computer." with a **Sign in with email** link. | |
+| 34 | Open the popup, wait 2 minutes. | The countdown reaches 0 and a new QR appears by itself; the old one no longer works. | |
+| 35 | Open the popup, switch to another tab for 30 seconds, come back. | The same QR is still shown (if time is left), and it still works. | |
+| 36 | With the phone already signed in as Ellie, scan a new code. | The phone goes straight to the page (no Continue screen); the desktop shows **Already signed in on your phone**. | |
+| 37 | With the phone signed in as Sam (pet seeker), scan Ellie's code. | "This phone is signed in as Sam. Continuing will switch accounts." Continue switches the phone to Ellie. | |
+| 38 | Log out on the phone. | Only the phone is signed out; the desktop stays signed in. | |

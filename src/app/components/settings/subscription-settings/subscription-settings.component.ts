@@ -158,7 +158,8 @@ export class SubscriptionSettingsComponent implements OnInit {
   }
 
   onDowngrade(plan: IPlan): void {
-    if (this.isDowngrading || this.isCurrentPlan(plan)) return;
+    // Upgrade and downgrade share one in-flight lock so a checkout and a plan change can't start together.
+    if (this.isDowngrading || this.isRedirecting || this.isCurrentPlan(plan)) return;
     this.downgradeViolations = [];
     this.isDowngrading = true;
 
@@ -210,7 +211,7 @@ export class SubscriptionSettingsComponent implements OnInit {
   }
 
   onUpgrade(plan: IPlan): void {
-    if (this.isRedirecting || this.isCurrentPlan(plan)) return;
+    if (this.isRedirecting || this.isDowngrading || this.isCurrentPlan(plan)) return;
 
     this.isRedirecting = true;
     this.billingService.createCheckoutSession(plan.id).subscribe({
@@ -234,7 +235,7 @@ export class SubscriptionSettingsComponent implements OnInit {
 
   /** Cancel a scheduled downgrade by re-subscribing to the current plan */
   onCancelDowngrade(): void {
-    if (!this.subscription || this.isDowngrading) return;
+    if (!this.subscription || this.isDowngrading || this.isRedirecting) return;
     this.isDowngrading = true;
     // Re-subscribe to current plan clears the pending downgrade on the backend
     this.billingService.cancelPendingDowngrade(this.subscription.id).subscribe({

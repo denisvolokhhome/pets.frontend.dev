@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`) from `develop` (`Jenkinsfile`), and to production (`https://breedly.us`) from `main` (`Jenkinsfile.prod`: unit tests, `prod` build, deploy with health check and rollback).
+Breedly frontend: an Angular 21 SPA for dog breeders (pets, breedings, offspring, waitlists, genealogy), pet seekers (map search, favorites, waitlists, messaging) and service providers. It talks to a separate backend API (`environment.API_URL`). Deployed as a static build behind nginx (`deploy/Dockerfile`, `deploy/nginx.conf`); Jenkins builds the image and deploys to dev (`https://dev.breedly.us`) from `develop` (`Jenkinsfile`) — the dev stack's `docker-compose.yml` lives in the backend repo (`delivery/docker-compose.yml`); the frontend pipeline only restarts `frontend` with `--no-deps` and never uploads a compose file, and to production (`https://breedly.us`) from `main` (`Jenkinsfile.prod`: unit tests, `prod` build, deploy with health check and rollback).
 
 ## Commands
 

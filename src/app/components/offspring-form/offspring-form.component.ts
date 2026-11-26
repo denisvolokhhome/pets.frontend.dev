@@ -21,6 +21,8 @@ export class OffspringFormComponent implements OnInit {
   
   breedings: IBreeding[] = [];
   uploadedImages: OffspringImage[] = [];
+  /** True while a photo reorder request is in flight; blocks overlapping reorders. */
+  isReordering = false;
   
   isLoading: boolean = false;
   isSaving: boolean = false;
@@ -219,13 +221,16 @@ export class OffspringFormComponent implements OnInit {
     // Get the new order of image IDs
     const imageIds = this.uploadedImages.map(img => img.id);
 
+    this.isReordering = true;
     this.offspringService.reorderImages(this.offspringId, imageIds).subscribe({
       next: (updatedImages) => {
+        this.isReordering = false;
         this.uploadedImages = updatedImages;
         this.toastr.success('Images reordered successfully', 'Success');
         this.cdr.detectChanges();
       },
       error: (error) => {
+        this.isReordering = false;
         console.error('Error reordering images:', error);
         this.toastr.error(error.message || 'Failed to reorder images', 'Error');
       }
@@ -233,7 +238,7 @@ export class OffspringFormComponent implements OnInit {
   }
 
   moveImageUp(index: number): void {
-    if (index > 0) {
+    if (index > 0 && !this.isReordering) {
       const temp = this.uploadedImages[index];
       this.uploadedImages[index] = this.uploadedImages[index - 1];
       this.uploadedImages[index - 1] = temp;
@@ -242,7 +247,7 @@ export class OffspringFormComponent implements OnInit {
   }
 
   moveImageDown(index: number): void {
-    if (index < this.uploadedImages.length - 1) {
+    if (index < this.uploadedImages.length - 1 && !this.isReordering) {
       const temp = this.uploadedImages[index];
       this.uploadedImages[index] = this.uploadedImages[index + 1];
       this.uploadedImages[index + 1] = temp;

@@ -36,6 +36,8 @@ export class BreedingModalComponent implements OnInit, OnChanges {
   locationError: string = '';
   isLoadingPets: boolean = false;
   isSaving: boolean = false;
+  /** Breeding created by an earlier Save whose parent assignment failed; a retry reuses it instead of creating another. */
+  private pendingBreeding: any = null;
 
   // Breeds for validation
   breeds: IBreed[] = [];
@@ -124,6 +126,7 @@ export class BreedingModalComponent implements OnInit, OnChanges {
   }
 
   save(): void {
+    if (this.isSaving) return;
     if (this.mode === 'create') {
       // Validate pet selection
       if (!this.selectedPet1 || !this.selectedPet2) {
@@ -159,32 +162,18 @@ export class BreedingModalComponent implements OnInit, OnChanges {
       }
 
       this.isSaving = true;
-      
+
+      // A previous attempt already created the breeding but failed to assign parents: only retry the assignment.
+      if (this.pendingBreeding) {
+        this.assignParents(this.pendingBreeding);
+        return;
+      }
+
       // Create new breeding
       this.dataService.createBreeding(this.formData.description || undefined).subscribe({
         next: (newBreeding: any) => {
-          // Automatically assign the selected pets
-          this.dataService.assignPetsToBreeding(newBreeding.id, [this.selectedPet1, this.selectedPet2]).subscribe({
-            next: (updatedBreeding: any) => {
-              this.isSaving = false;
-              this.toastr.success('Breeding created and pets assigned successfully', 'Success');
-              this.breedingSaved.emit(updatedBreeding);
-              this.close();
-              
-              // Navigate to the breeding detail page
-              setTimeout(() => {
-                this.router.navigate(['/breeding', newBreeding.id]);
-              }, 100);
-            },
-            error: (error) => {
-              this.isSaving = false;
-              console.error('Error assigning pets:', error);
-              const errorMsg = error.message || 'Failed to assign pets to breeding';
-              this.toastr.error(errorMsg, 'Error');
-              // Still emit the breeding even if assignment failed
-              this.breedingSaved.emit(newBreeding);
-            }
-          });
+          this.pendingBreeding = newBreeding;
+          this.assignParents(newBreeding);
         },
         error: (error) => {
           this.isSaving = false;
@@ -212,7 +201,34 @@ export class BreedingModalComponent implements OnInit, OnChanges {
     }
   }
 
+  /** Assigns the selected parents to a breeding that already exists on the server. */
+  private assignParents(newBreeding: any): void {
+    this.dataService.assignPetsToBreeding(newBreeding.id, [this.selectedPet1, this.selectedPet2]).subscribe({
+      next: (updatedBreeding: any) => {
+        this.isSaving = false;
+        this.pendingBreeding = null;
+        this.toastr.success('Breeding created and pets assigned successfully', 'Success');
+        this.breedingSaved.emit(updatedBreeding);
+        this.close();
+
+        // Navigate to the breeding detail page
+        setTimeout(() => {
+          this.router.navigate(['/breeding', newBreeding.id]);
+        }, 100);
+      },
+      error: (error) => {
+        this.isSaving = false;
+        console.error('Error assigning pets:', error);
+        const errorMsg = error.message || 'Failed to assign pets to breeding';
+        this.toastr.error(errorMsg, 'Error');
+        // Still emit the breeding even if assignment failed
+        this.breedingSaved.emit(newBreeding);
+      }
+    });
+  }
+
   close(): void {
+    this.pendingBreeding = null;
     this.modalService.close();
     this.formData.description = '';
     this.selectedPet1 = '';

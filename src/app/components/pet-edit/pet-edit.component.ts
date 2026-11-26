@@ -42,6 +42,10 @@ export class PetEditComponent implements OnInit, OnChanges {
   imageFiles: File[] = [];
   existingImages: any[] = []; // Track existing images from backend
   rotatingImageId: number | null = null;
+  /** True while the save (update + photo uploads) is in flight; blocks repeat submits. */
+  isSaving = false;
+  /** True while a photo reorder request is in flight; blocks overlapping reorders. */
+  isReordering = false;
   readonly MAX_PHOTOS = 5;
 
   readURLMultiple(event: any): void {
@@ -143,7 +147,7 @@ export class PetEditComponent implements OnInit, OnChanges {
   }
 
   moveImageUp(index: number): void {
-    if (index > 0 && this.pet) {
+    if (index > 0 && this.pet && !this.isReordering) {
       const temp = this.existingImages[index];
       this.existingImages[index] = this.existingImages[index - 1];
       this.existingImages[index - 1] = temp;
@@ -152,7 +156,7 @@ export class PetEditComponent implements OnInit, OnChanges {
   }
 
   moveImageDown(index: number): void {
-    if (index < this.existingImages.length - 1 && this.pet) {
+    if (index < this.existingImages.length - 1 && this.pet && !this.isReordering) {
       const temp = this.existingImages[index];
       this.existingImages[index] = this.existingImages[index + 1];
       this.existingImages[index + 1] = temp;
@@ -164,8 +168,10 @@ export class PetEditComponent implements OnInit, OnChanges {
     if (!this.pet) return;
 
     const imageIds = this.existingImages.map(img => img.id).filter(id => id !== null);
+    this.isReordering = true;
     this.DataService.reorderPetImages(this.pet.id, imageIds).subscribe({
       next: (updatedImages: any[]) => {
+        this.isReordering = false;
         // Update existing images with new order
         this.existingImages = updatedImages.map((img: any) => ({
           id: img.id,
@@ -175,6 +181,7 @@ export class PetEditComponent implements OnInit, OnChanges {
         this.cdr.detectChanges();
       },
       error: (error: any) => {
+        this.isReordering = false;
         console.error('Error reordering images:', error);
         this.toastService.error('Failed to reorder images. Please try again.');
       }
@@ -383,7 +390,8 @@ export class PetEditComponent implements OnInit, OnChanges {
     }
 
     submit(): void {
-      if (!this.pet) return;
+      if (!this.pet || this.isSaving) return;
+      this.isSaving = true;
 
       // Use existing pet data for read-only fields (breed_id, date_of_birth, gender, is_puppy)
       // Find location ID from location name
@@ -417,6 +425,7 @@ export class PetEditComponent implements OnInit, OnChanges {
           }
         },
         error: (error) => {
+          this.isSaving = false;
           console.error('Error updating pet:', error);
           this.toastService.error('Failed to update pet. Please try again.');
         }
@@ -427,6 +436,7 @@ export class PetEditComponent implements OnInit, OnChanges {
 
     /** Close the modal, confirm the save and let the host refresh. */
     private finishSave(): void {
+      this.isSaving = false;
       this.modalService.close('editPetModal');
       this.toastService.success(`${this.form.value.name} was updated`, 'Changes saved');
       if (this.failedImageUploads > 0) {

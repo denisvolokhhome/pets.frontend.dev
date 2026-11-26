@@ -1,0 +1,63 @@
+:host { display: inline-flex; }
+
+/* Same footprint as the map button next to it */
+.ms-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; min-width: 40px; min-height: 40px; padding: 0;
+  border: none; border-radius: 999px; background: transparent;
+  color: var(--stone); font-size: 1.2rem; cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.ms-trigger:hover { background: var(--n-100); color: var(--ink); }
+.ms-trigger:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+
+/* Desktop only: on a phone you're already on the phone */
+@media (max-width: 768px) { :host { display: none; } }
+
+.ms-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  background: rgba(31, 26, 20, 0.45);
+}
+.ms-dialog {
+  width: 100%; max-width: 380px; max-height: calc(100vh - 2rem); overflow-y: auto;
+  background: var(--cream); border-radius: 16px; box-shadow: 0 20px 50px rgba(31, 26, 20, 0.25);
+  padding: 1.25rem 1.5rem 1.5rem; color: var(--ink);
+}
+.ms-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
+.ms-head h3 { margin: 0; font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; }
+.ms-head h3:focus { outline: none; }
+
+.ms-steps { list-style: decimal; margin: 0 0 1rem; padding-left: 1.25rem; color: var(--stone); font-size: 0.9375rem; line-height: 1.6; }
+.ms-steps li { display: list-item; }
+.ms-steps li::marker { color: var(--clay); font-weight: 600; }
+.ms-steps strong { color: var(--ink); }
+
+.ms-qr {
+  display: flex; align-items: center; justify-content: center;
+  width: 248px; height: 248px; margin: 0 auto; padding: 8px;
+  background: white; border: 1px solid var(--n-200); border-radius: 12px;
+}
+.ms-qr img { display: block; width: 232px; height: 232px; image-rendering: pixelated; }
+.ms-spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid var(--n-200); border-top-color: var(--clay);
+  animation: ms-spin 0.8s linear infinite;
+}
+@keyframes ms-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ms-spinner { animation: none; } }
+
+.ms-countdown { margin: 0.75rem 0 0; text-align: center; font-size: 0.8125rem; color: var(--stone); font-variant-numeric: tabular-nums; }
+.ms-note {
+  display: flex; gap: 0.5rem; align-items: flex-start; margin: 1rem 0 0; padding: 0.625rem 0.75rem;
+  background: var(--n-50); border: 1px solid var(--n-200); border-radius: 8px;
+  font-size: 0.8125rem; color: var(--stone); line-height: 1.45;
+}
+.ms-note i { color: var(--pine); margin-top: 1px; }
+
+.ms-result { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.5rem; padding: 1.5rem 0.5rem 0.5rem; }
+.ms-result__icon { font-size: 2.5rem; color: var(--stone); }
+.ms-result__icon--ok { color: var(--success); }
+.ms-result__icon--warn { color: var(--warning); }
+.ms-result__title { margin: 0; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; }
+.ms-result__text { margin: 0; color: var(--stone); font-size: 0.9375rem; }

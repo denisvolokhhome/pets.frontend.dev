@@ -40,6 +40,8 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   // Loading states
   isLoadingPets: boolean = false;
   isSaving: boolean = false;
+  /** Breeding created by an earlier attempt whose parent assignment failed; a retry reuses it instead of creating another. */
+  private pendingBreeding: any = null;
 
   // Breeds for validation
   breeds: IBreed[] = [];
@@ -285,6 +287,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   }
 
   createBreeding(): void {
+    if (this.isSaving) return;
     if (!this.selectedPet || !this.selectedPartnerPet) {
       this.toastr.error('Please select both parent pets', 'Validation Error');
       return;
@@ -305,46 +308,58 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
     }
 
     this.isSaving = true;
-    
+
+    // A previous attempt already created the breeding but failed to assign parents: only retry the assignment.
+    if (this.pendingBreeding) {
+      this.assignParents(this.pendingBreeding);
+      return;
+    }
+
     this.dataService.createBreeding(this.description || undefined).subscribe({
       next: (newBreeding: any) => {
-        // Assign the selected pets
-        this.dataService.assignPetsToBreeding(
-          newBreeding.id, 
-          [this.selectedPet!.id, this.selectedPartnerPet!.id]
-        ).subscribe({
-          next: (updatedBreeding: any) => {
-            this.isSaving = false;
-            
-            // Show success message
-            this.toastr.success(
-              'Redirecting to breeding details…',
-              'Breeding Created Successfully',
-              { timeOut: 3000 }
-            );
-            
-            this.close();
-            
-            // Navigate to the breeding detail page
-            setTimeout(() => {
-              this.router.navigate(
-                ['/breeding', newBreeding.id],
-                this.continueToOffspring ? { queryParams: { addOffspring: 1 } } : {}
-              );
-            }, 500);
-          },
-          error: (error) => {
-            this.isSaving = false;
-            console.error('Error assigning pets:', error);
-            const errorMsg = error.message || 'Failed to assign pets to breeding';
-            this.toastr.error(errorMsg, 'Error');
-          }
-        });
+        this.pendingBreeding = newBreeding;
+        this.assignParents(newBreeding);
       },
       error: (error) => {
         this.isSaving = false;
         console.error('Error creating breeding:', error);
         this.toastr.error('Failed to create breeding. Please try again.', 'Error');
+      }
+    });
+  }
+
+  /** Assigns the selected parents to a breeding that already exists on the server. */
+  private assignParents(newBreeding: any): void {
+    this.dataService.assignPetsToBreeding(
+      newBreeding.id,
+      [this.selectedPet!.id, this.selectedPartnerPet!.id]
+    ).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.pendingBreeding = null;
+
+        // Show success message
+        this.toastr.success(
+          'Redirecting to breeding details…',
+          'Breeding Created Successfully',
+          { timeOut: 3000 }
+        );
+
+        this.close();
+
+        // Navigate to the breeding detail page
+        setTimeout(() => {
+          this.router.navigate(
+            ['/breeding', newBreeding.id],
+            this.continueToOffspring ? { queryParams: { addOffspring: 1 } } : {}
+          );
+        }, 500);
+      },
+      error: (error) => {
+        this.isSaving = false;
+        console.error('Error assigning pets:', error);
+        const errorMsg = error.message || 'Failed to assign pets to breeding';
+        this.toastr.error(errorMsg, 'Error');
       }
     });
   }
@@ -355,6 +370,7 @@ export class QuickBreedingAddComponent implements OnInit, OnChanges {
   }
 
   resetForm(): void {
+    this.pendingBreeding = null;
     if (this.allowParentPick) {
       this.selectedPet = null;
     }

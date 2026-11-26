@@ -41,6 +41,8 @@ export class GuestToAccountComponent implements OnInit {
 
   passwordErrors: string[] = [];
   emailExistsError: string | null = null;
+  /** True while the conversion request is in flight; blocks repeat submits. */
+  isSubmitting = false;
 
   validatePassword(): boolean {
     this.passwordErrors = [];
@@ -78,6 +80,7 @@ export class GuestToAccountComponent implements OnInit {
   }
 
   proceedRegistration() {
+    if (this.isSubmitting) return;
     this.emailExistsError = null;
     
     if (this.registerForm.valid) {
@@ -92,6 +95,7 @@ export class GuestToAccountComponent implements OnInit {
         name: this.registerForm.value.name || undefined,
       };
 
+      this.isSubmitting = true;
       this.service.ConvertGuestToAccount(formValue).subscribe({
         next: (response: any) => {
           // Store JWT token
@@ -115,6 +119,7 @@ export class GuestToAccountComponent implements OnInit {
           this.router.navigate(['messages']);
         },
         error: (error: HttpErrorResponse) => {
+          this.isSubmitting = false;
           console.error('Registration error:', error);
 
           if (error.error?.detail === 'REGISTER_SSO_ACCOUNT_EXISTS' || error.status === 409) {

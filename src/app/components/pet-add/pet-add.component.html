@@ -245,6 +245,6 @@
 
   <div class="modal-footer-modern">
     <button type="button" class="ui-btn ui-btn--secondary" (click)="modalClose()">Cancel</button>
-    <button type="submit" class="ui-btn ui-btn--primary" [disabled]="!form.valid">Save</button>
+    <button type="submit" class="ui-btn ui-btn--primary" [disabled]="!form.valid || isSaving">{{ isSaving ? 'Saving…' : 'Save' }}</button>
   </div>
 </form>

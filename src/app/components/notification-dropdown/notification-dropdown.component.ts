@@ -24,6 +24,8 @@ import { Subject, takeUntil, interval } from 'rxjs';
 export class NotificationDropdownComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   unreadCount = 0;
+  /** Ids with a mark-as-read request in flight, so repeat clicks don't send it (and decrement the count) twice. */
+  private markingRead = new Set<Notification['id']>();
   isLoading = false;
   isOpen = false;
   selectedNotification: Notification | null = null;
@@ -181,22 +183,26 @@ export class NotificationDropdownComponent implements OnInit, OnDestroy {
   }
 
   markAsRead(notification: Notification): void {
+    if (notification.is_read || this.markingRead.has(notification.id)) return;
+    this.markingRead.add(notification.id);
     this.notificationService.markAsRead(notification.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
+          this.markingRead.delete(notification.id);
           notification.is_read = true;
           this.unreadCount = Math.max(0, this.unreadCount - 1);
           this.cdr.markForCheck();
         },
         error: (error) => {
+          this.markingRead.delete(notification.id);
           console.error('Error marking notification as read:', error);
         }
       });
   }
 
   markAllAsRead(): void {
-    const unreadNotifications = this.notifications.filter(n => !n.is_read);
+    const unreadNotifications = this.notifications.filter(n => !n.is_read && !this.markingRead.has(n.id));
     
     if (unreadNotifications.length === 0) {
       return;

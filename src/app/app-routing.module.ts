@@ -52,6 +52,8 @@ import { AcceptableUsePolicyComponent } from './components/acceptable-use-policy
 import { BreederAgreementComponent } from './components/breeder-agreement/breeder-agreement.component';
 import { RefundPolicyComponent } from './components/refund-policy/refund-policy.component';
 import { LitterPublicComponent } from './components/litter-public/litter-public.component';
+import { MobileSigninComponent } from './components/mobile-signin/mobile-signin.component';
+import { MOBILE_SIGNIN_PATH } from './models/mobile-signin';
 import { BreederCalendarComponent } from './components/breeder-calendar/breeder-calendar.component';
 
 const routes: Routes = [
@@ -60,6 +62,7 @@ const routes: Routes = [
   { path: 'home-next', redirectTo: '', pathMatch: 'full' },
   { path: 'search-pets', component: SearchPageComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
+  { path: MOBILE_SIGNIN_PATH.slice(1), component: MobileSigninComponent }, // QR sign-in on the phone (instant mobile switch)
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },

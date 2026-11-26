@@ -21,6 +21,9 @@ chat also renders a shared-documents message as raw JSON.
    internal only (no public hostname, console off), own volume, keys from the
    server `.env`. Added to both delivery compose files, the prod compose, and
    local dev (`fastapi-backend/docker-compose.yml` + `dev.sh`).
+
+> **Superseded 2026-11-26:** `pets.frontend.dev/delivery/docker-compose.yml` was removed. The dev stack compose lives only in `pets.backend.dev/delivery/docker-compose.yml`; the frontend pipeline no longer uploads a compose file and restarts only `frontend` (`--no-deps`). Make deployed-stack changes in the backend repo only.
+
 4. **Buckets:** `documents` (private) and `photos` (all uploaded images: pets,
    offspring, profile, breedery, services). Created by the backend at startup.
 5. **Photos** keep their stored paths as object keys (e.g. `storage/x.jpg`) and are

@@ -15,8 +15,8 @@
         <span class="ui-cell-sub">{{ depositLabels[e.deposit_status] }}<ng-container *ngIf="e.deposit_amount"> · ${{ e.deposit_amount }}</ng-container><ng-container *ngIf="e.deposit_received_on"> · {{ formatDate(e.deposit_received_on) }}</ng-container></span>
       </div>
       <div class="settle-actions">
-        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="settle-refunded" (click)="settleDeposit(e, 'refunded')">Refunded</button>
-        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="settle-kept" (click)="settleDeposit(e, 'forfeited')">Kept</button>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="settle-refunded" [disabled]="busy" (click)="settleDeposit(e, 'refunded')">Refunded</button>
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="settle-kept" [disabled]="busy" (click)="settleDeposit(e, 'forfeited')">Kept</button>
       </div>
     </div>
   </section>
@@ -62,8 +62,8 @@
         </dl>
       </div>
       <div class="request-actions">
-        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="approve" (click)="approve(e)">Approve</button>
-        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="decline" (click)="decline(e)">Decline</button>
+        <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="approve" [disabled]="busy" (click)="approve(e)">Approve</button>
+        <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="decline" [disabled]="busy" (click)="decline(e)">Decline</button>
       </div>
     </div>
   </section>
@@ -107,7 +107,7 @@
                     <option [ngValue]="null">General waitlist</option>
                     <option *ngFor="let b of breedings" [ngValue]="b.id">{{ b.label }}</option>
                   </select>
-                  <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="move-confirm" (click)="confirmMove(e)">Move</button>
+                  <button type="button" class="ui-btn ui-btn--primary ui-btn--sm" data-testid="move-confirm" [disabled]="busy" (click)="confirmMove(e)">Move</button>
                 </div>
                 <div class="panel" *ngIf="isPanel(e, 'history')">
                   <ul class="events">
@@ -117,8 +117,8 @@
                 </div>
                 <div class="panel" *ngIf="isPanel(e, 'withdraw')">
                   <span>Refunded or kept?</span>
-                  <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="withdraw-refunded" (click)="withdraw(e, 'refunded')">Refunded</button>
-                  <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="withdraw-kept" (click)="withdraw(e, 'forfeited')">Kept</button>
+                  <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" data-testid="withdraw-refunded" [disabled]="busy" (click)="withdraw(e, 'refunded')">Refunded</button>
+                  <button type="button" class="ui-btn ui-btn--danger ui-btn--sm" data-testid="withdraw-kept" [disabled]="busy" (click)="withdraw(e, 'forfeited')">Kept</button>
                   <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" (click)="panel = null">Cancel</button>
                 </div>
               </td>

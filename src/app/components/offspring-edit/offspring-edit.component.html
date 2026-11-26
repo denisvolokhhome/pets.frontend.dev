@@ -218,7 +218,7 @@
                     type="button" 
                     class="photo-overlay-btn" 
                     (click)="moveImageUp(i)"
-                    [disabled]="i === 0"
+                    [disabled]="i === 0 || isReordering"
                     title="Move image left"
                     aria-label="Move image left">
                     <i class="bi bi-arrow-left"></i>
@@ -236,7 +236,7 @@
                     type="button" 
                     class="photo-overlay-btn" 
                     (click)="moveImageDown(i)"
-                    [disabled]="i === existingImages.length - 1"
+                    [disabled]="i === existingImages.length - 1 || isReordering"
                     title="Move image right"
                     aria-label="Move image right">
                     <i class="bi bi-arrow-right"></i>

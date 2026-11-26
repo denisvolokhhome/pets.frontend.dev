@@ -1,0 +1,55 @@
+<button #trigger type="button" class="ms-trigger" title="Open on your phone" aria-label="Open on your phone"
+        aria-haspopup="dialog" [attr.aria-expanded]="open" (click)="openPopup()">
+  <i class="bi bi-phone" aria-hidden="true"></i>
+</button>
+
+<div class="ms-overlay" *ngIf="open" (click)="close()">
+  <div class="ms-dialog" role="dialog" aria-modal="true" aria-labelledby="ms-title" (click)="$event.stopPropagation()">
+    <div class="ms-head">
+      <h3 id="ms-title" #dialogTitle tabindex="-1">Continue on your phone</h3>
+      <button type="button" class="ui-icon-btn" aria-label="Close" (click)="close()">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <ng-container [ngSwitch]="state">
+      <div *ngSwitchCase="'used'" class="ms-result" role="status">
+        <i class="bi bi-check-circle-fill ms-result__icon ms-result__icon--ok" aria-hidden="true"></i>
+        <p class="ms-result__title">Signed in on your phone</p>
+        <p class="ms-result__text">You can keep working here too.</p>
+      </div>
+
+      <div *ngSwitchCase="'already'" class="ms-result" role="status">
+        <i class="bi bi-phone-fill ms-result__icon" aria-hidden="true"></i>
+        <p class="ms-result__title">Already signed in on your phone</p>
+        <p class="ms-result__text">Your phone was already using this account, so it just opened the page.</p>
+      </div>
+
+      <div *ngSwitchCase="'error'" class="ms-result" role="alert">
+        <i class="bi bi-exclamation-circle ms-result__icon ms-result__icon--warn" aria-hidden="true"></i>
+        <p class="ms-result__text">{{ errorMessage }}</p>
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="generate()">Try again</button>
+      </div>
+
+      <div *ngSwitchDefault class="ms-body">
+        <ol class="ms-steps">
+          <li>Open your phone's camera</li>
+          <li>Point it at the code</li>
+          <li>Tap <strong>Continue</strong> — you'll be signed in on this page</li>
+        </ol>
+        <div class="ms-qr" [class.ms-qr--loading]="state === 'loading'">
+          <img *ngIf="qrDataUrl && state === 'ready'" [src]="qrDataUrl" width="232" height="232"
+               alt="QR code that signs you in on your phone">
+          <div *ngIf="state === 'loading'" class="ms-spinner" aria-label="Creating code"></div>
+        </div>
+        <p class="ms-countdown" *ngIf="state === 'ready'" aria-live="off">
+          Expires in {{ countdown }} · a new code appears automatically
+        </p>
+        <p class="ms-note">
+          <i class="bi bi-shield-lock" aria-hidden="true"></i>
+          Only scan codes from your own screen. Don't share this code — it signs you in.
+        </p>
+      </div>
+    </ng-container>
+  </div>
+</div>

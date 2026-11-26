@@ -235,7 +235,7 @@
                     type="button"
                     class="btn-icon btn-icon-sm bg-gray-500 hover:bg-gray-600"
                     (click)="moveImageUp(i)"
-                    [disabled]="i === 0"
+                    [disabled]="i === 0 || isReordering"
                     title="Move up">
                     <i class="pi pi-arrow-up"></i>
                   </button>
@@ -243,7 +243,7 @@
                     type="button"
                     class="btn-icon btn-icon-sm bg-gray-500 hover:bg-gray-600"
                     (click)="moveImageDown(i)"
-                    [disabled]="i === uploadedImages.length - 1"
+                    [disabled]="i === uploadedImages.length - 1 || isReordering"
                     title="Move down">
                     <i class="pi pi-arrow-down"></i>
                   </button>

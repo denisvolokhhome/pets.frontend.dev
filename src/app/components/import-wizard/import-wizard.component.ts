@@ -310,6 +310,7 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
   // ── Import action ────────────────────────────────────────────
 
   startImport(): void {
+    if (this.isImporting) return;
     const rowsToImport = this.parsedRows.filter((r) => r.willBeImported);
     if (rowsToImport.length === 0) return;
 
@@ -359,6 +360,8 @@ export class ImportWizardComponent implements OnInit, OnDestroy {
   // ── Close / Reset ────────────────────────────────────────────
 
   close(): void {
+    // Closing mid-import would lose the result and let the same file be imported again on reopen.
+    if (this.isImporting) return;
     const hadImport =
       this.importResult !== null && this.importResult.created_count > 0;
     this.modalService.close(IMPORT_WIZARD_MODAL_ID);

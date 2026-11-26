@@ -41,7 +41,7 @@
             <strong>{{ subscription!.pending_plan?.name }}</strong>.
           </span>
         </div>
-        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="onCancelDowngrade()" [disabled]="isDowngrading" title="Cancel scheduled downgrade">
+        <button type="button" class="ui-btn ui-btn--secondary ui-btn--sm" (click)="onCancelDowngrade()" [disabled]="isDowngrading || isRedirecting" title="Cancel scheduled downgrade">
           <i class="bi bi-x-circle"></i> Cancel
         </button>
       </div>
@@ -175,7 +175,7 @@
             *ngIf="!isCurrentPlan(plan) && isDowngradePlan(plan)"
             type="button"
             class="ui-btn ui-btn--secondary w-full"
-            [disabled]="isDowngrading"
+            [disabled]="isDowngrading || isRedirecting"
             (click)="onDowngrade(plan)">
             <i class="bi" [class.bi-arrow-down-circle]="!isDowngrading"
                           [class.bi-hourglass-split]="isDowngrading"></i>
