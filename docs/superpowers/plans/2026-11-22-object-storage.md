@@ -19,6 +19,8 @@
 - RustFS internal only: no published ports in deployed compose, console disabled.
 - Deployed-stack changes go into `pets.backend.dev/delivery/docker-compose.yml`, `pets.frontend.dev/delivery/docker-compose.yml`, and `pets.backend.dev/delivery/docker-compose.prod.yml`.
 
+> **Superseded 2026-11-26:** `pets.frontend.dev/delivery/docker-compose.yml` was removed. The dev stack compose lives only in `pets.backend.dev/delivery/docker-compose.yml`; the frontend pipeline no longer uploads a compose file and restarts only `frontend` (`--no-deps`). Make deployed-stack changes in the backend repo only.
+
 ## Review Focus
 
 - A seeker whose share message was soft-deleted asks for a document → 404 (Task 4 test).
@@ -95,6 +97,8 @@
 ### Task 7: Deployment and local dev
 
 **Files:** `delivery/docker-compose.yml` (both repos), `delivery/docker-compose.prod.yml`, `delivery/prod/deploy.sh` (archive RustFS volume via `compose exec -T rustfs tar -C /data -czf - .`, keep `KEEP_PREDEPLOY_BACKUPS`), `deploy/Dockerfile` + dev compose healthchecks fail on non-200, `fastapi-backend/docker-compose.yml` (rustfs on 127.0.0.1:9000), `dev.sh` (start rustfs, `.env` S3 vars), `.env.example`, `docs/` env-var doc.
+
+> **Superseded 2026-11-26:** `pets.frontend.dev/delivery/docker-compose.yml` was removed. The dev stack compose lives only in `pets.backend.dev/delivery/docker-compose.yml`; the frontend pipeline no longer uploads a compose file and restarts only `frontend` (`--no-deps`). Make deployed-stack changes in the backend repo only.
 
 - [ ] `rustfs` service: image `rustfs/rustfs:1.0.6`, env `RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY}`, `RUSTFS_SECRET_KEY: ${S3_SECRET_KEY}`, volume `rustfs_data:/data`, healthcheck `curl -fsS http://127.0.0.1:9000/health`; backend env `S3_ENDPOINT_URL: http://rustfs:9000` + keys, `depends_on: rustfs: service_healthy`.
 - [ ] `docker compose -f … config -q` passes for all three; local `dev.sh` brings RustFS up and backend `/health` is 200.

@@ -91,6 +91,8 @@ CSV files and readable columns per spec "ZIP contents". Photo sources: `pet_imag
 
 **Files:** `pets.backend.dev/delivery/docker-compose.yml` and `pets.frontend.dev/delivery/docker-compose.yml`: backend env `EXPORT_PATH: /app/private/exports`, volume `backend_exports:/app/private/exports`, declare `backend_exports`.
 
+> **Superseded 2026-11-26:** `pets.frontend.dev/delivery/docker-compose.yml` was removed. The dev stack compose lives only in `pets.backend.dev/delivery/docker-compose.yml`; the frontend pipeline no longer uploads a compose file and restarts only `frontend` (`--no-deps`). Make deployed-stack changes in the backend repo only.
+
 - [ ] Edit both; `docker compose -f ... config -q` passes for each.
 - [ ] Commit in each repo `chore(deploy): export volume`.
 
