@@ -172,9 +172,40 @@
   .cal-cell { min-height: 6.5rem; }
 }
 
+/* ── Phone header: compact sticky bar instead of the page-header card ──
+   The app shell drops its side margins below 768px, so the page pads itself
+   (1rem, like Breedings) and the bar bleeds back out to the screen edges. */
+.cal-mobile-bar { display: none; }
+
+@media (max-width: 768px) {
+  .cal-page { padding: 0 1rem; gap: 1rem; }
+  .cal-desktop-header { display: none; }
+
+  .cal-mobile-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    margin: 0 -1rem; padding: 0.5rem 0.75rem 0.5rem 1rem;
+    background: var(--color-surface); border-bottom: 1px solid var(--n-200);
+    box-shadow: 0 1px 3px rgba(48, 38, 28, 0.06);
+    position: sticky; top: var(--mobile-navbar-h, 0); z-index: 100;
+  }
+  .cal-mobile-bar__title {
+    margin: 0; display: flex; align-items: center; gap: 0.5rem; min-width: 0;
+    font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; color: var(--ink);
+  }
+  .cal-mobile-bar__title i { color: var(--clay); font-size: 1.125rem; }
+  /* [class] beats the global button[aria-label] touch-target padding rule */
+  .cal-mobile-bar__add[class] {
+    flex-shrink: 0; width: 44px; height: 44px; min-width: 0; min-height: 0; margin: 0; padding: 0;
+    border: none; border-radius: 50%; background: var(--secondary-strong); color: white;
+    display: flex; align-items: center; justify-content: center; font-size: 1.125rem; cursor: pointer;
+  }
+  .cal-mobile-bar__add:hover:not(:disabled) { background: var(--secondary-strong-hover); }
+  .cal-mobile-bar__add:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cal-mobile-bar__add:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+}
+
 /* ── Phone: compact grid of day numbers with dots ── */
 @media (max-width: 640px) {
-  .cal-page { gap: 1rem; }
   .cal-toolbar { flex-direction: column; align-items: stretch; }
   .cal-nav { justify-content: space-between; flex-wrap: nowrap; }
   .cal-month { order: -1; margin: 0; font-size: 1.25rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
